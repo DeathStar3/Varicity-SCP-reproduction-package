@@ -6,6 +6,7 @@ export interface Node {
     nbVariants: number;
     nbConstructorVariants: number;
     nbMethodVariants: number;
+    complexity: number;
 }
 
 export class NodeElement implements Node{
@@ -16,6 +17,7 @@ export class NodeElement implements Node{
     nbVariants: number;
     nbConstructorVariants: number;
     nbMethodVariants: number;
+    complexity: number;
 
     analyzed: boolean;
     root: boolean;

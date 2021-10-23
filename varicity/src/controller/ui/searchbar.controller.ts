@@ -64,7 +64,8 @@ export class SearchbarController {
             nbVariants: 0,
             nbConstructorVariants: 0,
             nbFunctions: 0,
-            nbMethodVariants: 0
+            nbMethodVariants: 0,
+            complexity: 0
         }
         for (let key in nodeKeys) {
             if (typeof nodeKeys[key] === "number") {

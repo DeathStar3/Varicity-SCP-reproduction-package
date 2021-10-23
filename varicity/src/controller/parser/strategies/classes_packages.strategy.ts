@@ -17,6 +17,7 @@ export class ClassesPackagesStrategy implements ParsingStrategy {
         data.nodes.forEach(n => {
             let node = new NodeElement(n.name);
             node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+            node.complexity = (n.complexity === undefined) ? 0 : n.complexity;
             node.nbFunctions = (n.methodVariants === undefined) ? 0 : n.methodVariants;
 
             const attr = n.attributes;

@@ -8,6 +8,7 @@ export abstract class Building implements Node {
     nbVariants: number;
     nbConstructorVariants: number;
     nbMethodVariants: number;
+    complexity: number;
 
     width: number;
     height: number;

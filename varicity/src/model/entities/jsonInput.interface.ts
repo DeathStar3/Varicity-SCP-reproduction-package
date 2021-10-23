@@ -18,6 +18,7 @@ export interface NodeInterface {
 
     constructorVariants?: number;
     methodVariants?: number;
+    complexity?: number;
 
     methodVPs?: number;
 

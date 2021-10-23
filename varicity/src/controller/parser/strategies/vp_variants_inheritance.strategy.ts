@@ -18,6 +18,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         data.nodes.forEach(n => {
             let node = new NodeElement(n.name);
             node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+            node.complexity = (n.complexity === undefined) ? 0 : n.complexity;
 
             const attr = n.attributes;
             let nbAttributes = 0;
@@ -63,6 +64,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
             ).forEach(n => {
                 let node = new NodeElement(n.name);
                 node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+                node.complexity = (n.complexity === undefined) ? 0 : n.complexity;
 
                 const attr = n.attributes;
                 let nbAttributes = 0;
