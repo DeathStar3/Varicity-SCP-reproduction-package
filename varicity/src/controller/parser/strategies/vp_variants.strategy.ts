@@ -18,7 +18,6 @@ export class VPVariantsStrategy implements ParsingStrategy {
         data.nodes.forEach(n => {
             let node = new NodeElement(n.name);
             node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
-            node.complexity = (n.complexity === undefined) ? 0 : n.complexity;
 
             const attr = n.attributes;
             let nbAttributes = 0;
@@ -38,6 +37,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
                     apiList.push(node);
                 }
             }
+            node.fillMetrics(n);
             nodesList.push(node);
         });
 
@@ -65,7 +65,6 @@ export class VPVariantsStrategy implements ParsingStrategy {
             ).forEach(n => {
                 let node = new NodeElement(n.name);
                 node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
-                node.complexity = (n.complexity === undefined) ? 0 : n.complexity;
 
                 const attr = n.attributes;
                 let nbAttributes = 0;
@@ -78,6 +77,9 @@ export class VPVariantsStrategy implements ParsingStrategy {
 
                 node.types = n.types;
                 node.types.push("API");
+
+                node.fillMetrics(n);
+
                 let c = new ClassImplem(
                     node,
                     node.compositionLevel

@@ -8,7 +8,6 @@ import { LinkImplem } from "../../../model/entitiesImplems/linkImplem.model";
 import { JsonInputInterface } from "../../../model/entities/jsonInput.interface";
 import { Config } from "../../../model/entitiesImplems/config.model";
 import { ParsingStrategy } from "./parsing.strategy.interface";
-
 export class ClassesPackagesStrategy implements ParsingStrategy {
     public parse(data: JsonInputInterface, config: Config): EntitiesList {
         console.log('Analyzing with classes and packages strategy: ', data);
@@ -17,7 +16,6 @@ export class ClassesPackagesStrategy implements ParsingStrategy {
         data.nodes.forEach(n => {
             let node = new NodeElement(n.name);
             node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
-            node.complexity = (n.complexity === undefined) ? 0 : n.complexity;
             node.nbFunctions = (n.methodVariants === undefined) ? 0 : n.methodVariants;
 
             const attr = n.attributes;
@@ -30,6 +28,8 @@ export class ClassesPackagesStrategy implements ParsingStrategy {
             node.nbConstructorVariants = cVar;
 
             node.types = n.types;
+
+            node.fillMetrics(n);
             nodesList.push(node);
         });
 
