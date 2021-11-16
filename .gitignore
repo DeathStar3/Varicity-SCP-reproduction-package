@@ -27,3 +27,9 @@ hs_err_pid*
 target
 /resources
 /generated_visualizations
+
+# Js Files #
+js/**/node_modules
+js/**/package-lock.json
+js/**/out
+js/**/experiments
