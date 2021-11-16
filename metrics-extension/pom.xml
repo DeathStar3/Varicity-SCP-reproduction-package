@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.unice.i3s.sparks.deathstar3</groupId>
+    <artifactId>metrics-extension</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>config-loader</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <!-- Testing dependencies -->
+        <versions.junit>4.13.2</versions.junit>
+        <versions.mockito>4.0.0</versions.mockito>
+        <!-- Codding tool dependencies -->
+        <versions.lombok>1.18.22</versions.lombok>
+        <!-- Logging dependencies -->
+        <versions.log4j>1.2.17</versions.log4j>
+    </properties>
+
+    <dependencies>
+
+        <!-- Codding tools -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${versions.lombok}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Dependencies for logging -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${versions.log4j}</version>
+        </dependency>
+
+        <!-- Dependencies for the testing frameworks (Junit, Mockito) (tests only) -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${versions.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${versions.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>
