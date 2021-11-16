@@ -10,6 +10,8 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>config-loader</module>
+        <module>metric-gatherer</module>
+        <module>entities</module>
     </modules>
 
     <properties>
@@ -26,6 +28,14 @@
     </properties>
 
     <dependencies>
+
+        <!-- Internal dependency -->
+        <dependency>
+            <groupId>fr.unice.i3s.sparks.deathstar3</groupId>
+            <artifactId>entities</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Codding tools -->
         <dependency>

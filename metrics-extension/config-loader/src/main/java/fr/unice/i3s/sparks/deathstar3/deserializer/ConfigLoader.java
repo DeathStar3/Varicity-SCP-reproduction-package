@@ -1,4 +1,4 @@
-package fr.unice.i3s.sparks.deathstar3.parser;
+package fr.unice.i3s.sparks.deathstar3.deserializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;

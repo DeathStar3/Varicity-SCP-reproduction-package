@@ -18,6 +18,8 @@ public class Source {
     private List<String> commands; //Optional
     private String sourceUrl; //Mandatory
 
+    private List<String> metrics;
+
     @Override
     public String toString() {
         return "Source{" +
@@ -25,6 +27,7 @@ public class Source {
                 ", enabled=" + enabled +
                 ", commands=" + commands +
                 ", sourceUrl='" + sourceUrl + '\'' +
+                ", metrics=" + metrics +
                 '}';
     }
 }
