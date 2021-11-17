@@ -8,28 +8,54 @@ import fr.unice.i3s.sparks.deathstar3.strategy.sonar.sonarqube.SonarQubeStrategy
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @NoArgsConstructor
 public class MetricGatherer {
 
     public void gatherMetrics(Config config) {
 
-        //TODO Run this in a thread
+
+        List<Thread> threads = new ArrayList<>();
+
         for (MetricSource metricSource : config.getSources()) {
             if (metricSource.isEnabled()) {
-                MetricGathering strategy = strategySelection(metricSource.getName());
 
-                if (strategy != null) {
-                    String outputFileName = config.getOutputPath() + "/" + metricSource.getName() + "/" + config.getProjectName();
-                    strategy.gatherAndSaveMetrics(metricSource.getSourceUrl(), metricSource.getMetrics(), outputFileName);
-                }
-                log.info("The metrics from " + metricSource.getName() + "were collected and saved (json)");
+                Thread t = new Thread() {
+                    public void run() {
+
+                        MetricGathering strategy = strategySelection(metricSource.getName());
+
+                        if (strategy != null) {
+                            String outputFileName = config.getOutputPath() + "/" + metricSource.getName() + "/" + config.getProjectName();
+                            strategy.gatherAndSaveMetrics(metricSource.getSourceUrl(), metricSource.getMetrics(), outputFileName);
+                        }
+                        log.info("The metrics from " + metricSource.getName() + " were collected and saved (json)");
+                    }
+                };
+                threads.add(t);
+            }
+        }
+
+        //Start all the threads
+        for (Thread t : threads) {
+            t.start();
+        }
+
+        //Join all the threads
+        for (Thread t : threads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    public MetricGathering strategySelection(String sourceName){
-        switch (sourceName){
+    public MetricGathering strategySelection(String sourceName) {
+        switch (sourceName) {
             case "sonar-qube":
             case "sonarqube":
                 return new MetricGathering(new SonarQubeStrategy());
