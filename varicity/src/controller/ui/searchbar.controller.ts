@@ -61,11 +61,6 @@ export class SearchbarController {
         const nodeKeys: Node = {
             name: "",
             types: [],
-            nbAttributes: 0,
-            nbVariants: 0,
-            nbConstructorVariants: 0,
-            nbFunctions: 0,
-            nbMethodVariants: 0,
             metrics: new Metrics()
         }
         for (let key in nodeKeys) {

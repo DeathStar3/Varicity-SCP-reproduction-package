@@ -1,5 +1,3 @@
-import { District } from '../entities/district.interface';
-import { ClassImplem } from './classImplem.model';
 import {MetricObject} from "./metricObject.model";
 
 export class Metrics {
@@ -10,12 +8,10 @@ export class Metrics {
         this.metrics = new Map<string, MetricObject>();
     }
 
-
     addMetric(metric: MetricObject) {
         return this.metrics.set(metric.name, metric);
     }
 
-    // returns if obj is a child of this
     hasMetric(metricName: string): boolean {
         return this.metrics.has(metricName);
     }
@@ -29,7 +25,3 @@ export class Metrics {
         return value === undefined ? 0 : value;
     }
 }
-
-export const includedVariabilityMetrics = new Set();
-includedVariabilityMetrics.add("nbConstructorVariants");
-includedVariabilityMetrics.add("nbMethodVariants");
