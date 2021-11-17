@@ -15,10 +15,10 @@ export class ClassImplem extends Building {
     }
 
     public getHeight(field: string) : number {
-        return 0.5 + this[field] *0.5;
+        return 0.5 + this.metrics.getMetricValue(field) * 0.5;
     }
 
     public getWidth(field: string) : number {
-        return 0.5 + this[field] *0.5;
+        return 0.5 + this.metrics.getMetricValue(field) * 0.5;
     }
 }

@@ -26,3 +26,8 @@ jfreechart:
     - org.jfree.chart.renderer.AbstractRenderer
   compositionLevel: 4
   compositionType: IN
+#cookiefactoryteamo:
+#  repositoryUrl: https://github.com/PNS-Conception/cookiefactory-20-21-team-o.git
+#  tagIds:
+#    - FINAL
+

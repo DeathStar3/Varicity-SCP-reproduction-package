@@ -1,5 +1,6 @@
 import { Node } from './../parser/symfinder_elements/nodes/node.element';
 import { Building3D } from './../../view/common/3Delements/building3D';
+import {Metrics} from "../../model/entitiesImplems/metrics.model";
 
 export class SearchbarController {
     private static map: Map<string, Building3D>;
@@ -60,11 +61,7 @@ export class SearchbarController {
         const nodeKeys: Node = {
             name: "",
             types: [],
-            nbAttributes: 0,
-            nbVariants: 0,
-            nbConstructorVariants: 0,
-            nbFunctions: 0,
-            nbMethodVariants: 0
+            metrics: new Metrics()
         }
         for (let key in nodeKeys) {
             if (typeof nodeKeys[key] === "number") {
