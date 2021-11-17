@@ -1,5 +1,5 @@
 import {EntitiesList} from "../../../model/entitiesList";
-import {NodeElement} from "../symfinder_elements/nodes/node.element";
+import {NodeElement, VariabilityMetricsName} from "../symfinder_elements/nodes/node.element";
 import {ClassImplem} from "../../../model/entitiesImplems/classImplem.model";
 import {LinkElement} from "../symfinder_elements/links/link.element";
 import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
@@ -7,6 +7,7 @@ import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.
 import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInput.interface";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Config} from "../../../model/entitiesImplems/config.model";
+import {MetricObject} from "../../../model/entitiesImplems/metricObject.model";
 
 // DEPRECATED
 export class VPVariantsInheritanceStrategy implements ParsingStrategy {
@@ -17,16 +18,17 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         const apiList: NodeElement[] = [];
         data.nodes.forEach(n => {
             let node = new NodeElement(n.name);
-            node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+
+            node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
             const attr = n.attributes;
             let nbAttributes = 0;
             attr.forEach(a => {
                 nbAttributes += a.number;
             })
-            const cVar = (n.constructorVariants === undefined) ? 0 : n.constructorVariants;
-            node.nbAttributes = nbAttributes;
-            node.nbConstructorVariants = cVar;
+
+            node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+            node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
 
             node.types = Object.assign([], n.types);
             if (config.api_classes[project] !== undefined) {
@@ -36,6 +38,8 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
                     apiList.push(node);
                 }
             }
+
+            node.fillMetricsFromNodeInterface(n);
             nodesList.push(node);
         });
 
@@ -44,7 +48,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         const compositionLinks = data.alllinks.map(l => new LinkElement(l.source, l.target, l.type));
 
         nodesList.forEach(n => {
-            n.nbVariants = this.getLinkedNodesFromSource(n, nodesList, linkElements).length;
+            n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
         });
 
         this.buildComposition(data.alllinks, nodesList, apiList, 0);
@@ -62,19 +66,22 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
                     && !nodesList.map(no => no.name).includes(nod.name)
             ).forEach(n => {
                 let node = new NodeElement(n.name);
-                node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+                node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
                 const attr = n.attributes;
                 let nbAttributes = 0;
                 attr.forEach(a => {
                     nbAttributes += a.number;
                 })
-                const cVar = (n.constructorVariants === undefined) ? 0 : n.constructorVariants;
-                node.nbAttributes = nbAttributes;
-                node.nbConstructorVariants = cVar;
+
+                node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+                node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
 
                 node.types = n.types;
                 node.types.push("API");
+
+                node.fillMetricsFromNodeInterface(n);
+
                 let c = new ClassImplem(
                     node,
                     node.compositionLevel

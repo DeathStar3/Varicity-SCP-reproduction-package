@@ -1,4 +1,5 @@
 import { Node } from './../../controller/parser/symfinder_elements/nodes/node.element';
+import {Metrics} from "../entitiesImplems/metrics.model";
 
 export abstract class Building implements Node {
     name: string;
@@ -8,6 +9,7 @@ export abstract class Building implements Node {
     nbVariants: number;
     nbConstructorVariants: number;
     nbMethodVariants: number;
+    metrics: Metrics;
 
     width: number;
     height: number;

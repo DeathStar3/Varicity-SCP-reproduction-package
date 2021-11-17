@@ -1,4 +1,4 @@
-import { Building3D } from './../../view/common/3Delements/building3D';
+import {Building3D} from './../../view/common/3Delements/building3D';
 
 export class DetailsController {
 
@@ -98,6 +98,14 @@ export class DetailsController {
                     throw new Error('Not yet implemented');
                 }
             }
+        } else if (obj instanceof Map) {
+            obj.forEach((value: any, key: any) => {
+                if(value.name !== undefined && value.value !== undefined){
+                    this.populateChildren({[value.name] : value.value}, parent);
+                }else{
+                    this.populateChildren(value, parent);
+                }
+            });
         } else {
             for (let key of Object.keys(obj)) {
                 if (!(obj[key] instanceof Object)) { // value of key isn't an object
