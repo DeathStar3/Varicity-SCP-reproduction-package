@@ -20,13 +20,13 @@ public class CompilerTest {
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
 
     private Compiler compiler = new Compiler();
-    ProjectConfig project=  new ProjectConfig("CookieFactory", "http:/zdefe",
+    ProjectConfig project=  new ProjectConfig("CookieFactory",
             "/home/anagonou/Documents/si5/ter/4A_ISA_TheCookieFactory", "j2e/", new ProjectConfig.SonarCloud(false, ""),
-            "maven","3.8-openjdk-8", List.of("mvn", "clean", "package", "-f", "/project/j2e/pom.xml"), "http://sonarqubehost:9000");
+            "maven","3.8-openjdk-8", List.of("mvn", "clean", "package", "-f", "/project/j2e/pom.xml"), "http://sonarqubehost:9000", false);
 
 
-    ProjectConfig jfreeChart=new ProjectConfig("jfreechart","https://github.com/jfree/jfreechart", "/home/anagonou/Documents/si5/ter/jfreechart",
-            "", new ProjectConfig.SonarCloud(false, ""), "maven", "3.8.2-jdk-11", List.of("mvn", "clean", "install", "-f", "/project/pom.xml"), "http://sonarqubehost:9000");
+    ProjectConfig jfreeChart=new ProjectConfig("jfreechart", "/home/anagonou/Documents/si5/ter/jfreechart",
+            "", new ProjectConfig.SonarCloud(false, ""), "maven", "3.8.2-jdk-11", List.of("mvn", "clean", "install","sonar:sonar" ,"-f", "/project/pom.xml"), "http://sonarqubehost:9000", true);
 
     @Test
     public void compileProjectTest() throws PullException {
