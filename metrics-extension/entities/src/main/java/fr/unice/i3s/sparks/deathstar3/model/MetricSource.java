@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Source {
+public class MetricSource {
 
     private String name; //Mandatory
     private boolean enabled = true; //Optional (default to true)
@@ -22,7 +22,7 @@ public class Source {
 
     @Override
     public String toString() {
-        return "Source{" +
+        return "MetricSource{" +
                 "name='" + name + '\'' +
                 ", enabled=" + enabled +
                 ", commands=" + commands +

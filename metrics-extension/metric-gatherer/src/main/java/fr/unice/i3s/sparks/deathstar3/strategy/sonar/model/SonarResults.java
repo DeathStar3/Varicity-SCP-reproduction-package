@@ -47,13 +47,13 @@ public class SonarResults {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Component {
 
-        private String key;
+        private String path;
         private List<Metric> measures;
 
         @Override
         public String toString() {
             return "Component{" +
-                    "key='" + key + '\'' +
+                    "path='" + path + '\'' +
                     ", measures=" + measures +
                     '}';
         }

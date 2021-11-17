@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -15,10 +14,10 @@ import java.util.Objects;
 public class Config {
 
     private String projectName = "default"; //Optional
-    private String outputPath = "output"; //Optional
+    private String outputPath = "metrics-extension/output"; //Optional
     private String sourceCodePath = "sources"; //Optional
 
-    private List<Source> sources;
+    private List<MetricSource> sources;
 
     @Override
     public String toString() {

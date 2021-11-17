@@ -1,4 +1,4 @@
-package fr.unice.i3s.sparks.deathstar3.model;
+package fr.unice.i3s.sparks.deathstar3.serializer.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
