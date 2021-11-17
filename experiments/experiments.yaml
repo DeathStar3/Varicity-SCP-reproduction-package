@@ -1,11 +1,16 @@
-cookiefactory-j2e:
+cookiefactory:
   repositoryUrl: https://github.com/collet/4A_ISA_TheCookieFactory.git
   commitIds:
     - 7bec06fd2fa5592d22dd0c506cae502903d7e77f
   sourcePackage: j2e
+  sonarcloud:
+    use: true
+    url: http://somewhere.com/
+  language: java
+  jdk:
 
-cookiefactory-client:
-  repositoryUrl: https://github.com/collet/4A_ISA_TheCookieFactory.git
-  commitIds:
-    - 7bec06fd2fa5592d22dd0c506cae502903d7e77f
-  sourcePackage: client/src
+#cookiefactoryteamo:
+#  repositoryUrl: https://github.com/PNS-Conception/cookiefactory-20-21-team-o.git
+#  tagIds:
+#    - FINAL
+
