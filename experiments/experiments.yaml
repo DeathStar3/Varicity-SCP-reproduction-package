@@ -9,8 +9,20 @@ cookiefactory:
   language: java
   jdk:
 
-#cookiefactoryteamo:
-#  repositoryUrl: https://github.com/PNS-Conception/cookiefactory-20-21-team-o.git
-#  tagIds:
-#    - FINAL
-  
+
+jfreechart:
+  repositoryUrl: https://github.com/jfree/jfreechart
+  sourcePackage: .
+  tagIds:
+    - v1.5.0
+  filters:
+    - org.jfree.chart.util.PublicCloneable
+    - org.jfree.chart.event
+    - org.jfree.data.general
+  apiFilters:
+    - org.jfree.chart.ChartFactory
+    - org.jfree.chart.plot.CategoryPlot
+    - org.jfree.chart.plot.XYPlot
+    - org.jfree.chart.renderer.AbstractRenderer
+  compositionLevel: 4
+  compositionType: IN
