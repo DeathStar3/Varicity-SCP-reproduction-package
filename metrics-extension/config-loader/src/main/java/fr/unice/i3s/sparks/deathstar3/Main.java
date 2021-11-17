@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String configFilePath = "./metrics-extension/config/config.yaml";
+        String configFilePath = "./metrics-extension/config/config.yaml"; //default config file path and file that will be loaded
 
         if (args.length == 1){
             configFilePath = args[0];

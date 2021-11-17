@@ -23,6 +23,7 @@ public class MetricGatherer {
                     String outputFileName = config.getOutputPath() + "/" + metricSource.getName() + "/" + config.getProjectName();
                     strategy.gatherAndSaveMetrics(metricSource.getSourceUrl(), metricSource.getMetrics(), outputFileName);
                 }
+                log.info("The metrics from " + metricSource.getName() + "were collected and saved (json)");
             }
         }
     }

@@ -11,12 +11,10 @@ import java.io.IOException;
 @Slf4j
 public class ConfigLoader {
 
-    private static final String CONFIG_FILE_PATH = ""; //TODO need to be defined
-
     public Config loadConfigFile(String fileName) {
 
         try {
-            File configFile = new File(CONFIG_FILE_PATH + fileName);
+            File configFile = new File(fileName);
 
             ObjectMapper om = new ObjectMapper(new YAMLFactory());
             Config config = om.readValue(configFile, Config.class); //TODO Missing a verification layer to check that all the mandatory properties are given
