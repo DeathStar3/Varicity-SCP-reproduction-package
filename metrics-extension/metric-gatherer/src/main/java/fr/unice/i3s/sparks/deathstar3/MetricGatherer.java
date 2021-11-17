@@ -52,6 +52,8 @@ public class MetricGatherer {
                 e.printStackTrace();
             }
         }
+
+        log.info("Metrics-extension process completed!");
     }
 
     public MetricGathering strategySelection(String sourceName) {
