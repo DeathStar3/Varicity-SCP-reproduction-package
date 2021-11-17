@@ -31,5 +31,5 @@ target
 # Js Files #
 js/**/node_modules
 js/**/package-lock.json
-js/**/out
+js/**/lib
 js/**/experiments

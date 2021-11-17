@@ -2,15 +2,17 @@
   "name": "js",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "build": "tsc --outfile app/out/parser.js app/src/parser.ts",
-    "start": "node app/out/parser.js"
+    "build": "tsc",
+    "start": "node lib/index.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^16.11.7",
+    "neo4j-driver": "^4.4.0",
+    "tslog": "^3.2.2",
     "typescript": "^4.4.4"
   }
 }
