@@ -1,17 +1,21 @@
 export enum EntityAttribut {
-    ABSTRACT
+    ABSTRACT = "ABSTRACT"
 }
 
 export enum EntityType {
-    CLASS,
-    METHOD,
-    CONSTRUCTOR,
-    INTERFACE
+    CLASS = "CLASS",
+    METHOD = "METHOD",
+    CONSTRUCTOR = "CONSTRUCTOR",
+    INTERFACE = "INTERFACE"
 }
 
 export enum EntityVisibility {
-    PUBLIC,
-    PRIVATE
+    PUBLIC = "PUBLIC",
+    PRIVATE = "PRIVATE"
 }
 
-export type NodeType = EntityAttribut | EntityType | EntityVisibility;
+export enum UnknownEntity {
+    UNKONWN = "UNKONWN"
+}
+
+export type NodeType = EntityAttribut | EntityType | EntityVisibility | UnknownEntity;

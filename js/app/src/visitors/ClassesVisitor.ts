@@ -1,18 +1,24 @@
 import * as ts from "typescript";
 import SymfinderVisitor from "./SymfinderVisitor";
-import {EntityType, EntityAttribut, EntityVisibility, NodeType} from "../neograph/NodeType";
+import {EntityType, EntityAttribut, EntityVisibility, NodeType, UnknownEntity} from "../neograph/NodeType";
+import NeoGraph from "../neograph/NeoGraph";
 
 export default class ClassesVisitor extends SymfinderVisitor{
+
+    constructor(neoGraph: NeoGraph){
+        super(neoGraph);
+    }
 
     visit(node: ts.Node): void{
 
         var type = node.kind;
         if(type != ts.SyntaxKind.ClassDeclaration && type != ts.SyntaxKind.InterfaceDeclaration) return;
 
-        var nodeType;
+        var nodeType: NodeType = UnknownEntity.UNKONWN;
         var nodeTypeList: NodeType[] = [];
-        var modifiers = node.modifiers?.map(modifier => modifier.kind);
+        var modifiers = node.modifiers?.map(m => m.kind);
         var nodeVisibility = modifiers?.includes(ts.SyntaxKind.ExportKeyword) ? EntityVisibility.PUBLIC : EntityVisibility.PRIVATE;
+        var name = (<any>node).name.escapedText
 
         if(type == ts.SyntaxKind.ClassDeclaration){
             
@@ -29,8 +35,10 @@ export default class ClassesVisitor extends SymfinderVisitor{
             nodeType = EntityType.INTERFACE;
             nodeTypeList = [nodeVisibility];
         }
+        console.log("Name : " + name)
         console.log("Type : " + nodeType?.toString());
-        console.log("Type List : ");
-        nodeTypeList.forEach(t => console.log(t.toString()))
+        console.log("Type List : " + nodeTypeList.join(' ') + "\n");
+
+        this.neoGraph.createNode(name, nodeType, nodeTypeList);
     }
 }
