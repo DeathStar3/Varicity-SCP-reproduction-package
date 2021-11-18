@@ -16,8 +16,8 @@ export class FilesLoader {
         let externalMetricsFilesPathsMap = new Map<string, string[]>();
 
         // Get the path of symfinder's & external metrics jsons
-        var myRegexp = new RegExp("^\\.\\/([a-zA-Z\\-\\_.0-9]+)\\/", "g");
         rootAnalysedProjectContext.keys().forEach((key) => {
+            var myRegexp = new RegExp("^\\.\\/([a-zA-Z\\-\\_.0-9]+)\\/", "g");
             let match = myRegexp.exec(key);
             if (match !== undefined && match != null) {
                 // [0]: contains "./directory/"
