@@ -14,6 +14,7 @@ import fr.varicity.models.ProjectConfig;
 import fr.varicity.projectbuilder.Compiler;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class CompilerTest {
 
@@ -25,7 +26,7 @@ public class CompilerTest {
             "maven","3.8-openjdk-8", List.of("mvn", "clean", "package", "-f", "/project/j2e/pom.xml"), "http://sonarqubehost:9000", false);
 
 
-    ProjectConfig jfreeChart=new ProjectConfig("jfreechart", "/home/anagonou/Documents/si5/ter/jfreechart",
+    ProjectConfig jfreeChart=new ProjectConfig("jfreechart", "/tmp/varicity-xp-projets/jfreechart",
             "", new ProjectConfig.SonarCloud(false, ""), "maven", "3.8.2-jdk-11", List.of("mvn", "clean", "install","sonar:sonar" ,"-f", "/project/pom.xml"), "http://sonarqubehost:9000", true);
 
     @Test
