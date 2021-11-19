@@ -16,6 +16,7 @@ public class Main {
         ConfigLoader configLoader = new ConfigLoader();
         Config config = configLoader.loadConfigFile(configFilePath);
 
+
         MetricGatherer metricGatherer = new MetricGatherer();
         metricGatherer.gatherMetrics(config);
 

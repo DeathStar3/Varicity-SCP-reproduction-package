@@ -1,4 +1,4 @@
-package fr.varicity;
+package fr.unice.i3s.sparks.deathstar3;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,4 +1,4 @@
-package fr.varicity.models;
+package fr.unice.i3s.sparks.deathstar3.models;
 
 
 

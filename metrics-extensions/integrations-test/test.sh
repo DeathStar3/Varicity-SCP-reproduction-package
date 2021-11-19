@@ -3,7 +3,7 @@ set -e
 xpdirs=/tmp/varicity-xp-projets
 
 # Run maven tests
-cd ../config
+cd ../../metrics-extension
 mvn clean verify -Dtest=CompilerTest#executeTest
 
 if [ ! -d $xpdirs/jfreechart/target ]; then

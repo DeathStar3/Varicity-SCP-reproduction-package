@@ -1,4 +1,4 @@
-package fr.varicity.builders;
+package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,27 +7,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientBuilder;
 
-import fr.varicity.exceptions.PullException;
+
+import fr.unice.i3s.sparks.deathstar3.exceptions.PullException;
+import fr.unice.i3s.sparks.deathstar3.model.Config;
 import org.junit.Test;
 
-import fr.varicity.models.ProjectConfig;
-import fr.varicity.projectbuilder.Compiler;
-
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class CompilerTest {
 
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
 
     private Compiler compiler = new Compiler();
-    ProjectConfig project=  new ProjectConfig("CookieFactory",
-            "/home/anagonou/Documents/si5/ter/4A_ISA_TheCookieFactory", "j2e/", new ProjectConfig.SonarCloud(false, ""),
+    Config project=  new Config("CookieFactory",
+            "/tmp/varicity-xp-projets/4A_ISA_TheCookieFactory", "j2e/",
             "maven","3.8-openjdk-8", List.of("mvn", "clean", "package", "-f", "/project/j2e/pom.xml"), "http://sonarqubehost:9000", false);
 
 
-    ProjectConfig jfreeChart=new ProjectConfig("jfreechart", "/tmp/varicity-xp-projets/jfreechart",
-            "", new ProjectConfig.SonarCloud(false, ""), "maven", "3.8.2-jdk-11", List.of("mvn", "clean", "install","sonar:sonar" ,"-f", "/project/pom.xml"), "http://sonarqubehost:9000", true);
+    Config jfreeChart=new Config("jfreechart", "/tmp/varicity-xp-projets/jfreechart",
+            "", "maven", "3.8.2-jdk-11", List.of("mvn", "clean", "install","sonar:sonar" ,"-f", "/project/pom.xml"), "http://sonarqubehost:9000", true);
 
     @Test
     public void compileProjectTest() throws PullException {
@@ -57,6 +55,7 @@ public class CompilerTest {
 
     @Test
     public void executeTest(){
+
         compiler.executeProject(jfreeChart);
     }
 }
