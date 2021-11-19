@@ -10,6 +10,9 @@ mkdir $xpdirs
 SONARQUBE_URL=localhost:9000
 workingdir=$(pwd)
 
+# Install wait-for-it
+apt-get install wait-for-it
+
 # Projects
 ## Project 1
 git -C $xpdirs clone https://github.com/jfree/jfreechart.git
