@@ -1,0 +1,14 @@
+name: Deployment to Google cloud
+on:
+  push:
+    branches:
+      - us-26-automated-build
+jobs:
+  compiletests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test Jfree Chart
+        working-directory: ./metrics-extensions/integrations-test
+        run: bash run.sh
+
