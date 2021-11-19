@@ -1,4 +1,4 @@
-name: Deployment to Google cloud
+name: Testing metrics extension
 on:
   push:
     branches:
@@ -10,5 +10,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test Jfree Chart
         working-directory: ./metrics-extensions/integrations-test
-        run: bash run.sh
+        run: bash runtest.sh
 
