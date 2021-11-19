@@ -2,7 +2,10 @@
 
 set -e
 xpdirs=/tmp/varicity-xp-projets
-rm -r $xpdirs
+if [ -d $xpdirs ]; then
+  rm -r $xpdirs
+fi
+
 mkdir $xpdirs
 SONARQUBE_URL=localhost:9000
 workingdir=$(pwd)
