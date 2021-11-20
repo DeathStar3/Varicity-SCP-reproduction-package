@@ -57,9 +57,7 @@ public class CompilerTest {
 
     @Test
     public void executeTest(){
-        System.out.println("hello");
-
-        /*sonarqubeStarter.startSonarqube();
-        compiler.executeProject(jfreeChart);*/
+        sonarqubeStarter.startSonarqube();
+        compiler.executeProject(jfreeChart);
     }
 }
