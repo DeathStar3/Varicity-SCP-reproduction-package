@@ -2,6 +2,7 @@ package fr.unice.i3s.sparks.deathstar3.model;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 @Getter
@@ -10,13 +11,17 @@ import java.util.Objects;
 @AllArgsConstructor
 @ToString
 public class Config {
+
+    @NotBlank()
     private  String projectName;
+
     private  String repositoryUrl;
     private String path;
     private  String sourcePackage;
     private List<String> tagIds;
     private String buildEnv;
     private String buildEnvTag;
+
     private List<String> buildCmds;
     private boolean buildCmdIncludeSonar;
     private String sonarqubeUrl;

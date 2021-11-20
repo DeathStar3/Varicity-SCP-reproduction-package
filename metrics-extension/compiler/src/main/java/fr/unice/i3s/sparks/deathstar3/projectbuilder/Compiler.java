@@ -36,7 +36,7 @@ public class Compiler {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Logger logger = Logger.getLogger(Compiler.class.getName());
 
-    private static final String NETWORK_NAME = "varicity-config";
+    public static final String NETWORK_NAME = "varicity-config";
 
     private static final String SONARQUBE_LOCAL_URL = "http://localhost:9000";
 
@@ -84,6 +84,7 @@ public class Compiler {
                 e.printStackTrace();
             }
             container = dockerClient.inspectContainerCmd(containerId).exec();
+
         }
 
         if (container.getState().getExitCodeLong() != 0) {
@@ -121,6 +122,7 @@ public class Compiler {
             List<String> mvnCommmands = new ArrayList<>(projectConfig.getBuildCmds());
             mvnCommmands.add("-Dsonar.login=" + result.token());
             mvnCommmands.add("-Dsonar.host.url=" + projectConfig.getSonarqubeUrl());
+            mvnCommmands.add("-Dsonar.projectKey=" + projectConfig.getProjectName());
             command = command.withEntrypoint(mvnCommmands);
         }
 
@@ -174,14 +176,7 @@ public class Compiler {
         }
     }
 
-    public void startSonarqube() {
-        CreateContainerResponse container = dockerClient.createContainerCmd("varicity-sonarqube")
-                .withName("sonarqubehost").withExposedPorts(ExposedPort.parse("9000")).withHostConfig(HostConfig
-                        .newHostConfig().withPortBindings(PortBinding.parse("9000:9000")).withNetworkMode(NETWORK_NAME))
-                .exec();
 
-        dockerClient.startContainerCmd(container.getId()).exec();
-    }
 
     private HttpHeaders createHeaders(String username, String password) {
         return new HttpHeaders() {
@@ -213,12 +208,7 @@ public class Compiler {
 
     public String runSonarScannerCli(Config projectConfig, SonarQubeToken token) {
 
-        List<Network> networks = dockerClient.listNetworksCmd().withNameFilter(NETWORK_NAME).exec();
-        if (networks.isEmpty()) {
-            CreateNetworkResponse networkResponse = dockerClient.createNetworkCmd().withName(NETWORK_NAME)
-                    .withAttachable(true).withDriver("bridge").exec();
-            System.out.printf("Network %s created...\n", networkResponse.getId());
-        }
+
 
         Volume volume = new Volume("/usr/src");
         String completePath = "";

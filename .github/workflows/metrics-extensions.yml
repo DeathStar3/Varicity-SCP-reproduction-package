@@ -16,6 +16,6 @@ jobs:
           cache: maven
 
       - name: Test Jfree Chart
-        working-directory: ./metrics-extensions/integrations-test
+        working-directory: ./metrics-extensions/integrations-test/test-jfreechart
         run: bash runtest.sh
 

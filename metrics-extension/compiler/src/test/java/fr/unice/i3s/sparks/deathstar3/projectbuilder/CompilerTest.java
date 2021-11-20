@@ -10,13 +10,15 @@ import com.github.dockerjava.core.DockerClientBuilder;
 
 import fr.unice.i3s.sparks.deathstar3.exceptions.PullException;
 import fr.unice.i3s.sparks.deathstar3.model.Config;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class CompilerTest {
 
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
+    private SonarqubeStarter sonarqubeStarter=new SonarqubeStarter();
 
     private Compiler compiler = new Compiler();
     Config project=  new Config("CookieFactory",
@@ -55,7 +57,9 @@ public class CompilerTest {
 
     @Test
     public void executeTest(){
+        System.out.println("hello");
 
-        compiler.executeProject(jfreeChart);
+        /*sonarqubeStarter.startSonarqube();
+        compiler.executeProject(jfreeChart);*/
     }
 }
