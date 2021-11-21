@@ -54,7 +54,9 @@ public class CompilerTest {
 
     @Test
     public void executeTest() {
+
         sonarqubeStarter.startSonarqube();
         compiler.executeProject(jfreeChart);
+
     }
 }
