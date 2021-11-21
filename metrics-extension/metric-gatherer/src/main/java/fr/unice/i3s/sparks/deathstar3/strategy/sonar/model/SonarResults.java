@@ -18,7 +18,6 @@ public class SonarResults {
     private Paging paging;
     private List<Component> components;
 
-
     @Getter
     @Setter
     @NoArgsConstructor
@@ -32,11 +31,7 @@ public class SonarResults {
 
         @Override
         public String toString() {
-            return "Paging{" +
-                    "pageIndex=" + pageIndex +
-                    ", pageSize=" + pageSize +
-                    ", total=" + total +
-                    '}';
+            return "Paging{" + "pageIndex=" + pageIndex + ", pageSize=" + pageSize + ", total=" + total + '}';
         }
     }
 
@@ -52,10 +47,7 @@ public class SonarResults {
 
         @Override
         public String toString() {
-            return "Component{" +
-                    "path='" + path + '\'' +
-                    ", measures=" + measures +
-                    '}';
+            return "Component{" + "path='" + path + '\'' + ", measures=" + measures + '}';
         }
     }
 
@@ -71,18 +63,12 @@ public class SonarResults {
 
         @Override
         public String toString() {
-            return "Metric{" +
-                    "metric='" + metric + '\'' +
-                    ", value=" + value +
-                    '}';
+            return "Metric{" + "metric='" + metric + '\'' + ", value=" + value + '}';
         }
     }
 
     @Override
     public String toString() {
-        return "SonarResults{" +
-                "paging=" + paging +
-                ", components=" + components +
-                '}';
+        return "SonarResults{" + "paging=" + paging + ", components=" + components + '}';
     }
 }

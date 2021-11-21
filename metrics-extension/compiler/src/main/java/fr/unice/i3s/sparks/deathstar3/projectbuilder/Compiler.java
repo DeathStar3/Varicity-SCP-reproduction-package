@@ -47,9 +47,9 @@ public class Compiler {
     public void executeProject(Config projectConfig) {
 
         if (projectConfig.isBuildCmdIncludeSonar()) {
-            logger.info("Hello "+projectConfig);
+            logger.info("Hello " + projectConfig);
             try {
-                var compileAndScanProjectId =this.compileAndScanProject(projectConfig);
+                var compileAndScanProjectId = this.compileAndScanProject(projectConfig);
                 waitForContainerCorrectExit(compileAndScanProjectId);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -98,6 +98,7 @@ public class Compiler {
      * Compile and scan the project in the same step if
      * 
      * @param projectConfig
+     * 
      * @return the containerId
      */
     public String compileAndScanProject(Config projectConfig) throws JsonProcessingException {
@@ -115,9 +116,10 @@ public class Compiler {
         SonarQubeToken result = this.getToken(tokenName, SONARQUBE_LOCAL_URL);
         Volume volume = new Volume("/project");
 
-        var command = dockerClient.createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag());
+        var command = dockerClient
+                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag());
         if (projectConfig.getBuildEnv().equals("maven")) { // to use sonar in maven jdk version need to be greater or
-                                                        // equals to 11
+                                                           // equals to 11
 
             List<String> mvnCommmands = new ArrayList<>(projectConfig.getBuildCmds());
             mvnCommmands.add("-Dsonar.login=" + result.token());
@@ -126,9 +128,8 @@ public class Compiler {
             command = command.withEntrypoint(mvnCommmands);
         }
 
-        var container = command
-                .withHostConfig(HostConfig.newHostConfig()
-                        .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)).withNetworkMode(NETWORK_NAME))
+        var container = command.withHostConfig(HostConfig.newHostConfig()
+                .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)).withNetworkMode(NETWORK_NAME))
                 .exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
@@ -176,8 +177,6 @@ public class Compiler {
         }
     }
 
-
-
     private HttpHeaders createHeaders(String username, String password) {
         return new HttpHeaders() {
             {
@@ -193,7 +192,9 @@ public class Compiler {
      * https://www.baeldung.com/how-to-use-resttemplate-with-basic-authentication-in-spring
      * 
      * @param token_name
+     * 
      * @return
+     * 
      * @throws JsonProcessingException
      */
     public SonarQubeToken getToken(String token_name, String sonarqubeUrl) throws JsonProcessingException {
@@ -207,8 +208,6 @@ public class Compiler {
     }
 
     public String runSonarScannerCli(Config projectConfig, SonarQubeToken token) {
-
-
 
         Volume volume = new Volume("/usr/src");
         String completePath = "";

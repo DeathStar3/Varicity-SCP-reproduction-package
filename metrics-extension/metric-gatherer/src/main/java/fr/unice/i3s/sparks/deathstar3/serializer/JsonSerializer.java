@@ -13,7 +13,7 @@ public class JsonSerializer {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public void generateAndSaveJson(List<Node> nodes, String fileName){
+    public void generateAndSaveJson(List<Node> nodes, String fileName) {
         try {
             File file = new File(fileName);
             file.getParentFile().mkdirs();

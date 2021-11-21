@@ -39,11 +39,9 @@ public class SonarqubeStarter {
 
     public void startSonarqube() {
 
-
         prepareVaricitySonarqube();
 
         createNetwork();
-
 
         CreateContainerResponse container = dockerClient.createContainerCmd("varicity-sonarqube")
                 .withName("sonarqubehost").withExposedPorts(ExposedPort.parse("9000")).withHostConfig(HostConfig
@@ -52,16 +50,18 @@ public class SonarqubeStarter {
 
         dockerClient.startContainerCmd(container.getId()).exec();
 
-        while(true){
+        while (true) {
             try {
-                var sonarqubeStatusResponse= this.restTemplate.getForEntity("http://localhost:9000/api/system/status",String.class);
-               var sonarqubeStatus=  this.objectMapper.readValue(sonarqubeStatusResponse.getBody(), SonarQubeStatus.class);
-               if(sonarqubeStatus.status().equals("UP")){
-                   break;
-               }
+                var sonarqubeStatusResponse = this.restTemplate.getForEntity("http://localhost:9000/api/system/status",
+                        String.class);
+                var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
+                        SonarQubeStatus.class);
+                if (sonarqubeStatus.status().equals("UP")) {
+                    break;
+                }
 
             } catch (Exception e) {
-                this.logger.info("Sonarqube is not ready yet "+ e.getClass().getName());
+                this.logger.info("Sonarqube is not ready yet " + e.getClass().getName());
             }
             try {
                 Thread.sleep(5000);
@@ -72,7 +72,7 @@ public class SonarqubeStarter {
         }
     }
 
-    private void createNetwork(){
+    private void createNetwork() {
         List<Network> networks = dockerClient.listNetworksCmd().withNameFilter(NETWORK_NAME).exec();
         if (networks.isEmpty()) {
             CreateNetworkResponse networkResponse = dockerClient.createNetworkCmd().withName(NETWORK_NAME)
@@ -81,34 +81,27 @@ public class SonarqubeStarter {
         }
     }
 
+    private void prepareVaricitySonarqube() {
 
-
-    private void prepareVaricitySonarqube(){
-
-        if(checkIfImageExists("varicity-sonarqube", "latest")){
+        if (checkIfImageExists("varicity-sonarqube", "latest")) {
             return;
         }
 
-
         try {
-           Path dir= Files.createTempDirectory("sonarqube-docker-varicity");
-            Path dockerFilePath= Files.createTempFile(dir,"sonarqube-varicity",".dockerfile");
+            Path dir = Files.createTempDirectory("sonarqube-docker-varicity");
+            Path dockerFilePath = Files.createTempFile(dir, "sonarqube-varicity", ".dockerfile");
 
-
-            Files.copy(SonarqubeStarter.class.getClassLoader().getResourceAsStream("varicity-sonarqube.dockerfile"), dockerFilePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(SonarqubeStarter.class.getClassLoader().getResourceAsStream("varicity-sonarqube.dockerfile"),
+                    dockerFilePath, StandardCopyOption.REPLACE_EXISTING);
             String imageId = dockerClient.buildImageCmd()
 
                     .withDockerfile(dockerFilePath.toFile())
 
-                    .withPull(true)
-                    .withNoCache(true)
-                    .withTags(Set.of("varicity-sonarqube:latest"))
-                    .exec(new BuildImageResultCallback())
-                    .awaitImageId();
+                    .withPull(true).withNoCache(true).withTags(Set.of("varicity-sonarqube:latest"))
+                    .exec(new BuildImageResultCallback()).awaitImageId();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -116,7 +109,5 @@ public class SonarqubeStarter {
         return dockerClient.listImagesCmd().exec().stream()
                 .anyMatch(img -> Arrays.stream(img.getRepoTags()).anyMatch(name -> name.equals(image + ":" + tag)));
     }
-
-
 
 }

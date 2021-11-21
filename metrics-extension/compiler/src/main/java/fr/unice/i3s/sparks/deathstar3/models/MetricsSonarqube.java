@@ -4,8 +4,7 @@ import java.util.List;
 
 public class MetricsSonarqube {
 
-
-   private  List<Component> components;
+    private List<Component> components;
 
     public static final record Measure(String metric, String value) {
 

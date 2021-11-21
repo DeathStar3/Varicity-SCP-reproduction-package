@@ -23,22 +23,20 @@ import java.io.IOException;
 
 public class SonarqubeStarterTest {
 
-    private SonarqubeStarter sonarqubeStarter=new SonarqubeStarter();
+    private SonarqubeStarter sonarqubeStarter = new SonarqubeStarter();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
     private final RestTemplate restTemplate = new RestTemplate();
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
 
         try {
             dockerClient.stopContainerCmd("sonarqubehost").exec();
             dockerClient.removeContainerCmd("sonarqubehost").exec();
-        }
-        catch (NotModifiedException | NotFoundException exception){
+        } catch (NotModifiedException | NotFoundException exception) {
             ;
         }
-
 
     }
 
@@ -47,21 +45,21 @@ public class SonarqubeStarterTest {
 
         this.sonarqubeStarter.startSonarqube();
 
-        Assertions.assertDoesNotThrow(()->{
-            var sonarqubeStatusResponse= this.restTemplate.getForEntity("http://localhost:9000/api/system/status",String.class);
-            var sonarqubeStatus=  this.objectMapper.readValue(sonarqubeStatusResponse.getBody(), SonarQubeStatus.class);
-            Assertions.assertEquals(sonarqubeStatus.status(),"UP");
+        Assertions.assertDoesNotThrow(() -> {
+            var sonarqubeStatusResponse = this.restTemplate.getForEntity("http://localhost:9000/api/system/status",
+                    String.class);
+            var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(), SonarQubeStatus.class);
+            Assertions.assertEquals(sonarqubeStatus.status(), "UP");
         });
 
-
     }
+
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         try {
             dockerClient.stopContainerCmd("sonarqubehost").exec();
             dockerClient.removeContainerCmd("sonarqubehost").exec();
-        }
-        catch (NotModifiedException | NotFoundException exception){
+        } catch (NotModifiedException | NotFoundException exception) {
             ;
         }
     }

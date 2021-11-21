@@ -18,8 +18,10 @@ public class Metric {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Metric metric = (Metric) o;
         return Double.compare(metric.value, value) == 0 && name.equals(metric.name);
     }
@@ -31,9 +33,6 @@ public class Metric {
 
     @Override
     public String toString() {
-        return "Metric{" +
-                "name='" + name + '\'' +
-                ", value=" + value +
-                '}';
+        return "Metric{" + "name='" + name + '\'' + ", value=" + value + '}';
     }
 }

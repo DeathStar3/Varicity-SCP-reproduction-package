@@ -14,14 +14,15 @@ import static org.junit.Assert.assertNotNull;
 
 public class ConfigLoaderTest {
 
+    private ConfigLoader configLoader = new ConfigLoader();
 
-    private ConfigLoader configLoader=new ConfigLoader();
     @Test
     public void loadConfigFromStringTest() throws IOException {
-       var source= new String(ConfigLoaderTest.class.getClassLoader().getResourceAsStream("config.yaml").readAllBytes());
-       var config= this.configLoader.loadConfigFromString(source);
+        var source = new String(
+                ConfigLoaderTest.class.getClassLoader().getResourceAsStream("config.yaml").readAllBytes());
+        var config = this.configLoader.loadConfigFromString(source);
 
-        Assert.assertEquals(config.getProjectName() , "jfreechart");
+        Assert.assertEquals(config.getProjectName(), "jfreechart");
     }
 
 }
