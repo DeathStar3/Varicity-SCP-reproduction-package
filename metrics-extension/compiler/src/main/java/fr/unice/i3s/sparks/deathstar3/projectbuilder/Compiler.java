@@ -37,6 +37,7 @@ public class Compiler {
     private final Logger logger = Logger.getLogger(Compiler.class.getName());
 
     public static final String NETWORK_NAME = "varicity-config";
+    public static final String COMPILER_SCANNER_NAME = "varicity-compiler-scanner-container";
 
     private static final String SONARQUBE_LOCAL_URL = "http://localhost:9000";
 
@@ -117,7 +118,8 @@ public class Compiler {
         Volume volume = new Volume("/project");
 
         var command = dockerClient
-                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag());
+                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())
+                .withName(COMPILER_SCANNER_NAME);
         if (projectConfig.getBuildEnv().equals("maven")) { // to use sonar in maven jdk version need to be greater or
                                                            // equals to 11
 

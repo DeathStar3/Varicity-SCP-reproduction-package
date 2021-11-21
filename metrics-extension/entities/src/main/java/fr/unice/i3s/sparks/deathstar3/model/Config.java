@@ -18,7 +18,14 @@ public class Config {
 
     private String repositoryUrl;
     private String path;
+    /**
+     * The directory containing the classes to be analyzed by Symfinder
+     */
     private String sourcePackage;
+    /**
+     * The directory containing the pom.xml , build.xml, gradle file and/or from which we can run the build command
+     */
+    private String buildRoot;
     private List<String> tagIds;
     private String buildEnv;
     private String buildEnvTag;
@@ -30,11 +37,11 @@ public class Config {
     private String sourceCodePath = "sources"; // Optional
     private List<MetricSource> sources;
 
-    public Config(String projectName, String path, String sourcePackage, String buildEnv, String buildEnvTag,
+    public Config(String projectName, String path, String buildRoot, String buildEnv, String buildEnvTag,
             List<String> buildCmds, String sonarqubeUrl, boolean buildCmdIncludeSonar) {
         this.projectName = projectName;
         this.path = path;
-        this.sourcePackage = sourcePackage;
+        this.buildRoot = buildRoot;
         this.buildEnv = buildEnv;
         this.buildEnvTag = buildEnvTag;
 

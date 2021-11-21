@@ -15,22 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CompilerTest {
 
-    private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
     private SonarqubeStarter sonarqubeStarter = new SonarqubeStarter();
 
     private Compiler compiler = new Compiler();
-    Config project = new Config("CookieFactory", "/tmp/varicity-xp-projets/4A_ISA_TheCookieFactory", "j2e/", "maven",
-            "3.8-openjdk-8", List.of("mvn", "clean", "package", "-f", "/project/j2e/pom.xml"),
-            "http://sonarqubehost:9000", false);
 
-    Config jfreeChart = new Config("jfreechart", "/tmp/varicity-xp-projets/jfreechart", "", "maven", "3.8.2-jdk-11",
+    private Config jfreeChart = new Config("jfreechart", "/tmp/varicity-xp-projets/jfreechart", "", "maven",
+            "3.8.2-jdk-11", List.of("mvn", "clean", "install", "sonar:sonar", "-f", "/project/pom.xml"),
+            "http://sonarqubehost:9000", true);
+
+    private Config junit = new Config("junit", "/tmp/varicity-xp-projects/junit", "", "maven", "3.8.2-jdk-11",
             List.of("mvn", "clean", "install", "sonar:sonar", "-f", "/project/pom.xml"), "http://sonarqubehost:9000",
             true);
-
-    @Test
-    public void compileProjectTest() throws PullException {
-        compiler.compileProject(project);
-    }
 
     @Test
     public void getTokenTest() throws JsonProcessingException {
@@ -40,23 +35,23 @@ public class CompilerTest {
 
     }
 
-    @Test
-    public void runSonarScannerCliTest() throws JsonProcessingException {
-        var result = compiler.getToken("some_random_tokendeffd", "http://localhost:9000");
-        compiler.runSonarScannerCli(project, result);
-    }
-
-    @Test
-    public void listImagesTest() {
-        dockerClient.listImagesCmd().exec().forEach(image -> System.out.println(Arrays.toString(image.getRepoTags())));
-
-    }
-
+    /**
+     * the test is executed by a shell script which does the equivalent of the asserts
+     */
     @Test
     public void executeTest() {
 
         sonarqubeStarter.startSonarqube();
         compiler.executeProject(jfreeChart);
 
+    }
+
+    /**
+     * the test is executed by a shell script which does the equivalent of the asserts
+     */
+    @Test
+    public void compileAndScanJunit4() {
+        sonarqubeStarter.startSonarqube();
+        compiler.executeProject(junit);
     }
 }

@@ -15,7 +15,13 @@ jobs:
           distribution: 'adopt'
           cache: maven
 
-      - name: Test Jfree Chart
+      - name: Test Compiler on JfreeChart
         working-directory: ./metrics-extensions/integrations-test/test-jfreechart
         run: bash runtest.sh
+      - name: Test Compiler on Junit4
+        working-directory: ./metrics-extensions/integrations-test/test-junit4
+        run: bash runtest.sh
+
+
+
 

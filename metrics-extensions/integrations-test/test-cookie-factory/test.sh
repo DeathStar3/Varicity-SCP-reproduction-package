@@ -9,3 +9,4 @@ mvn clean verify -Dtest=CompilerTest#executeTest -DfailIfNoTests=false
 if [ ! -d $xpdirs/jfreechart/target ]; then
   exit 1
 fi
+

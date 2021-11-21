@@ -12,10 +12,13 @@ workingdir=$(pwd)
 
 # Projects
 ## Project 1
-git -C $xpdirs clone https://github.com/jfree/jfreechart.git
-cd $xpdirs/jfreechart
-git checkout 768e0502995a9c55a48fc26d579fe5128ad43539
+git -C $xpdirs clone https://github.com/junit-team/junit4.git
+cd $xpdirs/junit4
+git checkout r4.12
 cd $workingdir
+
+
+
 
 
 

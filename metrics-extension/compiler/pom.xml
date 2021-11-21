@@ -11,7 +11,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>compiler</name>
-  <!-- FIXME change it to the project's website -->
+  <!-- The project's website -->
   <url>https://deathstar3.github.io/symfinder-demo/</url>
 
   <properties>
