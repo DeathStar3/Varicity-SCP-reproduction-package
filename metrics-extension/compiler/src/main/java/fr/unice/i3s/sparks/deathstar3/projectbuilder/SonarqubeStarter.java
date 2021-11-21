@@ -77,7 +77,7 @@ public class SonarqubeStarter {
         if (networks.isEmpty()) {
             CreateNetworkResponse networkResponse = dockerClient.createNetworkCmd().withName(NETWORK_NAME)
                     .withAttachable(true).withDriver("bridge").exec();
-            System.out.printf("Network %s created...\n", networkResponse.getId());
+            logger.info(String.format("Network %s created...\n", networkResponse.getId()));
         }
     }
 
