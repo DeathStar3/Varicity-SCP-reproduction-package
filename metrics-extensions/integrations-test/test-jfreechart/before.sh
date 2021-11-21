@@ -3,7 +3,7 @@
 set -e
 xpdirs=/tmp/varicity-xp-projets
 if [ -d $xpdirs ]; then
-  rm -r $xpdirs
+  sudo rm -r $xpdirs
 fi
 
 mkdir $xpdirs
