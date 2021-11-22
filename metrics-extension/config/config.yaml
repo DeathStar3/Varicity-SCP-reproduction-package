@@ -1,12 +1,29 @@
 jfreechart:
   sourceCodePath: "source code path for local analysis"
   sources:
+    - name: "sonarcloud"
+      enabled: true
+      commands:
+        - "cmd 1"
+        - "cmd 2"
+      sourceUrl: "https://sonarcloud.io/api/measures/component_tree?component=denislilajFox_jfreechart"
+      metrics:
+        - "complexity"
+        - "cognitive_complexity"
+
+
+
+
+projectName: "denislilajFox_jfreechart"
+sourceCodePath: "source code path for local analysis"
+
+sources:
   - name: "sonarcloud"
     enabled: true
     commands:
-    - "cmd 1"
-    - "cmd 2"
-    sourceUrl: "https://sonarcloud.io/api/measures/component_tree?component=denislilajFox_jfreechart"
+      - "cmd 1"
+      - "cmd 2"
+    rootUrl: "https://sonarcloud.io"
     metrics:
-    - "complexity"
-    - "cognitive_complexity"
+      - "complexity"
+      - "cognitive_complexity"

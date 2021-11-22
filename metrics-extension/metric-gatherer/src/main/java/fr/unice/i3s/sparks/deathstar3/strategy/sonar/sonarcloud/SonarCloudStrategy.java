@@ -21,28 +21,20 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
     private final HttpRequest httpRequest = new HttpRequest();
 
     @Override
-    public List<Node> getMetrics(String sourceUrl, List<String> metricNames) throws IOException {
+    public List<Node> getMetrics(String sourceUrl, String projectName, List<String> metricNames) throws IOException {
 
-        SonarResults sonarResults = performHttpRequest(sourceUrl, metricNames);
+        SonarResults sonarResults = performHttpRequest(sourceUrl, projectName, metricNames);
         return formatResults(sonarResults);
     }
 
-    public SonarResults performHttpRequest(String sourceUrl, List<String> metricNames) throws IOException {
+    /**
+     * Query the Sonar API (https://sonarcloud.io/web_api/api/measures) to retrieve the metrics wanted
+     */
+    public SonarResults performHttpRequest(String rootUrl, String projectName, List<String> metricNames) throws IOException {
 
         int numElementsPerPage = 500;
-        String baseUrl = sourceUrl + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; // TODO
-                                                                                                                   // Manage
-                                                                                                                   // API
-                                                                                                                   // errors
-                                                                                                                   // when
-                                                                                                                   // the
-                                                                                                                   // metric
-                                                                                                                   // asked
-                                                                                                                   // is
-                                                                                                                   // not
-                                                                                                                   // find
-                                                                                                                   // by
-                                                                                                                   // sonar
+
+        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + projectName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
 
         SonarResults sonarResults = new SonarResults();
         sonarResults.setComponents(new ArrayList<>());
@@ -56,9 +48,9 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
             } catch (HttpResponseException e) {
                 e.printStackTrace();
 
-                if (e.getCode() == HttpStatus.SC_NOT_FOUND) {
-                    // Display the available metrics for the project
-                    displayAvailableMetrics("https://sonarcloud.io", "pfc-test.sonar%3Ajunit4-4.13.2");
+                if (e.getCode() == HttpStatus.SC_NOT_FOUND){
+                    //Display the available metrics for the project
+                    displayAvailableMetrics(rootUrl, projectName);
                 }
                 Thread.currentThread().stop(); // Kill thread: an error occur
             }
@@ -70,20 +62,21 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
             sonarResults.getComponents().addAll(sonarResultsTemp.getComponents());
 
             page++;
-        } while (sonarResults.getPaging()
-                .getTotal() > (sonarResults.getPaging().getPageIndex() * sonarResults.getPaging().getPageSize()));
+        } while (sonarResults.getPaging().getTotal() > (sonarResults.getPaging().getPageIndex() * sonarResults.getPaging().getPageSize()));
 
         return sonarResults;
     }
 
+    /**
+     * Format correctly the response form Sonar
+     */
     public List<Node> formatResults(SonarResults sonarResults) {
         List<Node> nodes = new ArrayList<>();
 
         for (SonarResults.Component component : sonarResults.getComponents()) {
 
             Node node = new Node();
-            node.setName(((component.getPath().replaceAll("^src/main/java/", "")).replaceAll("\\.java$", ""))
-                    .replaceAll("/", "."));
+            node.setName(((component.getPath().replaceAll("^src/main/java/", "")).replaceAll("\\.java$","")).replaceAll("/", "."));
             node.setMetrics(new ArrayList<>());
 
             for (SonarResults.Metric metric : component.getMeasures()) {
@@ -95,6 +88,9 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
         return nodes;
     }
 
+    /**
+     * In case of error we will display the available metrics
+     */
     public void displayAvailableMetrics(String rootUrl, String projectName) {
 
         String url = rootUrl + "/api/metrics/search?&component=" + projectName;
@@ -102,6 +98,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
         try {
             String json = httpRequest.get(url);
             SonarMetricAvailable sonarMetricAvailable = objectMapper.readValue(json, SonarMetricAvailable.class);
+
             System.out.println("\n >>> Project Name: " + projectName + " (source = SonarCloud)");
             sonarMetricAvailable.formatPrint();
         } catch (Exception e) {

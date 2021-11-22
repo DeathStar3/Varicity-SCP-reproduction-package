@@ -16,13 +16,18 @@ public class MetricSource {
     private String name; // Mandatory
     private boolean enabled = true; // Optional (default to true)
     private List<String> commands; // Optional
-    private String sourceUrl; // Mandatory
+    private String rootUrl; // Mandatory
 
     private List<String> metrics;
 
     @Override
     public String toString() {
-        return "MetricSource{" + "name='" + name + '\'' + ", enabled=" + enabled + ", commands=" + commands
-                + ", sourceUrl='" + sourceUrl + '\'' + ", metrics=" + metrics + '}';
+        return "MetricSource{" +
+                "name='" + name + '\'' +
+                ", enabled=" + enabled +
+                ", commands=" + commands +
+                ", rootUrl='" + rootUrl + '\'' +
+                ", metrics=" + metrics +
+                '}';
     }
 }

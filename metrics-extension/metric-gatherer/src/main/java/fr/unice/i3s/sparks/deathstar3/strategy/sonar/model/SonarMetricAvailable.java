@@ -31,8 +31,12 @@ public class SonarMetricAvailable {
 
         @Override
         public String toString() {
-            return "Metric{" + "key='" + key + '\'' + ", description='" + description + '\'' + ", type='" + type + '\''
-                    + ", hidden=" + hidden + '}';
+            return "Metric{" +
+                    "key='" + key + '\'' +
+                    ", description='" + description + '\'' +
+                    ", type='" + type + '\'' +
+                    ", hidden=" + hidden +
+                    '}';
         }
 
         public void formatPrint() {
@@ -49,15 +53,17 @@ public class SonarMetricAvailable {
 
     @Override
     public String toString() {
-        return "SonarMetricAvailable{" + "metrics=" + metrics + '}';
+        return "SonarMetricAvailable{" +
+                "metrics=" + metrics +
+                '}';
     }
 
     public void formatPrint() {
         System.out.printf(" %45s | %80s | %20s | %6s \n", "name", "description", "type", "hidden");
-        System.out.print(
-                " --------------------------------------------- | -------------------------------------------------------------------------------- | -------------------- | ------ \n");
-        for (Metric m : metrics) {
-            m.formatPrint();
+        System.out.print(" --------------------------------------------- | -------------------------------------------------------------------------------- | -------------------- | ------ \n");
+        for (Metric metric : metrics) {
+            metric.formatPrint();
         }
+        System.out.println("");
     }
 }

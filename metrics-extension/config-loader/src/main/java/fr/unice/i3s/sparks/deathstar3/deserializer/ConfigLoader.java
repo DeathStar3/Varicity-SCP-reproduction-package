@@ -17,6 +17,9 @@ public class ConfigLoader {
 
     private final ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
+    /**
+     * Parse the config file
+     */
     public Config loadConfigFromString(String source) {
         try {
             var exps = om.readValue(source, new TypeReference<HashMap<String, Config>>() {
@@ -37,7 +40,11 @@ public class ConfigLoader {
         throw new RuntimeException("Could not parse config");
     }
 
+    /**
+     * Load the config file
+     */
     public Config loadConfigFile(String fileName) {
+
         try {
             return loadConfigFromString(Files.readString(Path.of(fileName)));
         } catch (IOException e) {
