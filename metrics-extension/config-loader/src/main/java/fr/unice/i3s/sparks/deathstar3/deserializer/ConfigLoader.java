@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 public class ConfigLoader {
@@ -22,19 +20,20 @@ public class ConfigLoader {
     /**
      * Parse the config file
      */
-    public Config deserializeConfigFile(String source) {
+    public List<Config> deserializeConfigFile(String source) {
         try {
-            Map<String, Config> configs = mapper.readValue(source, new TypeReference<HashMap<String, Config>>() {
+            Map<String, Config> configsMap = mapper.readValue(source, new TypeReference<HashMap<String, Config>>() {
             });
 
-            configs.forEach((name, config) -> {
+            configsMap.forEach((name, config) -> {
                 config.setProjectName(name);
             });
 
+            List<Config> configs = new ArrayList<>(configsMap.values());
+
             //Check there is at least one config
-            Optional<Config> configOptional = configs.values().stream().findFirst();
-            if (configOptional.isPresent()) {
-                return configOptional.get();
+            if (!configs.isEmpty()) {
+                return configs;
             } else {
                 throw new RuntimeException("No config found in source");
             }
@@ -48,7 +47,7 @@ public class ConfigLoader {
     /**
      * Load the config file
      */
-    public Config loadConfigFile(String fileName) {
+    public List<Config> loadConfigFile(String fileName) {
 
         try {
             return deserializeConfigFile(Files.readString(Path.of(fileName)));

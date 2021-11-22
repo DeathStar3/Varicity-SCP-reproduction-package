@@ -23,3 +23,17 @@ junit-r4.12: #Project name
       metrics:
         - "complexity"
         - "cognitive_complexity"
+
+jfreechart:
+  sourceCodePath: "source code path for local analysis"
+  sources:
+    - name: "sonarcloud"
+      enabled: true
+      sourceProjectName: "denislilajFox_jfreechart"
+      commands:
+        - "cmd 1"
+        - "cmd 2"
+      rootUrl: "https://sonarcloud.io"
+      metrics:
+        - "complexity"
+        - "cognitive_complexity"

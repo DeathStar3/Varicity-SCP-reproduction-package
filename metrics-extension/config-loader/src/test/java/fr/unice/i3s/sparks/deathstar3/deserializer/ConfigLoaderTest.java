@@ -17,7 +17,7 @@ public class ConfigLoaderTest {
                 ConfigLoaderTest.class.getClassLoader().getResourceAsStream("config.yaml").readAllBytes());
         var config = this.configLoader.deserializeConfigFile(source);
 
-        Assert.assertEquals(config.getProjectName(), "jfreechart");
+        Assert.assertEquals(config.get(0).getProjectName(), "jfreechart");
     }
 
 }

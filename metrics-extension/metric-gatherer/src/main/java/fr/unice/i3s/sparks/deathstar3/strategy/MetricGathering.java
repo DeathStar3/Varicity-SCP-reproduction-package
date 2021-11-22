@@ -19,14 +19,14 @@ public class MetricGathering {
     /**
      * Gather the metrics for a given source and save them in a Json file
      */
-    public void gatherAndSaveMetrics(String sourceUrl, String sourceProjectName, List<String> metrics, String outputFileName) {
+    public void gatherAndSaveMetrics(String sourceUrl, String sourceProjectName, List<String> metrics, String outputPath) {
 
         try {
             List<Node> nodes = strategy.getMetrics(sourceUrl, sourceProjectName, metrics);
-            log.info("Metrics gathered: " + nodes);
+            log.debug("Metrics gathered: " + nodes);
 
             JsonSerializer serializer = new JsonSerializer();
-            serializer.generateAndSaveJson(nodes, outputFileName + "-" + new Date().getTime() + ".json");
+            serializer.generateAndSaveJson(nodes, outputPath + "-" + new Date().getTime() + ".json");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,7 +1,9 @@
 package fr.unice.i3s.sparks.deathstar3;
 
-import fr.unice.i3s.sparks.deathstar3.model.Config;
 import fr.unice.i3s.sparks.deathstar3.deserializer.ConfigLoader;
+import fr.unice.i3s.sparks.deathstar3.model.Config;
+
+import java.util.List;
 
 public class Main {
 
@@ -16,10 +18,12 @@ public class Main {
         // TODO Filter configFile to call project builder and test runner one one side and directly MetricGatherer for the rest
 
         ConfigLoader configLoader = new ConfigLoader();
-        Config config = configLoader.loadConfigFile(configFilePath);
+        List<Config> configs = configLoader.loadConfigFile(configFilePath);
 
         MetricGatherer metricGatherer = new MetricGatherer();
-        metricGatherer.gatherMetrics(config);
+        for (Config config : configs) {
+            metricGatherer.gatherMetrics(config);
+        }
 
     }
 }
