@@ -2,11 +2,14 @@ package fr.unice.i3s.sparks.deathstar3.strategy.sonar.sonarcloud;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import fr.unice.i3s.sparks.deathstar3.exception.HttpResponseException;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Metric;
 import fr.unice.i3s.sparks.deathstar3.strategy.MetricGatheringStrategy;
+import fr.unice.i3s.sparks.deathstar3.strategy.sonar.model.SonarMetricAvailable;
 import fr.unice.i3s.sparks.deathstar3.strategy.sonar.model.SonarResults;
 import fr.unice.i3s.sparks.deathstar3.utils.HttpRequest;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
+import org.apache.hc.core5.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,8 +49,20 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
 
         int page = 1;
         do {
-            // Make the http request to Sonar Cloud
-            String json = httpRequest.get(baseUrl + "&p=" + page);
+            String json = null;
+            try {
+                // Make the http request to Sonar Cloud
+                json = httpRequest.get(baseUrl + "&p=" + page);
+            } catch (HttpResponseException e) {
+                e.printStackTrace();
+
+                if (e.getCode() == HttpStatus.SC_NOT_FOUND) {
+                    // Display the available metrics for the project
+                    displayAvailableMetrics("https://sonarcloud.io", "pfc-test.sonar%3Ajunit4-4.13.2");
+                }
+                Thread.currentThread().stop(); // Kill thread: an error occur
+            }
+
             SonarResults sonarResultsTemp = objectMapper.readValue(json, SonarResults.class);
 
             // Update SonarResults
@@ -78,5 +93,19 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
             nodes.add(node);
         }
         return nodes;
+    }
+
+    public void displayAvailableMetrics(String rootUrl, String projectName) {
+
+        String url = rootUrl + "/api/metrics/search?&component=" + projectName;
+
+        try {
+            String json = httpRequest.get(url);
+            SonarMetricAvailable sonarMetricAvailable = objectMapper.readValue(json, SonarMetricAvailable.class);
+            System.out.println("\n >>> Project Name: " + projectName + " (source = SonarCloud)");
+            sonarMetricAvailable.formatPrint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

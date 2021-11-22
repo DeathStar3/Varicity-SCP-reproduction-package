@@ -21,6 +21,9 @@ jobs:
       - name: Test Compiler on Junit4
         working-directory: ./metrics-extensions/integrations-test/test-junit4
         run: bash runtest.sh
+#      - name: Test Compiler on ArgoUML-SPL
+#        working-directory: ./metrics-extensions/integrations-test/test-argouml-spl
+#        run: bash runtest.sh
 
 
 

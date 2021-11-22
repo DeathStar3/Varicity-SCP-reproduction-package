@@ -13,6 +13,8 @@ import com.github.dockerjava.core.DockerClientBuilder;
 import fr.unice.i3s.sparks.deathstar3.exceptions.PullException;
 import fr.unice.i3s.sparks.deathstar3.model.Config;
 import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpEntity;
@@ -28,13 +30,13 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+@Log
 public class Compiler {
 
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final Logger logger = Logger.getLogger(Compiler.class.getName());
 
     public static final String NETWORK_NAME = "varicity-config";
     public static final String COMPILER_SCANNER_NAME = "varicity-compiler-scanner-container";
@@ -48,7 +50,7 @@ public class Compiler {
     public void executeProject(Config projectConfig) {
 
         if (projectConfig.isBuildCmdIncludeSonar()) {
-            logger.info("Hello " + projectConfig);
+            log.info("Hello " + projectConfig);
             try {
                 var compileAndScanProjectId = this.compileAndScanProject(projectConfig);
                 waitForContainerCorrectExit(compileAndScanProjectId);
@@ -77,8 +79,8 @@ public class Compiler {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
 
         while (!container.getState().getStatus().strip().equals("exited")) {
-            logger.info(container.getState().toString());
-            logger.info(containerId + " : " + container.getState().getStatus());
+            log.info(container.getState().toString());
+            log.info(containerId + " : " + container.getState().getStatus());
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
@@ -89,10 +91,11 @@ public class Compiler {
         }
 
         if (container.getState().getExitCodeLong() != 0) {
-            logger.severe("Container exited with non-zero code");
+
+            log.severe("Container exited with non-zero code");
         }
 
-        logger.info("End waiting for " + containerId + " " + container.getState());
+        log.info("End waiting for " + containerId + " " + container.getState());
     }
 
     /**
@@ -107,7 +110,7 @@ public class Compiler {
             try {
                 downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
             } catch (PullException exception) {
-                this.logger.severe("Cannot pull image necessary to compile project");
+                this.log.severe("Cannot pull image necessary to compile project");
                 System.exit(1);
             }
 
@@ -146,7 +149,7 @@ public class Compiler {
             try {
                 downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
             } catch (PullException exception) {
-                this.logger.severe("Cannot pull image necessary to compile project");
+                this.log.severe("Cannot pull image necessary to compile project");
                 System.exit(1);
             }
 

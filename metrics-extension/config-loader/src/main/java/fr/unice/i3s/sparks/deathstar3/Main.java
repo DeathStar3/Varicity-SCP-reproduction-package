@@ -14,6 +14,9 @@ public class Main {
             configFilePath = args[0];
         }
 
+        // TODO Filter configFile to call project builder and test runner one one side and directly MetricGatherer for
+        // the rest
+
         ConfigLoader configLoader = new ConfigLoader();
         Config config = configLoader.loadConfigFile(configFilePath);
 
