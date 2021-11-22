@@ -12,7 +12,7 @@ junit-r4.12: #Project name
         - "complexity"
         - "cognitive_complexity"
 
-jfreechart: #Project name
+jfreechart-v1.5.0:
   sourceCodePath: "source code path for local analysis"
   sources:
     - name: "sonarcloud"
