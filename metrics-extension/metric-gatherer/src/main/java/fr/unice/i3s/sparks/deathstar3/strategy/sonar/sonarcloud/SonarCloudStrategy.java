@@ -30,11 +30,11 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
     /**
      * Query the Sonar API (https://sonarcloud.io/web_api/api/measures) to retrieve the metrics wanted
      */
-    public SonarResults performHttpRequest(String sourceUrl, String projectName, List<String> metricNames) throws IOException {
+    public SonarResults performHttpRequest(String rootUrl, String projectName, List<String> metricNames) throws IOException {
 
         int numElementsPerPage = 500;
 
-        String baseUrl = sourceUrl + "/api/measures/component_tree?component=" + projectName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
+        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + projectName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
 
         SonarResults sonarResults = new SonarResults();
         sonarResults.setComponents(new ArrayList<>());
@@ -50,7 +50,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
 
                 if (e.getCode() == HttpStatus.SC_NOT_FOUND){
                     //Display the available metrics for the project
-                    displayAvailableMetrics("https://sonarcloud.io", "pfc-test.sonar%3Ajunit4-4.13.2");
+                    displayAvailableMetrics(rootUrl, projectName);
                 }
                 Thread.currentThread().stop(); //Kill thread: an error occur
             }
