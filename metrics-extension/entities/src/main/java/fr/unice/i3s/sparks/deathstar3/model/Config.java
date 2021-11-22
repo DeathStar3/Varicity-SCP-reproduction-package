@@ -32,7 +32,7 @@ public class Config {
     private List<String> buildCmds;
     private boolean buildCmdIncludeSonar;
     private String sonarqubeUrl;
-    private String outputPath = "metrics-extension/output"; // Optional
+    private String outputPath = "generated_visualizations/data/externals"; // Optional
     private String sourceCodePath = "sources"; // Optional
     private List<MetricSource> sources;
 
