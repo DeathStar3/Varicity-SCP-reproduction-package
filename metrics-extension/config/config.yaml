@@ -8,7 +8,7 @@ sources:
   commands:
   - "cmd 1"
   - "cmd 2"
-  sourceUrl: "https://sonarcloud.io"
+  rootUrl: "https://sonarcloud.io"
   metrics:
   - "complexity"
   - "cognitive_complexity"
