@@ -11,6 +11,9 @@ public class SonarQubeStrategy extends SonarCloudStrategy {
     private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
     private final HttpRequest httpRequest = new HttpRequest();
 
+    /**
+     * In case of error we will display the available metrics
+     */
     @Override
     public void displayAvailableMetrics(String rootUrl, String projectName) {
 
@@ -19,6 +22,7 @@ public class SonarQubeStrategy extends SonarCloudStrategy {
         try {
             String json = httpRequest.get(url);
             SonarMetricAvailable sonarMetricAvailable = objectMapper.readValue(json, SonarMetricAvailable.class);
+
             System.out.println("\n >>> Project Name: " + projectName + " (source = SonarQube)");
             sonarMetricAvailable.formatPrint();
         } catch (Exception e) {
