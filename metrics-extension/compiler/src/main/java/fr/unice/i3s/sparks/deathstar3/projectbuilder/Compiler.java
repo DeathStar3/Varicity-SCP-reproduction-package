@@ -30,16 +30,17 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-@Log
 public class Compiler {
 
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
-
+    private final Logger log = Logger.getLogger(Compiler.class.getName());
     public static final String NETWORK_NAME = "varicity-config";
     public static final String COMPILER_SCANNER_NAME = "varicity-compiler-scanner-container";
+    public static final String COMPILER_NAME = "varicity-compiler-container";
+    public static final String SCANNER_NAME = "varicity-scanner-container";
 
     private static final String SONARQUBE_LOCAL_URL = "http://localhost:9000";
 
@@ -158,6 +159,7 @@ public class Compiler {
         Volume volume = new Volume("/project");
         CreateContainerResponse container = dockerClient
                 .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())
+                .withName(COMPILER_NAME)
                 .withHostConfig(
                         HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
                 .withEntrypoint(projectConfig.getBuildCmds()).exec();// TODO assuming the project is a mvn project
@@ -216,14 +218,15 @@ public class Compiler {
 
         Volume volume = new Volume("/usr/src");
         String completePath = "";
-        if (projectConfig.getSourcePackage().isBlank() || projectConfig.getSourcePackage().strip().equals(".")) {
+        if (projectConfig.getSourcePackage() == null || projectConfig.getSourcePackage().isBlank()
+                || projectConfig.getSourcePackage().strip().equals(".")) {
             completePath = projectConfig.getPath();
         } else {
             completePath = projectConfig.getPath() + "/" + projectConfig.getSourcePackage();
         }
 
         CreateContainerResponse container = dockerClient.createContainerCmd("sonarsource/sonar-scanner-cli")
-                .withEnv("SONAR_LOGIN=" + token.token())
+                .withName(SCANNER_NAME).withEnv("SONAR_LOGIN=" + token.token())
                 .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(completePath, volume, AccessMode.rw))
                         .withNetworkMode(NETWORK_NAME))
 

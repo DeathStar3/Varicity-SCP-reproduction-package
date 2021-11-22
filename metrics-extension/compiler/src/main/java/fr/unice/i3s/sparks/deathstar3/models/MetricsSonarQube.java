@@ -2,7 +2,7 @@ package fr.unice.i3s.sparks.deathstar3.models;
 
 import java.util.List;
 
-public class MetricsSonarqube {
+public class MetricsSonarQube {
 
     private List<Component> components;
 

@@ -30,12 +30,12 @@ import java.util.logging.Logger;
 
 import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Compiler.NETWORK_NAME;
 
-public class SonarqubeStarter {
+public class SonarQubeStarter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
     private final RestTemplate restTemplate = new RestTemplate();
-    private final Logger logger = Logger.getLogger(SonarqubeStarter.class.getName());
+    private final Logger logger = Logger.getLogger(SonarQubeStarter.class.getName());
 
     public void startSonarqube() {
 
@@ -91,7 +91,7 @@ public class SonarqubeStarter {
             Path dir = Files.createTempDirectory("sonarqube-docker-varicity");
             Path dockerFilePath = Files.createTempFile(dir, "sonarqube-varicity", ".dockerfile");
 
-            Files.copy(SonarqubeStarter.class.getClassLoader().getResourceAsStream("varicity-sonarqube.dockerfile"),
+            Files.copy(SonarQubeStarter.class.getClassLoader().getResourceAsStream("varicity-sonarqube.dockerfile"),
                     dockerFilePath, StandardCopyOption.REPLACE_EXISTING);
             String imageId = dockerClient.buildImageCmd()
 
