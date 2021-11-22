@@ -1,5 +1,5 @@
 
-projectName: "jfreechart-v1.5.0"
+projectName: "denislilajFox_jfreechart"
 sourceCodePath: "source code path for local analysis"
 
 sources:
@@ -8,7 +8,7 @@ sources:
   commands:
   - "cmd 1"
   - "cmd 2"
-  sourceUrl: "https://sonarcloud.io/api/measures/component_tree?component=denislilajFox_jfreechart"
+  rootUrl: "https://sonarcloud.io"
   metrics:
   - "complexity"
   - "cognitive_complexity"
