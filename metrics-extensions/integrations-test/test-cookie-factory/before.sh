@@ -16,10 +16,3 @@ git -C $xpdirs clone https://github.com/jfree/jfreechart.git
 cd $xpdirs/jfreechart
 git checkout 768e0502995a9c55a48fc26d579fe5128ad43539
 cd $workingdir
-
-
-
-
-
-
-

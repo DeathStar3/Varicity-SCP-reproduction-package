@@ -1,24 +1,20 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientBuilder;
-
-import fr.unice.i3s.sparks.deathstar3.exceptions.PullException;
 import fr.unice.i3s.sparks.deathstar3.model.Config;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CompilerTest {
 

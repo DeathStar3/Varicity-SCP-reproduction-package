@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.CreateNetworkResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
-import com.github.dockerjava.api.model.*;
+import com.github.dockerjava.api.model.AccessMode;
+import com.github.dockerjava.api.model.Bind;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DockerClientBuilder;
-
 import fr.unice.i3s.sparks.deathstar3.exceptions.PullException;
 import fr.unice.i3s.sparks.deathstar3.model.Config;
 import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -28,15 +28,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
+@Slf4j
 public class Compiler {
 
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final Logger log = Logger.getLogger(Compiler.class.getName());
     public static final String NETWORK_NAME = "varicity-config";
     public static final String COMPILER_SCANNER_NAME = "varicity-compiler-scanner-container";
     public static final String COMPILER_NAME = "varicity-compiler-container";
@@ -93,7 +92,7 @@ public class Compiler {
 
         if (container.getState().getExitCodeLong() != 0) {
 
-            log.severe("Container exited with non-zero code");
+            log.error("Container exited with non-zero code");
         }
 
         log.info("End waiting for " + containerId + " " + container.getState());
@@ -101,9 +100,8 @@ public class Compiler {
 
     /**
      * Compile and scan the project in the same step if
-     * 
+     *
      * @param projectConfig
-     * 
      * @return the containerId
      */
     public String compileAndScanProject(Config projectConfig) throws JsonProcessingException {
@@ -111,8 +109,8 @@ public class Compiler {
             try {
                 downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
             } catch (PullException exception) {
-                this.log.severe("Cannot pull image necessary to compile project");
-                System.exit(1);
+                this.log.error("Cannot pull image necessary to compile project");
+                System.exit(1); //TODO All the System.exit need to be replace with a Thread exit !
             }
 
         }
@@ -125,7 +123,7 @@ public class Compiler {
                 .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())
                 .withName(COMPILER_SCANNER_NAME);
         if (projectConfig.getBuildEnv().equals("maven")) { // to use sonar in maven jdk version need to be greater or
-                                                           // equals to 11
+            // equals to 11
 
             List<String> mvnCommmands = new ArrayList<>(projectConfig.getBuildCmds());
             mvnCommmands.add("-Dsonar.login=" + result.token());
@@ -135,7 +133,7 @@ public class Compiler {
         }
 
         var container = command.withHostConfig(HostConfig.newHostConfig()
-                .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)).withNetworkMode(NETWORK_NAME))
+                        .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)).withNetworkMode(NETWORK_NAME))
                 .exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
@@ -150,7 +148,7 @@ public class Compiler {
             try {
                 downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
             } catch (PullException exception) {
-                this.log.severe("Cannot pull image necessary to compile project");
+                this.log.error("Cannot pull image necessary to compile project");
                 System.exit(1);
             }
 
@@ -197,11 +195,9 @@ public class Compiler {
 
     /**
      * https://www.baeldung.com/how-to-use-resttemplate-with-basic-authentication-in-spring
-     * 
+     *
      * @param token_name
-     * 
      * @return
-     * 
      * @throws JsonProcessingException
      */
     public SonarQubeToken getToken(String token_name, String sonarqubeUrl) throws JsonProcessingException {
@@ -229,7 +225,6 @@ public class Compiler {
                 .withName(SCANNER_NAME).withEnv("SONAR_LOGIN=" + token.token())
                 .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(completePath, volume, AccessMode.rw))
                         .withNetworkMode(NETWORK_NAME))
-
                 .withEnv("SONAR_HOST_URL=" + projectConfig.getSonarqubeUrl()).exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();

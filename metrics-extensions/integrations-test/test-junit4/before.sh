@@ -16,13 +16,3 @@ git -C $xpdirs clone https://github.com/junit-team/junit4.git
 cd $xpdirs/junit4
 #git checkout r4.12
 cd $workingdir
-
-
-
-
-
-
-
-
-
-

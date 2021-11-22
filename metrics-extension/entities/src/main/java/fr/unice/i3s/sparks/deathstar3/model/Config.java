@@ -15,7 +15,6 @@ public class Config {
 
     @NotBlank()
     private String projectName;
-
     private String repositoryUrl;
     private String path;
     /**
