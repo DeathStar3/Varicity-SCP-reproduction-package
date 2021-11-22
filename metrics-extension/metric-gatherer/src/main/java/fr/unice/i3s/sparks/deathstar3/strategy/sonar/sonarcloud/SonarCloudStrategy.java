@@ -2,11 +2,13 @@ package fr.unice.i3s.sparks.deathstar3.strategy.sonar.sonarcloud;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import fr.unice.i3s.sparks.deathstar3.exception.HttpResponseException;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Metric;
 import fr.unice.i3s.sparks.deathstar3.strategy.MetricGatheringStrategy;
 import fr.unice.i3s.sparks.deathstar3.strategy.sonar.model.SonarResults;
 import fr.unice.i3s.sparks.deathstar3.utils.HttpRequest;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
+import org.apache.hc.core5.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +36,20 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
 
         int page = 1;
         do {
-            //Make the http request to Sonar Cloud
-            String json = httpRequest.get(baseUrl + "&p=" + page);
+            String json = null;
+            try {
+                //Make the http request to Sonar Cloud
+                json = httpRequest.get(baseUrl + "&p=" + page);
+            } catch (HttpResponseException e) {
+                e.printStackTrace();
+
+                if (e.getCode() == HttpStatus.SC_NOT_FOUND){
+                    //Display the available metrics for the project
+
+                }
+                System.exit(0); //Kill process: error
+            }
+
             SonarResults sonarResultsTemp = objectMapper.readValue(json, SonarResults.class);
 
             //Update SonarResults
