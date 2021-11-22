@@ -10,23 +10,30 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.*;
 
 @Slf4j
 public class ConfigLoader {
 
-    private final ObjectMapper om = new ObjectMapper(new YAMLFactory());
+    private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-    public Config loadConfigFromString(String source) {
+    /**
+     * Parse the config file
+     */
+    public List<Config> deserializeConfigFile(String source) {
         try {
-            var exps = om.readValue(source, new TypeReference<HashMap<String, Config>>() {
+            Map<String, Config> configsMap = mapper.readValue(source, new TypeReference<HashMap<String, Config>>() {
             });
-            exps.forEach((name, exp) -> {
-                exp.setProjectName(name);
+
+            configsMap.forEach((name, config) -> {
+                config.setProjectName(name);
             });
-            var optExp = exps.values().stream().findFirst();
-            if (optExp.isPresent()) {
-                return optExp.get();
+
+            List<Config> configs = new ArrayList<>(configsMap.values());
+
+            //Check there is at least one config
+            if (!configs.isEmpty()) {
+                return configs;
             } else {
                 throw new RuntimeException("No config found in source");
             }
@@ -37,9 +44,13 @@ public class ConfigLoader {
         throw new RuntimeException("Could not parse config");
     }
 
-    public Config loadConfigFile(String fileName) {
+    /**
+     * Load the config file
+     */
+    public List<Config> loadConfigFile(String fileName) {
+
         try {
-            return loadConfigFromString(Files.readString(Path.of(fileName)));
+            return deserializeConfigFile(Files.readString(Path.of(fileName)));
         } catch (IOException e) {
             e.printStackTrace();
         }

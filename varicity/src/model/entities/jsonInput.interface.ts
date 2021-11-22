@@ -43,3 +43,8 @@ export interface JsonInputInterface {
     linkscompose: LinkInterface[];
     alllinks: LinkInterface[];
 }
+
+export interface MetricClassInterface {
+    name: string;
+    metrics: MetricObject[];
+}

@@ -15,6 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class MetricGatherer {
 
+    /**
+     * Gather for each source in Config the associate metrics
+     */
     public void gatherMetrics(Config config) {
 
         List<Thread> threads = new ArrayList<>();
@@ -28,12 +31,10 @@ public class MetricGatherer {
                         MetricGathering strategy = strategySelection(metricSource.getName());
 
                         if (strategy != null) {
-                            String outputFileName = config.getOutputPath() + "/" + metricSource.getName() + "/"
-                                    + config.getProjectName();
-                            strategy.gatherAndSaveMetrics(metricSource.getSourceUrl(), metricSource.getMetrics(),
-                                    outputFileName);
+                            String outputPath = config.getOutputPath() + "/" + config.getProjectName() + "/" + metricSource.getName() + "/" + config.getProjectName();
+                            strategy.gatherAndSaveMetrics(metricSource.getRootUrl(), metricSource.getSourceProjectName(), metricSource.getMetrics(), outputPath);
                         }
-                        log.info("The metrics from " + metricSource.getName() + " were collected and saved (json)");
+                        log.info("The metrics from " + config.getProjectName() + ":" + metricSource.getName() + " were collected and saved (json)");
                     }
                 };
                 threads.add(t);
@@ -54,19 +55,22 @@ public class MetricGatherer {
             }
         }
 
-        log.info("Metrics-extension process completed!");
+        log.info("Metrics-extension process completed for project: " + config.getProjectName() + "!");
     }
 
+    /**
+     * Select the Strategy to run using the sourceName
+     */
     public MetricGathering strategySelection(String sourceName) {
-        switch (sourceName) {
-        case "sonar-qube":
-        case "sonarqube":
-            return new MetricGathering(new SonarQubeStrategy());
-        case "sonar-cloud":
-        case "sonarcloud":
-            return new MetricGathering(new SonarCloudStrategy());
-        default:
-            return null;
+        switch (sourceName.toLowerCase()) {
+            case "sonar-qube":
+            case "sonarqube":
+                return new MetricGathering(new SonarQubeStrategy());
+            case "sonar-cloud":
+            case "sonarcloud":
+                return new MetricGathering(new SonarCloudStrategy());
+            default:
+                return null;
         }
     }
 }
