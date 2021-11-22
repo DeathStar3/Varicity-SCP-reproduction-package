@@ -1,18 +1,6 @@
 junit-r4.12: #Project name
   sourceCodePath: "source code path for local analysis"
   sources:
-    - name: "sonarqube"
-      enabled: true
-      sourceProjectName: "junit%3Ajunit"
-      commands:
-        - "cmd 1"
-        - "cmd 2"
-      rootUrl: "http://localhost:9000"
-      metrics:
-        - "complexity"
-        - "cognitive_complexity"
-        - "coverage"
-
     - name: "sonarcloud"
       enabled: true
       sourceProjectName: "pfc-test.sonar%3Ajunit4-4.13.2"
@@ -24,7 +12,7 @@ junit-r4.12: #Project name
         - "complexity"
         - "cognitive_complexity"
 
-jfreechart:
+jfreechart: #Project name
   sourceCodePath: "source code path for local analysis"
   sources:
     - name: "sonarcloud"
