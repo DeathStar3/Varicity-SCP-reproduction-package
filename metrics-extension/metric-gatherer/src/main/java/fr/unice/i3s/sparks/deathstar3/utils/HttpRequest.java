@@ -35,7 +35,7 @@ public class HttpRequest {
 
                 int responseCode = response.getCode();
 
-                if (responseCode > 200 && responseCode < 299) { //No error (2XX) return request result
+                if (responseCode >= 200 && responseCode <= 299) { //No error (2XX) return request result
                     return result.toString();
                 } else {
                     throw new HttpResponseException(responseCode, url, result.toString());

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import fr.unice.i3s.sparks.deathstar3.exception.HttpResponseException;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Metric;
 import fr.unice.i3s.sparks.deathstar3.strategy.MetricGatheringStrategy;
+import fr.unice.i3s.sparks.deathstar3.strategy.sonar.model.SonarMetricAvailable;
 import fr.unice.i3s.sparks.deathstar3.strategy.sonar.model.SonarResults;
 import fr.unice.i3s.sparks.deathstar3.utils.HttpRequest;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
@@ -45,9 +46,9 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
 
                 if (e.getCode() == HttpStatus.SC_NOT_FOUND){
                     //Display the available metrics for the project
-
+                    displayAvailableMetrics("https://sonarcloud.io", "pfc-test.sonar%3Ajunit4-4.13.2");
                 }
-                System.exit(0); //Kill process: error
+                Thread.currentThread().stop(); //Kill thread: an error occur
             }
 
             SonarResults sonarResultsTemp = objectMapper.readValue(json, SonarResults.class);
@@ -78,5 +79,19 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
             nodes.add(node);
         }
         return nodes;
+    }
+
+    public void displayAvailableMetrics(String rootUrl, String projectName) {
+
+        String url = rootUrl + "/api/metrics/search?&component=" + projectName;
+
+        try {
+            String json = httpRequest.get(url);
+            SonarMetricAvailable sonarMetricAvailable = objectMapper.readValue(json, SonarMetricAvailable.class);
+            System.out.println("\n >>> Project Name: " + projectName + " (source = SonarCloud)");
+            sonarMetricAvailable.formatPrint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
