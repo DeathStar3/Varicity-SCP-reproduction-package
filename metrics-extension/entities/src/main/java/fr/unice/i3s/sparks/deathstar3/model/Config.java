@@ -38,7 +38,7 @@ public class Config {
     private List<MetricSource> sources;
 
     public Config(String projectName, String path, String buildRoot, String buildEnv, String buildEnvTag,
-            List<String> buildCmds, String sonarqubeUrl, boolean buildCmdIncludeSonar) {
+                  List<String> buildCmds, String sonarqubeUrl, boolean buildCmdIncludeSonar) {
         this.projectName = projectName;
         this.path = path;
         this.buildRoot = buildRoot;

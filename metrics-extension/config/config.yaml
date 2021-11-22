@@ -1,29 +1,25 @@
-jfreechart:
+junit-r4.12: #Project name
   sourceCodePath: "source code path for local analysis"
   sources:
-    - name: "sonarcloud"
+    - name: "sonarqube"
       enabled: true
+      sourceProjectName: "junit%3Ajunit"
       commands:
         - "cmd 1"
         - "cmd 2"
-      sourceUrl: "https://sonarcloud.io/api/measures/component_tree?component=denislilajFox_jfreechart"
+      rootUrl: "http://localhost:9000"
       metrics:
         - "complexity"
         - "cognitive_complexity"
+        - "coverage"
 
-
-
-
-projectName: "denislilajFox_jfreechart"
-sourceCodePath: "source code path for local analysis"
-
-sources:
-  - name: "sonarcloud"
-    enabled: true
-    commands:
-      - "cmd 1"
-      - "cmd 2"
-    rootUrl: "https://sonarcloud.io"
-    metrics:
-      - "complexity"
-      - "cognitive_complexity"
+    - name: "sonarcloud"
+      enabled: true
+      sourceProjectName: "pfc-test.sonar%3Ajunit4-4.13.2"
+      commands:
+        - "cmd 1"
+        - "cmd 2"
+      rootUrl: "https://sonarcloud.io"
+      metrics:
+        - "complexity"
+        - "cognitive_complexity"

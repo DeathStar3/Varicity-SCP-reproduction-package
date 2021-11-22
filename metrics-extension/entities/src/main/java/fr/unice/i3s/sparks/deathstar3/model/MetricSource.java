@@ -14,6 +14,7 @@ import java.util.List;
 public class MetricSource {
 
     private String name; // Mandatory
+    private String sourceProjectName; // Mandatory
     private boolean enabled = true; // Optional (default to true)
     private List<String> commands; // Optional
     private String rootUrl; // Mandatory

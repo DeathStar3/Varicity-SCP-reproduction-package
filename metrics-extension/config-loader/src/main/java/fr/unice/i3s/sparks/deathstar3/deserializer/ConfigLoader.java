@@ -11,25 +11,30 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 public class ConfigLoader {
 
-    private final ObjectMapper om = new ObjectMapper(new YAMLFactory());
+    private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     /**
      * Parse the config file
      */
-    public Config loadConfigFromString(String source) {
+    public Config deserializeConfigFile(String source) {
         try {
-            var exps = om.readValue(source, new TypeReference<HashMap<String, Config>>() {
+            Map<String, Config> configs = mapper.readValue(source, new TypeReference<HashMap<String, Config>>() {
             });
-            exps.forEach((name, exp) -> {
-                exp.setProjectName(name);
+
+            configs.forEach((name, config) -> {
+                config.setProjectName(name);
             });
-            var optExp = exps.values().stream().findFirst();
-            if (optExp.isPresent()) {
-                return optExp.get();
+
+            //Check there is at least one config
+            Optional<Config> configOptional = configs.values().stream().findFirst();
+            if (configOptional.isPresent()) {
+                return configOptional.get();
             } else {
                 throw new RuntimeException("No config found in source");
             }
@@ -46,7 +51,7 @@ public class ConfigLoader {
     public Config loadConfigFile(String fileName) {
 
         try {
-            return loadConfigFromString(Files.readString(Path.of(fileName)));
+            return deserializeConfigFile(Files.readString(Path.of(fileName)));
         } catch (IOException e) {
             e.printStackTrace();
         }

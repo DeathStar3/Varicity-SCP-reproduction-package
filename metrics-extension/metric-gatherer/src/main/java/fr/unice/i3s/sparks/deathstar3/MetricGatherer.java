@@ -33,7 +33,7 @@ public class MetricGatherer {
 
                         if (strategy != null) {
                             String outputFileName = config.getOutputPath() + "/" + metricSource.getName() + "/" + config.getProjectName();
-                            strategy.gatherAndSaveMetrics(metricSource.getRootUrl(), config.getProjectName(), metricSource.getMetrics(), outputFileName);
+                            strategy.gatherAndSaveMetrics(metricSource.getRootUrl(), metricSource.getSourceProjectName(), metricSource.getMetrics(), outputFileName);
                         }
                         log.info("The metrics from " + metricSource.getName() + " were collected and saved (json)");
                     }
