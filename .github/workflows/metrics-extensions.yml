@@ -1,0 +1,30 @@
+name: Testing metrics extension
+on:
+  push:
+    branches:
+      - us-26-automated-build
+jobs:
+  compiletests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: maven
+
+      - name: Test Compiler on JfreeChart
+        working-directory: ./metrics-extensions/integrations-test/test-jfreechart
+        run: bash runtest.sh
+      - name: Test Compiler on Junit4
+        working-directory: ./metrics-extensions/integrations-test/test-junit4
+        run: bash runtest.sh
+#      - name: Test Compiler on ArgoUML-SPL
+#        working-directory: ./metrics-extensions/integrations-test/test-argouml-spl
+#        run: bash runtest.sh
+
+
+
+

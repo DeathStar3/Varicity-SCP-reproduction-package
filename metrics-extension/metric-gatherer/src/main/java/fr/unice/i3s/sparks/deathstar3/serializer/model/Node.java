@@ -13,14 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 public class Node {
 
-    private String name; //Class name
-    private List<Metric> metrics; //Class metrics
+    private String name; // Class name
+    private List<Metric> metrics; // Class metrics
 
     @Override
     public String toString() {
-        return "Node{" +
-                "name='" + name + '\'' +
-                ", metrics=" + metrics +
-                '}';
+        return "Node{" + "name='" + name + '\'' + ", metrics=" + metrics + '}';
     }
 }

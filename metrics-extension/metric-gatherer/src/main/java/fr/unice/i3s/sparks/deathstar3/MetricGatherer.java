@@ -31,22 +31,22 @@ public class MetricGatherer {
                         MetricGathering strategy = strategySelection(metricSource.getName());
 
                         if (strategy != null) {
-                            String outputFileName = config.getOutputPath() + "/" + metricSource.getName() + "/" + config.getProjectName();
-                            strategy.gatherAndSaveMetrics(metricSource.getRootUrl(), config.getProjectName(), metricSource.getMetrics(), outputFileName);
+                            String outputPath = config.getOutputPath() + "/" + config.getProjectName() + "/" + metricSource.getName() + "/" + config.getProjectName();
+                            strategy.gatherAndSaveMetrics(metricSource.getRootUrl(), metricSource.getSourceProjectName(), metricSource.getMetrics(), outputPath);
                         }
-                        log.info("The metrics from " + metricSource.getName() + " were collected and saved (json)");
+                        log.info("The metrics from " + config.getProjectName() + ":" + metricSource.getName() + " were collected and saved (json)");
                     }
                 };
                 threads.add(t);
             }
         }
 
-        //Start all the threads
+        // Start all the threads
         for (Thread t : threads) {
             t.start();
         }
 
-        //Join all the threads
+        // Join all the threads
         for (Thread t : threads) {
             try {
                 t.join();
@@ -55,7 +55,7 @@ public class MetricGatherer {
             }
         }
 
-        log.info("Metrics-extension process completed!");
+        log.info("Metrics-extension process completed for project: " + config.getProjectName() + "!");
     }
 
     /**

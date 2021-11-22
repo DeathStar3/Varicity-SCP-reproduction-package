@@ -32,5 +32,6 @@ testadd
 .factorypath
 .project
 .settings/
+*.vscode
 sonarqube-analysis-tcf-j2e.json
 

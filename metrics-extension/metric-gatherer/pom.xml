@@ -12,6 +12,7 @@
     <artifactId>metric-gatherer</artifactId>
 
     <dependencies>
+
         <!-- Apache Http Components HttpClient -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>

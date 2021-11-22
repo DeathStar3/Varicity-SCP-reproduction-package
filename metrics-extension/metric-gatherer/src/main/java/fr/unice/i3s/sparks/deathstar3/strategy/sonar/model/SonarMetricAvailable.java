@@ -44,7 +44,7 @@ public class SonarMetricAvailable {
             if (desc == null) {
                 desc = "";
             }
-            if (desc.length() > 80){
+            if (desc.length() > 80) {
                 desc = description.substring(0, 77) + "...";
             }
             System.out.printf(" %45s | %80s | %20s | %6s \n", key, desc, type, hidden);
