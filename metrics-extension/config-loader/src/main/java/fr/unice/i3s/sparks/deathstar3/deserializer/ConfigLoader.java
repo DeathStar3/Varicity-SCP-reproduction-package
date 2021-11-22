@@ -11,6 +11,9 @@ import java.io.IOException;
 @Slf4j
 public class ConfigLoader {
 
+    /**
+     * Load the config file and parse it
+     */
     public Config loadConfigFile(String fileName) {
 
         try {

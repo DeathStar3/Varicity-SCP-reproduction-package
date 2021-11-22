@@ -17,6 +17,9 @@ import java.io.IOException;
 @NoArgsConstructor
 public class HttpRequest {
 
+    /**
+     * HTTP GET Method, throw HttpResponseException if the return code is not a 2XX
+     */
     public String get(final String url) throws IOException, HttpResponseException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 

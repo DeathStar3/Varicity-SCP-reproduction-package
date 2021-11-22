@@ -21,16 +21,20 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
     private final HttpRequest httpRequest = new HttpRequest();
 
     @Override
-    public List<Node> getMetrics(String sourceUrl, List<String> metricNames) throws IOException {
+    public List<Node> getMetrics(String sourceUrl, String projectName, List<String> metricNames) throws IOException {
 
-        SonarResults sonarResults = performHttpRequest(sourceUrl, metricNames);
+        SonarResults sonarResults = performHttpRequest(sourceUrl, projectName, metricNames);
         return formatResults(sonarResults);
     }
 
-    public SonarResults performHttpRequest(String sourceUrl, List<String> metricNames) throws IOException {
+    /**
+     * Query the Sonar API (https://sonarcloud.io/web_api/api/measures) to retrieve the metrics wanted
+     */
+    public SonarResults performHttpRequest(String sourceUrl, String projectName, List<String> metricNames) throws IOException {
 
         int numElementsPerPage = 500;
-        String baseUrl = sourceUrl + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
+
+        String baseUrl = sourceUrl + "/api/measures/component_tree?component=" + projectName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
 
         SonarResults sonarResults = new SonarResults();
         sonarResults.setComponents(new ArrayList<>());
@@ -63,6 +67,9 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
         return sonarResults;
     }
 
+    /**
+     * Format correctly the response form Sonar
+     */
     public List<Node> formatResults(SonarResults sonarResults) {
         List<Node> nodes = new ArrayList<>();
 
@@ -81,6 +88,9 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
         return nodes;
     }
 
+    /**
+     * In case of error we will display the available metrics
+     */
     public void displayAvailableMetrics(String rootUrl, String projectName) {
 
         String url = rootUrl + "/api/metrics/search?&component=" + projectName;
@@ -88,6 +98,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
         try {
             String json = httpRequest.get(url);
             SonarMetricAvailable sonarMetricAvailable = objectMapper.readValue(json, SonarMetricAvailable.class);
+
             System.out.println("\n >>> Project Name: " + projectName + " (source = SonarCloud)");
             sonarMetricAvailable.formatPrint();
         } catch (Exception e) {

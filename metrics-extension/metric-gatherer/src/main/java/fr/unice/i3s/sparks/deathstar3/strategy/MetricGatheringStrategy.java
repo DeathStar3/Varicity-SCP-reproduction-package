@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface MetricGatheringStrategy {
 
-    List<Node> getMetrics(String sourceUrl, List<String> metricNames) throws IOException;
+    List<Node> getMetrics(String sourceUrl, String projectName, List<String> metricNames) throws IOException;
 
 }

@@ -61,8 +61,9 @@ public class SonarMetricAvailable {
     public void formatPrint() {
         System.out.printf(" %45s | %80s | %20s | %6s \n", "name", "description", "type", "hidden");
         System.out.print(" --------------------------------------------- | -------------------------------------------------------------------------------- | -------------------- | ------ \n");
-        for (Metric m : metrics) {
-            m.formatPrint();
+        for (Metric metric : metrics) {
+            metric.formatPrint();
         }
+        System.out.println("");
     }
 }
