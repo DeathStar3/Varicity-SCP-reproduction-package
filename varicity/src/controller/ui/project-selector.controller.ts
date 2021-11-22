@@ -6,6 +6,7 @@ import { UIController } from "./ui.controller";
 import { EntitiesList } from "../../model/entitiesList";
 import { FilesLoader } from "../parser/filesLoader";
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
+import {ConfigLoader} from "../parser/configLoader";
 
 export class ProjectController {
 
@@ -62,16 +63,19 @@ export class ProjectController {
     }
 
     public static reParse() {
-        if (UIController.scene) UIController.scene.dispose();
+        if (UIController.scene) {
+            UIController.scene.dispose();
+        }
         UIController.clearMap();
-        this.el = this.previousParser.parse(FilesLoader.loadDataFile(this.filename), UIController.config, this.filename);
+        this.el = this.previousParser.parse(FilesLoader.loadDataFile(this.filename), ConfigLoader.loadDataFile(this.filename), this.filename);
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
         inputElement.min = "1";
         const maxLvl = this.el.getMaxCompLevel();
         inputElement.max = maxLvl.toString();
-        if (+inputElement.value > maxLvl)
+        if (+inputElement.value > maxLvl) {
             inputElement.value = maxLvl.toString();
-        UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+inputElement.value));
+        }
+        UIController.scene = new EvostreetImplem(ConfigLoader.loadDataFile(this.filename), this.el.filterCompLevel(+inputElement.value));
         UIController.scene.buildScene();
     }
 }
