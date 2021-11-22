@@ -19,13 +19,13 @@ public class CompilerTest {
 
     private Compiler compiler = new Compiler();
 
-    private Config jfreeChart = new Config("jfreechart", "/tmp/varicity-xp-projets/jfreechart", "", "maven",
+    private Config jfreeChart = new Config("jfreechart", "/tmp/varicity-xp-projects/jfreechart", "", "maven",
             "3.8.2-jdk-11", List.of("mvn", "clean", "install", "sonar:sonar", "-f", "/project/pom.xml"),
             "http://sonarqubehost:9000", true);
 
-    private Config junit = new Config("junit", "/tmp/varicity-xp-projects/junit", "", "maven", "3.8.2-jdk-11",
-            List.of("mvn", "clean", "install", "sonar:sonar", "-f", "/project/pom.xml"), "http://sonarqubehost:9000",
-            true);
+    private Config junit = new Config("junit", "/tmp/varicity-xp-projects/junit4", "", "maven", "3.8.2-jdk-11",
+            List.of("mvn", "clean", "install", "sonar:sonar", "-f", "/project/pom.xml", "-DskipTests=true"),
+            "http://sonarqubehost:9000", true);
 
     @Test
     public void getTokenTest() throws JsonProcessingException {

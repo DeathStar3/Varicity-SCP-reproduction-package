@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-xpdirs=/tmp/varicity-xp-projets
+xpdirs=/tmp/varicity-xp-projects
 if [ -d $xpdirs ]; then
   sudo rm -r $xpdirs
 fi
@@ -14,7 +14,7 @@ workingdir=$(pwd)
 ## Project 1
 git -C $xpdirs clone https://github.com/junit-team/junit4.git
 cd $xpdirs/junit4
-git checkout r4.12
+#git checkout r4.12
 cd $workingdir
 
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-xpdirs=/tmp/varicity-xp-projets
+xpdirs=/tmp/varicity-xp-projects
 
 # Run maven tests
 cd ../../metrics-extension

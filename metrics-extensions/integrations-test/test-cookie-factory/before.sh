@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-xpdirs=/tmp/varicity-xp-projets
+xpdirs=/tmp/varicity-xp-projects
 if [ -d $xpdirs ]; then
   sudo rm -r $xpdirs
 fi
