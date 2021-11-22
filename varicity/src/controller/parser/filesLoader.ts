@@ -7,125 +7,128 @@ export class FilesLoader {
         return filePath.split('/').pop().split('.json').shift();
     }
 
-    // TODO reduce the complexity, and add methods for readability.
     private static loadJson(): void {
+        // Get all jsons path found in /symfinder_files
         const rootAnalysedProjectContext = require.context('/symfinder_files', true, /^(?!.*-stats\.json)(.*\.json)$/);
 
         FilesLoader.json = new Map<string, JsonInputInterface>();
-        let symFinderFilesPathsMap = new Map<string, string[]>();
+        let symFinderFilesPathsMap = new Map<string, string>();
         let externalMetricsFilesPathsMap = new Map<string, string[]>();
 
-        // Get the path of symfinder's & external metrics jsons
-        rootAnalysedProjectContext.keys().forEach((key) => {
-            var myRegexp = new RegExp("^\\.\\/([a-zA-Z\\-\\_.0-9]+)\\/", "g");
-            let match = myRegexp.exec(key);
-            if (match !== undefined && match != null) {
-                // [0]: contains "./directory/"
-                // [1]: contains "directory"
-                const directoryName = match[1];
+        // Get the path of SymFinder's & external metrics jsons
+        this.findJsons(rootAnalysedProjectContext, symFinderFilesPathsMap, externalMetricsFilesPathsMap);
 
-                if (FilesLoader.isPathToSymfinderJson(key)) {
-                    if(symFinderFilesPathsMap.has(directoryName)){
-                        symFinderFilesPathsMap.get(directoryName).push(key);
-                    }else{
-                        symFinderFilesPathsMap.set(directoryName, [key]);
-                    }
-                }
-                if (FilesLoader.isPathToExternalMetricsJson(key)) {
-                    if(externalMetricsFilesPathsMap.has(directoryName)){
-                        externalMetricsFilesPathsMap.get(directoryName).push(key);
-                    }else{
-                        externalMetricsFilesPathsMap.set(directoryName, [key]);
+        console.log("symFinderFilesPathsMap: ", symFinderFilesPathsMap);
+        console.log("externalMetricsFilesPathsMap: ", externalMetricsFilesPathsMap);
+
+        // deserialize the symfinder's & external metrics' jsons
+        this.deserializeJsons(symFinderFilesPathsMap, rootAnalysedProjectContext, externalMetricsFilesPathsMap);
+
+        console.log('Loaded json files: ', FilesLoader.json);
+    }
+
+    private static findJsons(rootAnalysedProjectContext: __WebpackModuleApi.RequireContext, symFinderFilesPathsMap: Map<string, string>, externalMetricsFilesPathsMap: Map<string, string[]>) {
+        rootAnalysedProjectContext.keys().forEach((key) => {
+            let symFinderProjectName = this.geSymFinderJsonProjectName(key);
+
+            if (symFinderProjectName !== undefined) {
+                symFinderFilesPathsMap.set(symFinderProjectName, key);
+            } else {
+                let externalProjectName = this.getExternalJsonProjectName(key);
+                if (externalProjectName !== undefined) {
+                    if (externalMetricsFilesPathsMap.has(externalProjectName)) {
+                        externalMetricsFilesPathsMap.get(externalProjectName).push(key);
+                    } else {
+                        externalMetricsFilesPathsMap.set(externalProjectName, [key]);
                     }
                 }
             }
         });
+    }
 
-        console.log("symFinderFilesPathsMap");
-        console.log(symFinderFilesPathsMap);
-        console.log("externalMetricsFilesPathsMap");
-        console.log(externalMetricsFilesPathsMap);
+    private static deserializeJsons(symFinderFilesPathsMap: Map<string, string>, rootAnalysedProjectContext: __WebpackModuleApi.RequireContext, externalMetricsFilesPathsMap: Map<string, string[]>) {
 
-        // deserialize the symfinder's & external metrics' jsons
+        // loop over all the SymFinder's Jsons
+        symFinderFilesPathsMap.forEach((symfinderJsonPaths, fileNameWithExtension) => {
 
-        // loop over all the symfinder's Jsons
-        symFinderFilesPathsMap.forEach((symfinderJsonPaths, directoryName) => {
+            // fetch SymFinder input json
+            const projectName = FilesLoader.getFileNameOnly(fileNameWithExtension);
+            let symfinderObj = rootAnalysedProjectContext(symfinderJsonPaths) as JsonInputInterface;
 
-            // loop over the symfinder's Json inside a single project if has multiple ones.
-            symfinderJsonPaths.forEach((symfinderJsonPath) => {
+            // aggregate externals metrics if any
+            const externalsMetricsPaths = externalMetricsFilesPathsMap.get(projectName);
+            if (externalsMetricsPaths !== undefined) {
 
-                // fetch symfinder input json
-                const obj = rootAnalysedProjectContext(symfinderJsonPath);
-                let jsonInputInterface = obj as JsonInputInterface;
+                // index all classes indexes to reduce the complexity of merging external jsons.
+                let mapSymFinderClassesIndex = this.indexSymFinderClassesToMap(symfinderObj);
 
-                // aggregate externals metrics if any
-                const externalsMetricsPaths = externalMetricsFilesPathsMap.get(directoryName);
-                if(externalsMetricsPaths !== undefined){
+                // loop over all the external metrics Json for the project
+                externalsMetricsPaths.forEach((externalsMetricsPath) => {
 
-                    // index all classes indexes to reduce the complexity of merging external jsons.
-                    let mapSymFinderClassesIndex = new Map<string, number>();
-                    for (let i = 0; i < jsonInputInterface.nodes.length; i++) {
-                        mapSymFinderClassesIndex.set(jsonInputInterface.nodes[i].name, i);
-                    }
+                    // get the object of external metrics
+                    let externalMetricsClasses = rootAnalysedProjectContext(externalsMetricsPath) as MetricClassInterface[];
 
-                    // loop over all the external metrics Json for the project
-                    externalsMetricsPaths.forEach((externalsMetricsPath) => {
+                    // loop over all the classes in the external jsons object
+                    externalMetricsClasses.forEach((classMetrics) => {
 
-                        // get the object of external metrics
-                        const obj = rootAnalysedProjectContext(externalsMetricsPath);
-                        let jsonMetricClassArrayInputInterface = obj as MetricClassInterface[];
-
-                        // loop over all the classes in the external jsons object
-                        jsonMetricClassArrayInputInterface.forEach((classMetrics) => {
-
-                            if(mapSymFinderClassesIndex.has(classMetrics.name)){
-                                const index = mapSymFinderClassesIndex.get(classMetrics.name);
-                                if(jsonInputInterface.nodes[index].additionalMetrics === undefined){
-                                    jsonInputInterface.nodes[index].additionalMetrics = [];
-                                }
-
-                                // aggregate the metrics in the symfinder object classes.
-                                classMetrics.metrics.forEach((metric) => {
-                                    jsonInputInterface.nodes[index].additionalMetrics.push(metric);
-                                });
+                        if (mapSymFinderClassesIndex.has(classMetrics.name)) {
+                            const index = mapSymFinderClassesIndex.get(classMetrics.name);
+                            if (symfinderObj.nodes[index].additionalMetrics === undefined) {
+                                symfinderObj.nodes[index].additionalMetrics = [];
                             }
-                        });
+
+                            // aggregate the metrics in the SymFinder object classes.
+                            classMetrics.metrics.forEach((metric) => {
+                                symfinderObj.nodes[index].additionalMetrics.push(metric);
+                            });
+                        }
                     });
-                }
+                });
+            }
 
-                const projectName = FilesLoader.getFileNameOnly(symfinderJsonPath);
-                FilesLoader.json.set(projectName, obj);
-            });
+            FilesLoader.json.set(projectName, symfinderObj);
         });
+    }
 
-        console.log('Loaded json files : ', FilesLoader.json);
+    private static geSymFinderJsonProjectName(key: string): string {
+        const myRegexp = new RegExp("^\\.\\/([a-zA-Z\\-\\_.0-9]+\\.json)$", "g");
+        let match = myRegexp.exec(key);
+        if (match !== undefined && match != null) {
+            return match[1];
+        } else {
+            return undefined;
+        }
+    }
+
+    private static getExternalJsonProjectName(key: string) {
+        const myRegexp = new RegExp("^\\.\\/externals\\/([a-zA-Z\\-\\_.0-9]+)\\/[a-zA-Z\\-\\_.0-9]+\\.json$", "g");
+        let match = myRegexp.exec(key);
+        if (match !== undefined && match != null) {
+            return match[1];
+        } else {
+            return undefined;
+        }
+    }
+
+    private static indexSymFinderClassesToMap(symfinderObj: JsonInputInterface) {
+        let mapSymFinderClassesIndex = new Map<string, number>();
+        for (let i = 0; i < symfinderObj.nodes.length; i++) {
+            mapSymFinderClassesIndex.set(symfinderObj.nodes[i].name, i);
+        }
+        return mapSymFinderClassesIndex;
     }
 
     public static loadDataFile(fileName: string): JsonInputInterface {
         if (FilesLoader.json === undefined) {
             FilesLoader.loadJson();
         }
-        // return FilesLoader.json[fileName];
         return FilesLoader.json.get(fileName);
     }
 
-    // returns map keys as string array
     public static getAllFilenames(): string[] {
         if (FilesLoader.json === undefined) {
             FilesLoader.loadJson();
         }
         return [...FilesLoader.json.keys()];
-    }
-
-    private static isPathToSymfinderJson(key: string): boolean {
-        var myRegexp = new RegExp("^\\.\\/([a-zA-Z\\-\\_.0-9]+)\\/([a-zA-Z\\-\\_.0-9]+\\.json)$", "g");
-        let match = myRegexp.exec(key);
-        return match !== undefined && match != null;
-    }
-
-    private static isPathToExternalMetricsJson(key: string): boolean {
-        var myRegexp = new RegExp("^\\.\\/([a-zA-Z\\-\\_.0-9]+)\\/externals\\/([a-zA-Z\\-\\_.0-9]+\\.json)$", "g");
-        let match = myRegexp.exec(key);
-        return match !== undefined && match != null;
     }
 }
