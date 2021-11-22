@@ -109,7 +109,7 @@ public class Compiler {
             try {
                 downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
             } catch (PullException exception) {
-                this.log.error("Cannot pull image necessary to compile project");
+                log.error("Cannot pull image necessary to compile project");
                 System.exit(1); //TODO All the System.exit need to be replace with a Thread exit !
             }
 
@@ -148,7 +148,7 @@ public class Compiler {
             try {
                 downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
             } catch (PullException exception) {
-                this.log.error("Cannot pull image necessary to compile project");
+                log.error("Cannot pull image necessary to compile project");
                 System.exit(1);
             }
 
@@ -158,9 +158,8 @@ public class Compiler {
         CreateContainerResponse container = dockerClient
                 .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())
                 .withName(COMPILER_NAME)
-                .withHostConfig(
-                        HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
-                .withEntrypoint(projectConfig.getBuildCmds()).exec();// TODO assuming the project is a mvn project
+                .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
+                .withEntrypoint(projectConfig.getBuildCmds()).exec(); // TODO assuming the project is a mvn project
 
         dockerClient.startContainerCmd(container.getId()).exec();
 
@@ -175,8 +174,7 @@ public class Compiler {
 
     private void downloadImage(String image, String tag) throws PullException {
         try {
-            dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(5,
-                    TimeUnit.MINUTES);
+            dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(5, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             throw new PullException();
         }

@@ -46,8 +46,7 @@ public class SonarQubeStarter {
 
         while (true) {
             try {
-                var sonarqubeStatusResponse = this.restTemplate.getForEntity("http://localhost:9000/api/system/status",
-                        String.class);
+                var sonarqubeStatusResponse = this.restTemplate.getForEntity("http://localhost:9000/api/system/status", String.class);
                 var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
                         SonarQubeStatus.class);
                 if (sonarqubeStatus.status().equals("UP")) {

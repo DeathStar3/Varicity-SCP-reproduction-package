@@ -23,7 +23,7 @@ public class SonarQubeStrategy extends SonarCloudStrategy {
             String json = httpRequest.get(url);
             SonarMetricAvailable sonarMetricAvailable = objectMapper.readValue(json, SonarMetricAvailable.class);
 
-            System.out.println("\n >>> Project Name: " + projectName + " (source = SonarQube)");
+            System.err.println("\n >>> Project Name: " + projectName + " (source = SonarQube)");
             sonarMetricAvailable.formatPrint();
         } catch (Exception e) {
             e.printStackTrace();

@@ -47,7 +47,7 @@ public class SonarMetricAvailable {
             if (desc.length() > 80) {
                 desc = description.substring(0, 77) + "...";
             }
-            System.out.printf(" %45s | %80s | %20s | %6s \n", key, desc, type, hidden);
+            System.err.printf(" %45s | %80s | %20s | %6s \n", key, desc, type, hidden);
         }
     }
 
@@ -59,11 +59,11 @@ public class SonarMetricAvailable {
     }
 
     public void formatPrint() {
-        System.out.printf(" %45s | %80s | %20s | %6s \n", "name", "description", "type", "hidden");
-        System.out.print(" --------------------------------------------- | -------------------------------------------------------------------------------- | -------------------- | ------ \n");
+        System.err.printf(" %45s | %80s | %20s | %6s \n", "name", "description", "type", "hidden");
+        System.err.print(" --------------------------------------------- | -------------------------------------------------------------------------------- | -------------------- | ------ \n");
         for (Metric metric : metrics) {
             metric.formatPrint();
         }
-        System.out.println("");
+        System.err.println("");
     }
 }
