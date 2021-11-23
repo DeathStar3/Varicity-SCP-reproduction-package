@@ -37,9 +37,8 @@ public class CommandRunner {
         ProcessBuilder builder = new ProcessBuilder();
 
         for (String cmd : commands) { //Execute each command line, one after the other
-            builder.command(shellLocation, cmd);
 
-            builder.directory(new File(workingDirectory));
+            builder.command(shellLocation, cmd).directory(new File(workingDirectory));
 
             try {
                 Process process = builder.start();
