@@ -3,7 +3,7 @@ junit-r4.12: #Project name
   sources:
     - name: "sonarcloud"
       enabled: true
-      sourceProjectName: "pfc-test.sonar%3Ajunit4-4.13.2"
+      componentName: "pfc-test.sonar%3Ajunit4-4.13.2"
       commands:
         - "cmd 1"
         - "cmd 2"
@@ -17,7 +17,7 @@ jfreechart-v1.5.0:
   sources:
     - name: "sonarcloud"
       enabled: true
-      sourceProjectName: "denislilajFox_jfreechart"
+      componentName: "denislilajFox_jfreechart"
       commands:
         - "cmd 1"
         - "cmd 2"

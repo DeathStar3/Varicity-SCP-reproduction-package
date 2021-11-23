@@ -14,9 +14,13 @@ import java.util.List;
 public class MetricSource {
 
     private String name; // Mandatory
-    private String sourceProjectName; // Mandatory
     private boolean enabled = true; // Optional (default to true)
+
+    private String shellLocation; // Optional (default cmd or sh)
+    private String workingDirectory = System.getProperty("user.home"); // Optional (default user home directory)
     private List<String> commands; // Optional
+
+    private String componentName; // Mandatory
     private String rootUrl; // Mandatory
 
     private List<String> metrics;
@@ -26,7 +30,10 @@ public class MetricSource {
         return "MetricSource{" +
                 "name='" + name + '\'' +
                 ", enabled=" + enabled +
+                ", shellLocation='" + shellLocation + '\'' +
+                ", workingDirectory='" + workingDirectory + '\'' +
                 ", commands=" + commands +
+                ", componentName='" + componentName + '\'' +
                 ", rootUrl='" + rootUrl + '\'' +
                 ", metrics=" + metrics +
                 '}';

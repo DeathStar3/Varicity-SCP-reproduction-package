@@ -21,20 +21,20 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
     private final HttpRequest httpRequest = new HttpRequest();
 
     @Override
-    public List<Node> getMetrics(String sourceUrl, String sourceProjectName, List<String> metricNames) throws IOException {
+    public List<Node> getMetrics(String sourceUrl, String componentName, List<String> metricNames) throws IOException {
 
-        SonarResults sonarResults = performHttpRequest(sourceUrl, sourceProjectName, metricNames);
+        SonarResults sonarResults = performHttpRequest(sourceUrl, componentName, metricNames);
         return formatResults(sonarResults);
     }
 
     /**
      * Query the Sonar API (https://sonarcloud.io/web_api/api/measures) to retrieve the metrics wanted
      */
-    public SonarResults performHttpRequest(String rootUrl, String sourceProjectName, List<String> metricNames) throws IOException {
+    public SonarResults performHttpRequest(String rootUrl, String componentName, List<String> metricNames) throws IOException {
 
         int numElementsPerPage = 500;
 
-        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + sourceProjectName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
+        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + componentName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
 
         SonarResults sonarResults = new SonarResults();
         sonarResults.setComponents(new ArrayList<>());
@@ -50,7 +50,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
 
                 if (e.getCode() == HttpStatus.SC_NOT_FOUND) {
                     //Display the available metrics for the project
-                    displayAvailableMetrics(rootUrl, sourceProjectName);
+                    displayAvailableMetrics(rootUrl, componentName);
                 }
                 Thread.currentThread().stop(); // Kill thread: an error occur
             }

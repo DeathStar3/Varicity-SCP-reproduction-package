@@ -19,10 +19,10 @@ public class MetricGathering {
     /**
      * Gather the metrics for a given source and save them in a Json file
      */
-    public void gatherAndSaveMetrics(String sourceUrl, String sourceProjectName, List<String> metrics, String outputPath) {
+    public void gatherAndSaveMetrics(String sourceUrl, String componentName, List<String> metrics, String outputPath) {
 
         try {
-            List<Node> nodes = strategy.getMetrics(sourceUrl, sourceProjectName, metrics);
+            List<Node> nodes = strategy.getMetrics(sourceUrl, componentName, metrics);
             log.debug("Metrics gathered: " + nodes);
 
             JsonSerializer serializer = new JsonSerializer();
