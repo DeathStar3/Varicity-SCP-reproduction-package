@@ -16,7 +16,7 @@ public class MetricSource {
     private String name; // Mandatory
     private boolean enabled = true; // Optional (default to true)
 
-    private String shellLocation; // Optional (default cmd or sh)
+    private String shellLocation; // Optional (default powershell or sh)
     private String workingDirectory = System.getProperty("user.home"); // Optional (default user home directory)
     private List<String> commands; // Optional
 

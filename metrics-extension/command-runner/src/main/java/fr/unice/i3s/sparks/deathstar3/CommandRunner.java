@@ -1,13 +1,18 @@
 package fr.unice.i3s.sparks.deathstar3;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-public class CommandRunner implements Runnable {
+@Slf4j
+public class CommandRunner {
 
     private final String workingDirectory;
     private final String shellLocation;
@@ -15,13 +20,13 @@ public class CommandRunner implements Runnable {
 
     public CommandRunner(String workingDirectory, String shellLocation, List<String> commands) {
 
-        if (shellLocation == null || shellLocation.equals("")){ //If no shell specified : cmd or sh
-            if(System.getProperty("os.name").toLowerCase().startsWith("windows")){
-                this.shellLocation = "cmd.exe";
+        if (shellLocation == null || shellLocation.equals("")) { //If no shell specified : powershell or sh
+            if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+                this.shellLocation = "powershell.exe";
             } else {
                 this.shellLocation = "sh";
             }
-        }else {
+        } else {
             this.shellLocation = shellLocation;
         }
 
@@ -30,21 +35,22 @@ public class CommandRunner implements Runnable {
     }
 
     @SneakyThrows
-    @Override
-    public void run() {
+    public void execute() {
         ProcessBuilder builder = new ProcessBuilder();
 
-        commands.add(0, shellLocation);
-        builder.command(commands);
+        for (String cmd : commands) { //Execute each command line, one after the other
+            builder.command(shellLocation, cmd);
 
-        builder.directory(new File(workingDirectory));
-        Process process = builder.start();
+            builder.directory(new File(workingDirectory));
+            Process process = builder.start();
+            log.info("Execute : " + shellLocation + " " + cmd);
 
-        StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
-        Executors.newSingleThreadExecutor().submit(streamGobbler);
+            StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), log::debug);
+            Executors.newSingleThreadExecutor().submit(streamGobbler);
 
-        int exitCode = process.waitFor();
-        assert exitCode == 0;
+            int exitCode = process.waitFor();
+            assert exitCode == 0;
+        }
     }
 
 

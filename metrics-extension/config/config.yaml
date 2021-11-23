@@ -3,11 +3,15 @@ junit-r4.12: #Project name
   sources:
     - name: "sonarcloud"
       enabled: true
-      componentName: "pfc-test.sonar%3Ajunit4-4.13.2"
+      # --- --- EXECUTION CONFIG --- --- #
+      shellLocation: "powershell.exe"
+      workingDirectory: "C:\\Users\\Anton van der Tuijn"
       commands:
-        - "cmd 1"
-        - "cmd 2"
+        - "echo 'command 1'"
+        - "echo 'command 2'"
+      # --- --- API CONFIG --- --- #
       rootUrl: "https://sonarcloud.io"
+      componentName: "pfc-test.sonar%3Ajunit4-4.13.2"
       metrics:
         - "complexity"
         - "cognitive_complexity"
@@ -17,11 +21,15 @@ jfreechart-v1.5.0:
   sources:
     - name: "sonarcloud"
       enabled: true
-      componentName: "denislilajFox_jfreechart"
+      # --- --- EXECUTION CONFIG --- --- #
+      shellLocation: "powershell.exe"
+      workingDirectory: "C:\\Users\\Anton van der Tuijn"
       commands:
-        - "cmd 1"
-        - "cmd 2"
+        - "dir"
+        - "echo example"
+      # --- --- API CONFIG --- --- #
       rootUrl: "https://sonarcloud.io"
+      componentName: "denislilajFox_jfreechart"
       metrics:
         - "complexity"
         - "cognitive_complexity"

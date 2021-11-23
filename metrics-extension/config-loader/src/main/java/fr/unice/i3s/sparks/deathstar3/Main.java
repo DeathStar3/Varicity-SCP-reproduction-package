@@ -20,10 +20,8 @@ public class Main {
         ConfigLoader configLoader = new ConfigLoader();
         List<Config> configs = configLoader.loadConfigFile(configFilePath);
 
-        MetricGatherer metricGatherer = new MetricGatherer();
-        for (Config config : configs) {
-            metricGatherer.gatherMetrics(config);
-        }
+        CommandScheduler scheduler = new CommandScheduler();
+        scheduler.schedule(configs);
 
     }
 }
