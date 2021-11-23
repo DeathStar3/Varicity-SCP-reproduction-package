@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class MetricGathering {
@@ -19,11 +20,11 @@ public class MetricGathering {
     /**
      * Gather the metrics for a given source and save them in a Json file
      */
-    public void gatherAndSaveMetrics(String sourceUrl, String sourceProjectName, List<String> metrics, String outputPath) {
+    public void gatherAndSaveMetrics(String sourceUrl, String componentName, List<String> metrics, String outputPath) {
 
         try {
-            List<Node> nodes = strategy.getMetrics(sourceUrl, sourceProjectName, metrics);
-            log.debug("Metrics gathered: " + nodes);
+            List<Node> nodes = strategy.getMetrics(sourceUrl, componentName, metrics);
+            log.debug("Metrics gathered: " + nodes.stream().limit(500).collect(Collectors.toList()));
 
             JsonSerializer serializer = new JsonSerializer();
             serializer.generateAndSaveJson(nodes, outputPath + "-" + new Date().getTime() + ".json");
