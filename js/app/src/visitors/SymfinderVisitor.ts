@@ -9,5 +9,5 @@ export default abstract class SymfinderVisitor{
         this.neoGraph = neoGraph;
     }
 
-    abstract visit(node: ts.Node): void;
+    abstract visit(node: ts.Node): Promise<void>;
 }

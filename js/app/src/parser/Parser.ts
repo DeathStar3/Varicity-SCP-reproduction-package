@@ -10,17 +10,17 @@ export default class Parser{
         this.sourceFile = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
     }
 
-    accept(visitor: SymfinderVisitor): void{
-        this.sourceFile.forEachChild(node => {
-            this.visit(node, visitor);
-            visitor.visit(node);
-        });
+    async accept(visitor: SymfinderVisitor) {
+        for(let node of this.sourceFile.statements) {
+            await this.visit(node, visitor);
+            await visitor.visit(node);
+        }
     }
 
-    visit(node: ts.Node, visitor: SymfinderVisitor){
-        node.forEachChild((child) => {
-            this.visit(child, visitor);
-            visitor.visit(child);
-        })
+    async visit(node: ts.Node, visitor: SymfinderVisitor){
+        for(let child of node.getChildren()){
+            await this.visit(child, visitor);
+            await visitor.visit(child);
+        }
     }
 }

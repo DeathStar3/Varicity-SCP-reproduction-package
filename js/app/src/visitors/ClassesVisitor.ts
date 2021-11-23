@@ -9,7 +9,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
         super(neoGraph);
     }
 
-    async visit(node: ts.Node) {
+    async visit(node: ts.Node): Promise<void> {
 
         var type = node.kind;
         if(!ts.isClassDeclaration(node) && !ts.isInterfaceDeclaration(node)) return;
@@ -39,6 +39,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
         console.log("Type : " + nodeType?.toString());
         console.log("Type List : " + nodeTypeList.join(' ') + "\n");
 
-        await this.neoGraph.createNode(name, nodeType, nodeTypeList);
+        await this.neoGraph.createNode(name, nodeType, nodeTypeList).catch((reason) => console.log("Error to create node "+name+"..."));
+        return;
     }
 }

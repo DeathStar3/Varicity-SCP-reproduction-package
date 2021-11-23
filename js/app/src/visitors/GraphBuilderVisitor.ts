@@ -10,7 +10,7 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
     }
 
     //Visit HeritageClauses
-    async visit(node: ts.Node) {
+    async visit(node: ts.Node): Promise<void> {
 
         if(!ts.isHeritageClause(node)) return;
 
@@ -37,12 +37,17 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         else return;
 
         for(let scn of superClassesName){
-            var superClassNode = await this.neoGraph.getOrCreateNode(scn, superClasseType, [EntityAttribut.OUT_OF_SCOPE], []);
-            var classNode = await this.neoGraph.getNode(className, classType);
-            this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
+            try {
+                var superClassNode = await this.neoGraph.getOrCreateNode(scn, superClasseType, [EntityAttribut.OUT_OF_SCOPE], []);
+                var classNode = await this.neoGraph.getNode(className, classType)
+                await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
+            } catch (error) {
+                console.log("Error to link nodes "+className+" and "+superClassesName+"...");
+            }
         };
         
-        console.log("Name : " + className)
-        console.log(relationType + " : " + superClassesName + "\n")
+        console.log("Name : " + className);
+        console.log(relationType + " : " + superClassesName + "\n");
+        return;
     }
 }

@@ -4,6 +4,7 @@ import GraphBuilderVisitor from "./visitors/GraphBuilderVisitor";
 import Parser from "./parser/Parser";
 import NeoGraph from "./neograph/NeoGraph";
 import { config } from "./configuration/Configuration";
+import * as glob from "glob";
 
 export class Symfinder{
 
@@ -11,23 +12,24 @@ export class Symfinder{
 
     constructor(){
         this.neoGraph = new NeoGraph(config);
-        this.neoGraph.clearNodes();
     }
 
-    run(){
+    async run(src: string){
+        await this.neoGraph.clearNodes();
         var files = [];
-        files.push('../test_project/strategy/index.ts');
-
-        console.log("########## SEARCH CLASSES ##########");
-        this.visitPackage(files, new ClassesVisitor(this.neoGraph));
-        console.log("########## SEARCH RELATIONS ##########");
-        this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph));
+        await glob(src + "/**/*.ts", async (er: any, files: string[]) => {
+            console.log("########## SEARCH CLASSES ##########");
+            await this.visitPackage(files, new ClassesVisitor(this.neoGraph));
+            console.log("########## SEARCH RELATIONS ##########");
+            await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph));
+            console.log("########## DONE ##########");
+        })        
     }
 
-    visitPackage(files: string[], visitor: SymfinderVisitor){
+    async visitPackage(files: string[], visitor: SymfinderVisitor){
         for(let file of files){
             let parser = new Parser(file);
-            parser.accept(visitor);
+            await parser.accept(visitor);
         }
     }
 }
