@@ -47,5 +47,6 @@ public class CommandScheduler {
             }
         }
         log.info("Metrics-extension process completed for all projects!");
+        System.exit(0); //End of program
     }
 }
