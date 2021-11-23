@@ -8,11 +8,16 @@ import com.github.dockerjava.api.command.CreateNetworkResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.*;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 
+import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import fr.unice.i3s.sparks.deathstar3.exceptions.PullException;
 import fr.unice.i3s.sparks.deathstar3.model.Config;
 import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
+import fr.unice.i3s.sparks.deathstar3.utils.Utils;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -23,6 +28,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +38,7 @@ import java.util.logging.Logger;
 
 public class Compiler {
 
-    private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
+    private final DockerClient dockerClient;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -41,11 +47,16 @@ public class Compiler {
     public static final String COMPILER_SCANNER_NAME = "varicity-compiler-scanner-container";
     public static final String COMPILER_NAME = "varicity-compiler-container";
     public static final String SCANNER_NAME = "varicity-scanner-container";
-
+    private static final Utils utils=new Utils();
     private static final String SONARQUBE_LOCAL_URL = "http://localhost:9000";
 
     public Compiler() {
 
+        DockerClientConfig standard = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder().dockerHost(standard.getDockerHost())
+                .sslConfig(standard.getSSLConfig()).maxConnections(100).connectionTimeout(Duration.ofSeconds(30))
+                .responseTimeout(Duration.ofSeconds(45)).build();
+        this.dockerClient = DockerClientBuilder.getInstance().withDockerHttpClient(httpClient).build();
     }
 
     public void executeProject(Config projectConfig) {
@@ -55,7 +66,7 @@ public class Compiler {
             try {
                 var compileAndScanProjectId = this.compileAndScanProject(projectConfig);
                 waitForContainerCorrectExit(compileAndScanProjectId);
-            } catch (JsonProcessingException e) {
+            } catch (JsonProcessingException | InterruptedException e) {
                 e.printStackTrace();
             }
         } else {
@@ -106,14 +117,10 @@ public class Compiler {
      * 
      * @return the containerId
      */
-    public String compileAndScanProject(Config projectConfig) throws JsonProcessingException {
-        if (!checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
-            try {
-                downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
-            } catch (PullException exception) {
-                this.log.severe("Cannot pull image necessary to compile project");
-                System.exit(1);
-            }
+    public String compileAndScanProject(Config projectConfig) throws JsonProcessingException, InterruptedException {
+        if (!this.utils.checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
+
+            downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
 
         }
 
@@ -146,12 +153,12 @@ public class Compiler {
 
     public String compileProject(Config projectConfig) {
 
-        if (!checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
+        if (!this.utils.checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
             try {
                 downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
-            } catch (PullException exception) {
+            } catch (InterruptedException exception) {
                 this.log.severe("Cannot pull image necessary to compile project");
-                System.exit(1);
+
             }
 
         }
@@ -170,18 +177,12 @@ public class Compiler {
 
     }
 
-    private boolean checkIfImageExists(String image, String tag) {
-        return dockerClient.listImagesCmd().exec().stream()
-                .anyMatch(img -> Arrays.stream(img.getRepoTags()).anyMatch(name -> name.equals(image + ":" + tag)));
-    }
 
-    private void downloadImage(String image, String tag) throws PullException {
-        try {
-            dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(5,
-                    TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            throw new PullException();
-        }
+
+    private void downloadImage(String image, String tag) throws InterruptedException {
+
+        dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(5,
+                TimeUnit.MINUTES);
     }
 
     private HttpHeaders createHeaders(String username, String password) {

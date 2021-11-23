@@ -1,17 +1,18 @@
-import { MetricityImplem } from './../../view/metricity/metricityImplem';
-import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
-import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
-import { ClassesPackagesStrategy } from "../parser/strategies/classes_packages.strategy";
-import { UIController } from "./ui.controller";
+import { CurrentProjectListener } from "../../configsaver/listener/current-project-listener";
 import { EntitiesList } from "../../model/entitiesList";
+import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
 import { FilesLoader } from "../parser/filesLoader";
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
+import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
+import { UIController } from "./ui.controller";
 
 export class ProjectController {
 
     static el: EntitiesList;
     private static previousParser: ParsingStrategy;
     private static filename: string;
+
+    private static projectListener:CurrentProjectListener=new CurrentProjectListener();
 
     static createProjectSelector(keys: string[]) {
         let parent = document.getElementById("project_selector");
@@ -32,12 +33,15 @@ export class ProjectController {
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
+                this.projectListener.projectChange(key);
                 this.previousParser = new VPVariantsStrategy();
                 this.filename = key;
 
                 this.reParse();
 
                 parent.childNodes[0].nodeValue = "Project selection: " + key;
+
+                
 
                 /* @ts-ignore */
                 for (let child of parent.children) {
@@ -62,7 +66,10 @@ export class ProjectController {
     }
 
     public static reParse() {
-        if (UIController.scene) UIController.scene.dispose();
+        if (UIController.scene) {
+            UIController.scene.dispose();
+        }
+        
         UIController.clearMap();
         this.el = this.previousParser.parse(FilesLoader.loadDataFile(this.filename), UIController.config, this.filename);
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;

@@ -3,11 +3,13 @@ import { City3D } from "./3Delements/city3D";
 import { SceneRenderer } from "../sceneRenderer";
 import { Config } from "../../model/entitiesImplems/config.model";
 
+
+
 export class EvostreetImplem extends SceneRenderer {
 
     buildScene() {
         this.scene = new Scene(this.engine);
-
+//TODO 
         this.camera = new ArcRotateCamera("Camera", 2 * Math.PI / 3, Math.PI / 3, 100, Vector3.Zero(), this.scene);
         this.camera.attachControl(this.canvas, true);
         this.camera.panningSensibility = 100;

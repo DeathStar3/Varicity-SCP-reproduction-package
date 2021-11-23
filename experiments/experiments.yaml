@@ -1,33 +1,10 @@
-cookiefactory:
-  repositoryUrl: https://github.com/collet/4A_ISA_TheCookieFactory.git
-  commitIds:
-    - 7bec06fd2fa5592d22dd0c506cae502903d7e77f
-  sourcePackage: j2e
-  sonarcloud:
-    use: true
-    url: http://somewhere.com/
-  language: java
-  jdk:
-
-
-jfreechart:
-  repositoryUrl: https://github.com/jfree/jfreechart
+awt:
+  repositoryUrl: https://github.com/JetBrains/jdk8u_jdk
+  sourcePackage: src/share/classes/java/awt
+  tagIds:
+    - jb8u202-b1532
+cxf:
+  repositoryUrl: https://github.com/apache/cxf
   sourcePackage: .
   tagIds:
-    - v1.5.0
-  filters:
-    - org.jfree.chart.util.PublicCloneable
-    - org.jfree.chart.event
-    - org.jfree.data.general
-  apiFilters:
-    - org.jfree.chart.ChartFactory
-    - org.jfree.chart.plot.CategoryPlot
-    - org.jfree.chart.plot.XYPlot
-    - org.jfree.chart.renderer.AbstractRenderer
-  compositionLevel: 4
-  compositionType: IN
-#cookiefactoryteamo:
-#  repositoryUrl: https://github.com/PNS-Conception/cookiefactory-20-21-team-o.git
-#  tagIds:
-#    - FINAL
-
+    - cxf-3.2.7

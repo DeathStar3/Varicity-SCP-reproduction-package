@@ -27,7 +27,11 @@ export abstract class SceneRenderer {
 
         this.camera = new ArcRotateCamera("Camera", 2 * Math.PI / 3, Math.PI / 3, 500, Vector3.Zero(), this.scene);
         this.camera.attachControl(this.canvas, true);
+        
         this.camera.panningSensibility = 10;
+        
+        
+        //console.log(" *** Camera position here"+ this.camera.position);
         this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
         this.entitiesList = entitiesList;
 
