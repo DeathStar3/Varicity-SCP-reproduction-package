@@ -1,6 +1,5 @@
 package fr.unice.i3s.sparks.deathstar3;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -34,7 +33,6 @@ public class CommandRunner {
         this.commands = commands;
     }
 
-    @SneakyThrows
     public void execute() {
         ProcessBuilder builder = new ProcessBuilder();
 
@@ -42,14 +40,19 @@ public class CommandRunner {
             builder.command(shellLocation, cmd);
 
             builder.directory(new File(workingDirectory));
-            Process process = builder.start();
-            log.info("Execute : " + shellLocation + " " + cmd);
 
-            StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), log::debug);
-            Executors.newSingleThreadExecutor().submit(streamGobbler);
+            try {
+                Process process = builder.start();
+                log.info("Execute : " + shellLocation + " " + cmd);
 
-            int exitCode = process.waitFor();
-            assert exitCode == 0;
+                StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), log::debug);
+                Executors.newSingleThreadExecutor().submit(streamGobbler);
+
+                int exitCode = process.waitFor();
+                assert exitCode == 0;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
