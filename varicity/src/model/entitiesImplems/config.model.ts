@@ -8,6 +8,10 @@ export enum CriticalLevel {
 }
 
 export class Config implements ConfigInterface {
+
+    name: string;
+    description: string;
+
     building: D3Config;
     // building: ConfigColor;
     // district: ConfigColor;
@@ -101,5 +105,18 @@ export class Config implements ConfigInterface {
             }
             return CriticalLevel.RERENDER_SCENE;
         }
+        if (fields.includes("name")) {
+            if (Array.isArray(value)) {
+                config.name = value[1];
+                return CriticalLevel.LOW_IMPACT;
+            }
+        }
+        if (fields.includes("description")) {
+            if (Array.isArray(value)) {
+                config.description = value[1];
+                return CriticalLevel.LOW_IMPACT;
+            }
+        }
+        return CriticalLevel.RERENDER_SCENE;
     }
 }

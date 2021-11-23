@@ -1,12 +1,8 @@
-import { Config } from '../../model/entitiesImplems/config.model';
+import {Config} from '../../model/entitiesImplems/config.model';
 
 export class ConfigLoader {
     private static json: Map<string, Config[]> = undefined;
     private static defaultJsonName = undefined;
-
-    private static getConfigNameOnly(configPath: string): string {
-        return configPath.split('/').pop().split(/\.ya?ml$/).shift();
-    }
 
     private static loadJson(): void {
         const requireContext = require.context('/config', true, /\.ya?ml$/);
@@ -19,15 +15,15 @@ export class ConfigLoader {
 
             // check if config file is for specific project
             const projectName = ConfigLoader.getConfigProjectName(key);
-            if(projectName !== undefined) {
-                if(ConfigLoader.json.has(projectName)){
+            if (projectName !== undefined) {
+                if (ConfigLoader.json.has(projectName)) {
                     ConfigLoader.json.get(projectName).push(config);
-                }else{
+                } else {
                     ConfigLoader.json.set(projectName, [config]);
                 }
 
                 // check if config file is the default one
-            }else if(ConfigLoader.isDefaultProject(key)){
+            } else if (ConfigLoader.isDefaultProject(key)) {
                 ConfigLoader.json.set(ConfigLoader.defaultJsonName, [config]);
             }
         });
@@ -40,10 +36,22 @@ export class ConfigLoader {
             ConfigLoader.loadJson();
         }
 
-        if(ConfigLoader.json.has(fileName)){
+        if (ConfigLoader.json.has(fileName)) {
             return ConfigLoader.json.get(fileName)[0];
-        }else{
+        } else {
             return ConfigLoader.json.get(ConfigLoader.defaultJsonName)[0];
+        }
+    }
+
+    public static loadConfigFiles(fileName: string): Config[] {
+        if (ConfigLoader.json === undefined) {
+            ConfigLoader.loadJson();
+        }
+
+        if (ConfigLoader.json.has(fileName)) {
+            return ConfigLoader.json.get(fileName);
+        } else {
+            return ConfigLoader.json.get(ConfigLoader.defaultJsonName);
         }
     }
 

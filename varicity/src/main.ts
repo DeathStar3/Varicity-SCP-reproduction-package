@@ -5,14 +5,15 @@ import { FilesLoader } from './controller/parser/filesLoader';
 class Main {
 
     constructor() {
-        let keys = FilesLoader.getAllFilenames();
+        let jsonFiles = FilesLoader.getAllFilenames();
 
-        let config = ConfigLoader.loadDataFile("config");
+        let configs = ConfigLoader.loadConfigFiles("config");
 
         UIController.initSearchbar();
-        UIController.createConfig(config);
+        UIController.createConfig(configs[0]);
         UIController.createDoc();
-        UIController.createProjectSelector(keys);
+        UIController.createProjectSelector(jsonFiles);
+        UIController.createConfigSelector(configs, "");
         UIController.createLogs();
     }
 }

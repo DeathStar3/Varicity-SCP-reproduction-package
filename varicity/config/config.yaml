@@ -2,6 +2,9 @@
 # you may alter this file before running the program
 # pick your color at https://htmlcolorcodes.com/
 
+name: "default config"
+description: "basic config with default colors and building representation"
+
 building:
   padding: 0.2
   colors:
@@ -105,8 +108,8 @@ api_classes: # configuration given in the paper
     - "org.zalando.riptide.Http"
 
 variables: #variables to be used for width and height of a building
-  width: "Cyclo"
-  height: "WMC"
+  width: "nbMethodVariants"
+  height: "nbConstructorVariants"
 
 orientation: "OUT"
 
