@@ -3,13 +3,9 @@ import { User, UserType } from '../../configsaver/model/city-view-config';
 import Cookies from 'js-cookie';
 class LoginController {
 
-
-
     constructor(){
         this.addListenerToRegisterBtn();
     }
-
-
 
     public async addListenerToRegisterBtn() {
         console.log("my method is called");
@@ -27,25 +23,34 @@ class LoginController {
                 console.log(usr);
 
 
+                // Cookies.set('varicity-connected-user', response.data, { path: '', sameSite: 'strict' });
+                // console.log(response.data);
 
-                axios.post('http://localhost:8080/users', usr).then(response => {
+                if (document.URL.endsWith('/')) {
+                    document.location.href = document.URL + 'ui.html'
+                }
+                else {
+                    document.location.href = document.URL + '/ui.html'
+                }
 
-                    console.log("Trying to log in");
-
-                    Cookies.set('varicity-connected-user', response.data, { path: '', sameSite: 'strict' });
-                    console.log(response.data);
-
-                    if (document.URL.endsWith('/')) {
-                        document.location.href = document.URL + 'ui.html'
-                    }
-                    else {
-                        document.location.href = document.URL + '/ui.html'
-                    }
-
-
-                }).catch(err => {
-                    console.log(err);
-                });
+                // axios.post('http://localhost:8080/users', usr).then(response => {
+                //
+                //     console.log("Trying to log in");
+                //
+                //     Cookies.set('varicity-connected-user', response.data, { path: '', sameSite: 'strict' });
+                //     console.log(response.data);
+                //
+                //     if (document.URL.endsWith('/')) {
+                //         document.location.href = document.URL + 'ui.html'
+                //     }
+                //     else {
+                //         document.location.href = document.URL + '/ui.html'
+                //     }
+                //
+                //
+                // }).catch(err => {
+                //     console.log(err);
+                // });
 
             });
         });

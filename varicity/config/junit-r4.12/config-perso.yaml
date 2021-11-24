@@ -77,3 +77,13 @@ variables: #variables to be used for width and height of a building
 orientation: "OUT"
 
 default_level: 5
+
+
+camera_data:
+  alpha: 4
+  beta: 5
+  radius: 1000
+  target:
+    x: 1
+    y: 20
+    z: 10

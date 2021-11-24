@@ -4,7 +4,7 @@ import {UIController} from "./ui.controller";
 import {EntitiesList} from "../../model/entitiesList";
 import {FilesLoader} from "../parser/filesLoader";
 import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
-import {Config} from "../../model/entitiesImplems/config.model";
+import {Config, Vector3_Local} from "../../model/entitiesImplems/config.model";
 
 export class ConfigSelectorController {
 
@@ -29,6 +29,17 @@ export class ConfigSelectorController {
             // const doc = new Document();
             // doc.contents = JSON.stringify(this.config);
             // console.log(doc.toString());
+        }
+
+
+        let saveCameraButton = document.getElementById("save-btn");
+        saveCameraButton.onclick = () => {
+            let cameraPos = UIController.scene.camera.getTarget();
+            this.config.camera_data.target = Vector3_Local.fromVector3(cameraPos);
+            this.config.camera_data.alpha = UIController.scene.camera["alpha"];
+            this.config.camera_data.beta = UIController.scene.camera["beta"];
+            this.config.camera_data.radius = UIController.scene.camera["radius"];
+            UIController.createConfig(this.config);
         }
 
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
