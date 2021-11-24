@@ -8,7 +8,8 @@ module.exports = {
     entry: {
       'main': path.resolve(appDirectory, "src/main.ts"),
       'parserTest':'./tests/parser.test.ts',
-      'parserVPTest':'./tests/parserVP.test.ts'
+      'parserVPTest':'./tests/parserVP.test.ts',
+      'login':path.resolve(appDirectory, 'src/controller/ui/login.controller.ts')
     },
     optimization: {
         splitChunks: {
@@ -51,8 +52,14 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            inject: true,
+            chunks:['login'],
+            
             template: path.resolve(appDirectory, "public/index.html")
+        }),
+        new HtmlWebpackPlugin({
+          chunks:['main'],
+          template: path.resolve(appDirectory, "public/ui.html"),
+          filename: 'ui.html'
         }),
         new CleanWebpackPlugin()
     ],

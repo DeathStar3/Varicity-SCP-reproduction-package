@@ -1,8 +1,8 @@
 import { Vector3 } from "@babylonjs/core";
 
 export enum UserType{
-    EXPERT=2,
-    NEWCOMER=1
+    EXPERT="EXPERT",
+    NEWCOMER="NEWCOMER"
 }
 export class CityViewConfig{
     userType:UserType;
@@ -10,4 +10,14 @@ export class CityViewConfig{
     timestamp:Date;
     projectName:string;
     cameraPosition:Vector3;
+}
+
+export class User{
+
+    constructor(n:string , u:UserType){
+        this.userType=u;
+        this.username=n;
+    }
+    userType:UserType;
+    username:string;
 }
