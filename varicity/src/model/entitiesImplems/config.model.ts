@@ -1,5 +1,6 @@
 import { Color, ConfigClones, ConfigColor, ConfigInterface, D3Config } from "../entities/config.interface";
 import { Orientation } from "./orientation.enum";
+import {Vector3} from "@babylonjs/core";
 
 export enum CriticalLevel {
     LOW_IMPACT = 0,
@@ -35,6 +36,9 @@ export class Config implements ConfigInterface {
         width: string;
         height: string;
     };
+
+    camera_data: CameraData;
+
     parsing_mode: string;
     orientation: Orientation;
     default_level: number;
@@ -81,6 +85,24 @@ export class Config implements ConfigInterface {
                 return CriticalLevel.RERENDER_SCENE;
             }
         }
+        if (fields.includes("camera_data")){
+            if (Array.isArray(value)) {
+
+                // let obj = config;
+                // for (let i = 0; i < fields.length - 1; i++) {
+                //     obj = config[fields[i]];
+                // }
+                // obj[fields.length - 1] = +value[1];
+
+
+                if(fields.length == 2){
+                    config[fields[0]][fields[1]] = +value[1];
+                }else{
+                    config[fields[0]][fields[1]][fields[2]]  = +value[1];
+                }
+                return CriticalLevel.RERENDER_SCENE;
+            }
+        }
         for (let key of fields) {
             cur = cur[key]; // we go deeper
         }
@@ -118,5 +140,40 @@ export class Config implements ConfigInterface {
             }
         }
         return CriticalLevel.RERENDER_SCENE;
+    }
+}
+
+// TODO move to new file
+export class CameraData {
+    alpha: number;
+    beta: number;
+    radius: number;
+    target: Vector3_Local;
+
+    constructor(alpha: number, beta: number, radius: number, position: Vector3_Local) {
+        this.alpha = alpha;
+        this.beta = beta;
+        this.radius = radius;
+        this.target = position;
+    }
+
+}
+
+export class Vector3_Local {
+    x: number;
+    y: number;
+    z: number;
+
+    constructor(x?: number, y?: number, z?: number) {
+        this.x = x || 0;
+        this.y = y || 0;
+        this.z = z || 0;
+    }
+
+    public static toVector3(v: Vector3_Local): Vector3{
+        return new Vector3(v.x, v.y, v.z);
+    }
+    public static fromVector3(v: Vector3): Vector3_Local{
+        return new Vector3_Local(v.x, v.y, v.z);
     }
 }

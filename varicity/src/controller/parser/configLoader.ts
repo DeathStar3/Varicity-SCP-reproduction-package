@@ -1,4 +1,5 @@
-import {Config} from '../../model/entitiesImplems/config.model';
+import {CameraData, Config, Vector3_Local} from '../../model/entitiesImplems/config.model';
+import {Vector3} from "@babylonjs/core";
 
 export class ConfigLoader {
     private static json: Map<string, Config[]> = undefined;
@@ -12,6 +13,10 @@ export class ConfigLoader {
 
         requireContext.keys().forEach((key) => {
             const config = requireContext(key) as Config;
+
+            if(config.camera_data === undefined){
+                config.camera_data = new CameraData(2 * Math.PI / 3, Math.PI / 3, 100, new Vector3_Local());
+            }
 
             // check if config file is for specific project
             const projectName = ConfigLoader.getConfigProjectName(key);
