@@ -51,7 +51,7 @@
     border: 5px black;
 }
 
-div {
+div:not(#main) {
     padding-top: 10px;
 }
 

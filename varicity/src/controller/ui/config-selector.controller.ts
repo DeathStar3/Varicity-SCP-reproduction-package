@@ -10,7 +10,6 @@ export class ConfigSelectorController {
 
     static el: EntitiesList;
     private static previousParser: ParsingStrategy;
-    private static config: Config;
     private static filename: string;
 
     static createConfigSelector(configs: Config[], filename: string) {
@@ -18,16 +17,16 @@ export class ConfigSelectorController {
 
         this.filename = filename;
         if(configs.length > 0){
-            this.config = configs[0];
+            UIController.config = configs[0];
         }
 
-        parent.innerHTML = "Config selection: " + ((this.config !== undefined)? this.config.name : "[no config found]");
+        parent.innerHTML = "Config selection: " + ((UIController.config !== undefined)? UIController.config.name : "[no config found]");
 
         let saveConfigButton = document.getElementById("save-config");
         saveConfigButton.onclick = () => {
             console.log("yaml config: TODO")
             // const doc = new Document();
-            // doc.contents = JSON.stringify(this.config);
+            // doc.contents = JSON.stringify(UIController.config);
             // console.log(doc.toString());
         }
 
@@ -35,15 +34,15 @@ export class ConfigSelectorController {
         let saveCameraButton = document.getElementById("save-btn");
         saveCameraButton.onclick = () => {
             let cameraPos = UIController.scene.camera.getTarget();
-            this.config.camera_data.target = Vector3_Local.fromVector3(cameraPos);
-            this.config.camera_data.alpha = UIController.scene.camera["alpha"];
-            this.config.camera_data.beta = UIController.scene.camera["beta"];
-            this.config.camera_data.radius = UIController.scene.camera["radius"];
-            UIController.createConfig(this.config);
+            UIController.config.camera_data.target = Vector3_Local.fromVector3(cameraPos);
+            UIController.config.camera_data.alpha = UIController.scene.camera["alpha"];
+            UIController.config.camera_data.beta = UIController.scene.camera["beta"];
+            UIController.config.camera_data.radius = UIController.scene.camera["radius"];
+            UIController.createConfig(UIController.config);
         }
 
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-        inputElement.value = this.config.default_level.toString();
+        inputElement.value = UIController.config.default_level.toString();
 
         let filterButton = document.getElementById("filter-button") as HTMLButtonElement;
         filterButton.onclick = () => {
@@ -57,10 +56,10 @@ export class ConfigSelectorController {
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
-                this.config = configs[i];
+                UIController.config = configs[i];
 
                 parent.childNodes[0].nodeValue = "Config selection: " + configs[i].name;
-                inputElement.value = this.config.default_level.toString();
+                inputElement.value = UIController.config.default_level.toString();
 
                 this.reParse();
 
@@ -95,9 +94,9 @@ export class ConfigSelectorController {
         }
 
         UIController.clearMap();
-        UIController.createConfig(this.config);
+        UIController.createConfig(UIController.config);
 
-        this.el = this.previousParser.parse(FilesLoader.loadDataFile(this.filename), this.config, this.filename);
+        this.el = this.previousParser.parse(FilesLoader.loadDataFile(this.filename), UIController.config, this.filename);
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
         inputElement.min = "1";
         const maxLvl = this.el.getMaxCompLevel();
@@ -106,7 +105,7 @@ export class ConfigSelectorController {
             inputElement.value = maxLvl.toString();
         }
 
-        UIController.scene = new EvostreetImplem(this.config, this.el.filterCompLevel(+inputElement.value));
+        UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+inputElement.value));
         UIController.scene.buildScene();
     }
 }
