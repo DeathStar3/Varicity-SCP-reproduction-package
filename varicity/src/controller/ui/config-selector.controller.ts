@@ -23,6 +23,13 @@ export class ConfigSelectorController {
 
         parent.innerHTML = "Config selection: " + ((this.config !== undefined)? this.config.name : "[no config found]");
 
+        let saveConfigButton = document.getElementById("save-config");
+        saveConfigButton.onclick = () => {
+            console.log("yaml config: TODO")
+            // const doc = new Document();
+            // doc.contents = JSON.stringify(this.config);
+            // console.log(doc.toString());
+        }
 
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
         inputElement.value = this.config.default_level.toString();
