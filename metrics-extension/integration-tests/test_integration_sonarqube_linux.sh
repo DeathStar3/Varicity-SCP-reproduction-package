@@ -23,7 +23,7 @@ echo " ### [1;32m Step: 3/3 - Assert result [0m"
 
 RESULT_FILE_NAME=$(find ./test_actual_result -type f -printf "%f\n") # Find file name
 
-DIFF=$(diff ./test_expected_result/junit-r4.13.2-expected.json ./test_actual_result/junit-r4.13.2/${RESULT_FILE_NAME}) #Compare files
+DIFF=$(diff ./test_expected_result/junit-r4.13.2-expected-linux.json ./test_actual_result/junit-r4.13.2/${RESULT_FILE_NAME}) #Compare files
 
 if [ ! -z "${DIFF}" ]; then # Check if the comparison result is an empty string
   echo " ### [1;31m TEST FAIL [0m"
