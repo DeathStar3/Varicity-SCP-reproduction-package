@@ -66,6 +66,7 @@ input {
     padding-right: 10px;
     background-color: lightgrey;
     border: 2px lightgrey solid;
+    /*padding: 0.5em;*/
     cursor: pointer;
 }
 
@@ -99,4 +100,19 @@ html {
 body {
     overflow: hidden;
     height: 100%;
+}
+
+#save-config {
+    text-align: center;
+    font-weight: bold;
+    background-color: grey;
+    padding: 0.5em 0;
+}
+
+.parent div{
+    /*padding: 0.5em;*/
+}
+
+body{
+    margin: 0px;
 }
