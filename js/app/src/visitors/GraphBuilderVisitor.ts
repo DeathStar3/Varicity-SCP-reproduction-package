@@ -1,7 +1,7 @@
-import * as ts from "typescript";
 import SymfinderVisitor from "./SymfinderVisitor";
-import {EntityType, EntityAttribut, EntityVisibility, NodeType, UnknownEntity, RelationType} from "../neograph/NodeType";
+import { EntityType, EntityAttribut, RelationType } from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
+import { HeritageClause, isHeritageClause, Node, SyntaxKind } from "typescript";
 
 export default class GraphBuilderVisitor extends SymfinderVisitor{
 
@@ -9,45 +9,56 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         super(neoGraph);
     }
 
-    //Visit HeritageClauses
-    async visit(node: ts.Node): Promise<void> {
+    /**
+     * Visit heritage clause
+     * @param node AST node
+     * @returns ...
+     */
+    async visit(node: Node): Promise<void> {
 
-        if(!ts.isHeritageClause(node)) return;
+        if(isHeritageClause(node)) await this.visitHeritageClause(node);
+        return;        
+    }
 
-        var className: string = (<any>node.parent).name.escapedText;
+    async visitHeritageClause(node: HeritageClause): Promise<void>{
+        
+        if(node.parent.name === undefined) return;
+        var className: string = node.parent.name?.getText();
         var classType: EntityType; 
-        var superClassesName: string[] = (<any>node).types.map((type: any) => type.expression.escapedText);
+        var superClassesName: string[] = node.types.map((type) => type.expression.getText());
         var superClasseType: EntityType;
         var relationType: RelationType;
 
-        if((<any>node.parent).kind == ts.SyntaxKind.InterfaceDeclaration)
+        if(node.parent.kind == SyntaxKind.InterfaceDeclaration)
             classType = EntityType.INTERFACE;
-        else if((<any>node.parent).kind == ts.SyntaxKind.ClassDeclaration)
+        else if(node.parent.kind == SyntaxKind.ClassDeclaration)
             classType = EntityType.CLASS;
-        else return;
+        else {
+            console.log("Unknown EntityType "+node.parent.kind+"...");
+            return;
+        }
 
-        if((<any>node).token == ts.SyntaxKind.ImplementsKeyword){
+        if(node.token == SyntaxKind.ImplementsKeyword){
             superClasseType = EntityType.INTERFACE;
             relationType = RelationType.IMPLEMENTS;
         }
-        else if((<any>node).token == ts.SyntaxKind.ExtendsKeyword){
+        else if(node.token == SyntaxKind.ExtendsKeyword){
             superClasseType = EntityType.CLASS;
             relationType = RelationType.EXTENDS;
         }
-        else return;
+        else {
+            console.log("Unknown RelationType "+node.parent.kind+"...");
+            return;
+        }
 
         for(let scn of superClassesName){
-            try {
                 var superClassNode = await this.neoGraph.getOrCreateNode(scn, superClasseType, [EntityAttribut.OUT_OF_SCOPE], []);
-                var classNode = await this.neoGraph.getNode(className, classType)
-                await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
-            } catch (error) {
-                console.log("Error to link nodes "+className+" and "+superClassesName+"...");
-            }
+                var classNode = await this.neoGraph.getNodeWithType(className, classType)
+                if(classNode !== undefined)
+                    await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
+                else 
+                    console.log("Error to link nodes "+className+" and "+superClassesName+"...");
         };
-        
-        console.log("Name : " + className);
-        console.log(relationType + " : " + superClassesName + "\n");
         return;
     }
 }

@@ -1,26 +1,26 @@
 import SymfinderVisitor from "../visitors/SymfinderVisitor";
-import * as ts from 'typescript';
-import * as fs from 'fs';
+import { createSourceFile, Node, ScriptTarget, SourceFile } from 'typescript';
+import { readFileSync } from 'fs';
 
 export default class Parser{
 
-    sourceFile: ts.SourceFile;
+    sourceFile: SourceFile;
     
     constructor(file: string) {
-        this.sourceFile = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
+        this.sourceFile = createSourceFile(file, readFileSync(file, 'utf8'), ScriptTarget.Latest, true);
     }
 
     async accept(visitor: SymfinderVisitor) {
         for(let node of this.sourceFile.statements) {
-            await this.visit(node, visitor);
             await visitor.visit(node);
+            await this.visit(node, visitor);
         }
     }
 
-    async visit(node: ts.Node, visitor: SymfinderVisitor){
+    async visit(node: Node, visitor: SymfinderVisitor){
         for(let child of node.getChildren()){
-            await this.visit(child, visitor);
             await visitor.visit(child);
+            await this.visit(child, visitor);
         }
     }
 }

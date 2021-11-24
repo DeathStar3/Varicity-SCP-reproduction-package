@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import { Node } from "typescript";
 import NeoGraph from "../neograph/NeoGraph";
 
 export default abstract class SymfinderVisitor{
@@ -9,5 +9,5 @@ export default abstract class SymfinderVisitor{
         this.neoGraph = neoGraph;
     }
 
-    abstract visit(node: ts.Node): Promise<void>;
+    abstract visit(node: Node): Promise<void>;
 }

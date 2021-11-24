@@ -1,9 +1,9 @@
-import * as yaml from "js-yaml"
-import * as fs from "fs"
+import { load } from "js-yaml"
+import { readFileSync } from "fs"
 
 export class Configuration{
 
-    properties: any = yaml.load(fs.readFileSync('./neo4j.yaml', 'utf8'));
+    properties: any = load(readFileSync('./neo4j.yaml', 'utf8'));
 
     getNeo4JBoltAdress(): string{
         return this.properties.neo4j.boltAddress

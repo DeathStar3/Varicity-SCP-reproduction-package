@@ -27,4 +27,12 @@ export enum RelationType {
     INSTANTIATE = "INSTANTIATE"
 }
 
-export type NodeType = EntityAttribut | EntityType | EntityVisibility | UnknownEntity | RelationType;
+export enum DesignPatternType {
+    STRATEGY = "STRATEGY",
+    FACTORY = "FACTORY",
+    TEMPLATE = "TEMPLATE",
+    DECORATOR = "DECORATOR",
+    COMPOSITION_STRATEGY = "COMPOSITION_STRATEGY"
+}
+
+export type NodeType = EntityAttribut | EntityType | EntityVisibility | UnknownEntity | RelationType | DesignPatternType;
