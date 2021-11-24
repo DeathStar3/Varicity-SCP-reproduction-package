@@ -16,5 +16,3 @@ junit-r4.13.2:
       component-name: "junit%3Ajunit"
       metrics:
         - "coverage"
-        - "complexity"
-        - "cognitive_complexity"
