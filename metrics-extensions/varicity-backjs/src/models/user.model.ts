@@ -1,3 +1,5 @@
+import { VaricityConfig } from "./config.model";
+import { JsonInputInterface } from "./jsonInput.interface";
 
 export enum UserType{
     EXPERT="EXPERT",
@@ -8,6 +10,8 @@ export class Project{
     projectName:string;
     index?:number;
     id?:string;
+    configs?:VaricityConfig[];
+    visualizationData?:JsonInputInterface;
 }
 
 

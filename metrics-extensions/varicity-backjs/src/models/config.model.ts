@@ -41,9 +41,12 @@ export interface ConfigColor {
 }
 export class VaricityConfig {
 
+    id:string; //id
     name: string;
+    
     description: string;
-
+    username:string;
+    timestamp:string; //isodate
     building: D3Config;
     // building: ConfigColor;
     // district: ConfigColor;

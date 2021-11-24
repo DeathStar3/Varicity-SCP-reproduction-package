@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
+import { endWith } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { AppService } from './app.service';
 import { VaricityConfig } from './models/config.model';
@@ -24,25 +25,24 @@ export class AppController {
   }
 
 
-  //TODO get
-  @Post('/users/configs')
-  saveConfigForUser(@Body() config: CityViewConfig): CityViewConfig {
-
-    this.db.push(`/users[${config.authorIndex}]/configs[]`, config);
-
-    return config;
-  }
 
 
-  //TODO get
+
   @Post('/projects/:index/configs')
   saveConfig(@Param() params, @Body() config: VaricityConfig): VaricityConfig {
+
+    config.timestamp = new Date().toISOString();
     this.db.push(`/projects[${params.index}]/configs[]`, config);
 
     return config;
   }
 
   @Get('/projects')
+  findAllProjects(): string[] {
+    return this.db.filter<Project>('/projects', (entry, index) => true).map(project => project.projectName)
+  }
+
+  @Get('/projects/configs')
   getConfigsOfProject(@Query() query: Record<string, any>): VaricityConfig[] {
 
     try {
@@ -61,17 +61,28 @@ export class AppController {
   newProject(@Body() project: Project): Project {
     let index = 0;
 
-    try {
+    if (this.db.exists('/projects')) {
       index = this.db.count("/projects");
-    } catch (error) {
+      const existingProject = this.db.find<Project>('/users', (entry, index) => entry.projectName == project.projectName);
+
+      if (existingProject) {
+        return existingProject;
+      }
 
     }
     project.index = index;
     this.db.push(`/projects[]`, project);
 
+
     return project;
   }
 
+  @Get('/configs')
+  getConfigsOfUser(@Query() query: Record<string, any>): VaricityConfig[] {
+    let project: { configs: VaricityConfig[] } = this.db.find('/projects', (entry, index) => entry.projectName == query['projectName'])
+    return project.configs.filter((entry, index) => entry.username == query['username']);
+
+  }
 
   //todo get
   @Post('/users')
