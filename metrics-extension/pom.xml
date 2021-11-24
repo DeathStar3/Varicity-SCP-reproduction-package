@@ -11,7 +11,6 @@
         <module>config-loader</module>
         <module>metric-gatherer</module>
         <module>entities</module>
-        <module>compiler</module>
         <module>command-runner</module>
     </modules>
 
