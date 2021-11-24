@@ -53,11 +53,15 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
 
         for(let scn of superClassesName){
                 var superClassNode = await this.neoGraph.getOrCreateNode(scn, superClasseType, [EntityAttribut.OUT_OF_SCOPE], []);
-                var classNode = await this.neoGraph.getNodeWithType(className, classType)
-                if(classNode !== undefined)
-                    await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
-                else 
-                    console.log("Error to link nodes "+className+" and "+superClassesName+"...");
+                if(superClassNode !== undefined){
+                    var classNode = await this.neoGraph.getNodeWithType(className, classType)
+                    if(classNode !== undefined)
+                        await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
+                    else 
+                        console.log("Error to link nodes "+className+" and "+superClassesName+"...");
+                }
+                else
+                    console.log("Error to link nodes "+className+" and "+superClassesName+"...");                
         };
         return;
     }

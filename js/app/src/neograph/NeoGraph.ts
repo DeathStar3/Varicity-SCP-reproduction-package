@@ -1,5 +1,6 @@
 import { driver, Driver } from "neo4j-driver";
 import { auth, Node, QueryResult, Record, Session, Transaction } from "neo4j-driver-core";
+import { exit } from "process";
 import { Configuration } from "../configuration/Configuration"
 import { NodeType, RelationType, EntityType, EntityAttribut } from "./NodeType";
 
@@ -81,15 +82,23 @@ export default class NeoGraph{
     }
 
     async submitRequest(request: string, parameter: any): Promise<Record[]>{
-        try {
-            var session: Session = this.driver.session();
-            var transaction: Transaction = session.beginTransaction();
-            return transaction.run(request, parameter).then((result: QueryResult) => {
-                return transaction.commit().then(() => result.records);
-            });
-        } catch (error) {
-            console.log("Neo4j database not ready...");
-            throw error;
+        var maxTry = 10;
+        var waitingTime = 5;
+        for(let nbTry = 0; nbTry < maxTry; nbTry++){
+            try {
+                var session: Session = this.driver.session();
+                var transaction: Transaction = session.beginTransaction();
+                var result: QueryResult = await transaction.run(request, parameter);
+                await transaction.commit();
+                if(nbTry > 0) process.stdout.write("Database ready.                                               \n");
+                return result.records;
+            } catch (error) {
+                process.stdout.write("Data base not ready... Retrying in "+waitingTime+" sec (" + nbTry + "/" + maxTry + ")" + "\r");
+                await new Promise<void>((res) => setTimeout(()=>res(), waitingTime * 1000));
+            }
         }
+        process.stdout.write("Data base not ready... Retrying in "+waitingTime+" sec (" + maxTry + "/" + maxTry + ")" + "\n");
+        console.log("Cannot connect to the database...");
+        exit(1);
     }
 }
