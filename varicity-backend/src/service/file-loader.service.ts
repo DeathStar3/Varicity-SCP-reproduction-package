@@ -1,10 +1,11 @@
-import { JsonDB } from "node-json-db";
-import { Config } from "node-json-db/dist/lib/JsonDBConfig";
-import { JsonInputInterface, MetricClassInterface } from "./models/jsonInput.interface";
-const path = require('path');
+import {JsonDB} from "node-json-db";
+import {Config} from "node-json-db/dist/lib/JsonDBConfig";
+import {JsonInputInterface, MetricClassInterface} from "../model/jsonInput.interface";
 import * as fs from 'fs';
 
-export class FilesLoader {
+const path = require('path');
+
+export class FileLoaderService {
 
 
     private static getFileNameOnly(filePath: string): string {
@@ -19,15 +20,15 @@ export class FilesLoader {
 
         let symfinderObj = db.getData('/') as JsonInputInterface;
 
-        
+
         let mapSymFinderClassesIndex = this.indexSymFinderClassesToMap(symfinderObj);
 
 
         ['sonarcloud', 'sonarqube'].forEach(metricsource => {
             const metricsPath = path.join(process.cwd(), `data/symfinder_files/externals/${projectName}/${projectName}-${metricsource}.json`)
-            
+
             if (fs.existsSync(metricsPath)) {
-               
+
                 let externalMetrics = new JsonDB(new Config(`data/symfinder_files/externals/${projectName}/${projectName}-${metricsource}.json`, true, true, '/')).getData('/') as MetricClassInterface[]
 
                 console.log()
@@ -52,9 +53,6 @@ export class FilesLoader {
     }
 
 
-    
-    
-
     private static indexSymFinderClassesToMap(symfinderObj: JsonInputInterface) {
         let mapSymFinderClassesIndex = new Map<string, number>();
         for (let i = 0; i < symfinderObj.nodes.length; i++) {
@@ -64,6 +62,6 @@ export class FilesLoader {
     }
 
     public static loadVisualizationInfoOfProject(project: string): JsonInputInterface {
-        return FilesLoader.loadJson(project);
+        return FileLoaderService.loadJson(project);
     }
 }

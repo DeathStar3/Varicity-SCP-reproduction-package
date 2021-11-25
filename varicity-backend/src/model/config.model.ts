@@ -1,4 +1,4 @@
-import { Vector3 } from "./user.model";
+import {Vector3} from "./user.model";
 
 export class CameraData {
     alpha: number;
@@ -39,14 +39,15 @@ export interface ConfigColor {
     outlines: Color[]
     // }
 }
+
 export class VaricityConfig {
 
-    id?:string; //for persistence
+    id?: string; //for persistence
     name: string;
-    projectId?:string; //for persistence
+    projectId?: string; //for persistence
     description: string;
-    username:string;
-    timestamp:string; //isodate
+    username: string;
+    timestamp: string; //isodate
     building: D3Config;
     // building: ConfigColor;
     // district: ConfigColor;
