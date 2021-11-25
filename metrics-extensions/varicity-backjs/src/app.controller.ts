@@ -39,12 +39,20 @@ export class AppController {
   @Post('/projects/configs')
   saveConfig(@Body() config: VaricityConfig): VaricityConfig {
 
-    let projectIndex = this.db.getIndex('/projects', config.projectId, 'projectId');
+    if(!config.projectId){
+      console.warn('projectId of config is not defined');
+      return config;
+    }
+
+    console.log(config.projectId)
+    let projectIndex = this.db.getIndex('/projects', config.projectId, 'projectName');
+
+    console.log('JsonDB found that the index of ',config.projectId,' is ',projectIndex);
 
     if (projectIndex == -1) {
       console.error('Project of id ', config.projectId, 'does not exist');
       //TODO send http status code ...
-      return null;
+      return config;
     }
 
     //si l'id est défini

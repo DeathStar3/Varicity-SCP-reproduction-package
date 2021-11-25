@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+import { UIController } from "../../controller/ui/ui.controller";
 
 export class CurrentProjectListener {
 
@@ -5,14 +7,18 @@ export class CurrentProjectListener {
     public projectChange(newProject: string): void {
 
         
-        if (this.currentProject) {
+        if (this.currentProject && this.currentProject!== newProject) {
             console.log(" Visualized Project changed from " + this.currentProject + " to " + newProject);
             this.currentProject = newProject;
+            UIController.config.projectId = this.currentProject;
         }
         else {
             console.log(" Visualized Project is " + newProject);
             this.currentProject = newProject;
+            UIController.config.projectId = this.currentProject;
         }
+
+        Cookies.set('varicity-current-project',this.currentProject , { sameSite: 'strict' });
 
 
         /**

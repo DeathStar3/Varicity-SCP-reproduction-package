@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { backendUrl } from './constants';
 import { ConfigLoader } from './controller/parser/configLoader';
 import { UIController } from './controller/ui/ui.controller';
@@ -9,9 +10,9 @@ class Main {
 
 
 
-    addEvenListenersToUI(){
+    addEvenListenersToUI() {
 
-        document.getElementById("save-btn").addEventListener('click', ()=>{
+        document.getElementById("save-btn").addEventListener('click', () => {
             let cameraPos = UIController.scene.camera.getTarget();
             UIController.config.camera_data.target = Vector3_Local.fromVector3(cameraPos);
             UIController.config.camera_data.alpha = UIController.scene.camera["alpha"];
@@ -22,6 +23,13 @@ class Main {
 
         document.querySelector("#save-config").addEventListener('click', _clickev => {
             console.log('Add config ', new Date().toISOString())
+
+            console.log('Project Id of the Config is', UIController.config.projectId);
+
+
+            UIController.config.projectId = Cookies.get('varicity-current-project');
+            console.log('Project Id of the Config is now', UIController.config.projectId);
+
             axios.post(`${backendUrl}/projects/configs`, UIController.config).then(response => {
                 UIController.config = response.data;
 
@@ -30,7 +38,7 @@ class Main {
                 console.error(err);
             })
         });
-     
+
     }
 
     constructor() {
@@ -49,12 +57,12 @@ class Main {
             UIController.createConfigSelector(configs, "");
             UIController.createLogs();
 
-            
+
             this.addEvenListenersToUI();
 
 
 
-           
+
 
         })
 

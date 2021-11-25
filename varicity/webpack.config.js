@@ -5,6 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
+
     entry: {
       'main': path.resolve(appDirectory, "src/main.ts"),
       //'parserTest':'./tests/parser.test.ts',
@@ -31,6 +32,7 @@ module.exports = {
         publicPath: '/',
         hot: true
     },
+    devtool: 'eval-source-map',
     module: {
       rules: [
         {

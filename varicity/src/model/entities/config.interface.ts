@@ -27,6 +27,8 @@ export interface ConfigClones {
 }
 
 export interface ConfigInterface {
+    id?:string; //for persistence
+    projectId?:string; //for persistence
     building: D3Config;
     // building: ConfigColor;
     district: D3Config;
