@@ -5,11 +5,28 @@
     <meta charset="UTF-8">
     <title>Symfinder Varicity</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Tangerine">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 
 <body>
+    <mwc-dialog id="dialog" heading="Form Validation">
+        <div>
+            <p>You are about to save your config. Are you sure ? Enter a name for your config or update it if needed.</p>
+            <input class="form-control" id="text-field" minlength="3" maxlength="64" placeholder="Config name" required>
+        
+        </div>
+
+        <mwc-button id="save-config-confirm-btn" slot="primaryAction">
+            Confirm
+        </mwc-button>
+        <mwc-button slot="secondaryAction" dialogAction="close">
+            Cancel
+        </mwc-button>
+    </mwc-dialog>
     <div id="main">
         <div id="console" class="overflowable">
 
@@ -21,8 +38,16 @@
                 </div>
                 <div class="btn-group ">
 
-                    <button class=" btn parent" id="save-config">Save Config</button>
+                    <button class=" btn parent" id="save-config">
+                        <span class="material-icons-outlined">
+                            save
+                            </span>
+                        Save Config</button>
                 </div>
+                <div class="btn-group ">
+                    <button id="documentation" type="button" class="btn btn-primary">Documentation</button>
+                </div>
+               
             </div>
 
 
@@ -31,39 +56,43 @@
             <div id="project_selector" class="parent"></div>
             <div id="config_selector" class="parent"></div>
 
+
+
+
+            <mwc-dialog id="doc_content" heading="Documentation of Varicity" class="styled">
+                <div >
+                    Use left click + drag to rotate camera<br />
+                    Use right click + drag to move camera<br />
+                    Use mouse wheel to zoom in/out<br />
+                    Hover on building to display class info in the details section below<br />
+                    Click on building to lock the info display on it<br />
+                    Legend for design patterns:<br />
+                    <ul>
+                        <li>
+                            Chimneys: A building with chimneys represents a Factory class<br />
+                            <img id="factory_img" />
+                        </li>
+                        <li>
+                            Dome: A building with a dome represents a Strategy class<br />
+                            <img id="strategy_img" />
+                        </li>
+                        <li>
+                            Inverted pyramid: A building with an inverted pyramid represents a Template class<br />
+                            <img id="template_img" />
+                        </li>
+                        <li>
+                            Sphere: A building with a sphere represents a Decorator class<br />
+                            <img id="decorator_img" />
+                        </li>
+                    </ul>
+    
+                </div>
+              <mwc-button slot="primaryAction" dialogAction="close">
+               Close documentation
+              </mwc-button>
+            </mwc-dialog>
+
             
-
-
-                <div id="documentation" type="button"
-                    class="btn btn-primary btn-lg btn-block parent">Documentation</div>
-            
-            <div id="doc_content">
-                Use left click + drag to rotate camera<br />
-                Use right click + drag to move camera<br />
-                Use mouse wheel to zoom in/out<br />
-                Hover on building to display class info in the details section below<br />
-                Click on building to lock the info display on it<br />
-                Legend for design patterns:<br />
-                <ul>
-                    <li>
-                        Chimneys: A building with chimneys represents a Factory class<br />
-                        <img id="factory_img" />
-                    </li>
-                    <li>
-                        Dome: A building with a dome represents a Strategy class<br />
-                        <img id="strategy_img" />
-                    </li>
-                    <li>
-                        Inverted pyramid: A building with an inverted pyramid represents a Template class<br />
-                        <img id="template_img" />
-                    </li>
-                    <li>
-                        Sphere: A building with a sphere represents a Decorator class<br />
-                        <img id="decorator_img" />
-                    </li>
-                </ul>
-
-            </div>
             <div id="config" class="parent"></div>
             <div class="parent">
                 <label for="comp-level">Usage level</label>
