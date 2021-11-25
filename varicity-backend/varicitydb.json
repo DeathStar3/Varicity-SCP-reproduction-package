@@ -158,13 +158,13 @@
                     "orientation": "OUT",
                     "default_level": 4,
                     "camera_data": {
-                        "alpha": -4.704375714698943,
-                        "beta": 0.1067465212009582,
-                        "radius": 103.92135820838061,
+                        "alpha": -3.1509950654599153,
+                        "beta": 3.1315926535897933,
+                        "radius": 100.33953115489997,
                         "target": {
-                            "x": 11.684349326346426,
-                            "y": 8.721032203281815,
-                            "z": 10.633651660390944
+                            "x": 42.70245364795744,
+                            "y": 9.076134305768313,
+                            "z": -1.7696821774914298
                         }
                     },
                     "projectId": "jfreechart-v1.5.0",
@@ -351,7 +351,7 @@
             "id": "2",
             "configs": [
                 {
-                    "name": "default config",
+                    "name": "my first config 2",
                     "description": "basic config with default colors and building representation",
                     "building": {
                         "padding": 0.2,
@@ -383,7 +383,7 @@
                                 },
                                 {
                                     "name": "CLASS",
-                                    "color": "#335DFF"
+                                    "color": "#a64ea4"
                                 }
                             ],
                             "edges": [
@@ -504,18 +504,21 @@
                     "orientation": "OUT",
                     "default_level": 4,
                     "camera_data": {
-                        "alpha": -4.688704016453424,
-                        "beta": 3.1315926535897933,
-                        "radius": 29.559067943185145,
+                        "alpha": -2.9997348718941756,
+                        "beta": 3.084048795181568,
+                        "radius": 36.139887165034516,
                         "target": {
-                            "x": 11.684349326346426,
-                            "y": 8.721032203281815,
-                            "z": 10.633651660390944
+                            "x": 14.30115446429799,
+                            "y": 9.273431384051834,
+                            "z": 14.99530384141609
                         }
                     },
                     "projectId": "junit-r4.12",
                     "timestamp": "2021-11-25T18:50:09.027Z",
-                    "id": "ed61622a-cbe5-4798-823d-4abdfcb17ab5"
+                    "id": "ed61622a-cbe5-4798-823d-4abdfcb17ab5",
+                    "clones": {
+                        "map": {}
+                    }
                 }
             ]
         }
