@@ -1,3 +1,5 @@
+import axios from "axios";
+import { backendUrl } from "../../constants";
 import { Config, Vector3_Local } from "../../model/entitiesImplems/config.model";
 import { EntitiesList } from "../../model/entitiesList";
 import { ProjectService } from "../../services/project.service";
@@ -22,24 +24,7 @@ export class ConfigSelectorController {
 
         parent.innerHTML = "Config selection: " + ((UIController.config !== undefined) ? UIController.config.name : "[no config found]");
 
-        let saveConfigButton = document.getElementById("save-config");
-        saveConfigButton.onclick = () => {
-            console.log("yaml config: TODO")
-            // const doc = new Document();
-            // doc.contents = JSON.stringify(UIController.config);
-            // console.log(doc.toString());
-        }
 
-
-        let saveCameraButton = document.getElementById("save-btn");
-        saveCameraButton.onclick = () => {
-            let cameraPos = UIController.scene.camera.getTarget();
-            UIController.config.camera_data.target = Vector3_Local.fromVector3(cameraPos);
-            UIController.config.camera_data.alpha = UIController.scene.camera["alpha"];
-            UIController.config.camera_data.beta = UIController.scene.camera["beta"];
-            UIController.config.camera_data.radius = UIController.scene.camera["radius"];
-            UIController.createConfig(UIController.config);
-        }
 
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
         inputElement.value = UIController.config.default_level.toString();

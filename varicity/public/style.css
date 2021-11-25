@@ -105,13 +105,9 @@ body {
 #save-config {
     text-align: center;
     font-weight: bold;
-    background-color: grey;
-    padding: 0.5em 0;
+    background-color: rgb(42, 207, 21);
 }
 
-.parent div{
-    /*padding: 0.5em;*/
-}
 
 body{
     margin: 0px;

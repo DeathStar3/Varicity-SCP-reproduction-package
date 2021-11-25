@@ -1,17 +1,184 @@
 {
     "projects": [
-       
         {
             "projectName": "jfreechart-v1.5.0",
-            "index": 0
+            "id": "0",
+            "configs": [
+                {
+                    "name": "default config",
+                    "description": "basic config with default colors and building representation",
+                    "building": {
+                        "padding": 0.2,
+                        "colors": {
+                            "faces": [
+                                {
+                                    "name": "!HOTSPOT",
+                                    "color": "#555555"
+                                },
+                                {
+                                    "name": "VP",
+                                    "color": "#FF6F33"
+                                },
+                                {
+                                    "name": "STRATEGY",
+                                    "color": "#17202a"
+                                },
+                                {
+                                    "name": "FACTORY",
+                                    "color": "#7d3c98"
+                                },
+                                {
+                                    "name": "INTERFACE",
+                                    "color": "#e67e22"
+                                },
+                                {
+                                    "name": "ABSTRACT",
+                                    "color": "#2c3e50"
+                                },
+                                {
+                                    "name": "CLASS",
+                                    "color": "#335DFF"
+                                }
+                            ],
+                            "edges": [
+                                {
+                                    "name": "API",
+                                    "color": "#000000"
+                                }
+                            ],
+                            "outlines": null
+                        }
+                    },
+                    "district": {
+                        "padding": 0,
+                        "colors": {
+                            "faces": [
+                                {
+                                    "name": "PACKAGE",
+                                    "color": "#801A2E"
+                                },
+                                {
+                                    "name": "VP",
+                                    "color": "#1A8039"
+                                }
+                            ]
+                        }
+                    },
+                    "link": {
+                        "colors": [
+                            {
+                                "name": "IMPLEMENTS",
+                                "color": "#ef2222"
+                            },
+                            {
+                                "name": "EXTENDS",
+                                "color": "#3f97ff"
+                            },
+                            {
+                                "name": "DUPLICATES",
+                                "color": "#2B914A"
+                            },
+                            {
+                                "name": "INSTANTIATE",
+                                "color": "#1A8039"
+                            }
+                        ],
+                        "display": {
+                            "air_traffic": [
+                                "IMPLEMENTS",
+                                "EXTENDS"
+                            ],
+                            "underground_road": [
+                                "INSTANTIATE"
+                            ]
+                        }
+                    },
+                    "hierarchy_links": [
+                        "INSTANTIATE",
+                        "IMPLEMENTS",
+                        "EXTENDS"
+                    ],
+                    "blacklist": [
+                        "org.jfree.chart.util.PublicCloneable",
+                        "org.jfree.chart.event",
+                        "org.jfree.data.general"
+                    ],
+                    "api_classes": {
+                        "argoUML-bcae373": [
+                            "org.argouml.cognitive.Designer",
+                            "org.argouml.uml.ui.UMLModelElementListModel2",
+                            "org.argouml.uml.diagram.ui.FigNodeModelElement"
+                        ],
+                        "awt-jb8u202-b1532": [
+                            "java.awt.Shape"
+                        ],
+                        "cookiefactory-7bec06fd2fa5592d22dd0c506cae502903d7e77f": [
+                            "Main"
+                        ],
+                        "cookiefactory-j2e-7bec06fd2fa5592d22dd0c506cae502903d7e77f": [
+                            "fr.unice.polytech.isa.tcf.webservice.CartWebService"
+                        ],
+                        "cookiefactory-client-7bec06fd2fa5592d22dd0c506cae502903d7e77f": [
+                            "Main"
+                        ],
+                        "cucumber-v6.8.0": [
+                            "io.cucumber.plugin.event.Event",
+                            "io.cucumber.java.StepDefinitionAnnotation"
+                        ],
+                        "cxf-cxf-3.2.7": [
+                            "org.apache.cxf.endpoint.Endpoint"
+                        ],
+                        "jfreechart-v1.5.0": [
+                            "org.jfree.chart.JFreeChart",
+                            "org.jfree.chart.plot.Plot"
+                        ],
+                        "junit-r4.12": [
+                            "org.junit.Assert",
+                            "org.junit.rules.TestRule"
+                        ],
+                        "logbook-2.2.1": [
+                            "org.zalando.logbook.Logbook",
+                            "org.zalando.logbook.Sink"
+                        ],
+                        "maven-maven-3.6.0": [
+                            "org.apache.maven.Maven",
+                            "org.apache.maven.execution.MavenSession"
+                        ],
+                        "netbeans-12.2": [
+                            "org.netbeans.api.java.platform.JavaPlatform"
+                        ],
+                        "riptide-2.11.0": [
+                            "org.zalando.riptide.Http"
+                        ]
+                    },
+                    "variables": {
+                        "width": "nbMethodVariants",
+                        "height": "nbConstructorVariants"
+                    },
+                    "orientation": "OUT",
+                    "default_level": 4,
+                    "camera_data": {
+                        "alpha": -2.398824183085783,
+                        "beta": 0.7903819125060638,
+                        "radius": 29.559067943185145,
+                        "target": {
+                            "x": 11.684349326346426,
+                            "y": 8.721032203281815,
+                            "z": 10.633651660390944
+                        }
+                    },
+                    "timestamp": "2021-11-25T17:27:04.152Z",
+                    "id": "d840700e-c2fa-46d8-8a07-63cb93e28792"
+                }
+            ]
         },
         {
-            "projectName":"cxf-cxf-3.2.7",
-            "index":1
+            "projectName": "cxf-cxf-3.2.7",
+            "id": "1"
         },
         {
-            "projectName":"junit-r4.12",
-            "index":2
+            "projectName": "junit-r4.12",
+            "id": "2"
         }
     ]
 }

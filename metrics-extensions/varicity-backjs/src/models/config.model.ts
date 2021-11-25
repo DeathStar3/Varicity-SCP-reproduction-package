@@ -41,9 +41,9 @@ export interface ConfigColor {
 }
 export class VaricityConfig {
 
-    id:string; //id
+    id?:string; //for persistence
     name: string;
-    
+    projectId?:string; //for persistence
     description: string;
     username:string;
     timestamp:string; //isodate

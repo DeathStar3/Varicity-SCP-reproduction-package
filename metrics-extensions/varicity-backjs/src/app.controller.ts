@@ -32,17 +32,47 @@ export class AppController {
 
   @Get('/projects/name/:name')
   getVisualizationData(@Param() params): JsonInputInterface {
-    console.log('Wrong function is called')
     return FilesLoader.loadVisualizationInfoOfProject(params.name);
-
   }
 
 
-  @Post('/projects/:index/configs')
-  saveConfig(@Param() params, @Body() config: VaricityConfig): VaricityConfig {
+  @Post('/projects/configs')
+  saveConfig(@Body() config: VaricityConfig): VaricityConfig {
 
-    config.timestamp = new Date().toISOString();
-    this.db.push(`/projects[${params.index}]/configs[]`, config);
+    let projectIndex = this.db.getIndex('/projects', config.projectId, 'projectId');
+
+    if (projectIndex == -1) {
+      console.error('Project of id ', config.projectId, 'does not exist');
+      //TODO send http status code ...
+      return null;
+    }
+
+    //si l'id est défini
+    if (config.id) {
+
+    
+
+      let configIndex = this.db.getIndex(`/projects[${projectIndex}]/configs`, config.id, 'id');
+      //si la config n'est pas encore présente dans la bd
+      if (configIndex == -1) {
+        console.warn('The config object of id', config.id, 'does not exist in the database')
+        console.log('Reassigning new id')
+        config.id = uuidv4()
+        this.db.push(`/projects[${projectIndex}]/configs[]`, config);
+      }
+      else{
+        this.db.push(`/projects[${projectIndex}]/configs[${configIndex}]`, config);
+      }
+      
+    }
+    else {
+      config.timestamp = new Date().toISOString();
+      config.id = uuidv4()
+      this.db.push(`/projects[${projectIndex}]/configs[]`, config);
+    }
+
+
+
 
     return config;
   }
@@ -70,7 +100,7 @@ export class AppController {
         }
 
       }
-      else{
+      else {
         console.log('4th')
         return [this.appService.loadDefaultConfig()];
       }
