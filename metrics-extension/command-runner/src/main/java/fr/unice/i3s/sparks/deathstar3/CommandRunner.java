@@ -19,17 +19,8 @@ public class CommandRunner {
 
     public CommandRunner(String workingDirectory, String shellLocation, List<String> commands) {
 
-        if (shellLocation == null || shellLocation.equals("")) { //If no shell specified : powershell or sh
-            if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
-                this.shellLocation = "powershell.exe";
-            } else {
-                this.shellLocation = "sh";
-            }
-        } else {
-            this.shellLocation = shellLocation;
-        }
-
-        this.workingDirectory = workingDirectory;
+        this.shellLocation = shellLocation;
+        this.workingDirectory = new File(workingDirectory).getAbsolutePath();
         this.commands = commands;
     }
 
@@ -38,11 +29,21 @@ public class CommandRunner {
 
         for (String cmd : commands) { //Execute each command line, one after the other
 
-            builder.command(shellLocation, cmd).directory(new File(workingDirectory));
+            if (shellLocation == null || shellLocation.equals("")) { //If no shell specified : powershell or sh
+                if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+                    builder.command("powershell.exe", cmd).directory(new File(workingDirectory));
+                    log.info("Execute : " + "powershell.exe" + " " + cmd);
+                } else {
+                    builder.command("/bin/bash", "-c", cmd).directory(new File(workingDirectory));
+                    log.info("Execute : " + "/bin/bash -c" + " " + cmd);
+                }
+            }else{
+                builder.command(shellLocation, cmd).directory(new File(workingDirectory));
+                log.info("Execute : " + shellLocation + " " + cmd);
+            }
 
             try {
                 Process process = builder.start();
-                log.info("Execute : " + shellLocation + " " + cmd);
 
                 StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), log::debug);
                 Executors.newSingleThreadExecutor().submit(streamGobbler);
