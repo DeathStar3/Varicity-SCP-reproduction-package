@@ -5,7 +5,7 @@ junit-r4.13.2:
       enabled: true
       # --- --- EXECUTION CONFIG --- --- #
       shell-location: "powershell.exe"
-      working-directory: "./test_projects/junit-r4.13.2"
+      working-directory: "test_projects/junit-r4.13.2"
       commands:
         - "docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -e SONAR_FORCEAUTHENTICATION=false -p 9000:9000 sonarqube:latest"
         - "Start-Sleep -s 15"
