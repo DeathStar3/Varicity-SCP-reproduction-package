@@ -1,10 +1,10 @@
-import {ParsingStrategy} from './../parser/strategies/parsing.strategy.interface';
-import {EvostreetImplem} from "../../view/evostreet/evostreetImplem";
-import {UIController} from "./ui.controller";
-import {EntitiesList} from "../../model/entitiesList";
-import {FilesLoader} from "../parser/filesLoader";
-import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
-import {Config, Vector3_Local} from "../../model/entitiesImplems/config.model";
+import { Config, Vector3_Local } from "../../model/entitiesImplems/config.model";
+import { EntitiesList } from "../../model/entitiesList";
+import { ProjectService } from "../../services/project.service";
+import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
+import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
+import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
+import { UIController } from "./ui.controller";
 
 export class ConfigSelectorController {
 
@@ -16,11 +16,11 @@ export class ConfigSelectorController {
         let parent = document.getElementById("config_selector");
 
         this.filename = filename;
-        if(configs.length > 0){
+        if (configs.length > 0) {
             UIController.config = configs[0];
         }
 
-        parent.innerHTML = "Config selection: " + ((UIController.config !== undefined)? UIController.config.name : "[no config found]");
+        parent.innerHTML = "Config selection: " + ((UIController.config !== undefined) ? UIController.config.name : "[no config found]");
 
         let saveConfigButton = document.getElementById("save-config");
         saveConfigButton.onclick = () => {
@@ -49,16 +49,16 @@ export class ConfigSelectorController {
             this.reParse();
         }
 
-        for (let i = 0; i < configs.length; i++) {
+        for (let config of configs) {
             let node = document.createElement("div");
-            node.innerHTML =  " - " + configs[i].name;
+            node.innerHTML = " - " + config.name;
             parent.appendChild(node);
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
-                UIController.config = configs[i];
+                UIController.config = config;
 
-                parent.childNodes[0].nodeValue = "Config selection: " + configs[i].name;
+                parent.childNodes[0].nodeValue = "Config selection: " + config.name;
                 inputElement.value = UIController.config.default_level.toString();
 
                 this.reParse();
@@ -96,16 +96,20 @@ export class ConfigSelectorController {
         UIController.clearMap();
         UIController.createConfig(UIController.config);
 
-        this.el = this.previousParser.parse(FilesLoader.loadDataFile(this.filename), UIController.config, this.filename);
-        let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-        inputElement.min = "1";
-        const maxLvl = this.el.getMaxCompLevel();
-        inputElement.max = maxLvl.toString();
-        if (+inputElement.value > maxLvl) {
-            inputElement.value = maxLvl.toString();
-        }
+        ProjectService.fetchVisualizationData(this.filename).then(response => {
+            this.el = this.previousParser.parse(response.data, UIController.config, this.filename);
+            let inputElement = document.getElementById("comp-level") as HTMLInputElement;
+            inputElement.min = "1";
+            const maxLvl = this.el.getMaxCompLevel();
+            inputElement.max = maxLvl.toString();
+            if (+inputElement.value > maxLvl) {
+                inputElement.value = maxLvl.toString();
+            }
 
-        UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+inputElement.value));
-        UIController.scene.buildScene();
+            UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+inputElement.value));
+            UIController.scene.buildScene();
+
+        })
+
     }
 }

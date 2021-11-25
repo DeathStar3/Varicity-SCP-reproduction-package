@@ -1,0 +1,7357 @@
+[
+    {
+        "name": "junit.extensions.ActiveTestSuite",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.extensions.ActiveTestTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.After",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.AfterClass",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.assertion.AllAssertionTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.experimental.categories.AllCategoriesTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.AllClassesTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.core.AllCoreTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders.AllDefaultPossibilitiesBuilder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.deprecated.AllDeprecatedTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.description.AllDescriptionTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.AllExperimentalTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.AllInternalTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.AllJUnit3CompatibilityTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.listening.AllListeningTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.AllManipulationTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.max.AllMaxTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.internal.AllMembersSupplier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 40.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 40.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.internal.AllMembersSupplierTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 26.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.methods.AllMethodsTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.model.AllModelTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.notification.AllNotificationTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.parallel.AllParallelTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.parameterized.AllParameterizedTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.results.AllResultsTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.AllRulesTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.AllRunnersTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.AllRunnerTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.AllRunningTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.samples.AllSamplesTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.AllTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.AllTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.AllTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.extensions.AllTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.AllTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner.AllTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.AllTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.AllTestsTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.internal.AllTheoriesInternalTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.AllTheoriesRunnerTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.AllTheoriesTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.validation.AllValidationTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.validator.AllValidatorTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.Alphanumeric",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.AlphanumericOrdering",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.Annotatable",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders.AnnotatedBuilder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 9.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.builders.AnnotatedBuilderTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.description.AnnotatedDescriptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.validator.AnnotationsValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 13.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.validator.AnnotationsValidatorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.methods.AnnotationTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 127.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.validator.AnnotationValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.validator.AnnotationValidatorFactory",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.validator.AnnotationValidatorFactoryTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.validation.anotherpackage",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.ArrayComparisonFailure",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.ArrayComparisonFailureTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.Assert",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 61.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 22.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.Assert",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 105.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 42.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.assertion",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 115.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 41.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.AssertionFailedError",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.AssertionFailedErrorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.assertion.AssertionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 105.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 36.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.AssertTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 16.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 14.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.internal.Assignments",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 25.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 13.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.Assume",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 13.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.AssumingInTheoriesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.AssumptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 36.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.AssumptionViolatedException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.AssumptionViolatedException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 13.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 7.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.AssumptionViolatedExceptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.validation.BadlyFormedClassesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.runner.BaseTestRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 47.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 40.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner.BaseTestRunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.Before",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.BeforeClass",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.BlockJUnit4ClassRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 57.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 26.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.BlockJUnit4ClassRunnerOverrideTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 19.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.BlockJUnit4ClassRunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.parameterized.BlockJUnit4ClassRunnerWithParameters",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 38.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 31.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.parameterized.BlockJUnit4ClassRunnerWithParametersFactory",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.parameterized.BlockJUnit4ClassRunnerWithParametersTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.internal.BooleanSupplier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 32.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 17.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.builders",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.resources.css.carousel.css",
+        "metrics": [
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.categories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 76.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 55.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.categories.Categories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 60.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 47.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.experimental.categories.CategoriesAndParameterizedTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.categories.Category",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.categories.CategoryFilterFactory",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.experimental.categories.CategoryFilterFactoryTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.experimental.categories.CategoryTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 55.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.categories.CategoryValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.experimental.categories.CategoryValidatorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.Checks",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.ChecksTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 272.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 17.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.Classes",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.ClassLevelMethodsWithIgnoredTestsTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 21.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.requests.ClassRequest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.ClassRequestTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.ClassRoadie",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 10.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.ClassRule",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.ClassRulesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 47.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.core.CommandLineTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.ComparatorBasedOrdering",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.Comparators",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.ComparisonCompactor",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 13.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.ComparisonCompactorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 19.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.ComparisonCriteria",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 22.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 32.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.ComparisonFailure",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.ComparisonFailure",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 23.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 11.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.ComparisonFailureTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 7.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.assertion.ComparisonFailureTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.Computer",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.notification.ConcurrentRunNotifierTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 22.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 12.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.core",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 25.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.Correspondent",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.max.CouldNotReadCoreException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.resources.css",
+        "metrics": []
+    },
+    {
+        "name": "src.test.java.org.junit.runners.CustomBlockJUnit4ClassRunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.DataPoint",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.DataPoints",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.deprecated",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.Describable",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.description",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 21.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.Description",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 40.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 14.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.max.DescriptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.DisableOnDebug",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.DisableOnDebugTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 16.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.DoublePrecisionAssertTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.model.EachTestNotifier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.runners.Enclosed",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.EnclosedTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.internal.EnumSupplier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.ErrorCollector",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.ErrorCollectorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 29.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.ErrorReportingRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 14.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.runners.ErrorReportingRunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.EventCollector",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 32.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.ExactComparisonCriteria",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.categories.ExcludeCategories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.ExpectedException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 19.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.ExpectedExceptionMatcherBuilder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.ExpectedExceptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 26.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.methods.ExpectedTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.statements.ExpectException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 7.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.runners.statements.ExpectExceptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 345.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 235.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 421.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 37.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.experimental.categories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 125.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 60.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 20.0
+            }
+        ]
+    },
+    {
+        "name": "junit.extensions",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 28.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 7.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.extensions",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 26.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.extensions.ExtensionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.ExternalResource",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.ExternalResourceRuleTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 15.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.statements.Fail",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.FailedBefore",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.validation.FailedConstructionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.FailingDataPointMethods",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 18.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.statements.FailOnTimeout",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 36.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 35.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.runners.statements.FailOnTimeoutTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 28.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 9.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.notification.Failure",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.Failure",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.results.FailureList",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.management.FakeRuntimeMXBean",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.management.FakeThreadMXBean",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.Filter",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 18.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 11.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.Filterable",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.FilterableTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.FilterFactories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.FilterFactoriesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 15.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.FilterFactory",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.FilterFactoryParams",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.FilterOptionIntegrationTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 19.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.requests.FilterRequest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.FilterTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.FixMethodOrder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.FloatAssertTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.ForwardCompatibilityPrintingTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.ForwardCompatibilityTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 37.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 253.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 98.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 143.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 30.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.FrameworkField",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 14.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.model.FrameworkFieldTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.FrameworkMember",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.FrameworkMethod",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 35.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 17.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.model.FrameworkMethodTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.FromDataPoints",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.function",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.Guesser",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 23.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 9.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.GuesserQueue",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.Ignore",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.IgnoreClassTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders.IgnoredBuilder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders.IgnoredClassRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.money.IMoney",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.categories.IncludeCategories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.resources.scripts.index.js",
+        "metrics": [
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.xdoc.index.xml",
+        "metrics": [
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.InexactComparisonCriteria",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.InheritedTestCase",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.methods.InheritedTestTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.InitializationError",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.InitializationError",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.InitializationErrorForwardCompatibilityTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 13.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 510.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 368.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.internal",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 91.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 71.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 140.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 31.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.internal",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 54.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.InvalidOrderingException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.InvalidTestClassError",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.model.InvalidTestClassErrorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.statements.InvokeMethod",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.main.java",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2246.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1241.0
+            }
+        ]
+    },
+    {
+        "name": "src.main.javadoc",
+        "metrics": []
+    },
+    {
+        "name": "src.test.java.org.junit.experimental.categories.JavadocTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 381.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 168.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 338.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 77.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.xhtml.junit-lambda-campaign.xhtml",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.xhtml.junit-lambda-contributors.xhtml",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.xhtml.junit-lambda-spending.xhtml",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.resources.css.junit-lambda.css",
+        "metrics": [
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.xhtml.junit-lambda.xhtml",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.JUnit38ClassRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 37.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 26.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.JUnit38ClassRunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 19.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.max.JUnit38SortingTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders.JUnit3Builder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 117.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.JUnit4",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders.JUnit4Builder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.JUnit4ClassRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 25.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.deprecated.JUnit4ClassRunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.JUnit4TestAdapter",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 16.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.JUnit4TestAdapterCache",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 14.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 12.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.JUnit4TestAdapterTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.JUnit4TestCaseFacade",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.xhtml.junit5.xhtml",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.JUnitCommandLineParseResult",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 23.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 29.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.JUnitCommandLineParseResultTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.JUnitCore",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 14.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.core.JUnitCoreReturnsCorrectExitCodeTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.JUnitCoreTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.matchers.JUnitMatchers",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.JUnitSystem",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.listening.ListenerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.listening",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 30.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.ListTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.samples.ListTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.LoggingMethodRule",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.LoggingStatement",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.LoggingTestRule",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.LoggingTestWatcher",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.main",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2246.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1241.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.core.MainRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.management",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 19.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 47.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.management.ManagementFactory",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 14.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 55.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 25.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 166.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.matchers",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.matchers",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 29.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.matchers",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.MatcherTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.max",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 47.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 25.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.max",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 54.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.max.MaxCore",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 23.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 16.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.max.MaxHistory",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 23.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 9.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.max.MaxStarterTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 34.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.MemberValueConsumer",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.requests.MemoizingRequest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.MethodCall",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.MethodRoadie",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 21.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 27.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.MethodRule",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.MethodRulesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 51.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.methods",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 263.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 18.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.MethodSorter",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.MethodSorters",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.MethodSorterTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 35.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.MethodValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 16.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 17.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.model",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 13.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 165.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 91.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.model",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 40.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.money",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 80.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 33.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.samples.money",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 25.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.money.Money",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 7.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.money.MoneyBag",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 36.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 26.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.money.MoneyTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 24.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.samples.money.MoneyTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 25.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.experimental.categories.MultiCategoryTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 37.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.model.MultipleFailureException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.MultipleFailureException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 16.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 10.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.assertion.MultipleFailureExceptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.NameRulesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.NoArgTestCaseTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.NoGenericTypeParametersValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 14.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.NoTestCaseClass",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.NoTestCases",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.NoTestsRemainException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.notification",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 67.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 14.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.notification",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 55.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 18.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.NotPublicTestCase",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.NotVoidTestCase",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders.NullBuilder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.ObjectContractTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.OldTestClassAdaptingListenerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.OldTests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.OneTestCase",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.Orderable",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.OrderableTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 41.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.Orderer",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.Ordering",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 16.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.requests.OrderingRequest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.OrderWith",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.OrderWithTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 33.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.OrderWithValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.OrderWithValidatorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1865.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1073.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2548.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 208.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.OverrideTestCase",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.runner.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.extensions.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.textui.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.notification.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.requests.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.matchers.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.money.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.extensions.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.samples.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.samples.money.package-info",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.parallel",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.parallel.ParallelClassTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.ParallelComputer",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.parallel.ParallelMethodTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.parameterized",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 51.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 35.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.parameterized",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 22.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.Parameterized",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 37.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 28.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.internal.ParameterizedAssertionError",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.internal.ParameterizedAssertionErrorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.parameterized.ParameterizedNamesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.methods.ParameterizedTestMethodTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 34.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.ParameterizedTestTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 119.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.ParameterSignature",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 28.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 15.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.ParameterSignatureTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 10.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.parameterized.ParametersRunnerFactory",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.ParametersSuppliedBy",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.ParameterSupplier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.parent",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.ParentRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 67.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 42.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.parent.ParentRunnerClassLoaderTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.ParentRunnerFilteringTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 17.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.ParentRunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 42.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.resources.css.plain-links.css",
+        "metrics": [
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.PotentialAssignment",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.PotentialAssignmentTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.results.PrintableResult",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.results.PrintableResultTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.Protectable",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.validator.PublicClassValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.validator.PublicClassValidatorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.RealSystem",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.model.ReflectiveCallable",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.management.ReflectiveRuntimeMXBean",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 12.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.management.ReflectiveThreadMXBean",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 21.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.ReguessableValue",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.extensions.RepeatedTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.extensions.RepeatedTestTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.Request",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.requests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 16.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 7.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.RequestTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.resources",
+        "metrics": []
+    },
+    {
+        "name": "org.junit.runner.Result",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 24.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.results.ResultMatchers",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 17.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.results.ResultMatchersTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.textui.ResultPrinter",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 23.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 9.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.results",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 27.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.results",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner.ResultTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 21.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.ReverseAlphanumericOrdering",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.ReverseAlphanumericSorter",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.Rule",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.RuleChain",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.RuleChainTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.RuleContainer",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 10.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.RuleContainerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.rules.RuleMemberValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 36.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 17.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.RuleMemberValidatorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 38.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 166.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 79.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.rules",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 37.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 17.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 538.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 26.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.statements.RunAfters",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.statements.RunBefores",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.notification.RunListener",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.runner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 50.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 40.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 255.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 92.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 63.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 9.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 115.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 19.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 172.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.Runner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.RunnerBuilder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 7.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.model.RunnerBuilderStub",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 412.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 234.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.runners",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 274.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 194.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 77.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.runners",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 45.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 13.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.RunnerScheduler",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.RunnerSpy",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.listening.RunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 560.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 38.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.notification.RunNotifier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 35.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 12.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.notification.RunNotifierTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.RunRules",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.management.RuntimeMXBean",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.RunWith",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.RunWithTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.SampleJUnit3Tests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.SampleJUnit4Tests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 15.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 96.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 35.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.samples",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 41.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.resources.scripts",
+        "metrics": []
+    },
+    {
+        "name": "org.junit.internal.SerializableMatcherDescription",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.SerializableValueDescription",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.samples.SimpleTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.samples.SimpleTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.SingleMethodTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 27.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.site.xml",
+        "metrics": [
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.Sortable",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.manipulation.SortableTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 43.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.manipulation.Sorter",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.requests.SortingRequest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.internal.SpecificDataPointsSupplier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 13.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 12.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.internal.SpecificDataPointsSupplierTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5137.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1526.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner.StackFilterTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.matchers.StacktracePrintingMatcher",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.matchers.StacktracePrintingMatcherTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.StackTracesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 35.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 10.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.Statement",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.statements",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 53.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 47.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.runners.statements",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 35.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 13.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.notification.StoppedByUserException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.Stopwatch",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 19.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.StopwatchTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 25.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.StringableObject",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.Stub",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.extendingwithstubs.StubbedTheoriesTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.main.javadoc.stylesheet.css",
+        "metrics": [
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.validation.anotherpackage.Sub",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.Success",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.SuccessfulWithDataPointFields",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.Suite",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.description.SuiteDescriptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.SuiteMethod",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.builders.SuiteMethodBuilder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.junit3compatibility.SuiteMethodTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 17.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.SuiteTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 14.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.SuiteTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 21.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.validation.anotherpackage.Super",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.suppliers",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runner.notification.SynchronizedRunListener",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 15.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runner.notification.SynchronizedRunListenerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 21.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 6.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.core.SystemExitTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.TempFolderRuleTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 31.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 7.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.TemporaryFolder",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 45.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 38.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.TemporaryFolderRuleAssuredDeletionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.TemporaryFolderUsageTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 36.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.Test",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.Test",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2886.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 285.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.TestCase",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 54.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 9.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.TestCaseTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 32.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.TestClass",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 25.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 18.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.TestClass",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 57.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 38.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.model.TestClassTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 28.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.validator.TestClassValidator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.TestCouldNotBeSkippedException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.extensions.TestDecorator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.description.TestDescriptionMethodNameTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.description.TestDescriptionTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.suppliers.TestedOn",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.suppliers.TestedOnSupplier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.TestedOnSupplierTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.TestFailure",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.TestImplementorTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.TestListener",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.TestListenerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.listening.TestListenerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.TestMethod",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.methods.TestMethodTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 46.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.TestName",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.TestResult",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 24.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.TestRule",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.TestRuleTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 78.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.runner.TestRunListener",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.textui.TestRunner",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 27.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 14.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 242.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 42.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1477.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 125.0
+            }
+        ]
+    },
+    {
+        "name": "junit.extensions.TestSetup",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.framework.TestSuite",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 44.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 29.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.TestSystem",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.model.TestTimedOutException",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.TestWatcher",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 14.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 11.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.TestWatcherTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 38.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.TestWatchman",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.TestWatchmanTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 11.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.parent.TestWithClassRule",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.runners.parameterized.TestWithParameters",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 4.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.runners.parameterized.TestWithParametersTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner.TextFeedbackTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 18.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.TextListener",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 17.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.listening.TextListenerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner.TextRunnerSingleMethodTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.runner.TextRunnerTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "junit.textui",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 50.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 23.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 180.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 140.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 311.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 27.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.Theories",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 52.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 47.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.TheoriesPerformanceTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.experimental.theories.Theory",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.TheoryTestUtils",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.management.ThreadMXBean",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.ThreadsTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.framework.ThreeTestCases",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.matchers.ThrowableCauseMatcher",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.internal.matchers.ThrowableCauseMatcherTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.matchers.ThrowableMessageMatcher",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.Throwables",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 43.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 32.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.function.ThrowingRunnable",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.Timeout",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 18.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.TimeoutRuleTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 14.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 2.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.methods.TimeoutTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 42.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 16.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.TypeMatchingBetweenMultiDataPointsMethod",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 6.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.matchers.TypeSafeMatcher",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 12.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 8.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.UnsuccessfulWithDataPointFields",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 26.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.listening.UserStopTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.running.classes.UseSuiteAsASuperclassTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 4.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.validator.ValidateWith",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 0.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.validation",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 17.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.internal.runners.rules.ValidationError",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.validation.ValidationTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.validator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 9.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.validator",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 15.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "org.junit.rules.Verifier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.rules.VerifierRuleTest",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "junit.runner.Version",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 3.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.junit.tests.WasRun",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 1.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.WhenNoParametersMatch",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 2.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.WithAutoGeneratedDataPoints",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 8.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.WithDataPointMethod",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 15.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.WithExtendedParameterSources",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.WithNamedDataPoints",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 7.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.WithOnlyTestAnnotations",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 9.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 3.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.WithParameterSupplier",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 19.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 1.0
+            }
+        ]
+    },
+    {
+        "name": "src.test.java.org.junit.tests.experimental.theories.runner.WithUnresolvedGenericTypeVariablesOnTheoryParms",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 20.0
+            },
+            {
+                "name": "cognitive_complexity",
+                "value": 0.0
+            }
+        ]
+    },
+    {
+        "name": "src.site.xdoc",
+        "metrics": []
+    },
+    {
+        "name": "src.site.xhtml",
+        "metrics": [
+            {
+                "name": "complexity",
+                "value": 5.0
+            }
+        ]
+    }
+]

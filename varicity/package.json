@@ -1,7 +1,7 @@
 {
   "name": "varicity",
   "version": "1.0.0",
-  "description": "",
+  "description": "Front end of Varicity",
   "main": "index.js",
   "scripts": {
     "build": "webpack",

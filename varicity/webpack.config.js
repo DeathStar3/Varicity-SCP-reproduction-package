@@ -7,8 +7,8 @@ const appDirectory = fs.realpathSync(process.cwd());
 module.exports = {
     entry: {
       'main': path.resolve(appDirectory, "src/main.ts"),
-      'parserTest':'./tests/parser.test.ts',
-      'parserVPTest':'./tests/parserVP.test.ts',
+      //'parserTest':'./tests/parser.test.ts',
+      //'parserVPTest':'./tests/parserVP.test.ts',
       'login':path.resolve(appDirectory, 'src/controller/ui/login.controller.ts')
     },
     optimization: {

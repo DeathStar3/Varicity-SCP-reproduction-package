@@ -1,0 +1,17 @@
+{
+    "projects": [
+       
+        {
+            "projectName": "jfreechart-v1.5.0",
+            "index": 0
+        },
+        {
+            "projectName":"cxf-cxf-3.2.7",
+            "index":1
+        },
+        {
+            "projectName":"junit-r4.12",
+            "index":2
+        }
+    ]
+}

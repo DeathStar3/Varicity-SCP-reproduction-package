@@ -1,10 +1,10 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
+import { ConfigLoader } from "../src/controller/parser/configLoader";
+import { VPVariantsStrategy } from "../src/controller/parser/strategies/vp_variants.strategy";
+import { District } from '../src/model/entities/district.interface';
+import { Orientation } from "../src/model/entitiesImplems/orientation.enum";
+import { ProjectService } from '../src/services/project.service';
 
-import {VPVariantsStrategy} from "../src/controller/parser/strategies/vp_variants.strategy";
-import {District} from '../src/model/entities/district.interface';
-import {FilesLoader} from "../src/controller/parser/filesLoader";
-import {ConfigLoader} from "../src/controller/parser/configLoader";
-import {Orientation} from "../src/model/entitiesImplems/orientation.enum";
 
 function countBuilding(districts: District[]) : number{
   let sum = 0;
@@ -24,10 +24,10 @@ function countDistricts(districts: District[]) : number{
    return sum;
 }
 describe('parsing without filtering by composition level', function() {
-  it('parse', function() {
-    let config = ConfigLoader.loadDataFile("config");
+  it('parse', async function() {
+    let config = (await ConfigLoader.loadDataFile("config")).data;
     config.hierarchy_links = ["EXTENDS", "IMPLEMENTS"];
-    let entities = new VPVariantsStrategy().parse(FilesLoader.loadDataFile('test3ForVPParser'), config, "");
+    let entities = new VPVariantsStrategy().parse((await ProjectService.fetchVisualizationData('test3ForVPParser')).data, config, "");
     let dis = entities.district.districts
     let numberOfDistricts = countDistricts(dis);
     let numberOfBuiildings = countBuilding(dis) + countDistricts(dis)
@@ -37,11 +37,12 @@ describe('parsing without filtering by composition level', function() {
 });
 
 describe('parsing with filtering by composition level', function() {
-  it('parse', function() {
-    let config = ConfigLoader.loadDataFile("config");
+  it('parse', async function() {
+    let config = (await ConfigLoader.loadDataFile("config")).data;
     config.hierarchy_links = ["EXTENDS", "IMPLEMENTS"];
     config.orientation = Orientation.IN_OUT;
-    let entities = new VPVariantsStrategy().parse(FilesLoader.loadDataFile('test3ForVPParser'), config, "");
+
+    let entities = new VPVariantsStrategy().parse( (await ProjectService.fetchVisualizationData('test3ForVPParser')).data, config, "");
     let ent = entities.filterCompLevel(1);
     let dis = ent.district.districts
     let numberOfDistricts = countDistricts(dis);

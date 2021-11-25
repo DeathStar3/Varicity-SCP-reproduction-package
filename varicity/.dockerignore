@@ -1,2 +1,6 @@
 symfinder_files/
 config/
+dist/
+node_modules/
+.dockerignore
+Dockerfile

@@ -64,8 +64,8 @@ export class UIController {
     }
 
 
-    public static reloadConfigAndConfigSelector(filename: string) {
-        this.configs = ConfigLoader.loadConfigFiles(filename);
+    public static async reloadConfigAndConfigSelector(filename: string) {
+        this.configs = (await ConfigLoader.loadConfigFiles(filename)).data;
         this.createConfigSelector(this.configs, filename);
         this.createConfig(this.configs[0])
     }

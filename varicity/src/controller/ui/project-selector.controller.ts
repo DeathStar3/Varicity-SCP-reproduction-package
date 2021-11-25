@@ -1,13 +1,13 @@
 import { CurrentProjectListener } from "../../configsaver/listener/current-project-listener";
 import { EntitiesList } from "../../model/entitiesList";
+import { ProjectService } from "../../services/project.service";
 import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
-import { FilesLoader } from "../parser/filesLoader";
+import { ConfigLoader } from "../parser/configLoader";
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
 import { UIController } from "./ui.controller";
 
 
-import {ConfigLoader} from "../parser/configLoader";
 
 export class ProjectController {
 
@@ -75,10 +75,14 @@ export class ProjectController {
         
         UIController.clearMap();
         UIController.reloadConfigAndConfigSelector(this.filename);
-        this.el = this.previousParser.parse(FilesLoader.loadDataFile(this.filename), ConfigLoader.loadDataFile(this.filename), this.filename);
-        let inputElement = document.getElementById("comp-level") as HTMLInputElement;
+        
+        ProjectService.fetchVisualizationData(this.filename).then(async response=>{
+            this.el = this.previousParser.parse(response.data, (await ConfigLoader.loadDataFile(this.filename)).data, this.filename);
+            let inputElement = document.getElementById("comp-level") as HTMLInputElement;
+            UIController.scene = new EvostreetImplem((await ConfigLoader.loadDataFile(this.filename)).data, this.el.filterCompLevel(+inputElement.value));
+            UIController.scene.buildScene();
+        })
 
-        UIController.scene = new EvostreetImplem(ConfigLoader.loadDataFile(this.filename), this.el.filterCompLevel(+inputElement.value));
-        UIController.scene.buildScene();
+       
     }
 }
