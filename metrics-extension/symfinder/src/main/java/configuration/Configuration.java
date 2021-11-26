@@ -21,6 +21,8 @@
 
 package configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -30,6 +32,8 @@ import java.io.IOException;
 public class Configuration {
 
     private ParametersObject properties;
+
+    private ObjectMapper objectMapperYaml=new ObjectMapper(new YAMLFactory());
 
     public Configuration() {
         this("symfinder.yaml");
@@ -41,12 +45,9 @@ public class Configuration {
 
     private Configuration(String propertiesFile) {
         try (FileInputStream fis = new FileInputStream(propertiesFile)) {
-            Yaml yaml = new Yaml();
-            properties = yaml.loadAs(fis, ParametersObject.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace(); // TODO: 11/28/18 create exception
+            properties = this.objectMapperYaml.readValue(fis, ParametersObject.class );
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO: 11/28/18 create exception
         }
     }
 
