@@ -23,7 +23,25 @@ export class Symfinder{
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes");
         await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations");
         await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies");
+        
+        await this.neoGraph.detectVPsAndVariants();
+        console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
+        console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
+        console.log("Number of constructor VPs: " + await this.neoGraph.getNbConstructorVPs());
+        console.log("Number of method level VPs: " + await this.neoGraph.getNbMethodLevelVPs());
+        console.log("Number of class level VPs: " + await this.neoGraph.getNbClassLevelVPs());
+        console.log("Number of variants: " + await this.neoGraph.getTotalNbVariants());
+        console.log("Number of methods variants: " + await this.neoGraph.getNbMethodVariants());
+        console.log("Number of constructors variants: " + await this.neoGraph.getNbConstructorVariants());
+        console.log("Number of method level variants: " + await this.neoGraph.getNbMethodLevelVariants());
+        console.log("Number of class level variants: " + await this.neoGraph.getNbClassLevelVariants());
+        console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
+        console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
+        
+
         await this.neoGraph.driver.close();
+
+        
     }
 
     async visitPackage(files: string[], visitor: SymfinderVisitor, label: string){

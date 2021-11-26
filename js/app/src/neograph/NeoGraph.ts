@@ -2,7 +2,7 @@ import { driver, Driver } from "neo4j-driver";
 import { auth, Node, QueryResult, Record, Session, Transaction } from "neo4j-driver-core";
 import { exit } from "process";
 import { Configuration } from "../configuration/Configuration"
-import { NodeType, RelationType, EntityType, EntityAttribut } from "./NodeType";
+import { NodeType, RelationType, EntityType, EntityAttribut, DesignPatternType } from "./NodeType";
 
 export default class NeoGraph{
 
@@ -46,7 +46,7 @@ export default class NeoGraph{
         });
     }
 
-    async linkTwoNodes(node1: Node, node2: Node, type: RelationType) {
+    async linkTwoNodes(node1: Node, node2: Node, type: RelationType): Promise<void> {
         const request = "MATCH(a)\n" +
         "WHERE ID(a)=$aId\n" +
         "WITH a\n" +
@@ -54,9 +54,7 @@ export default class NeoGraph{
         "WITH a,b\n" +
         "WHERE ID(b)=$bId\n" +
         "CREATE (a)-[r:"+type+"]->(b)";
-        this.submitRequest(request, {aId: node1.identity, bId: node2.identity}).then((result: Record[]) =>{
-            return;
-        });
+        await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
     async getNbVariant(node: Node): Promise<number>{
@@ -65,7 +63,7 @@ export default class NeoGraph{
         "RETURN count(c2)";
 
         return this.submitRequest(request, {id:node.identity}).then((result: Record[]) =>{
-            return <number>(result[0].get(0));
+            return +(result[0].get(0));
         })
     }
 
@@ -76,9 +74,196 @@ export default class NeoGraph{
         })
     }
 
-    async clearNodes(){
+    async detectVPsAndVariants(): Promise<void>{
+        await this.setMethodVPs();
+        await this.setMethodVariants();
+        await this.setConstructorVPs();
+        await this.setConstructorVariants();
+        await this.setNbVariantsProperty();
+        await this.setVPLabels();
+        await this.setMethodLevelVPLabels();
+        await this.setVariantsLabels();
+        await this.setPublicMethods();
+        await this.setPublicConstructors();
+        await this.setNbCompositions();
+        await this.setAllMethods();
+        await this.detectStrategiesWithComposition();
+        await this.detectDensity();
+    }
+
+    async setMethodVPs(): Promise<void>{
+        await this.submitRequest("MATCH (c:CLASS)-->(a:METHOD) MATCH (c:CLASS)-->(b:METHOD)\n" +
+        "WHERE a.name = b.name AND ID(a) <> ID(b)\n" +
+        "WITH count(DISTINCT a.name) AS cnt, c\n" +
+        "SET c.methodVPs = cnt", {});
+
+        await this.submitRequest("MATCH (c:CLASS)\n" +
+        "WHERE NOT EXISTS(c.methodVPs)\n" +
+        "SET c.methodVPs = 0",{});
+    }
+
+    async setMethodVariants(): Promise<void>{
+        await this.submitRequest("MATCH (c:CLASS)-->(a:METHOD) MATCH (c:CLASS)-->(b:METHOD)\n" +
+        "WHERE a.name = b.name AND ID(a) <> ID(b)\n" +
+        "WITH count(DISTINCT a) AS cnt, c\n" +
+        "SET c.methodVariants = cnt",{});
+        await this.submitRequest("MATCH (c:CLASS)\n" +
+        "WHERE NOT EXISTS(c.methodVariants)\n" +
+        "SET c.methodVariants = 0",{});
+    }
+
+    async setConstructorVPs(): Promise<void>{
+        await this.submitRequest("MATCH (c:CLASS)-->(a:CONSTRUCTOR)\n" +
+        "WITH count(a.name) AS cnt, c\n" +
+        "SET c.constructorVPs = CASE WHEN cnt > 1 THEN 1 ELSE 0 END",{});
+        await this.submitRequest("MATCH (c:CLASS)\n" +
+        "WHERE NOT EXISTS(c.constructorVPs)\n" +
+        "SET c.constructorVPs = 0",{});
+    }
+
+    async setConstructorVariants(): Promise<void>{
+        await this.submitRequest("MATCH (c:CLASS)-->(a:CONSTRUCTOR)\n" +
+        "WITH count(a.name) AS cnt, c\n" +
+        "SET c.constructorVariants = CASE WHEN cnt > 1 THEN cnt ELSE 0 END",{});
+        await this.submitRequest("MATCH (c:CLASS)\n" +
+        "WHERE NOT EXISTS(c.constructorVariants)\n" +
+        "SET c.constructorVariants = 0",{});
+    }
+
+    async setNbVariantsProperty(): Promise<void>{
+        await this.submitRequest("MATCH (c)-[:EXTENDS|IMPLEMENTS]->(sc:CLASS) WITH count(sc) AS nbVar, c SET c.classVariants = nbVar",{});
+        await this.submitRequest("MATCH (c) WHERE ((c:CLASS OR c:INTERFACE) AND NOT EXISTS (c.classVariants)) SET c.classVariants = 0",{});
+    }
+
+    async setVPLabels(): Promise<void>{
+        const clauseForHavingDesignPattern = Object.keys(DesignPatternType).map((nodeType) => "c:" + nodeType).join(" OR ");
+        const request = "MATCH (c) WHERE (NOT c:OUT_OF_SCOPE)\n"
+        +"AND (c:INTERFACE OR (c:CLASS AND c:ABSTRACT) OR ("+clauseForHavingDesignPattern+") OR (EXISTS(c.classVariants) AND c.classVariants > 0))\n"
+        +"SET c:"+EntityAttribut.VP;
+        await this.submitRequest(request,{});
+    }
+
+    async setMethodLevelVPLabels(): Promise<void>{
+        const request = "MATCH (c) WHERE (NOT c:OUT_OF_SCOPE) AND (c.methodVPs > 0 OR c.constructorVPs > 0) SET c:" + EntityAttribut.METHOD_LEVEL_VP;
+        await this.submitRequest(request, {});
+    }
+
+    async setVariantsLabels(): Promise<void>{
+        const request = "MATCH (sc:VP)-[:EXTENDS|IMPLEMENTS]->(c) WHERE c:CLASS OR c:INTERFACE SET c:" + EntityAttribut.VARIANT;
+        await this.submitRequest(request, {});
+    }
+
+    async setPublicMethods(): Promise<void>{
+        await this.submitRequest("MATCH (c:CLASS:PUBLIC)-->(a:METHOD:PUBLIC)\n" +
+        "WITH count( a.name ) AS cnt, c\n" +
+        "SET c.publicMethods = cnt",{});
+        await this.submitRequest("MATCH (c:CLASS)\n" +
+        "WHERE NOT EXISTS(c.publicMethods)\n" +
+        "SET c.publicMethods = 0",{});
+    }
+
+    async setPublicConstructors() {
+        await this.submitRequest("MATCH (c)-->(a) \n" +
+        "WHERE c:PUBLIC AND c:CLASS AND  a:CONSTRUCTOR AND a:PUBLIC\n" +
+        "WITH count( a.name ) AS cnt, c\n" +
+        "SET c.publicConstructors = cnt",{});
+        await this.submitRequest("MATCH (c:CLASS)\n" +
+        "WHERE NOT EXISTS(c.publicConstructors)\n" +
+        "SET c.publicConstructors = 0",{});
+    }
+
+    async setNbCompositions(): Promise<void>{
+        await this.submitRequest("MATCH (c)-[:INSTANTIATE]->(a) WITH count(a) AS nbComp, c SET c.nbCompositions = nbComp",{});
+    }
+
+    async setAllMethods(){
+        await this.submitRequest("MATCH (c:CLASS)-->(a:METHOD)\n" +
+        "WITH count( a.name ) AS cnt, c\n" +
+        "SET c.allMethods = cnt", {});
+        await this.submitRequest("MATCH (c:CLASS)\n" +
+        "WHERE NOT EXISTS(c.allMethods)\n" +
+        "SET c.allMethods = 0", {});
+    }
+
+    async detectStrategiesWithComposition(){
+        const request = "MATCH (c)-[:INSTANTIATE]->(c1) " +
+        "WHERE (c:CLASS OR c:INTERFACE) AND (EXISTS(c1.classVariants) AND c1.classVariants > 1) " +
+        "SET c1:" + DesignPatternType.COMPOSITION_STRATEGY;
+        await this.submitRequest(request, {});
+    }
+
+    async detectDensity(): Promise<void>{
+        await this.submitRequest("MATCH (v1:VARIANT)-[:INSTANTIATE]->(v2:VARIANT) " +
+        "SET v1:DENSE SET v2:DENSE", {});
+    }
+
+    async getTotalNbVPs(): Promise<number>{
+        return (await this.getNbClassLevelVPs()) + (await this.getNbMethodLevelVPs());
+    }
+
+    async getNbClassLevelVPs(): Promise<number>{
+        return this.submitRequest("MATCH (c:VP) RETURN COUNT (DISTINCT c)", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
+    async getNbMethodLevelVPs(): Promise<number>{
+        return await this.getNbMethodVPs() + await this.getNbConstructorVPs();
+    }
+
+    async getNbMethodVPs() : Promise<number>{
+        return this.submitRequest("MATCH (c:CLASS) RETURN (SUM(c.methodVPs))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
+    async getNbConstructorVPs() : Promise<number>{
+        return this.submitRequest("MATCH (c:CLASS) RETURN (SUM(c.constructorVPs))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
+    async getTotalNbVariants(): Promise<number>{
+        return await this.getNbClassLevelVariants() + await this.getNbMethodLevelVariants();
+    }
+
+    async getNbClassLevelVariants(): Promise<number>{
+        return this.submitRequest("MATCH (c:VARIANT) WHERE NOT c:VP RETURN (COUNT(DISTINCT c))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
+    async getNbMethodLevelVariants(): Promise<number>{
+        return await this.getNbMethodVariants() + await this.getNbConstructorVariants();
+    }
+
+    async getNbMethodVariants(): Promise<number>{
+        return this.submitRequest("MATCH (c:CLASS) RETURN (SUM(c.methodVariants))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
+    async getNbConstructorVariants(): Promise<number>{
+        return this.submitRequest("MATCH (c:CLASS) RETURN (SUM(c.constructorVariants))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
+    async getNbNodes(): Promise<number>{
+        return this.submitRequest("MATCH(n) RETURN count(*)", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
+    async getNbRelationships(): Promise<number>{
+        return this.submitRequest("MATCH (n)-[r]->() RETURN COUNT(r)", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
+    async clearNodes(): Promise<void>{
         const request = "MATCH (n) DETACH DELETE n"
-        this.submitRequest(request, {});
+        await this.submitRequest(request, {});
     }
 
     async submitRequest(request: string, parameter: any): Promise<Record[]>{

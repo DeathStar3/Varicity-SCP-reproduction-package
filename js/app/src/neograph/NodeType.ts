@@ -1,6 +1,9 @@
 export enum EntityAttribut {
     ABSTRACT = "ABSTRACT",
-    OUT_OF_SCOPE = "OUT_OF_SCOPE"
+    OUT_OF_SCOPE = "OUT_OF_SCOPE",
+    VP = "VP",
+    METHOD_LEVEL_VP = "METHOD_LEVEL_VP",
+    VARIANT = "VARIANT"
 }
 
 export enum EntityType {

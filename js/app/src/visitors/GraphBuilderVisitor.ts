@@ -9,12 +9,14 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         super(neoGraph);
     }
 
+    async visit(node: HeritageClause): Promise<void>;
+
     /**
      * Visit heritage clause
      * @param node AST node
      * @returns ...
      */
-    async visit(node: Node): Promise<void> {
+    async visit(node: HeritageClause): Promise<void> {
 
         if(isHeritageClause(node)) await this.visitHeritageClause(node);
         return;        
