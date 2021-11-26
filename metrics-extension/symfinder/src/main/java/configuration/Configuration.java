@@ -28,16 +28,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Configuration {
-    private static Configuration ourInstance = new Configuration();
 
-    public static Configuration getInstance() {
-        return ourInstance;
+    private ParametersObject properties;
+
+    public Configuration() {
+        this("symfinder.yaml");
     }
 
-    private static ParametersObject properties;
-
-    private Configuration() {
-        this("symfinder.yaml");
+    public Configuration(ParametersObject properties){
+        this.properties=properties;
     }
 
     private Configuration(String propertiesFile) {
@@ -51,24 +50,24 @@ public class Configuration {
         }
     }
 
-    public static String getNeo4JBoltAddress() {
-        return properties.getNeo4j().boltAddress;
+    public  String getNeo4JBoltAddress() {
+        return properties.neo4j().boltAddress();
     }
 
-    public static String getNeo4JUser() {
-        return properties.getNeo4j().user;
+    public  String getNeo4JUser() {
+        return properties.neo4j().user();
     }
 
-    public static String getNeo4JPassword() {
-        return properties.getNeo4j().password;
+    public String getNeo4JPassword() {
+        return properties.neo4j().password();
     }
 
-    public static int getSingularityThreshold() {
-        return properties.getHotspotsParameters().nbVariantsThreshold;
+    public int getSingularityThreshold() {
+        return properties.hotspots().nbVariantsThreshold();
     }
 
-    public static int getAggregationThreshold() {
-        return properties.getHotspotsParameters().nbAggregationsThreshold;
+    public int getAggregationThreshold() {
+        return properties.hotspots().nbAggregationsThreshold();
     }
 
 }

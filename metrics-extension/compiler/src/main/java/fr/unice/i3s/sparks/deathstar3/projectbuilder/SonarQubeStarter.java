@@ -5,6 +5,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.CreateNetworkResponse;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Network;
@@ -31,7 +32,16 @@ public class SonarQubeStarter {
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public void startSonarqube() {
+    private boolean checkIfSonarqubeHasExited(String containerId){
+        InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
+        log.info(container.getState().toString());
+        log.info(containerId + " : " + container.getState().getStatus());
+        return container.getState().getStatus().strip().equals("exited");
+    }
+
+    public boolean startSonarqube() {
+
+        //TODO check if varicity-sonarqube is already running or existing ...
 
         prepareVaricitySonarqube();
 
@@ -46,6 +56,12 @@ public class SonarQubeStarter {
 
         while (true) {
             try {
+
+            if(checkIfSonarqubeHasExited(container.getId())){
+                return false;
+            }
+
+
                 var sonarqubeStatusResponse = this.restTemplate.getForEntity("http://localhost:9000/api/system/status", String.class);
                 var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
                         SonarQubeStatus.class);
@@ -63,6 +79,7 @@ public class SonarQubeStarter {
                 break;
             }
         }
+        return true;
     }
 
     private void createNetwork() {

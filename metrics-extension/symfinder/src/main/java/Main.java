@@ -19,20 +19,19 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-package configuration;
+import entrypoint.Symfinder;
 
-public class ParametersObject {
+import java.util.Optional;
 
-    public Neo4jParameters neo4j;
-    public HotspotsParameters hotspots;
-    public String experimentsFile;
+public class Main {
 
-    public Neo4jParameters getNeo4j() {
-        return neo4j;
+    public static void main(String[] args) {
+        System.setProperty("logfilename", Optional.ofNullable(System.getenv("PROJECT_NAME")).orElse("debug.log"));
+        try {
+            new Symfinder(args[0], args[1]).run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.exit(0);
     }
-
-    public HotspotsParameters getHotspotsParameters() {
-        return hotspots;
-    }
-
 }

@@ -1,3 +1,6 @@
+package entrypoint;
+
+import entrypoint.Symfinder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

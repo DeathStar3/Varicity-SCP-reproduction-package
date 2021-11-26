@@ -13,6 +13,8 @@
         <module>entities</module>
         <module>command-runner</module>
         <module>sourcesfetcher</module>
+        <module>symfinder</module>
+        <module>compiler</module>
     </modules>
 
     <properties>

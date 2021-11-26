@@ -61,7 +61,7 @@ public class Neo4jTest {
 //        try (Driver driver = GraphDatabase.driver(Configuration.getNeo4JBoltAddress(), AuthTokens.basic(Configuration.getNeo4JUser(),
 //                Configuration.getNeo4JPassword()))) {
         try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), Config.defaultConfig())) {
-            NeoGraph graph = new NeoGraph(driver);
+            NeoGraph graph = new NeoGraph(driver,null);
             consumer.accept(graph);
         }
     }

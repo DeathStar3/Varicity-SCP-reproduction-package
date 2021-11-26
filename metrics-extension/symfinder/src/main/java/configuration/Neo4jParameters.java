@@ -19,17 +19,8 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import java.util.Optional;
+package configuration;
 
-public class Main {
+public record Neo4jParameters(String boltAddress, String user, String password) {
 
-    public static void main(String[] args) {
-        System.setProperty("logfilename", Optional.ofNullable(System.getenv("PROJECT_NAME")).orElse("debug.log"));
-        try {
-            new Symfinder(args[0], args[1]).run();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.exit(0);
-    }
 }

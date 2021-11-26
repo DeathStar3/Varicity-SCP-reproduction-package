@@ -22,21 +22,23 @@ public class CompilerTest {
     private SonarQubeStarter sonarqubeStarter = new SonarQubeStarter();
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
 
-    private final Logger logger= Logger.getLogger(CompilerTest.class.getName());
+    private final Logger logger = Logger.getLogger(CompilerTest.class.getName());
 
     private Compiler compiler = new Compiler();
 
-    private final ExperimentConfig jfreeChart = new ExperimentConfig("jfreechart", "/tmp/varicity-xp-projects/jfreechart", "", "maven",
+    private final ExperimentConfig jfreeChart = new ExperimentConfig("jfreechart",
+            "/tmp/varicity-xp-projects/jfreechart",  "maven",
             "3.8.2-jdk-11", List.of("mvn", "clean", "install", "sonar:sonar", "-f", "/project/pom.xml"),
-            "http://sonarqubehost:9000", true);
+            true);
 
-    private final ExperimentConfig junit = new ExperimentConfig("junit", "/tmp/varicity-xp-projects/junit4", "", "maven", "3.8.2-jdk-11",
+    private final ExperimentConfig junit = new ExperimentConfig("junit", "/tmp/varicity-xp-projects/junit4", 
+            "maven", "3.8.2-jdk-11",
             List.of("mvn", "clean", "install", "sonar:sonar", "-f", "/project/pom.xml", "-DskipTests=true"),
-            "http://sonarqubehost:9000", true);
+            true);
 
-    private final ExperimentConfig argoUml = new ExperimentConfig("argouml", "", "", "argouml-ant", "jdk8",
+    private final ExperimentConfig argoUml = new ExperimentConfig("argouml", "", "argouml-ant", "jdk8",
             List.of("bash", "/project/build.sh"),
-            "http://sonarqubehost:9000", false);
+            false);
 
     @Test
     public void getTokenTest() throws JsonProcessingException {
@@ -47,7 +49,8 @@ public class CompilerTest {
     }
 
     /**
-     * the test is executed by a shell script which does the equivalent of the asserts
+     * the test is executed by a shell script which does the equivalent of the
+     * asserts
      */
     @Test
     public void executeTest() {
@@ -58,7 +61,8 @@ public class CompilerTest {
     }
 
     /**
-     * the test is executed by a shell script which does the equivalent of the asserts
+     * the test is executed by a shell script which does the equivalent of the
+     * asserts
      */
     @Test
     public void compileAndScanJunit4() {
@@ -78,7 +82,7 @@ public class CompilerTest {
                 Path.of(projectDest.toAbsolutePath().toString(), "sonar-project.properties"));
 
         System.out.println(projectDest);
-        //sonarqubeStarter.startSonarqube();
+        // sonarqubeStarter.startSonarqube();
         argoUml.setPath(projectDest.toAbsolutePath().toString());
         compiler.executeProject(argoUml);
 

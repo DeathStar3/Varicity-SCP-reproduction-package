@@ -1,10 +1,7 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,6 +9,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class MetricSource {
 
     @JsonProperty("name")
@@ -34,17 +32,5 @@ public class MetricSource {
     @JsonProperty("metrics")
     private List<String> metrics;
 
-    @Override
-    public String toString() {
-        return "MetricSource{" +
-                "name='" + name + '\'' +
-                ", enabled=" + enabled +
-                ", shellLocation='" + shellLocation + '\'' +
-                ", workingDirectory='" + workingDirectory + '\'' +
-                ", commands=" + commands +
-                ", componentName='" + componentName + '\'' +
-                ", rootUrl='" + rootUrl + '\'' +
-                ", metrics=" + metrics +
-                '}';
-    }
+
 }

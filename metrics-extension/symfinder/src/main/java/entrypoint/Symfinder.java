@@ -1,4 +1,4 @@
-/*
+package entrypoint;/*
  * This file is part of symfinder.
  *
  * symfinder is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import result.SymfinderResult;
 import visitors.*;
 
 import java.io.File;
@@ -53,23 +54,31 @@ public class Symfinder {
     private NeoGraph neoGraph;
     private String sourcePackage;
     private String graphOutputPath;
+    private Configuration configuration;
 
     public Symfinder(String sourcePackage, String graphOutputPath) {
+        this.configuration=new Configuration();
         this.sourcePackage = sourcePackage;
         this.graphOutputPath = graphOutputPath;
-        this.neoGraph = new NeoGraph(Configuration.getNeo4JBoltAddress(),
-                Configuration.getNeo4JUser(),
-                Configuration.getNeo4JPassword());
+        this.neoGraph = new NeoGraph(this.configuration);
     }
 
-    public void run() throws IOException {
+    public Symfinder(String sourcePackage, String graphOutputPath, Configuration configuration){
+        this.sourcePackage = sourcePackage;
+        this.graphOutputPath = graphOutputPath;
+        this.configuration=configuration;
+        this.neoGraph = new NeoGraph(this.configuration);
+    }
+
+    public SymfinderResult run() throws IOException {
         long symfinderStartTime = System.currentTimeMillis();
         logger.log(Level.getLevel("MY_LEVEL"), "Symfinder version: " + System.getenv("SYMFINDER_VERSION"));
         String classpathPath;
 
         classpathPath = System.getenv("JAVA_HOME");
         if (classpathPath == null) { // default to linux openJDK 11 path
-            classpathPath = "/usr/lib/jvm/java-11-openjdk";
+            System.out.println("Using default");
+            classpathPath = "/home/anagonou/jdk-17";
         }
 
         List <File> files = Files.walk(Paths.get(sourcePackage))
@@ -110,12 +119,24 @@ public class Symfinder {
         logger.log(Level.getLevel("MY_LEVEL"), "Number of nodes: " + neoGraph.getNbNodes());
         logger.log(Level.getLevel("MY_LEVEL"), "Number of relationships: " + neoGraph.getNbRelationships());
         logger.log(Level.getLevel("MY_LEVEL"), "Number of corrected inheritance relationships: " + GraphBuilderVisitor.getNbCorrectedInheritanceLinks() + "/" + neoGraph.getNbInheritanceRelationships());
-        neoGraph.writeVPGraphFile(graphOutputPath);
-        neoGraph.writeStatisticsFile(graphOutputPath.replace(".json", "-stats.json"));
+        try {
+            neoGraph.writeVPGraphFile(graphOutputPath);
+            neoGraph.writeStatisticsFile(graphOutputPath.replace(".json", "-stats.json"));
+        }
+        catch (Exception e){
+            logger.error(e);
+        }
+
+        SymfinderResult result= new SymfinderResult(neoGraph.generateVPJsonGraph(), neoGraph.generateStatisticsJson());
         logger.debug(neoGraph.generateStatisticsJson());
         neoGraph.closeDriver();
         long symfinderExecutionTime = System.currentTimeMillis() - symfinderStartTime;
         logger.printf(Level.getLevel("MY_LEVEL"), "Total execution time: %s", formatExecutionTime(symfinderExecutionTime));
+
+
+        return result;
+
+
     }
 
     private void visitPackage(String classpathPath, List <File> files, ASTVisitor visitor) throws IOException {
@@ -123,7 +144,7 @@ public class Symfinder {
         for (File file : files) {
             String fileContent = getFileLines(file);
 
-            ASTParser parser = ASTParser.newParser(AST.JLS13);
+            ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
             parser.setResolveBindings(true);
             parser.setKind(ASTParser.K_COMPILATION_UNIT);
 
@@ -137,8 +158,10 @@ public class Symfinder {
             parser.setSource(fileContent.toCharArray());
 
             Map <String, String> options = JavaCore.getOptions();
-            options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_13);
+            options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_16);
             parser.setCompilerOptions(options);
+
+            System.out.println(file.toPath());
 
             CompilationUnit cu = (CompilationUnit) parser.createAST(null);
             cu.accept(visitor);

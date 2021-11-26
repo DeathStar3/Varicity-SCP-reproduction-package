@@ -129,9 +129,9 @@ public class Compiler {
                 .withName(COMPILER_SCANNER_NAME);
         if (projectConfig.getBuildEnv().equals("maven")) { // to use sonar in maven jdk version need to be greater or equals to 11
 
-            List<String> mvnCommmands = new ArrayList<>(projectConfig.getBuildCmds());
+            List<String> mvnCommmands = new ArrayList<>(projectConfig.getBuildCmd());
             mvnCommmands.add("-Dsonar.login=" + result.token());
-            mvnCommmands.add("-Dsonar.host.url=" + projectConfig.getSonarqubeUrl());
+            mvnCommmands.add("-Dsonar.host.url=" + SONARQUBE_LOCAL_URL);//TODO
             mvnCommmands.add("-Dsonar.projectKey=" + projectConfig.getProjectName());
             command = command.withEntrypoint(mvnCommmands);
         }
@@ -152,7 +152,7 @@ public class Compiler {
             try {
                 downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
             } catch (InterruptedException exception) {
-                this.log.severe("Cannot pull image necessary to compile project");
+                this.log.info("Cannot pull image necessary to compile project");
 
             }
 
@@ -163,7 +163,7 @@ public class Compiler {
                 .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())
                 .withName(COMPILER_NAME)
                 .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
-                .withEntrypoint(projectConfig.getBuildCmds()).exec(); // TODO assuming the project is a mvn project
+                .withEntrypoint(projectConfig.getBuildCmd()).exec(); // TODO assuming the project is a mvn project
 
         dockerClient.startContainerCmd(container.getId()).exec();
 
@@ -222,7 +222,7 @@ public class Compiler {
                 .withName(SCANNER_NAME).withEnv("SONAR_LOGIN=" + token.token())
                 .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(completePath, volume, AccessMode.rw))
                 .withNetworkMode(NETWORK_NAME))
-                .withEnv("SONAR_HOST_URL=" + projectConfig.getSonarqubeUrl()).exec();
+                .withEnv("SONAR_HOST_URL=" + SONARQUBE_LOCAL_URL).exec();//TODO fix next commit merge
 
         dockerClient.startContainerCmd(container.getId()).exec();
 
