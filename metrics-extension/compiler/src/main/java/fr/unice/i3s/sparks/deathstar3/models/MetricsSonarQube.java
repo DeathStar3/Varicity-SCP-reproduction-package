@@ -11,7 +11,7 @@ public class MetricsSonarQube {
     }
 
     public static final record Component(String key, String name, String qualifier, String path, String language,
-            List<Measure> measures) {
+                                         List<Measure> measures) {
 
     }
 
