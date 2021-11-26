@@ -5,6 +5,13 @@ export class CameraData {
     beta: number;
     radius: number;
     target: Vector3;
+
+    constructor(alpha: number, beta: number, radius: number, target: Vector3) {
+        this.alpha = alpha;
+        this.beta = beta;
+        this.radius = radius;
+        this.target = target;
+    }
 }
 
 export enum Orientation {

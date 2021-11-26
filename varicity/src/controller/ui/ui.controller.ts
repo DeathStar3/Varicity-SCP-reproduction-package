@@ -10,6 +10,7 @@ import {LogsController} from "./logs.controller";
 import {DocController} from "./doc.controller";
 import {ConfigSelectorController} from "./config-selector.controller";
 import {ConfigLoader} from "../parser/configLoader";
+import {SaveController} from "./save.controller";
 
 export class UIController {
 
@@ -57,6 +58,10 @@ export class UIController {
 
     public static displayObjectInfo(obj: Building3D, force: boolean = false): void {
         DetailsController.displayObjectInfo(obj, force);
+    }
+
+    public static createSaveSection(): void {
+        SaveController.addSaveListeners();
     }
 
     public static createFooter(): void {

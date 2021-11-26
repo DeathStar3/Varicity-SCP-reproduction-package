@@ -7,8 +7,6 @@ import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
 import { UIController } from "./ui.controller";
 
-
-
 export class ProjectController {
 
     static el: EntitiesList;
@@ -20,14 +18,6 @@ export class ProjectController {
     static createProjectSelector(keys: string[]) {
         let parent = document.getElementById("project_selector");
         parent.innerHTML = "Project selection";
-        //
-        // let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-        // inputElement.value = UIController.config.default_level.toString();
-        //
-        // let filterButton = document.getElementById("filter-button") as HTMLButtonElement;
-        // filterButton.onclick = () => {
-        //     ProjectController.reParse();
-        // }
 
         for (let key of keys) {
             let node = document.createElement("div");
@@ -44,14 +34,11 @@ export class ProjectController {
 
                 parent.childNodes[0].nodeValue = "Project selection: " + key;
 
-                
-
                 /* @ts-ignore */
                 for (let child of parent.children) {
                     child.style.display = "none";
                 }
             });
-
         }
         /* @ts-ignore */
         for (let child of parent.children) {
@@ -72,17 +59,17 @@ export class ProjectController {
         if (UIController.scene) {
             UIController.scene.dispose();
         }
-        
+
         UIController.clearMap();
         UIController.reloadConfigAndConfigSelector(this.filename);
         
         ProjectService.fetchVisualizationData(this.filename).then(async response=>{
-            this.el = this.previousParser.parse(response.data, (await ConfigLoader.loadDataFile(this.filename)).data, this.filename);
+            const config = (await ConfigLoader.loadDataFile(this.filename)).data
+            console.log("config", config)
+            this.el = this.previousParser.parse(response.data, config, this.filename);
             let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-            UIController.scene = new EvostreetImplem((await ConfigLoader.loadDataFile(this.filename)).data, this.el.filterCompLevel(+inputElement.value));
+            UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(+inputElement.value));
             UIController.scene.buildScene();
         })
-
-       
     }
 }
