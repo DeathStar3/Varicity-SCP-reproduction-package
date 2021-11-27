@@ -1,5 +1,6 @@
-import neo4j_types.EntityType;
-import neo4j_types.EntityVisibility;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityVisibility;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -11,7 +12,7 @@ public class ClassPublicTest extends Neo4jTest{
         runTest(graph -> {
             graph.createNode("Shapes", EntityType.CLASS, EntityVisibility.PUBLIC);
             graph.detectVPsAndVariants();
-            assertEquals(1, graph.getNbPublicClass());
+            Assertions.assertEquals(1, graph.getNbPublicClass());
         });
     }
 
@@ -20,7 +21,7 @@ public class ClassPublicTest extends Neo4jTest{
         runTest(graph -> {
             graph.createNode("Rectangle", EntityType.CLASS, EntityVisibility.PRIVATE);
             graph.detectVPsAndVariants();
-            assertEquals(0, graph.getNbPublicClass());
+            Assertions.assertEquals(0, graph.getNbPublicClass());
         });
     }
 
@@ -30,7 +31,7 @@ public class ClassPublicTest extends Neo4jTest{
             graph.createNode("Forms", EntityType.CLASS, EntityVisibility.PUBLIC);
             graph.createNode("Cricle", EntityType.CLASS, EntityVisibility.PRIVATE);
             graph.detectVPsAndVariants();
-            assertEquals(1, graph.getNbPublicClass());
+            Assertions.assertEquals(1, graph.getNbPublicClass());
         });
     }
 
@@ -41,7 +42,7 @@ public class ClassPublicTest extends Neo4jTest{
             graph.createNode("Cricle", EntityType.CLASS, EntityVisibility.PRIVATE);
             graph.createNode("Test2",EntityType.INTERFACE,EntityVisibility.PUBLIC);
             graph.detectVPsAndVariants();
-            assertEquals(2, graph.getNbPublicClass());
+            Assertions.assertEquals(2, graph.getNbPublicClass());
         });
     }
 }

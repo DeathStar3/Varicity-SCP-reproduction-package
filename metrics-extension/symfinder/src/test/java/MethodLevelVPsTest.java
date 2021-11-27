@@ -19,12 +19,11 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityType;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
-
-import static org.junit.Assert.assertEquals;
 
 public class MethodLevelVPsTest extends Neo4jTest {
 
@@ -39,9 +38,9 @@ public class MethodLevelVPsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.setMethodVPs();
             graph.setConstructorVPs();
-            assertEquals(0, graph.getNbMethodVPs());
-            assertEquals(0, graph.getNbConstructorVPs());
-            assertEquals(0, graph.getNbMethodLevelVPs());
+            Assertions.assertEquals(0, graph.getNbMethodVPs());
+            Assertions.assertEquals(0, graph.getNbConstructorVPs());
+            Assertions.assertEquals(0, graph.getNbMethodLevelVPs());
         });
     }
 
@@ -58,9 +57,9 @@ public class MethodLevelVPsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod2, relationType);
             graph.setMethodVPs();
             graph.setConstructorVPs();
-            assertEquals(1, graph.getNbMethodVPs());
-            assertEquals(0, graph.getNbConstructorVPs());
-            assertEquals(1, graph.getNbMethodLevelVPs());
+            Assertions.assertEquals(1, graph.getNbMethodVPs());
+            Assertions.assertEquals(0, graph.getNbConstructorVPs());
+            Assertions.assertEquals(1, graph.getNbMethodLevelVPs());
         });
     }
 
@@ -77,9 +76,9 @@ public class MethodLevelVPsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.setMethodVPs();
             graph.setConstructorVPs();
-            assertEquals(0, graph.getNbMethodVPs());
-            assertEquals(1, graph.getNbConstructorVPs());
-            assertEquals(1, graph.getNbMethodLevelVPs());
+            Assertions.assertEquals(0, graph.getNbMethodVPs());
+            Assertions.assertEquals(1, graph.getNbConstructorVPs());
+            Assertions.assertEquals(1, graph.getNbMethodLevelVPs());
         });
     }
 
@@ -98,9 +97,9 @@ public class MethodLevelVPsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod2, relationType);
             graph.setMethodVPs();
             graph.setConstructorVPs();
-            assertEquals(1, graph.getNbMethodVPs());
-            assertEquals(1, graph.getNbConstructorVPs());
-            assertEquals(2, graph.getNbMethodLevelVPs());
+            Assertions.assertEquals(1, graph.getNbMethodVPs());
+            Assertions.assertEquals(1, graph.getNbConstructorVPs());
+            Assertions.assertEquals(2, graph.getNbMethodLevelVPs());
         });
     }
 

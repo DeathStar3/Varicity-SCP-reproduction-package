@@ -21,12 +21,10 @@
 
 import apoc.path.PathExplorer;
 import apoc.cypher.Cypher;
-import configuration.Configuration;
-import neograph.NeoGraph;
+import fr.unice.i3s.sparks.deathstar3.neograph.NeoGraph;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Config;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;

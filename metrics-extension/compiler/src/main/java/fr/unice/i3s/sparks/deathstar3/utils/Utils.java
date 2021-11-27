@@ -1,11 +1,15 @@
 package fr.unice.i3s.sparks.deathstar3.utils;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.command.ListContainersCmd;
+import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.core.DockerClientBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 public class Utils {
@@ -14,6 +18,24 @@ public class Utils {
     public boolean checkIfImageExists(String image, String tag) {
         return dockerClient.listImagesCmd().exec().stream()
                 .anyMatch(img -> Arrays.stream(img.getRepoTags()).anyMatch(name -> name.equals(image + ":" + tag)));
+    }
+
+    private boolean checkIfContainerHasExited(String containerId){
+        InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
+        log.info(container.getState().toString());
+        log.info(containerId + " : " + container.getState().getStatus());
+        return container.getState().getStatus().strip().equals("exited");
+    }
+
+    public void removeOldExitedContainer(String containerName){
+      var containers= dockerClient.listContainersCmd()
+                .withShowAll(true)
+                .withStatusFilter(List.of("exited")) .withNameFilter(List.of(containerName)).exec();
+        for(var container:containers){
+
+            dockerClient.removeContainerCmd(container.getId())
+                        .exec();
+        }
     }
 
     public String getUserIdentity(){

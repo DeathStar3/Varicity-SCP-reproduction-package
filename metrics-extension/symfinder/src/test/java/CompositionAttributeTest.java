@@ -1,10 +1,11 @@
-import neo4j_types.EntityType;
-import neo4j_types.EntityVisibility;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityVisibility;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
-import static org.junit.Assert.assertEquals;
+
 
 public class CompositionAttributeTest extends Neo4jTest{
 
@@ -16,7 +17,7 @@ public class CompositionAttributeTest extends Neo4jTest{
             graph.linkTwoNodes(rectangleClass, drawClass, RelationType.INSTANTIATE);
             graph.setNbCompositions();
 
-            assertEquals(1,graph.getNbAttributeComposeClass());
+            Assertions.assertEquals(1,graph.getNbAttributeComposeClass());
         });
     }
 
@@ -31,7 +32,7 @@ public class CompositionAttributeTest extends Neo4jTest{
             graph.linkTwoNodes(rectangleClass, shapeClass, RelationType.INSTANTIATE);
             graph.setNbCompositions();
 
-            assertEquals(2,graph.getNbAttributeComposeClass());
+            Assertions.assertEquals(2,graph.getNbAttributeComposeClass());
         });
     }
 
@@ -48,7 +49,7 @@ public class CompositionAttributeTest extends Neo4jTest{
             graph.linkTwoNodes(rectangleClass, shapeClass, RelationType.EXTENDS);
             graph.setNbCompositions();
 
-            assertEquals(2,graph.getNbAttributeComposeClass());
+            Assertions.assertEquals(2,graph.getNbAttributeComposeClass());
         });
     }
 
@@ -63,7 +64,7 @@ public class CompositionAttributeTest extends Neo4jTest{
             graph.linkTwoNodes(rectangleClass, shapeClass, RelationType.INSTANTIATE);
             graph.setNbCompositions();
 
-            assertEquals(2,graph.getNbAttributeComposeClass());
+            Assertions.assertEquals(2,graph.getNbAttributeComposeClass());
         });
     }
 }

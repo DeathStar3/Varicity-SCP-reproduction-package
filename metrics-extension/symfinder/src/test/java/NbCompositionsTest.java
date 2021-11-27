@@ -19,13 +19,14 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityAttribute;
-import neo4j_types.EntityType;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
-import static org.junit.Assert.assertEquals;
+
 import static org.junit.Assert.assertNull;
 
 public class NbCompositionsTest extends Neo4jTest {
@@ -37,7 +38,7 @@ public class NbCompositionsTest extends Neo4jTest {
         runTest(graph -> {
             Node shapeClass = graph.createNode("Shape", EntityType.CLASS, EntityAttribute.ABSTRACT);
             graph.setNbCompositions();
-            assertNull(graph.getPropertyValue(shapeClass, propertyName));
+            Assertions.assertNull(graph.getPropertyValue(shapeClass, propertyName));
         });
     }
 
@@ -48,7 +49,7 @@ public class NbCompositionsTest extends Neo4jTest {
             Node circleClass = graph.createNode("Circle", EntityType.CLASS);
             graph.linkTwoNodes(shapeClass, circleClass, RelationType.INSTANTIATE);
             graph.setNbCompositions();
-            assertEquals(1L, graph.getPropertyValue(shapeClass, propertyName));
+            Assertions.assertEquals(1L, graph.getPropertyValue(shapeClass, propertyName));
         });
     }
 
@@ -63,7 +64,7 @@ public class NbCompositionsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, rectangleClass, RelationType.INSTANTIATE);
             graph.linkTwoNodes(shapeClass, triangleClass, RelationType.INSTANTIATE);
             graph.setNbCompositions();
-            assertEquals(3L, graph.getPropertyValue(shapeClass, propertyName));
+            Assertions.assertEquals(3L, graph.getPropertyValue(shapeClass, propertyName));
         });
     }
 
@@ -78,10 +79,10 @@ public class NbCompositionsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, circleClass, RelationType.INSTANTIATE);
             graph.linkTwoNodes(polygonClass, rectangleClass, RelationType.INSTANTIATE);
             graph.setNbCompositions();
-            assertEquals(1L, graph.getPropertyValue(shapeClass, propertyName));
-            assertEquals(1L, graph.getPropertyValue(polygonClass, propertyName));
-            assertNull(graph.getPropertyValue(circleClass, propertyName));
-            assertNull(graph.getPropertyValue(rectangleClass, propertyName));
+            Assertions.assertEquals(1L, graph.getPropertyValue(shapeClass, propertyName));
+            Assertions.assertEquals(1L, graph.getPropertyValue(polygonClass, propertyName));
+            Assertions.assertNull(graph.getPropertyValue(circleClass, propertyName));
+            Assertions.assertNull(graph.getPropertyValue(rectangleClass, propertyName));
         });
     }
 

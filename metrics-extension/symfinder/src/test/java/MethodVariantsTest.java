@@ -19,12 +19,13 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityType;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
-import static org.junit.Assert.assertEquals;
+
 
 public class MethodVariantsTest extends Neo4jTest {
 
@@ -35,7 +36,7 @@ public class MethodVariantsTest extends Neo4jTest {
             Node drawMethod = graph.createNode("draw", EntityType.METHOD);
             graph.linkTwoNodes(rectangleClass, drawMethod, RelationType.METHOD);
             graph.setMethodVariants();
-            assertEquals(0, graph.getNbMethodVariants());
+            Assertions.assertEquals(0, graph.getNbMethodVariants());
         });
     }
 
@@ -48,7 +49,7 @@ public class MethodVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, drawMethod1, RelationType.METHOD);
             graph.linkTwoNodes(rectangleClass, drawMethod2, RelationType.METHOD);
             graph.setMethodVariants();
-            assertEquals(2, graph.getNbMethodVariants());
+            Assertions.assertEquals(2, graph.getNbMethodVariants());
         });
     }
 
@@ -63,7 +64,7 @@ public class MethodVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, drawMethod2, RelationType.METHOD);
             graph.linkTwoNodes(rectangleClass, drawMethod3, RelationType.METHOD);
             graph.setMethodVariants();
-            assertEquals(3, graph.getNbMethodVariants());
+            Assertions.assertEquals(3, graph.getNbMethodVariants());
         });
     }
 
@@ -78,7 +79,7 @@ public class MethodVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, displayMethod1, RelationType.METHOD);
             graph.linkTwoNodes(rectangleClass, displayMethod2, RelationType.METHOD);
             graph.setMethodVariants();
-            assertEquals(2, graph.getNbMethodVariants());
+            Assertions.assertEquals(2, graph.getNbMethodVariants());
         });
     }
 
@@ -99,7 +100,7 @@ public class MethodVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, showMethod2, RelationType.METHOD);
             graph.linkTwoNodes(rectangleClass, showMethod3, RelationType.METHOD);
             graph.setMethodVariants();
-            assertEquals(5, graph.getNbMethodVariants());
+            Assertions.assertEquals(5, graph.getNbMethodVariants());
         });
     }
 
@@ -114,7 +115,7 @@ public class MethodVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, drawRectangleMethod, RelationType.METHOD);
             graph.linkTwoNodes(circleClass, drawCircleMethod, RelationType.METHOD);
             graph.setMethodVariants();
-            assertEquals(0, graph.getNbMethodVariants());
+            Assertions.assertEquals(0, graph.getNbMethodVariants());
         });
     }
 
@@ -132,7 +133,7 @@ public class MethodVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(circleClass, drawCircleMethod1, RelationType.METHOD);
             graph.linkTwoNodes(circleClass, drawCircleMethod2, RelationType.METHOD);
             graph.setMethodVariants();
-            assertEquals(4, graph.getNbMethodVariants());
+            Assertions.assertEquals(4, graph.getNbMethodVariants());
         });
     }
 
@@ -155,7 +156,7 @@ public class MethodVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(circleClass, visualizeCircleMethod1, RelationType.METHOD);
             graph.linkTwoNodes(circleClass, visualizeCircleMethod2, RelationType.METHOD);
             graph.setMethodVariants();
-            assertEquals(4, graph.getNbMethodVariants());
+            Assertions.assertEquals(4, graph.getNbMethodVariants());
         });
     }
 }

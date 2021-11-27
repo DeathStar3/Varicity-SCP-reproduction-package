@@ -1,5 +1,14 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Filter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientBuilder;
@@ -9,11 +18,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -82,7 +86,7 @@ public class CompilerTest {
                 Path.of(projectDest.toAbsolutePath().toString(), "sonar-project.properties"));
 
         System.out.println(projectDest);
-        // sonarqubeStarter.startSonarqube();
+        //sonarqubeStarter.startSonarqube();
         argoUml.setPath(projectDest.toAbsolutePath().toString());
         compiler.executeProject(argoUml);
 

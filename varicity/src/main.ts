@@ -1,10 +1,9 @@
-import {ConfigLoader} from './controller/parser/configLoader';
-import {UIController} from './controller/ui/ui.controller';
-import {ProjectService} from './services/project.service';
-import '@material/mwc-dialog';
 import '@material/mwc-button/mwc-button';
-import '@material/mwc-radio/mwc-radio';
+import '@material/mwc-dialog';
 import '@material/mwc-formfield/mwc-formfield';
+import '@material/mwc-radio/mwc-radio';
+import { UIController } from './controller/ui/ui.controller';
+import { ProjectService } from './services/project.service';
 
 class Main {
 

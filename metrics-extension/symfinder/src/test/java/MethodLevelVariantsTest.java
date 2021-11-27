@@ -19,8 +19,9 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityType;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
@@ -38,9 +39,9 @@ public class MethodLevelVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, drawMethod, RelationType.METHOD);
             graph.setMethodVariants();
             graph.setConstructorVariants();
-            assertEquals(0, graph.getNbMethodVariants());
-            assertEquals(0, graph.getNbConstructorVariants());
-            assertEquals(0, graph.getNbMethodLevelVariants());
+            Assertions.assertEquals(0, graph.getNbMethodVariants());
+            Assertions.assertEquals(0, graph.getNbConstructorVariants());
+            Assertions.assertEquals(0, graph.getNbMethodLevelVariants());
         });
     }
 
@@ -56,9 +57,9 @@ public class MethodLevelVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, drawMethod2, RelationType.METHOD);
             graph.setMethodVariants();
             graph.setConstructorVariants();
-            assertEquals(2, graph.getNbMethodVariants());
-            assertEquals(0, graph.getNbConstructorVariants());
-            assertEquals(2, graph.getNbMethodLevelVariants());
+            Assertions.assertEquals(2, graph.getNbMethodVariants());
+            Assertions.assertEquals(0, graph.getNbConstructorVariants());
+            Assertions.assertEquals(2, graph.getNbMethodLevelVariants());
         });
     }
 
@@ -74,9 +75,9 @@ public class MethodLevelVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, drawMethod, RelationType.METHOD);
             graph.setMethodVariants();
             graph.setConstructorVariants();
-            assertEquals(0, graph.getNbMethodVariants());
-            assertEquals(2, graph.getNbConstructorVariants());
-            assertEquals(2, graph.getNbMethodLevelVariants());
+            Assertions.assertEquals(0, graph.getNbMethodVariants());
+            Assertions.assertEquals(2, graph.getNbConstructorVariants());
+            Assertions.assertEquals(2, graph.getNbMethodLevelVariants());
         });
     }
 
@@ -94,9 +95,9 @@ public class MethodLevelVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, drawMethod2, RelationType.METHOD);
             graph.setMethodVariants();
             graph.setConstructorVariants();
-            assertEquals(2, graph.getNbMethodVariants());
-            assertEquals(2, graph.getNbConstructorVariants());
-            assertEquals(4, graph.getNbMethodLevelVariants());
+            Assertions.assertEquals(2, graph.getNbMethodVariants());
+            Assertions.assertEquals(2, graph.getNbConstructorVariants());
+            Assertions.assertEquals(4, graph.getNbMethodLevelVariants());
         });
     }
 
@@ -118,9 +119,9 @@ public class MethodLevelVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(circleClass, drawMethod3, RelationType.METHOD);
             graph.setMethodVariants();
             graph.setConstructorVariants();
-            assertEquals(3, graph.getNbMethodVariants());
-            assertEquals(2, graph.getNbConstructorVariants());
-            assertEquals(5, graph.getNbMethodLevelVariants());
+            Assertions.assertEquals(3, graph.getNbMethodVariants());
+            Assertions.assertEquals(2, graph.getNbConstructorVariants());
+            Assertions.assertEquals(5, graph.getNbMethodLevelVariants());
         });
     }
 

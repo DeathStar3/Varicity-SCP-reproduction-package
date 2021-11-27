@@ -19,14 +19,14 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityAttribute;
-import neo4j_types.EntityType;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
 
 public class VPLabelTest extends Neo4jTest {
 
@@ -35,7 +35,7 @@ public class VPLabelTest extends Neo4jTest {
         runTest(graph -> {
             graph.createNode("Shape", EntityType.CLASS, EntityAttribute.ABSTRACT);
             graph.setVPLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
         });
     }
 
@@ -44,7 +44,7 @@ public class VPLabelTest extends Neo4jTest {
         runTest(graph -> {
             graph.createNode("Shape", EntityType.INTERFACE);
             graph.setVPLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
         });
     }
 
@@ -53,7 +53,7 @@ public class VPLabelTest extends Neo4jTest {
         runTest(graph -> {
             graph.createNode("Shape", EntityType.INTERFACE);
             graph.setVPLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
         });
     }
 
@@ -62,7 +62,7 @@ public class VPLabelTest extends Neo4jTest {
         runTest(graph -> {
             graph.createNode("Shape", EntityType.INTERFACE, EntityAttribute.OUT_OF_SCOPE);
             graph.setVPLabels();
-            assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
         });
     }
 
@@ -71,7 +71,7 @@ public class VPLabelTest extends Neo4jTest {
         runTest(graph -> {
             graph.createNode("draw", EntityType.METHOD);
             graph.setVPLabels();
-            assertFalse(graph.getNode("draw").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertFalse(graph.getNode("draw").get().hasLabel(EntityAttribute.VP.toString()));
         });
     }
 
@@ -85,9 +85,9 @@ public class VPLabelTest extends Neo4jTest {
             graph.linkTwoNodes(shapeNode, circleNode, RelationType.EXTENDS);
             graph.setNbVariantsProperty();
             graph.setVPLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.getString()));
-            assertFalse(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VP.getString()));
-            assertFalse(graph.getNode("Circle").get().hasLabel(EntityAttribute.VP.getString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.getString()));
+            Assertions.assertFalse(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VP.getString()));
+            Assertions.assertFalse(graph.getNode("Circle").get().hasLabel(EntityAttribute.VP.getString()));
         });
     }
 
@@ -101,7 +101,7 @@ public class VPLabelTest extends Neo4jTest {
             graph.linkTwoNodes(shapeNode, drawNode2, RelationType.METHOD);
             graph.setMethodVPs();
             graph.setMethodLevelVPLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.METHOD_LEVEL_VP.getString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.METHOD_LEVEL_VP.getString()));
         });
     }
 
@@ -115,7 +115,7 @@ public class VPLabelTest extends Neo4jTest {
             graph.linkTwoNodes(shapeNode, shapeConstructorNode2, RelationType.METHOD);
             graph.setConstructorVPs();
             graph.setMethodLevelVPLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.METHOD_LEVEL_VP.getString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.METHOD_LEVEL_VP.getString()));
         });
     }
 

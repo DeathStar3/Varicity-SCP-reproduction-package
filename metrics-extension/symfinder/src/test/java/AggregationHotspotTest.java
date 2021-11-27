@@ -19,9 +19,10 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityAttribute;
-import neo4j_types.EntityType;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
@@ -42,11 +43,11 @@ public class AggregationHotspotTest extends Neo4jTest {
             graph.linkTwoNodes(vp2, vp4, RelationType.INSTANTIATE);
             graph.linkTwoNodes(vp3, vp5, RelationType.INSTANTIATE);
             graph.detectHotspotsInAggregation(5);
-            assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP1").get(), "aggregation"));
-            assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP2").get(), "aggregation"));
-            assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP3").get(), "aggregation"));
-            assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP4").get(), "aggregation"));
-            assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP5").get(), "aggregation"));
+            Assertions.assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP1").get(), "aggregation"));
+            Assertions.assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP2").get(), "aggregation"));
+            Assertions.assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP3").get(), "aggregation"));
+            Assertions.assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP4").get(), "aggregation"));
+            Assertions.assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP5").get(), "aggregation"));
         });
     }
 

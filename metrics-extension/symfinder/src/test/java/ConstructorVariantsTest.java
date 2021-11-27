@@ -19,8 +19,9 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityType;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
@@ -35,7 +36,7 @@ public class ConstructorVariantsTest extends Neo4jTest {
             Node rectangleConstructor = graph.createNode("Rectangle", EntityType.CONSTRUCTOR);
             graph.linkTwoNodes(rectangleClass, rectangleConstructor, RelationType.METHOD);
             graph.setConstructorVariants();
-            assertEquals(0, graph.getNbConstructorVariants());
+            Assertions.assertEquals(0, graph.getNbConstructorVariants());
         });
     }
 
@@ -48,7 +49,7 @@ public class ConstructorVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, rectangleConstructor1, RelationType.METHOD);
             graph.linkTwoNodes(rectangleClass, rectangleConstructor2, RelationType.METHOD);
             graph.setConstructorVariants();
-            assertEquals(2, graph.getNbConstructorVariants());
+            Assertions.assertEquals(2, graph.getNbConstructorVariants());
         });
     }
 
@@ -63,7 +64,7 @@ public class ConstructorVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, rectangleConstructor2, RelationType.METHOD);
             graph.linkTwoNodes(rectangleClass, rectangleConstructor3, RelationType.METHOD);
             graph.setConstructorVariants();
-            assertEquals(3, graph.getNbConstructorVariants());
+            Assertions.assertEquals(3, graph.getNbConstructorVariants());
         });
     }
 
@@ -77,7 +78,7 @@ public class ConstructorVariantsTest extends Neo4jTest {
            graph.linkTwoNodes(rectangleClass, rectangleConstructor, RelationType.METHOD);
            graph.linkTwoNodes(circleClass, circleConstructor, RelationType.METHOD);
            graph.setConstructorVariants();
-           assertEquals(0, graph.getNbConstructorVariants());
+           Assertions.assertEquals(0, graph.getNbConstructorVariants());
        });
     }
 
@@ -93,7 +94,7 @@ public class ConstructorVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(rectangleClass, rectangleConstructor2, RelationType.METHOD);
             graph.linkTwoNodes(circleClass, circleConstructor, RelationType.METHOD);
             graph.setConstructorVariants();
-            assertEquals(2, graph.getNbConstructorVariants());
+            Assertions.assertEquals(2, graph.getNbConstructorVariants());
         });
     }
 
@@ -111,7 +112,7 @@ public class ConstructorVariantsTest extends Neo4jTest {
             graph.linkTwoNodes(circleClass, circleConstructor1, RelationType.METHOD);
             graph.linkTwoNodes(circleClass, circleConstructor2, RelationType.METHOD);
             graph.setConstructorVariants();
-            assertEquals(4, graph.getNbConstructorVariants());
+            Assertions.assertEquals(4, graph.getNbConstructorVariants());
         });
     }
 

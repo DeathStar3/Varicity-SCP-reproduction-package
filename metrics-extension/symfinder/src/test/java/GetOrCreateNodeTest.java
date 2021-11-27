@@ -19,8 +19,9 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityAttribute;
-import neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ResourceIterable;
@@ -38,9 +39,9 @@ public class GetOrCreateNodeTest extends Neo4jTest {
             org.neo4j.driver.types.Node node = graph.getOrCreateNode(nodeName, nodeType);
             try (Transaction tx = graphDatabaseService.beginTx()) {
                 ResourceIterable <Node> allNodes = tx.getAllNodes();
-                assertEquals(1, allNodes.stream().count());
-                assertEquals(node.get("name").asString(), nodeName);
-                assertTrue(node.hasLabel(nodeType.toString()));
+                Assertions.assertEquals(1, allNodes.stream().count());
+                Assertions.assertEquals(node.get("name").asString(), nodeName);
+                Assertions.assertTrue(node.hasLabel(nodeType.toString()));
                 tx.commit();
             }
         });
@@ -57,13 +58,13 @@ public class GetOrCreateNodeTest extends Neo4jTest {
             org.neo4j.driver.types.Node node2 = graph.getOrCreateNode(nodeName, nodeType, new EntityAttribute[]{attribute2}, new EntityAttribute[]{});
             try (Transaction tx = graphDatabaseService.beginTx()) {
                 ResourceIterable <Node> allNodes = tx.getAllNodes();
-                assertEquals(1, allNodes.stream().count());
-                assertEquals(node1.get("name").asString(), nodeName);
-                assertTrue(node1.hasLabel(nodeType.toString()));
-                assertTrue(node1.hasLabel(attribute1.toString()));
-                assertEquals(node1, node2);
-                assertTrue(node2.hasLabel(attribute1.toString()));
-                assertFalse(node2.hasLabel(attribute2.toString()));
+                Assertions.assertEquals(1, allNodes.stream().count());
+                Assertions.assertEquals(node1.get("name").asString(), nodeName);
+                Assertions.assertTrue(node1.hasLabel(nodeType.toString()));
+                Assertions.assertTrue(node1.hasLabel(attribute1.toString()));
+                Assertions.assertEquals(node1, node2);
+                Assertions.assertTrue(node2.hasLabel(attribute1.toString()));
+                Assertions.assertFalse(node2.hasLabel(attribute2.toString()));
                 tx.commit();
             }
         });
@@ -78,10 +79,10 @@ public class GetOrCreateNodeTest extends Neo4jTest {
             org.neo4j.driver.types.Node node = graph.getOrCreateNode(nodeName, nodeType, new EntityAttribute[]{attribute}, new EntityAttribute[]{});
             try (Transaction tx = graphDatabaseService.beginTx()) {
                 ResourceIterable <Node> allNodes = tx.getAllNodes();
-                assertEquals(1, allNodes.stream().count());
-                assertEquals(node.get("name").asString(), nodeName);
-                assertTrue(node.hasLabel(nodeType.toString()));
-                assertTrue(node.hasLabel(attribute.toString()));
+                Assertions.assertEquals(1, allNodes.stream().count());
+                Assertions.assertEquals(node.get("name").asString(), nodeName);
+                Assertions.assertTrue(node.hasLabel(nodeType.toString()));
+                Assertions.assertTrue(node.hasLabel(attribute.toString()));
                 tx.commit();
             }
         });
@@ -98,13 +99,13 @@ public class GetOrCreateNodeTest extends Neo4jTest {
             org.neo4j.driver.types.Node node2 = graph.getOrCreateNode(nodeName, nodeType, new EntityAttribute[]{}, new EntityAttribute[]{attribute2});
             try (Transaction tx = graphDatabaseService.beginTx()) {
                 ResourceIterable <Node> allNodes = tx.getAllNodes();
-                assertEquals(1, allNodes.stream().count());
-                assertEquals(node1.get("name").asString(), nodeName);
-                assertTrue(node1.hasLabel(nodeType.toString()));
-                assertTrue(node1.hasLabel(attribute1.toString()));
-                assertEquals(node1, node2);
-                assertTrue(node2.hasLabel(attribute1.toString()));
-                assertTrue(node2.hasLabel(attribute2.toString()));
+                Assertions.assertEquals(1, allNodes.stream().count());
+                Assertions.assertEquals(node1.get("name").asString(), nodeName);
+                Assertions.assertTrue(node1.hasLabel(nodeType.toString()));
+                Assertions.assertTrue(node1.hasLabel(attribute1.toString()));
+                Assertions.assertEquals(node1, node2);
+                Assertions.assertTrue(node2.hasLabel(attribute1.toString()));
+                Assertions.assertTrue(node2.hasLabel(attribute2.toString()));
                 tx.commit();
             }
         });
@@ -118,10 +119,10 @@ public class GetOrCreateNodeTest extends Neo4jTest {
             org.neo4j.driver.types.Node node = graph.getOrCreateNode(nodeName, nodeType, new EntityAttribute[]{}, new EntityAttribute[]{attribute});
             try (Transaction tx = graphDatabaseService.beginTx()) {
                 ResourceIterable <Node> allNodes = tx.getAllNodes();
-                assertEquals(1, allNodes.stream().count());
-                assertEquals(node.get("name").asString(), nodeName);
-                assertTrue(node.hasLabel(nodeType.toString()));
-                assertFalse(node.hasLabel(attribute.toString()));
+                Assertions.assertEquals(1, allNodes.stream().count());
+                Assertions.assertEquals(node.get("name").asString(), nodeName);
+                Assertions.assertTrue(node.hasLabel(nodeType.toString()));
+                Assertions.assertFalse(node.hasLabel(attribute.toString()));
                 tx.commit();
             }
         });
@@ -137,9 +138,9 @@ public class GetOrCreateNodeTest extends Neo4jTest {
             org.neo4j.driver.types.Node node = graph.getOrCreateNode(nodeName, nodeType2);
             try (Transaction tx = graphDatabaseService.beginTx()) {
                 ResourceIterable <Node> allNodes = tx.getAllNodes();
-                assertEquals(2, allNodes.stream().count());
-                assertEquals(node.get("name").asString(), nodeName);
-                assertTrue(node.hasLabel(nodeType2.toString()));
+                Assertions.assertEquals(2, allNodes.stream().count());
+                Assertions.assertEquals(node.get("name").asString(), nodeName);
+                Assertions.assertTrue(node.hasLabel(nodeType2.toString()));
                 tx.commit();
             }
         });
@@ -155,10 +156,10 @@ public class GetOrCreateNodeTest extends Neo4jTest {
             org.neo4j.driver.types.Node node = graph.getOrCreateNode(nodeName, nodeType1, new EntityAttribute[]{nodeType2});
             try (Transaction tx = graphDatabaseService.beginTx()) {
                 ResourceIterable <Node> allNodes = tx.getAllNodes();
-                assertEquals(1, allNodes.stream().count());
-                assertEquals(node.get("name").asString(), nodeName);
-                assertTrue(node.hasLabel(nodeType1.toString()));
-                assertTrue(node.hasLabel(nodeType2.toString()));
+                Assertions.assertEquals(1, allNodes.stream().count());
+                Assertions.assertEquals(node.get("name").asString(), nodeName);
+                Assertions.assertTrue(node.hasLabel(nodeType1.toString()));
+                Assertions.assertTrue(node.hasLabel(nodeType2.toString()));
                 tx.commit();
             }
         });
@@ -173,10 +174,10 @@ public class GetOrCreateNodeTest extends Neo4jTest {
             org.neo4j.driver.types.Node node = graph.getOrCreateNode(nodeName, nodeType1, new EntityAttribute[]{nodeType2});
             try (Transaction tx = graphDatabaseService.beginTx()) {
                 ResourceIterable <Node> allNodes = tx.getAllNodes();
-                assertEquals(1, allNodes.stream().count());
-                assertEquals(node.get("name").asString(), nodeName);
-                assertTrue(node.hasLabel(nodeType1.toString()));
-                assertTrue(node.hasLabel(nodeType2.toString()));
+                Assertions.assertEquals(1, allNodes.stream().count());
+                Assertions.assertEquals(node.get("name").asString(), nodeName);
+                Assertions.assertTrue(node.hasLabel(nodeType1.toString()));
+                Assertions.assertTrue(node.hasLabel(nodeType2.toString()));
                 tx.commit();
             }
         });

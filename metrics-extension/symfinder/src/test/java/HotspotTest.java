@@ -19,10 +19,10 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityAttribute;
-import neo4j_types.EntityType;
-import neo4j_types.RelationType;
-import org.junit.jupiter.api.Disabled;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
@@ -40,11 +40,11 @@ public class HotspotTest extends Neo4jTest {
             graph.detectVPsAndVariants();
             graph.detectSingularHotspotsInSubtyping(2);
             graph.setHotspotLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
-            assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
-            assertFalse(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertFalse(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
+            Assertions.assertFalse(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertFalse(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -59,12 +59,12 @@ public class HotspotTest extends Neo4jTest {
             graph.detectVPsAndVariants();
             graph.detectSingularHotspotsInSubtyping(2);
             graph.setHotspotLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
-            assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
-            assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.VARIANT.toString()));
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
+            Assertions.assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.VARIANT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -79,12 +79,12 @@ public class HotspotTest extends Neo4jTest {
             graph.detectVPsAndVariants();
             graph.detectSingularHotspotsInSubtyping(3);
             graph.setHotspotLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
-            assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
-            assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.VARIANT.toString()));
-            assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertFalse(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertFalse(graph.getNode("Circle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
+            Assertions.assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.VARIANT.toString()));
+            Assertions.assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertFalse(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertFalse(graph.getNode("Circle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -101,14 +101,14 @@ public class HotspotTest extends Neo4jTest {
             graph.detectVPsAndVariants();
             graph.detectSingularHotspotsInSubtyping(3);
             graph.setHotspotLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
-            assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
-            assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.VARIANT.toString()));
-            assertTrue(graph.getNode("Triangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
-            assertTrue(graph.getNode("Triangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.VP.toString()));
+            Assertions.assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
+            Assertions.assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.VARIANT.toString()));
+            Assertions.assertTrue(graph.getNode("Triangle").get().hasLabel(EntityAttribute.VARIANT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Rectangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Circle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Triangle").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -120,7 +120,7 @@ public class HotspotTest extends Neo4jTest {
             graph.setNodeAttribute(shapeNode, "constructorVariants", 0);
             graph.detectSingularHotspotsInOverloading(3);
             graph.setHotspotLabels();
-            assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -130,7 +130,7 @@ public class HotspotTest extends Neo4jTest {
             graph.createNode("Shape", EntityType.CLASS);
             graph.detectSingularHotspotsInOverloading(3);
             graph.setHotspotLabels();
-            assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -142,7 +142,7 @@ public class HotspotTest extends Neo4jTest {
             graph.setNodeAttribute(shapeNode, "constructorVariants", 0);
             graph.detectSingularHotspotsInOverloading(3);
             graph.setHotspotLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -154,7 +154,7 @@ public class HotspotTest extends Neo4jTest {
             graph.setNodeAttribute(shapeNode, "constructorVariants", 1);
             graph.detectSingularHotspotsInOverloading(3);
             graph.setHotspotLabels();
-            assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -166,7 +166,7 @@ public class HotspotTest extends Neo4jTest {
             graph.setNodeAttribute(shapeNode, "constructorVariants", 3);
             graph.detectSingularHotspotsInOverloading(3);
             graph.setHotspotLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -178,7 +178,7 @@ public class HotspotTest extends Neo4jTest {
             graph.setNodeAttribute(shapeNode, "methodVariants", 1);
             graph.detectSingularHotspotsInOverloading(3);
             graph.setHotspotLabels();
-            assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertFalse(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 
@@ -190,7 +190,7 @@ public class HotspotTest extends Neo4jTest {
             graph.setNodeAttribute(shapeNode, "methodVariants", 1);
             graph.detectSingularHotspotsInOverloading(3);
             graph.setHotspotLabels();
-            assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
+            Assertions.assertTrue(graph.getNode("Shape").get().hasLabel(EntityAttribute.HOTSPOT.toString()));
         });
     }
 

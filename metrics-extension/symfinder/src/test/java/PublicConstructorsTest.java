@@ -19,13 +19,13 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityType;
-import neo4j_types.EntityVisibility;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityVisibility;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
-import static org.junit.Assert.assertEquals;
 
 public class PublicConstructorsTest extends Neo4jTest {
 
@@ -37,7 +37,7 @@ public class PublicConstructorsTest extends Neo4jTest {
             RelationType relationType = RelationType.METHOD;
             graph.linkTwoNodes(shapeClass, constructor, relationType);
             graph.setPublicConstructors();
-            assertEquals(0, graph.getNbPublicConstructors());
+            Assertions.assertEquals(0, graph.getNbPublicConstructors());
         });
     }
 
@@ -49,7 +49,7 @@ public class PublicConstructorsTest extends Neo4jTest {
             RelationType relationType = RelationType.METHOD;
             graph.linkTwoNodes(shapeClass, constructor, relationType);
             graph.setPublicConstructors();
-            assertEquals(0, graph.getNbPublicConstructors());
+            Assertions.assertEquals(0, graph.getNbPublicConstructors());
         });
     }
 
@@ -61,7 +61,7 @@ public class PublicConstructorsTest extends Neo4jTest {
             RelationType relationType = RelationType.METHOD;
             graph.linkTwoNodes(shapeClass, constructor, relationType);
             graph.setPublicConstructors();
-            assertEquals(1, graph.getNbPublicConstructors());
+            Assertions.assertEquals(1, graph.getNbPublicConstructors());
         });
     }
 
@@ -75,7 +75,7 @@ public class PublicConstructorsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, method, relationType);
             graph.linkTwoNodes(shapeClass, constructor, relationType);
             graph.setPublicConstructors();
-            assertEquals(1, graph.getNbPublicConstructors());
+            Assertions.assertEquals(1, graph.getNbPublicConstructors());
         });
     }
 
@@ -89,7 +89,7 @@ public class PublicConstructorsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, constructor, relationType);
             graph.linkTwoNodes(shapeClass, constructor2, relationType);
             graph.setPublicConstructors();
-            assertEquals(2, graph.getNbPublicConstructors());
+            Assertions.assertEquals(2, graph.getNbPublicConstructors());
         });
     }
 
@@ -103,7 +103,7 @@ public class PublicConstructorsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, constructor, relationType);
             graph.linkTwoNodes(shapeClass, constructor2, relationType);
             graph.setPublicConstructors();
-            assertEquals(1, graph.getNbPublicConstructors());
+            Assertions.assertEquals(1, graph.getNbPublicConstructors());
         });
     }
 
@@ -118,7 +118,7 @@ public class PublicConstructorsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, shapeConstructor, relationType);
             graph.linkTwoNodes(rectangleClass, rectangleConstructor, relationType);
             graph.setPublicConstructors();
-            assertEquals(2, graph.getNbPublicConstructors());
+            Assertions.assertEquals(2, graph.getNbPublicConstructors());
         });
     }
 
@@ -133,7 +133,7 @@ public class PublicConstructorsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, shapeConstructor, relationType);
             graph.linkTwoNodes(rectangleClass, rectangleConstructor, relationType);
             graph.setPublicConstructors();
-            assertEquals(1, graph.getNbPublicConstructors());
+            Assertions.assertEquals(1, graph.getNbPublicConstructors());
         });
     }
 

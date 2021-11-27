@@ -19,9 +19,10 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityType;
-import neo4j_types.EntityVisibility;
-import neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityVisibility;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
@@ -37,7 +38,7 @@ public class AllMethodsTest extends Neo4jTest {
             RelationType relationType = RelationType.METHOD;
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.setAllMethods();
-            assertEquals(1, graph.getNbAllMethods() );
+            Assertions.assertEquals(1, graph.getNbAllMethods() );
         });
     }
 
@@ -49,7 +50,7 @@ public class AllMethodsTest extends Neo4jTest {
             RelationType relationType = RelationType.METHOD;
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.setAllMethods();
-            assertEquals(1, graph.getNbAllMethods());
+            Assertions.assertEquals(1, graph.getNbAllMethods());
         });
     }
 
@@ -61,7 +62,7 @@ public class AllMethodsTest extends Neo4jTest {
             RelationType relationType = RelationType.METHOD;
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.setAllMethods();
-            assertEquals(1, graph.getNbAllMethods());
+            Assertions.assertEquals(1, graph.getNbAllMethods());
         });
     }
 
@@ -75,7 +76,7 @@ public class AllMethodsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, shapeConstructor, relationType);
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.setAllMethods();
-            assertEquals(1, graph.getNbAllMethods());
+            Assertions.assertEquals(1, graph.getNbAllMethods());
         });
     }
 
@@ -89,7 +90,7 @@ public class AllMethodsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.linkTwoNodes(shapeClass, displayMethod2, relationType);
             graph.setAllMethods();
-            assertEquals(2, graph.getNbAllMethods());
+            Assertions.assertEquals(2, graph.getNbAllMethods());
         });
     }
 
@@ -103,7 +104,7 @@ public class AllMethodsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.linkTwoNodes(shapeClass, displayMethod2, relationType);
             graph.setAllMethods();
-            assertEquals(2, graph.getNbAllMethods());
+            Assertions.assertEquals(2, graph.getNbAllMethods());
         });
     }
 
@@ -117,7 +118,7 @@ public class AllMethodsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.linkTwoNodes(shapeClass, displayMethod2, relationType);
             graph.setAllMethods();
-            assertEquals(2, graph.getNbAllMethods());
+            Assertions.assertEquals(2, graph.getNbAllMethods());
         });
     }
 
@@ -132,7 +133,7 @@ public class AllMethodsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.linkTwoNodes(rectangleClass, displayMethod2, relationType);
             graph.setAllMethods();
-            assertEquals(2, graph.getNbAllMethods());
+            Assertions.assertEquals(2, graph.getNbAllMethods());
         });
     }
 
@@ -147,7 +148,7 @@ public class AllMethodsTest extends Neo4jTest {
             graph.linkTwoNodes(shapeClass, displayMethod, relationType);
             graph.linkTwoNodes(rectangleClass, displayMethod2, relationType);
             graph.setAllMethods();
-            assertEquals(2, graph.getNbAllMethods());
+            Assertions.assertEquals(2, graph.getNbAllMethods());
         });
     }
 

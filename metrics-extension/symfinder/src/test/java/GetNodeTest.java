@@ -19,7 +19,8 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
@@ -34,8 +35,8 @@ public class GetNodeTest extends Neo4jTest {
         runTest(graph -> {
             Node classNode = graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
             Optional <Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.unice.i3s");
-            assertTrue(foundNode.isPresent());
-            assertEquals(classNode, foundNode.get());
+            Assertions.assertTrue(foundNode.isPresent());
+            Assertions.assertEquals(classNode, foundNode.get());
         });
     }
 
@@ -44,8 +45,8 @@ public class GetNodeTest extends Neo4jTest {
         runTest(graph -> {
             Node classNode = graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
             Optional <Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.unice");
-            assertTrue(foundNode.isPresent());
-            assertEquals(classNode, foundNode.get());
+            Assertions.assertTrue(foundNode.isPresent());
+            Assertions.assertEquals(classNode, foundNode.get());
         });
     }
 
@@ -54,7 +55,7 @@ public class GetNodeTest extends Neo4jTest {
         runTest(graph -> {
             graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
             Optional <Node> foundNode = graph.getNodeWithNameInPackage("Test", "fr.unice");
-            assertFalse(foundNode.isPresent());
+            Assertions.assertFalse(foundNode.isPresent());
         });
     }
 
@@ -63,7 +64,7 @@ public class GetNodeTest extends Neo4jTest {
         runTest(graph -> {
             graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
             Optional <Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.i3s");
-            assertFalse(foundNode.isPresent());
+            Assertions.assertFalse(foundNode.isPresent());
         });
     }
 
@@ -72,7 +73,7 @@ public class GetNodeTest extends Neo4jTest {
         runTest(graph -> {
             graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
             Optional <Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.uni");
-            assertFalse(foundNode.isPresent());
+            Assertions.assertFalse(foundNode.isPresent());
         });
     }
 
