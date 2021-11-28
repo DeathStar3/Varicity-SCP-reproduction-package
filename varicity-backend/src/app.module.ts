@@ -4,6 +4,7 @@ import {ConfigController} from "./controller/config.controller";
 import {ProjectService} from "./service/project.service";
 import {ConfigService} from "./service/config.service";
 import {UtilsService} from "./service/utils.service";
+import {FsWatcherService} from "./service/fs-watcher.service";
 
 @Module({
     imports: [],
@@ -14,7 +15,8 @@ import {UtilsService} from "./service/utils.service";
     providers: [
         ProjectService,
         ConfigService,
-        UtilsService
+        UtilsService,
+        FsWatcherService
     ],
 })
 export class AppModule {
