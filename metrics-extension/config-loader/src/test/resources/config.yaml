@@ -3,7 +3,7 @@ jfreechart: #Project name
   sources:
     - name: "sonarcloud"
       enabled: true
-      sourceProjectName: "denislilajFox_jfreechart"
+      componentName: "denislilajFox_jfreechart"
       commands:
         - "cmd 1"
         - "cmd 2"

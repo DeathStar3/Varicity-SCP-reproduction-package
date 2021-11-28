@@ -11,7 +11,7 @@
         <module>config-loader</module>
         <module>metric-gatherer</module>
         <module>entities</module>
-        <module>compiler</module>
+        <module>command-runner</module>
     </modules>
 
     <properties>
@@ -67,13 +67,11 @@
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
         </dependency>
-
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>7.0.1.Final</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -87,7 +85,6 @@
         </dependency>
 
         <!-- Dependencies for the testing frameworks (Junit, Mockito) (tests only) -->
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -99,22 +96,18 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.8.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-runner</artifactId>
             <version>1.8.1</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
             <version>1.8.1</version>
             <scope>test</scope>
         </dependency>
-
-
     </dependencies>
 
     <build>

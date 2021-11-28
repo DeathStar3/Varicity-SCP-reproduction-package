@@ -2,14 +2,4 @@
 
 echo "Before"
 
-docker build -t argouml-ant:jdk8 .
-
-
-
-
-
-
-
-
-
-
+docker build -t ant:jdk8 .

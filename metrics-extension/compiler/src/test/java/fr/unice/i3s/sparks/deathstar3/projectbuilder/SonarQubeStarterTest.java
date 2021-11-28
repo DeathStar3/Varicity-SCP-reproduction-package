@@ -5,14 +5,12 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.exception.NotModifiedException;
 import com.github.dockerjava.core.DockerClientBuilder;
-
+import fr.unice.i3s.sparks.deathstar3.models.SonarQubeStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
-
-import fr.unice.i3s.sparks.deathstar3.models.SonarQubeStatus;
 
 public class SonarQubeStarterTest {
 

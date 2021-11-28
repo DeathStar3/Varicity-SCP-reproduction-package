@@ -1,7 +1,7 @@
 package fr.unice.i3s.sparks.deathstar3.utils;
 
-import java.io.IOException;
-
+import fr.unice.i3s.sparks.deathstar3.exception.HttpResponseException;
+import lombok.NoArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -10,8 +10,7 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 
-import fr.unice.i3s.sparks.deathstar3.exception.HttpResponseException;
-import lombok.NoArgsConstructor;
+import java.io.IOException;
 
 @NoArgsConstructor
 public class HttpRequest {

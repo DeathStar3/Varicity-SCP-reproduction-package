@@ -1,5 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -15,7 +16,6 @@ public class Config {
 
     @NotBlank()
     private String projectName;
-
     private String repositoryUrl;
     private String path;
     /**
@@ -29,12 +29,15 @@ public class Config {
     private List<String> tagIds;
     private String buildEnv;
     private String buildEnvTag;
-
     private List<String> buildCmds;
     private boolean buildCmdIncludeSonar;
     private String sonarqubeUrl;
-    private String outputPath = "metrics-extension/output"; // Optional
+
+    @JsonProperty("output-path")
+    private String outputPath = "generated_visualizations/data/externals"; // Optional
+    @JsonProperty("source-code-path")
     private String sourceCodePath = "sources"; // Optional
+    @JsonProperty("sources")
     private List<MetricSource> sources;
 
     public Config(String projectName, String path, String buildRoot, String buildEnv, String buildEnvTag,
