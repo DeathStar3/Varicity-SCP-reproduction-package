@@ -10,7 +10,7 @@ const YAML = require('yaml');
 
 export class ConfigService {
 
-    private configs: Map<string, VaricityConfig[]> = undefined;
+    private configs: Map<string, VaricityConfig[]> = undefined; // TODO replace with json DB or just look up on FS
     private static defaultConfigName = "config";
     private static defaultConfigsPath = "./config/";
 
@@ -51,7 +51,7 @@ export class ConfigService {
 
         ymlFilePaths.forEach((key) => {
             const config = ConfigService.getYamlFromDisk(key) as VaricityConfig;
-            console.log(config)
+            // console.log(config)
 
             if(config.camera_data === undefined){
                 config.camera_data = new CameraData(2 * Math.PI / 3, Math.PI / 3, 100, new Vector3());
@@ -72,7 +72,7 @@ export class ConfigService {
             }
         });
 
-        console.log('Loaded yaml files : ', this.configs);
+        // console.log('Loaded yaml files : ', this.configs);
     }
 
     public loadDataFile(fileName: string): VaricityConfig {

@@ -9,7 +9,9 @@ var path = require('path');
 
 export class ProjectService {
 
-    private project: Map<string, JsonInputInterface> = undefined;
+    db = new JsonDB(new Config("projects-db", true, true, '/'));
+
+    private project: Map<string, JsonInputInterface> = undefined;  // TODO replace with look up on FS & Json DB
     private static pathToJsons = "./data/symfinder_files/";
 
     constructor() {
@@ -22,18 +24,16 @@ export class ProjectService {
         let symFinderFilesPathsMap = new Map<string, string>();
         let externalMetricsFilesPathsMap = new Map<string, string[]>();
 
-
-
         // Get the path of SymFinder's & external metrics jsons
         this.findJsons(symFinderFilesPathsMap, externalMetricsFilesPathsMap);
 
-        console.log("symFinderFilesPathsMap: ", symFinderFilesPathsMap);
-        console.log("externalMetricsFilesPathsMap: ", externalMetricsFilesPathsMap);
+        // console.log("symFinderFilesPathsMap: ", symFinderFilesPathsMap);
+        // console.log("externalMetricsFilesPathsMap: ", externalMetricsFilesPathsMap);
 
         // deserialize the symfinder's & external metrics' jsons
         this.deserializeJsons(symFinderFilesPathsMap, externalMetricsFilesPathsMap);
 
-        console.log('Loaded json files: ', this.project);
+        // console.log('Loaded json files: ', this.project);
     }
 
     public findJsons(symFinderFilesPathsMap: Map<string, string>, externalMetricsFilesPathsMap: Map<string, string[]>) {
@@ -148,30 +148,37 @@ export class ProjectService {
         return this.project.get(fileName);
     }
 
-    public getAllFilenames(): string[] {
-        if (this.project === undefined) {
-            this.loadProjects();
-        }
-        return [...this.project.keys()];
-    }
-
     public getAllFilenamesFromDisk(): string[] {
-        let pathsWithStartDir = UtilsService.traverseDir(ProjectService.pathToJsons);
-        let paths = [];
+        if(this.db.exists('/projects/names')){
+            return this.db.getData('/projects/names')
+        }else{
+            let pathsWithStartDir = UtilsService.traverseDir(ProjectService.pathToJsons);
+            let paths = [];
 
-        pathsWithStartDir.forEach(path => {
-            let newPath =  path.replace(/\\+/g, "/");
-            let newPathSplit = newPath.split('\/');
-            newPathSplit.shift();
-            newPathSplit.shift();
-            paths.push(newPathSplit.join('/'))
-        })
-
-        return paths;
+            pathsWithStartDir.forEach(path => {
+                let newPath =  path.replace(/\\+/g, "/");
+                let newPathSplit = newPath.split('\/');
+                newPathSplit.shift();
+                newPathSplit.shift();
+                paths.push(newPathSplit.join('/'))
+            })
+            this.db.push('/projects/names', paths);
+            return paths;
+        }
     }
 
     getAllProjectsName(): string[] {
-        return [...this.project.keys()]; // todo change
+        const allFilesPaths = this.getAllFilenamesFromDisk();
+        let projectNames = [];
+
+        allFilesPaths.forEach(path => {
+            if(!path.includes('/')){
+                projectNames.push(path.split('.json')[0]);
+            }
+        })
+
+        console.log("projectNames", projectNames)
+        return projectNames;
     }
 
     addProject(project: Project) {

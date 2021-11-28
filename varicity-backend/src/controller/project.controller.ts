@@ -31,14 +31,9 @@ export class ProjectController {
         return this.projectService.getAllProjectsName();
     }
 
-    @Get('/projects/name/:name')
+    @Get('/projects/json/:name')
     getVisualizationData(@Param() params): JsonInputInterface {
         return this.projectService.loadVisualizationInfoOfProject(params.name);
-    }
-
-    @Get('/projects')
-    findAllProjects(): string[] {
-        return this.projectService.getAllFilenames();
     }
 
     @Post('/projects')
