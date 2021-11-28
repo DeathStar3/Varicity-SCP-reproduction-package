@@ -1,66 +1,29 @@
 import {JsonDB} from "node-json-db";
 import {Config} from "node-json-db/dist/lib/JsonDBConfig";
 import {DisksProjectPaths, JsonInputInterface, MetricClassInterface} from "../model/jsonInput.interface";
-import {Project} from "../model/user.model";
-import {UtilsService} from "./utils.service";
 
 var fs = require('fs');
 
 export class ProjectService {
 
-    db = new JsonDB(new Config("projects-db", true, true, '/'));
+    private DB = new JsonDB(new Config("index-db", true, true, '/'));
     private static pathToJsons = "./data/symfinder_files/";
 
-    public findJsons(symFinderFilesPathsMap: Map<string, string>, externalMetricsFilesPathsMap: Map<string, string[]>) {
-        const allJsonPaths = this.getAllFilenamesFromDisk();
+    /******************
+     * LOAD A PROJECT *
+     ******************/
 
-        allJsonPaths.forEach((key) => {
-            let symFinderProjectName = ProjectService.getSymFinderJsonProjectName(key);
-
-            if (symFinderProjectName !== undefined) {
-                symFinderFilesPathsMap.set(symFinderProjectName, key);
-            } else {
-                let externalProjectName = ProjectService.getExternalJsonProjectName(key);
-                if (externalProjectName !== undefined) {
-                    if (externalMetricsFilesPathsMap.has(externalProjectName)) {
-                        externalMetricsFilesPathsMap.get(externalProjectName).push(key);
-                    } else {
-                        externalMetricsFilesPathsMap.set(externalProjectName, [key]);
-                    }
-                }
-            }
-        });
-    }
-
-    private static getSymFinderJsonProjectName(key: string): string {
-        const myRegexp = new RegExp("^([a-zA-Z\\-\\_.0-9]+\\.json)$", "g");
-        let match = myRegexp.exec(key);
-        if (match !== undefined && match != null) {
-            return match[1];
-        } else {
-            return undefined;
-        }
-    }
-
-    private static getExternalJsonProjectName(key: string) {
-        const myRegexp = new RegExp("^externals\\/([a-zA-Z\\-\\_.0-9]+)\\/[a-zA-Z\\-\\_.0-9]+\\.json$", "g");
-        let match = myRegexp.exec(key);
-        if (match !== undefined && match != null) {
-            return match[1];
-        } else {
-            return undefined;
-        }
-    }
-
+    /**
+     * Load a given json file from disk using it path
+     */
     private static getJsonFromDisk(path: string): any {
         return JSON.parse(fs.readFileSync(ProjectService.pathToJsons + path, 'utf8'));
     }
 
-    private static getFileNameOnly(filePath: string): string {
-        return filePath.split('/').pop().split('.json').shift();
-    }
-
-    public loadVisualizationInfoOfProject(projectName: string): JsonInputInterface {
+    /**
+     * Load SymFinder and external metrics jsons for a given project and merge them into a single object
+     */
+    public loadProject(projectName: string): JsonInputInterface {
         const projectPaths = this.getProjectPaths(projectName);
 
         // fetch SymFinder input json
@@ -97,10 +60,12 @@ export class ProjectService {
                 });
             });
         }
-
         return symfinderObj;
     }
 
+    /**
+     * Create a map base on SymFinder json, the map is then used to easily merge the SymFinder data with the external metrics
+     */
     private static indexSymFinderClassesToMap(symfinderObj: JsonInputInterface) {
         let mapSymFinderClassesIndex = new Map<string, number>();
         for (let i = 0; i < symfinderObj.nodes.length; i++) {
@@ -109,77 +74,30 @@ export class ProjectService {
         return mapSymFinderClassesIndex;
     }
 
-    public getAllFilenamesFromDisk(): string[] {
-        if (this.db.exists('/projects/names')) {
-            return this.db.getData('/projects/names')
-        } else {
-            let pathsWithStartDir = UtilsService.traverseDir(ProjectService.pathToJsons);
-            let paths = [];
-
-            pathsWithStartDir.forEach(path => {
-                let newPath = path.replace(/\\+/g, "/");
-                let newPathSplit = newPath.split('\/');
-                newPathSplit.shift();
-                newPathSplit.shift();
-                paths.push(newPathSplit.join('/'))
-            })
-            this.db.push('/projects/names', paths);
-            return paths;
-        }
+    /**
+     * Return a list with all the project names
+     */
+    public getAllProjectsName(): string[] {
+        return Object.keys(this.DB.getData("/data"));
     }
 
-    getAllProjectsName(): string[] {
-        const allFilesPaths = this.getAllFilenamesFromDisk();
-        let projectNames = [];
-
-        allFilesPaths.forEach(path => {
-            if (!path.includes('/')) {
-                projectNames.push(path.split('.json')[0]);
-            }
-        })
-
-        return projectNames;
-    }
-
+    /**
+     * Return an object that contain the SymFinder and external jsons locations
+     */
     private getProjectPaths(projectName: string): DisksProjectPaths {
-        const allFilePaths = this.getAllFilenamesFromDisk();
+        const allFilePaths = this.DB.getData("/data/" + projectName);
 
         let symFinderFilesPath: string;
         let externalFilesPaths = [];
 
         allFilePaths.forEach((filePath) => {
-            const currentProjectName = ProjectService.getFileNameOnly(filePath);
-            let symFinderProjectName = ProjectService.getSymFinderJsonProjectName(filePath);
-            if (symFinderProjectName !== undefined && currentProjectName === (projectName)) {
-                console.log(symFinderProjectName);
+            if (filePath.split('\/')[0] === 'externals'){ // If is an external file
+                externalFilesPaths.push(filePath);
+            }else{ // If is the SymFinder file
                 symFinderFilesPath = filePath;
-            } else {
-                let externalProjectName = ProjectService.getExternalJsonProjectName(filePath);
-                if (externalProjectName !== undefined && externalProjectName === projectName) {
-                    externalFilesPaths.push(filePath);
-                }
             }
         });
-
         return new DisksProjectPaths(symFinderFilesPath, externalFilesPaths);
     }
 
-    addProject(project: Project) {
-        // TODO
-        // let index = 0;
-        //
-        // if (this.db.exists('/projects')) {
-        //     index = this.db.count("/projects");
-        //     const existingProject = this.db.find<Project>('/users', (entry: { projectName: string; }, _: any) => entry.projectName == project.projectName);
-        //
-        //     if (existingProject) {
-        //         return existingProject;
-        //     }
-        //
-        // }
-        // project.index = index;
-        // this.db.push(`/projects[]`, project);
-
-        return project;
-    }
 }

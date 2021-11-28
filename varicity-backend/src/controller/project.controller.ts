@@ -32,12 +32,8 @@ export class ProjectController {
     }
 
     @Get('/projects/json/:name')
-    getVisualizationData(@Param() params): JsonInputInterface {
-        return this.projectService.loadVisualizationInfoOfProject(params.name);
+    loadProject(@Param() params): JsonInputInterface {
+        return this.projectService.loadProject(params.name);
     }
 
-    @Post('/projects')
-    newProject(@Body() project: Project): Project {
-        return this.projectService.addProject(project);
-    }
 }
