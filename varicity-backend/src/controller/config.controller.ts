@@ -1,7 +1,4 @@
 import {Body, Controller, Get, Post, Query} from '@nestjs/common';
-import {JsonDB} from 'node-json-db';
-import {Config} from 'node-json-db/dist/lib/JsonDBConfig';
-import {v4 as uuidv4} from 'uuid';
 import {ConfigService} from '../service/config.service';
 import {VaricityConfig} from '../model/config.model';
 
@@ -21,9 +18,13 @@ export class ConfigController {
     @Get('/projects/configs')
     getConfigsOfProject(@Query() query: Record<string, any>): VaricityConfig[] {
         console.log("/projects/configs - getConfigsOfProject", query)
-        const res =  this.configService.loadConfigFiles(query['name']);
-        console.log(res);
-        return res;
+        return this.configService.loadConfigFiles(query['name']);
+    }
+
+    @Get('/projects/configs/names')
+    getConfigsNamesOfProject(@Query() query: Record<string, any>): VaricityConfig[] {
+        console.log("/projects/configs/names - getConfigsNamesOfProject", query)
+        return this.configService.loadConfigFilesNames(query['name']);
     }
 
     @Get('/projects/configs/firstOrDefault')

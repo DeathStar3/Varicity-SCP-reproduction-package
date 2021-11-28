@@ -12,15 +12,11 @@ class Main {
         document.addEventListener('DOMContentLoaded', async (_ev) => {
             let projects = (await ProjectService.findAllProjectsName()).data;
             console.log("projects", projects);
-            let configs = (await ConfigLoader.loadConfigFiles("config")).data;
-            console.log("configs", configs);
 
             UIController.initSearchbar();
             UIController.createSaveSection();
             UIController.createDoc();
-            UIController.createConfig(configs[0]);
             UIController.createProjectSelector(projects);
-            UIController.createConfigSelector(configs, "");
             UIController.createLogs();
         })
     }

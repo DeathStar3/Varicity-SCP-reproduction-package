@@ -3,6 +3,7 @@ import {CameraData, VaricityConfig} from "../model/config.model";
 import {Vector3} from "../model/user.model";
 import {UtilsService} from "./utils.service";
 import {Config} from "node-json-db/dist/lib/JsonDBConfig";
+import {JsonDB} from "node-json-db";
 
 const path = require('path');
 const yaml = require('js-yaml');
@@ -10,6 +11,7 @@ const YAML = require('yaml');
 
 export class ConfigService {
 
+    db = new JsonDB(new Config("configs-db", true, true, '/'));
     private configs: Map<string, VaricityConfig[]> = undefined; // TODO replace with json DB or just look up on FS
     private static defaultConfigName = "config";
     private static defaultConfigsPath = "./config/";
@@ -40,6 +42,20 @@ export class ConfigService {
         })
 
         return paths;
+    }
+
+
+    getAllConfigsName(projectName: string): string[] {
+        const allFilesPaths = this.getAllFilenamesFromDisk();
+        let projectNames = [];
+
+        allFilesPaths.forEach(path => {
+            if (!path.includes('/')) {
+                projectNames.push(path.split('.json')[0]);
+            }
+        })
+
+        return projectNames;
     }
 
     private loadConfigs(): void {
@@ -148,5 +164,9 @@ export class ConfigService {
         })
 
         return config;    
+    }
+
+    loadConfigFilesNames(configName: string) {
+        return [];
     }
 }
