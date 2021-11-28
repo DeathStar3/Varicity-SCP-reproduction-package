@@ -123,7 +123,7 @@ export class FsWatcherService {
         if (newPathSplit[2] === 'externals') {
             return newPathSplit[3];
         } else {
-            return newPathSplit[2].replace(".json","");
+            return newPathSplit[2].replace(".json", "");
         }
     }
 
