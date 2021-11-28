@@ -57,3 +57,13 @@ export interface MetricClassInterface {
     name: string;
     metrics: MetricObject[];
 }
+
+export class DisksProjectPaths {
+    symFinderFilePath: string;
+    externalFilePaths: string[];
+
+    constructor(symFinderFilePath: string, externalFilePaths: string[]) {
+        this.symFinderFilePath = symFinderFilePath;
+        this.externalFilePaths = externalFilePaths;
+    }
+}
