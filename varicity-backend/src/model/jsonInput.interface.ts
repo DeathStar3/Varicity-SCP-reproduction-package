@@ -20,22 +20,15 @@ export interface NodeInterface {
     name: string;
     methods: NumerableInterface[];
     attributes: NumerableInterface[];
-
     interfaceAttributes?: NumerableInterface[];
-
     publicConstructors?: number;
     publicMethods?: number;
     constructorVPs?: number;
-
     constructorVariants?: number;
     methodVariants?: number;
-
     additionalMetrics?: MetricObject[];
-
     methodVPs?: number;
-
     allMethods?: number;
-
     nbComposition?: number;
 }
 

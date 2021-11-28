@@ -1,7 +1,6 @@
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Controller, Get, Param, Post} from '@nestjs/common';
 import {JsonInputInterface} from '../model/jsonInput.interface';
 import {ProjectService} from "../service/project.service";
-import {Project} from "../model/user.model";
 
 
 @Controller()

@@ -108,8 +108,8 @@ api_classes: # configuration given in the paper
     - "org.zalando.riptide.Http"
 
 variables: #variables to be used for width and height of a building
-  width: "nbMethodVariants"
-  height: "nbConstructorVariants"
+  width: "nbConstructorVariants"
+  height: "nbMethodVariants"
 
 orientation: "OUT"
 
