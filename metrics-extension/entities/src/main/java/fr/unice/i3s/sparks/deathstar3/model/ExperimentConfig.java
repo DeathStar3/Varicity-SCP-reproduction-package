@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.var;
 
 @Getter
 @Setter
@@ -77,7 +76,7 @@ public class ExperimentConfig {
             return true;
         if (obj == null || obj.getClass() != this.getClass())
             return false;
-        var that = (ExperimentConfig) obj;
+        ExperimentConfig that = (ExperimentConfig) obj;
         return Objects.equals(this.projectName, that.projectName)
                 && Objects.equals(this.repositoryUrl, that.repositoryUrl)
                 && Objects.equals(this.sourcePackage, that.sourcePackage) && Objects.equals(this.tagIds, that.tagIds);
