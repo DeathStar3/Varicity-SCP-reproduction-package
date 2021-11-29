@@ -6,7 +6,6 @@ import { ConfigLoader } from "../parser/configLoader";
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from '../parser/strategies/parsing.strategy.interface';
 import { UIController } from "./ui.controller";
-import {fsWatcherService} from "../../../../varicity-backend/src/service/fs-watcher.service";
 
 export class ProjectController {
 
