@@ -21,5 +21,5 @@
 
 FROM python:3.8.2-alpine3.11
 RUN apk add --no-cache git bash && pip install PyYAML mako
-ADD files/* /
+ADD docker/sources_fetcher/files/* /
 CMD sh sources_fetcher.sh

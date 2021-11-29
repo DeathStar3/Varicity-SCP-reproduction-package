@@ -1,6 +1,6 @@
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
-import {fsWatcherService, FsWatcherService} from "./service/fs-watcher.service";
+import {fsWatcherService} from "./service/fs-watcher.service";
 
 async function startServer() {
     const app = await NestFactory.create(AppModule);

@@ -1,7 +1,6 @@
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Controller, Get, Param, Post} from '@nestjs/common';
 import {JsonInputInterface} from '../model/jsonInput.interface';
 import {ProjectService} from "../service/project.service";
-import {Project} from "../model/user.model";
 
 
 @Controller()
@@ -32,12 +31,8 @@ export class ProjectController {
     }
 
     @Get('/projects/json/:name')
-    getVisualizationData(@Param() params): JsonInputInterface {
-        return this.projectService.loadVisualizationInfoOfProject(params.name);
+    loadProject(@Param() params): JsonInputInterface {
+        return this.projectService.loadProject(params.name);
     }
 
-    @Post('/projects')
-    newProject(@Body() project: Project): Project {
-        return this.projectService.addProject(project);
-    }
 }
