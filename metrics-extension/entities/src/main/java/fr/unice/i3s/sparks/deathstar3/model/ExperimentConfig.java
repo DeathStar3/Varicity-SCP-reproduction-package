@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,9 +26,11 @@ public class ExperimentConfig {
     private String projectName;
     private String repositoryUrl;
     /**
-     * If skip clone is true then the attributes repositoryUrl, tagIds are ignored and the path must be the path to the project
+     * If skip clone is true then the attributes repositoryUrl, tagIds are ignored
+     * and the path must be the path to the project
      * eg: /home/user/projects/thisProject
-     * If skipClone is false the path attribute must be the parent directory where we want to clone the project
+     * If skipClone is false the path attribute must be the parent directory where
+     * we want to clone the project
      * eg: /home/user/projects
      */
     private boolean skipClone = false;
@@ -45,12 +46,12 @@ public class ExperimentConfig {
     private String buildEnvTag;
     private String buildCmd;
     /**
-     * whether ther build command contains a sonar;  eg: mvn clean package sonar:sonar
+     * whether ther build command contains a sonar; eg: mvn clean package
+     * sonar:sonar
      */
     private boolean buildCmdIncludeSonar;
 
     private boolean sonarqubeNeeded = false;
-
 
     private String outputPath = "generated_visualizations/data/externals"; // Optional
     @JsonProperty("source-code-path")
@@ -59,7 +60,7 @@ public class ExperimentConfig {
     private List<MetricSource> sources;
 
     public ExperimentConfig(String projectName, String path, String buildEnv, String buildEnvTag,
-                           String buildCmd, boolean buildCmdIncludeSonar) {
+            String buildCmd, boolean buildCmdIncludeSonar) {
         this.projectName = projectName;
         this.path = path;
         this.buildEnv = buildEnv;
@@ -69,7 +70,6 @@ public class ExperimentConfig {
 
         this.buildCmdIncludeSonar = buildCmdIncludeSonar;
     }
-
 
     @Override
     public boolean equals(Object obj) {

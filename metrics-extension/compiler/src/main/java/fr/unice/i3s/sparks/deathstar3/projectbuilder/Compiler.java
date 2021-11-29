@@ -139,8 +139,7 @@ public class Compiler {
         String tokenName = RandomStringUtils.randomAlphabetic(8, 10).toUpperCase(Locale.ENGLISH);
         SonarQubeToken result = this.getToken(tokenName, SONARQUBE_LOCAL_URL);
         Volume volume = new Volume("/project");
-
-        System.out.println(utils.getUserIdentity());
+        
         var command = dockerClient
                 .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())//.withUser(utils.getUserIdentity())
                 .withName(COMPILER_SCANNER_NAME);
