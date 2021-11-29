@@ -1,6 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
-import fr.unice.i3s.sparks.deathstar3.MetricGatherer;
+
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.Neo4jParameters;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
@@ -16,7 +16,6 @@ public class MetricExtensionEntrypointTest {
 
 
     private MetricExtensionEntrypoint entrypoint = new MetricExtensionEntrypoint();
-    private MetricGatherer metricGatherer = new MetricGatherer();
 
     private ConfigLoader configLoader = new ConfigLoader();
 
@@ -63,8 +62,8 @@ public class MetricExtensionEntrypointTest {
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
             System.out.println(experimentResult);
-            //TODO fix this assert
-            // Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
+            
+            Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
 
         });
 

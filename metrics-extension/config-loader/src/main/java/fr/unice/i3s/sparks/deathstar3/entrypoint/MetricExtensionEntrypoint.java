@@ -66,7 +66,7 @@ public class MetricExtensionEntrypoint {
                 //la mise à jour de sonarqube par rapport au nouveau projet n'est pas immédiate
                 // le sleep introduit un délai pour attendre que la mise à jour se fasse avant que le metric gatherer ne soit appelé
                 try {
-                    Thread.sleep(4000);
+                    Thread.sleep(30_000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
