@@ -1,5 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -12,46 +13,56 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Config {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ExperimentConfig {
 
     @NotBlank()
     private String projectName;
     private String repositoryUrl;
-    private String path;
+    /**
+     * If skip clone is true then the attributes repositoryUrl, tagIds are ignored and the path must be the path to the project
+     * eg: /home/user/projects/thisProject
+     * If skipClone is false the path attribute must be the parent directory where we want to clone the project
+     * eg: /home/user/projects
+     */
+    private boolean skipClone = false;
+    private String path = "resources";
     /**
      * The directory containing the classes to be analyzed by Symfinder
      */
     private String sourcePackage;
-    /**
-     * The directory containing the pom.xml , build.xml, gradle file and/or from which we can run the build command
-     */
-    private String buildRoot;
+
     private List<String> tagIds;
+    private List<String> commitIds;
     private String buildEnv;
     private String buildEnvTag;
-    private List<String> buildCmds;
+    private List<String> buildCmd;
+    /**
+     * whether ther build command contains a sonar;  eg: mvn clean package sonar:sonar
+     */
     private boolean buildCmdIncludeSonar;
-    private String sonarqubeUrl;
 
-    @JsonProperty("output-path")
+    private boolean sonarqubeNeeded = false;
+
+
     private String outputPath = "generated_visualizations/data/externals"; // Optional
     @JsonProperty("source-code-path")
     private String sourceCodePath = "sources"; // Optional
     @JsonProperty("sources")
     private List<MetricSource> sources;
 
-    public Config(String projectName, String path, String buildRoot, String buildEnv, String buildEnvTag,
-                  List<String> buildCmds, String sonarqubeUrl, boolean buildCmdIncludeSonar) {
+    public ExperimentConfig(String projectName, String path, String buildEnv, String buildEnvTag,
+                            List<String> buildCmd, boolean buildCmdIncludeSonar) {
         this.projectName = projectName;
         this.path = path;
-        this.buildRoot = buildRoot;
         this.buildEnv = buildEnv;
         this.buildEnvTag = buildEnvTag;
 
-        this.buildCmds = buildCmds;
-        this.sonarqubeUrl = sonarqubeUrl;
+        this.buildCmd = buildCmd;
+
         this.buildCmdIncludeSonar = buildCmdIncludeSonar;
     }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -59,7 +70,7 @@ public class Config {
             return true;
         if (obj == null || obj.getClass() != this.getClass())
             return false;
-        var that = (Config) obj;
+        var that = (ExperimentConfig) obj;
         return Objects.equals(this.projectName, that.projectName)
                 && Objects.equals(this.repositoryUrl, that.repositoryUrl)
                 && Objects.equals(this.sourcePackage, that.sourcePackage) && Objects.equals(this.tagIds, that.tagIds);

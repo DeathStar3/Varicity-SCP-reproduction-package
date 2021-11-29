@@ -3,7 +3,7 @@ package fr.unice.i3s.sparks.deathstar3;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import fr.unice.i3s.sparks.deathstar3.deserializer.ConfigLoader;
-import fr.unice.i3s.sparks.deathstar3.model.Config;
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ public class Main {
         // TODO Filter configFile to call project builder and test runner one one side and directly MetricGatherer for the rest
 
         ConfigLoader configLoader = new ConfigLoader();
-        List<Config> configs = configLoader.loadConfigFile(configFilePath);
+        List<ExperimentConfig> configs = configLoader.loadConfigFile(configFilePath);
 
         CommandScheduler scheduler = new CommandScheduler();
         scheduler.schedule(configs);

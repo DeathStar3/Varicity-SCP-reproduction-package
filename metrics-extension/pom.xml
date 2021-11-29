@@ -12,6 +12,7 @@
         <module>metric-gatherer</module>
         <module>entities</module>
         <module>command-runner</module>
+        <module>sourcesfetcher</module>
     </modules>
 
     <properties>

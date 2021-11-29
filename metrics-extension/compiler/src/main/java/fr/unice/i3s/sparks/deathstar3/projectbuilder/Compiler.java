@@ -6,18 +6,18 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
-import com.github.dockerjava.api.model.*;
+import com.github.dockerjava.api.model.AccessMode;
+import com.github.dockerjava.api.model.Bind;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
-
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
-import fr.unice.i3s.sparks.deathstar3.exceptions.PullException;
-import fr.unice.i3s.sparks.deathstar3.model.Config;
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
 import fr.unice.i3s.sparks.deathstar3.utils.Utils;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -29,7 +29,6 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -57,7 +56,7 @@ public class Compiler {
         this.dockerClient = DockerClientBuilder.getInstance().withDockerHttpClient(httpClient).build();
     }
 
-    public void executeProject(Config projectConfig) {
+    public void executeProject(ExperimentConfig projectConfig) {
 
         if (projectConfig.isBuildCmdIncludeSonar()) {
             log.info("Hello " + projectConfig);
@@ -114,7 +113,7 @@ public class Compiler {
      * @param projectConfig
      * @return the containerId
      */
-    public String compileAndScanProject(Config projectConfig) throws JsonProcessingException, InterruptedException {
+    public String compileAndScanProject(ExperimentConfig projectConfig) throws JsonProcessingException, InterruptedException {
         if (!this.utils.checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
 
             downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
@@ -147,7 +146,7 @@ public class Compiler {
 
     }
 
-    public String compileProject(Config projectConfig) {
+    public String compileProject(ExperimentConfig projectConfig) {
 
         if (!this.utils.checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
             try {
@@ -208,7 +207,7 @@ public class Compiler {
         return this.objectMapper.readValue(response.getBody(), SonarQubeToken.class);
     }
 
-    public String runSonarScannerCli(Config projectConfig, SonarQubeToken token) {
+    public String runSonarScannerCli(ExperimentConfig projectConfig, SonarQubeToken token) {
 
         Volume volume = new Volume("/usr/src");
         String completePath = "";
