@@ -2,7 +2,6 @@
 # you may alter this file before running the program
 # pick your color at https://htmlcolorcodes.com/
 
-name: "default config"
 description: "basic config with default colors and building representation"
 
 building:

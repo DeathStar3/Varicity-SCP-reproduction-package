@@ -2,7 +2,6 @@
 # you may alter this file before running the program
 # pick your color at https://htmlcolorcodes.com/
 
-name: "junit config full variability"
 description: "specific config for the Junit project"
 
 building:

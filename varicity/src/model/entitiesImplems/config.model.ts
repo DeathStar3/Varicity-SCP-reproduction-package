@@ -12,7 +12,6 @@ export class Config implements ConfigInterface {
 
     id?:string; //for persistence
     projectId?:string; //for persistence
-    name: string;
     description: string;
     building: D3Config;
     // building: ConfigColor;
@@ -127,12 +126,6 @@ export class Config implements ConfigInterface {
                 if(fields.includes("api_classes") || fields.includes("hierarchy_links")) return CriticalLevel.REPARSE_DATA;
             }
             return CriticalLevel.RERENDER_SCENE;
-        }
-        if (fields.includes("name")) {
-            if (Array.isArray(value)) {
-                config.name = value[1];
-                return CriticalLevel.LOW_IMPACT;
-            }
         }
         if (fields.includes("description")) {
             if (Array.isArray(value)) {

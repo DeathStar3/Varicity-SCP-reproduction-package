@@ -5,7 +5,6 @@ export class CurrentProjectListener {
 
     private currentProject: string;
     public projectChange(newProject: string): void {
-
         
         if (this.currentProject && this.currentProject!== newProject) {
             console.log(" Visualized Project changed from " + this.currentProject + " to " + newProject);
