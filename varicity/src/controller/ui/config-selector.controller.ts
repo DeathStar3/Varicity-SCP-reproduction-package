@@ -15,15 +15,12 @@ export class ConfigSelectorController {
     private static previousParser: ParsingStrategy;
     private static filename: string;
 
-    static createConfigSelector(configs: Config[], filename: string) {
+    static createConfigSelector(configs: string[], filename: string) {
         let parent = document.getElementById("config_selector");
 
         this.filename = filename;
-        if (configs.length > 0) {
-            UIController.config = configs[0];
-        }
 
-        parent.innerHTML = "Config selection: " + ((UIController.config !== undefined) ? UIController.config.name : "[no config found]");
+        parent.innerHTML = "Config selection: " + ((UIController.configName !== undefined) ? UIController.configName : "[no config found]");
 
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
         inputElement.value = UIController.config.default_level.toString();
@@ -35,14 +32,14 @@ export class ConfigSelectorController {
 
         for (let config of configs) {
             let node = document.createElement("div");
-            node.innerHTML = " - " + config.name;
+            node.innerHTML = " - " + config;
             parent.appendChild(node);
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
-                this.defineConfig(config.filePath);
+                this.defineConfig(config);
 
-                parent.childNodes[0].nodeValue = "Config selection: " + config.name;
+                parent.childNodes[0].nodeValue = "Config selection: " + config;
                 inputElement.value = UIController.config.default_level.toString();
 
                 this.reParse();
@@ -97,7 +94,8 @@ export class ConfigSelectorController {
 
     }
 
-    private static async defineConfig(configPath: string) {
-        UIController.config = (await ConfigLoader.loadConfigFromPath(configPath)).data
+    private static async defineConfig(configName: string) {
+        UIController.config = (await ConfigLoader.loadConfigFromName(this.filename, configName)).data
+        UIController.configName = configName;
     }
 }

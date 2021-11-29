@@ -15,4 +15,12 @@ export class ConfigLoader {
     public static loadConfigFiles(fileName: string): Promise<AxiosResponse<Config[],any>>  {
         return  axios.get<Config[]>(`${backendUrl}/projects/configs?name=${fileName}`);
     }
+
+    public static loadConfigNames(fileName: string): Promise<AxiosResponse<string[],any>>  {
+        return  axios.get<string[]>(`${backendUrl}/projects/configs/names?name=${fileName}`);
+    }
+
+    static async loadConfigFromName(projectName: string, configName: string): Promise<AxiosResponse<Config,any>> {
+        return  axios.get<Config>(`${backendUrl}/projects/${projectName}/configs?configName=${configName}`);
+    }
 }

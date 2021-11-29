@@ -1,17 +1,13 @@
 import * as fs from 'fs';
 import {CameraData, VaricityConfig} from "../model/config.model";
 import {Vector3} from "../model/user.model";
-import {UtilsService} from "./utils.service";
-import {Config} from "node-json-db/dist/lib/JsonDBConfig";
-import {JsonDB} from "node-json-db";
+import {AppModule} from "../app.module";
 
 const path = require('path');
 const yaml = require('js-yaml');
 const YAML = require('yaml');
 
 export class ConfigService {
-
-    db = new JsonDB(new Config("index-db", true, true, '/'));
 
     private static defaultConfigsPath = "./config/";
     private static defaultConfigsDirectory = "default";
@@ -34,7 +30,7 @@ export class ConfigService {
      * @param projectName
      */
     public getFirstProjectConfigOrDefaultOne(projectName: string): VaricityConfig {
-        const configsPaths = this.getConfigsPaths(projectName);
+        const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
         return this.getConfigsFromPath(configsPaths[0]);
     }
 
@@ -53,7 +49,7 @@ export class ConfigService {
      * @param projectName
      */
     public getConfigsFromProjectName(projectName: string): VaricityConfig[]{
-        const configsPaths = this.getConfigsPaths(projectName);
+        const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
         console.log("configsPaths", configsPaths)
         let configs = [];
         configsPaths.forEach(configPath => {
@@ -72,9 +68,6 @@ export class ConfigService {
         if(config.camera_data === undefined){
             config.camera_data = new CameraData(2 * Math.PI / 3, Math.PI / 3, 100, new Vector3());
         }
-        config.fileName = ConfigService.getFileNameOnly(configPath);
-        config.filePath = configPath;
-        // config.projectId = ConfigService.getProjectNameFromConfigPath(configPath);
         return config;
     }
 
@@ -98,9 +91,9 @@ export class ConfigService {
             fs.mkdirSync(pathDirToConfig);
         }
 
-        const version = this.getConfigsPaths(config.projectId).length;
-
-        fs.writeFile(path.join(pathDirToConfig, "config-" + config.projectId + "-" + version + ".yaml"),  doc.toString(), err => {
+        const version = this.getConfigsPaths(config.projectId).length + 1; // TODO improve versionning system
+        const filename = "config-" + config.projectId + "-" + version;
+        fs.writeFile(path.join(pathDirToConfig, filename + ".yaml"),  doc.toString(), err => {
             if (err) {
                 console.error(err)
                 return
@@ -108,7 +101,7 @@ export class ConfigService {
             //file written successfully
         })
 
-        return config;    
+        return {config, filename:  filename};
     }
 
     /**
@@ -116,12 +109,9 @@ export class ConfigService {
      * @private
      */
     private getDefaultConfigPaths(): string[] {
-        if(this.db.exists('/config/' + ConfigService.defaultConfigsDirectory)){
-            console.log("default exist")
-            return this.db.getData('/config/' + ConfigService.defaultConfigsDirectory);
+        if(AppModule.DB.exists('/config/' + ConfigService.defaultConfigsDirectory)){
+            return AppModule.DB.getData('/config/' + ConfigService.defaultConfigsDirectory);
         }
-
-        console.log("default not exist" + '/config/' + ConfigService.defaultConfigsDirectory )
         return [];
     }
 
@@ -131,28 +121,58 @@ export class ConfigService {
      * @private
      */
     private getConfigsPaths(projectName: string): string[] {
-        if(this.db.exists('/config/' + projectName)){
-            console.log("this.db.exists('/config/'" + projectName)
-            return this.db.getData('/config/' + projectName);
+        if(AppModule.DB.exists('/config/' + projectName)){
+            return AppModule.DB.getData('/config/' + projectName);
+        }
+        return []
+    }
+
+    /**
+     * Get the path of all the configs for a specified project
+     * @param projectName
+     * @private
+     */
+    private getConfigsPathsWithDefaultConfigsFallback(projectName: string): string[] {
+        if(AppModule.DB.exists('/config/' + projectName)){
+            return AppModule.DB.getData('/config/' + projectName);
         }else{
-            const test = this.getDefaultConfigPaths();
-            console.log("test", test);
-            return test;
+            return this.getDefaultConfigPaths();
         }
     }
 
-
-    public getConfigByNameFromProject(projectName: string, configName: string): VaricityConfig {
-        const configsPaths = this.getConfigsPaths(projectName);
+    /**
+     * Get the file name of all the configs for a specified project
+     * @param projectName
+     * @private
+     */
+    public getConfigsNames(projectName: string): string[] {
+        const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
+        let configsNames = []
         configsPaths.forEach(configPath => {
+            configsNames.push(ConfigService.getFileNameOnly(configPath));
+        })
+        return configsNames;
+    }
+
+    /**
+     * Get the Varicity config with the config name and it's project name
+     * @param projectName equivalent to the config/projectName/... on disk
+     * @param configName without the extension
+     */
+    public getConfigByNameFromProject(projectName: string, configName: string): VaricityConfig {
+        const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
+        for (const configPath of configsPaths) {
             if(ConfigService.getFileNameOnly(configPath) === configName){
                 return this.getConfigsFromPath(configPath);
             }
-        })
-        console.warn("Config: " + configName + " not found, sending default config");
+        }
         return this.loadDefaultConfig();
     }
 
+    /**
+     * return the file name without the yaml or yml extension from any path given
+     * @param filePath ex: config/my-file.yaml
+     */
     public static getFileNameOnly(filePath: string): string {
         return filePath.split('/').pop().split(/\.y?aml/g).shift();
     }

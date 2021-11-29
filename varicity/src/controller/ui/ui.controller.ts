@@ -15,8 +15,9 @@ import {SaveController} from "./save.controller";
 export class UIController {
 
     public static scene: SceneRenderer;
-    public static configs: Config[];
+    public static configsName: string[];
     public static config: Config;
+    public static configName: string;
 
     public static createHeader(): void {
 
@@ -42,8 +43,8 @@ export class UIController {
         ProjectController.createProjectSelector(keys);
     }
 
-    public static createConfigSelector(configs: Config[], filename: string): void {
-        this.configs = configs;
+    public static createConfigSelector(configs: string[], filename: string): void {
+        this.configsName = configs;
         ConfigSelectorController.createConfigSelector(configs, filename);
     }
 
@@ -70,9 +71,11 @@ export class UIController {
 
 
     public static async reloadConfigAndConfigSelector(filename: string) {
-        this.configs = (await ConfigLoader.loadConfigFiles(filename)).data;
-        this.createConfigSelector(this.configs, filename);
-        this.createConfig(this.configs[0]);
+        this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
+        this.configName = this.configsName[0];
+        const config = (await ConfigLoader.loadConfigFromName(filename, this.configName)).data;
+        this.createConfig(config);
+        this.createConfigSelector(this.configsName, filename);
     }
 
     public static changeConfig(arr: string[], value: [string, string] | Color) {

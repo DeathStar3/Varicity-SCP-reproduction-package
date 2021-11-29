@@ -25,17 +25,20 @@ export class SaveController {
             UIController.config.projectId = Cookies.get('varicity-current-project');
             console.log('Project Id of the Config is now', UIController.config.projectId);
 
-            (document.querySelector('#text-field') as HTMLInputElement).value = UIController.config.name;
+            (document.querySelector('#text-field') as HTMLInputElement).value = UIController.configName;
         });
 
         document.querySelector('#save-config-confirm-btn').addEventListener('click', _clickev => {
             console.log('Add config ', new Date().toISOString())
-            UIController.config.name = (document.querySelector('#text-field') as HTMLInputElement).value;
+            UIController.configName = (document.querySelector('#text-field') as HTMLInputElement).value;
 
             //Fetch input text and set it as Config's name
             axios.post(`${backendUrl}/projects/configs`, UIController.config).then(response => {
                 console.log('Config saved successfully');
-                UIController.config = response.data;
+                UIController.config = response.data.config;
+                UIController.configName = response.data.filename;
+                UIController.configsName.push(UIController.configName);
+                UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
             }).catch(err => {
                 console.log('Cannot save config to database');
                 console.error(err);

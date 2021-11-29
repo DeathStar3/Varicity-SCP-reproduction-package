@@ -50,7 +50,6 @@ export interface ConfigColor {
 export class VaricityConfig {
 
     id?: string; //for persistence
-    name: string;
     projectId?: string; //for persistence
     description: string;
     username: string;
@@ -81,8 +80,6 @@ export class VaricityConfig {
     parsing_mode: string;
     orientation: Orientation;
     default_level: number;
-    fileName: string;
-    filePath: string;
 
     camera_data: CameraData;
 }
