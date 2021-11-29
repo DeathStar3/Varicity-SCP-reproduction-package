@@ -1,6 +1,5 @@
 
 import { ConfigLoader } from '../src/controller/parser/configLoader';
-import { FilesLoader } from '../src/controller/parser/filesLoader';
 import { VPVariantsStrategy } from "../src/controller/parser/strategies/vp_variants.strategy";
 import * as fs from 'fs';
 
