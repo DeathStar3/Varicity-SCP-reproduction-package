@@ -2,6 +2,7 @@
 import { ConfigLoader } from '../src/controller/parser/configLoader';
 import { FilesLoader } from '../src/controller/parser/filesLoader';
 import { VPVariantsStrategy } from "../src/controller/parser/strategies/vp_variants.strategy";
+import * as fs from 'fs';
 
 function countBuilding(districts){
   let sum = 0;
@@ -21,6 +22,10 @@ function countDistricts(districts) {
    return sum;
 }
 
+function loadProject(projectPath) {
+    return JSON.parse(fs.readFileSync(projectPath, 'utf8'))
+}
+
 describe('cross check', function() {
   
   beforeAll(async () => {
@@ -29,7 +34,7 @@ describe('cross check', function() {
   });
 
   it('cross check cross_check_1', function() {
-      let entities = new VPVariantsStrategy().parse(FilesLoader.loadDataFile('cross_check_1'), ConfigLoader.loadDataFile("config"), "cross_check_1");
+      let entities = new VPVariantsStrategy().parse(this.loadProject('symfinder_files/cross_check_1.json'), ConfigLoader.loadDataFile("config"), "cross_check_1");
       let ent = entities.filterCompLevel(1);
       let dis = ent.district.districts
       let numberOfBuiildings = countBuilding(dis) + countDistricts(dis)
