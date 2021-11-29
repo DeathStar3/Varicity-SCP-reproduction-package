@@ -1,6 +1,4 @@
-import axios from "axios";
-import { backendUrl } from "../../constants";
-import { Config, Vector3_Local } from "../../model/entitiesImplems/config.model";
+
 import { EntitiesList } from "../../model/entitiesList";
 import { ProjectService } from "../../services/project.service";
 import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
