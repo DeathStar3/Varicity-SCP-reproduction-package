@@ -20,7 +20,8 @@
   ~ Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.unice.i3s.sparks.deathstar3</groupId>
     <artifactId>symfinder</artifactId>
@@ -157,18 +158,18 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
-              <!--  <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>libs/</classpathPrefix>
-                            <mainClass>Main</mainClass>
-                        </manifest>
-                    </archive>
-                    <includes>
-                        <include>classes/log4j2.xml</include>
-                    </includes>
-                </configuration>-->
+                <!--  <configuration>
+                      <archive>
+                          <manifest>
+                              <addClasspath>true</addClasspath>
+                              <classpathPrefix>libs/</classpathPrefix>
+                              <mainClass>Main</mainClass>
+                          </manifest>
+                      </archive>
+                      <includes>
+                          <include>classes/log4j2.xml</include>
+                      </includes>
+                  </configuration>-->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

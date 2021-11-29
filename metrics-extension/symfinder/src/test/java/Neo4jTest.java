@@ -19,9 +19,9 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import apoc.path.PathExplorer;
 import apoc.cypher.Cypher;
-import fr.unice.i3s.sparks.deathstar3.neograph.NeoGraph;
+import apoc.path.PathExplorer;
+import fr.unice.i3s.sparks.deathstar3.engine.neograph.NeoGraph;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -55,11 +55,11 @@ public class Neo4jTest {
         embeddedDatabaseServer.close();
     }
 
-    protected void runTest(Consumer<NeoGraph> consumer){
+    protected void runTest(Consumer<NeoGraph> consumer) {
 //        try (Driver driver = GraphDatabase.driver(Configuration.getNeo4JBoltAddress(), AuthTokens.basic(Configuration.getNeo4JUser(),
 //                Configuration.getNeo4JPassword()))) {
         try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), Config.defaultConfig())) {
-            NeoGraph graph = new NeoGraph(driver,null);
+            NeoGraph graph = new NeoGraph(driver, null);
             consumer.accept(graph);
         }
     }

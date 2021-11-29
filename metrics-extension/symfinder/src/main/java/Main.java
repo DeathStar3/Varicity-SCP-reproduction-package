@@ -19,7 +19,8 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import fr.unice.i3s.sparks.deathstar3.entrypoint.Symfinder;
+
+import fr.unice.i3s.sparks.deathstar3.engine.entrypoint.Symfinder;
 
 import java.util.Optional;
 

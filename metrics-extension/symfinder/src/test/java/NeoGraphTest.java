@@ -19,11 +19,11 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.DesignPatternType;
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityAttribute;
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
-import fr.unice.i3s.sparks.deathstar3.neograph.NeoGraph;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.DesignPatternType;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.engine.neograph.NeoGraph;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.graphdb.*;
@@ -31,7 +31,6 @@ import org.neo4j.graphdb.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 
 
 public class NeoGraphTest extends Neo4jTest {
@@ -43,9 +42,9 @@ public class NeoGraphTest extends Neo4jTest {
             String nodeName = "n";
             graph.createNode(nodeName, nodeType);
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                ResourceIterable <Node> allNodes = tx.getAllNodes();
+                ResourceIterable<Node> allNodes = tx.getAllNodes();
                 Assertions.assertEquals(1, allNodes.stream().count());
-                Optional <Node> optionalNode = allNodes.stream().findFirst();
+                Optional<Node> optionalNode = allNodes.stream().findFirst();
                 Assertions.assertTrue(optionalNode.isPresent());
                 Assertions.assertTrue(optionalNode.get().hasLabel(Label.label(nodeType.toString())));
                 Assertions.assertEquals(optionalNode.get().getProperty("name"), nodeName);
@@ -62,9 +61,9 @@ public class NeoGraphTest extends Neo4jTest {
             String nodeName = "n";
             graph.createNode(nodeName, nodeType1, nodeType2);
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                ResourceIterable <Node> allNodes = tx.getAllNodes();
+                ResourceIterable<Node> allNodes = tx.getAllNodes();
                 Assertions.assertEquals(1, allNodes.stream().count());
-                Optional <Node> optionalNode = allNodes.stream().findFirst();
+                Optional<Node> optionalNode = allNodes.stream().findFirst();
                 Assertions.assertTrue(optionalNode.isPresent());
                 Assertions.assertTrue(optionalNode.get().hasLabel(Label.label(nodeType1.toString())));
                 Assertions.assertTrue(optionalNode.get().hasLabel(Label.label(nodeType2.toString())));
@@ -93,11 +92,11 @@ public class NeoGraphTest extends Neo4jTest {
             RelationType relationType = RelationType.METHOD;
             graph.linkTwoNodes(node1, node2, relationType);
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                ResourceIterable <Node> allNodes = tx.getAllNodes();
+                ResourceIterable<Node> allNodes = tx.getAllNodes();
                 Assertions.assertEquals(2, allNodes.stream().count());
-                ResourceIterable <Relationship> allRelationships = tx.getAllRelationships();
+                ResourceIterable<Relationship> allRelationships = tx.getAllRelationships();
                 Assertions.assertEquals(1, allRelationships.stream().count());
-                Optional <Relationship> optionalRelationship = allRelationships.stream().findFirst();
+                Optional<Relationship> optionalRelationship = allRelationships.stream().findFirst();
                 Assertions.assertTrue(optionalRelationship.isPresent());
                 Assertions.assertTrue(optionalRelationship.get().isType(RelationshipType.withName(relationType.toString())));
                 tx.commit();
@@ -116,7 +115,7 @@ public class NeoGraphTest extends Neo4jTest {
             graph.linkTwoNodes(classNode, areaNode, relationType);
             graph.setMethodVPs();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                List <Node> allNodes = tx.getAllNodes().stream()
+                List<Node> allNodes = tx.getAllNodes().stream()
                         .filter(node -> node.hasLabel(Label.label(EntityType.CLASS.toString())))
                         .collect(Collectors.toList());
                 Assertions.assertEquals(1, allNodes.size());
@@ -141,7 +140,7 @@ public class NeoGraphTest extends Neo4jTest {
             graph.linkTwoNodes(classNode, areaNode, relationType);
             graph.setMethodVPs();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                List <Node> allNodes = tx.getAllNodes().stream()
+                List<Node> allNodes = tx.getAllNodes().stream()
                         .filter(node -> node.hasLabel(Label.label(EntityType.CLASS.toString())))
                         .collect(Collectors.toList());
                 Assertions.assertEquals(1, allNodes.size());
@@ -168,7 +167,7 @@ public class NeoGraphTest extends Neo4jTest {
             graph.linkTwoNodes(classNode, areaNode, relationType);
             graph.setMethodVPs();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                List <Node> allNodes = tx.getAllNodes().stream()
+                List<Node> allNodes = tx.getAllNodes().stream()
                         .filter(node -> node.hasLabel(Label.label(EntityType.CLASS.toString())))
                         .collect(Collectors.toList());
                 Assertions.assertEquals(1, allNodes.size());
@@ -195,7 +194,7 @@ public class NeoGraphTest extends Neo4jTest {
             graph.linkTwoNodes(classNode, areaNode2, relationType);
             graph.setMethodVPs();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                List <Node> allNodes = tx.getAllNodes().stream()
+                List<Node> allNodes = tx.getAllNodes().stream()
                         .filter(node -> node.hasLabel(Label.label(EntityType.CLASS.toString())))
                         .collect(Collectors.toList());
                 Assertions.assertEquals(1, allNodes.size());
@@ -218,7 +217,7 @@ public class NeoGraphTest extends Neo4jTest {
             graph.linkTwoNodes(classNode, methodNode, relationType);
             graph.setConstructorVPs();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                List <Node> allNodes = tx.getAllNodes().stream()
+                List<Node> allNodes = tx.getAllNodes().stream()
                         .filter(node -> node.hasLabel(Label.label(EntityType.CLASS.toString())))
                         .collect(Collectors.toList());
                 Assertions.assertEquals(1, allNodes.size());
@@ -243,7 +242,7 @@ public class NeoGraphTest extends Neo4jTest {
             graph.linkTwoNodes(classNode, methodNode, relationType);
             graph.setConstructorVPs();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                List <Node> allNodes = tx.getAllNodes().stream()
+                List<Node> allNodes = tx.getAllNodes().stream()
                         .filter(node -> node.hasLabel(Label.label(EntityType.CLASS.toString())))
                         .collect(Collectors.toList());
                 Assertions.assertEquals(1, allNodes.size());
@@ -270,7 +269,7 @@ public class NeoGraphTest extends Neo4jTest {
             graph.linkTwoNodes(classNode, methodNode, relationType);
             graph.setConstructorVPs();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                List <Node> allNodes = tx.getAllNodes().stream()
+                List<Node> allNodes = tx.getAllNodes().stream()
                         .filter(node -> node.hasLabel(Label.label(EntityType.CLASS.toString())))
                         .collect(Collectors.toList());
                 Assertions.assertEquals(1, allNodes.size());
@@ -294,7 +293,7 @@ public class NeoGraphTest extends Neo4jTest {
             graph.linkTwoNodes(nodeClass1, nodeMethod, RelationType.METHOD);
             graph.setNbVariantsProperty();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                List <Node> allClassNodes = tx.getAllNodes().stream()
+                List<Node> allClassNodes = tx.getAllNodes().stream()
                         .filter(node -> node.hasLabel(Label.label(EntityType.CLASS.toString())))
                         .collect(Collectors.toList());
                 Assertions.assertEquals(3, allClassNodes.size());
@@ -314,7 +313,7 @@ public class NeoGraphTest extends Neo4jTest {
         runTest(graph -> {
             graph.deleteGraph();
             try (Transaction tx = graphDatabaseService.beginTx()) {
-                ResourceIterable <Node> allNodes = tx.getAllNodes();
+                ResourceIterable<Node> allNodes = tx.getAllNodes();
                 Assertions.assertEquals(0, allNodes.stream().count());
                 tx.commit();
             }

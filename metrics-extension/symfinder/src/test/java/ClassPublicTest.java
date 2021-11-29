@@ -1,11 +1,9 @@
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityVisibility;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityVisibility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-
-public class ClassPublicTest extends Neo4jTest{
+public class ClassPublicTest extends Neo4jTest {
 
     @Test
     public void OnePublicClass() {
@@ -40,7 +38,7 @@ public class ClassPublicTest extends Neo4jTest{
         runTest(graph -> {
             graph.createNode("Forms", EntityType.CLASS, EntityVisibility.PUBLIC);
             graph.createNode("Cricle", EntityType.CLASS, EntityVisibility.PRIVATE);
-            graph.createNode("Test2",EntityType.INTERFACE,EntityVisibility.PUBLIC);
+            graph.createNode("Test2", EntityType.INTERFACE, EntityVisibility.PUBLIC);
             graph.detectVPsAndVariants();
             Assertions.assertEquals(2, graph.getNbPublicClass());
         });

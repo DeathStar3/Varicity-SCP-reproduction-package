@@ -19,60 +19,58 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-
 public class GetNodeTest extends Neo4jTest {
 
     @Test
-    public void getNodeInRealPackage(){
+    public void getNodeInRealPackage() {
         runTest(graph -> {
             Node classNode = graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
-            Optional <Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.unice.i3s");
+            Optional<Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.unice.i3s");
             Assertions.assertTrue(foundNode.isPresent());
             Assertions.assertEquals(classNode, foundNode.get());
         });
     }
 
     @Test
-    public void getNodeInUpperPackage(){
+    public void getNodeInUpperPackage() {
         runTest(graph -> {
             Node classNode = graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
-            Optional <Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.unice");
+            Optional<Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.unice");
             Assertions.assertTrue(foundNode.isPresent());
             Assertions.assertEquals(classNode, foundNode.get());
         });
     }
 
     @Test
-    public void inexistantClassName(){
+    public void inexistantClassName() {
         runTest(graph -> {
             graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
-            Optional <Node> foundNode = graph.getNodeWithNameInPackage("Test", "fr.unice");
+            Optional<Node> foundNode = graph.getNodeWithNameInPackage("Test", "fr.unice");
             Assertions.assertFalse(foundNode.isPresent());
         });
     }
 
     @Test
-    public void inexistantPackage(){
+    public void inexistantPackage() {
         runTest(graph -> {
             graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
-            Optional <Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.i3s");
+            Optional<Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.i3s");
             Assertions.assertFalse(foundNode.isPresent());
         });
     }
 
     @Test
-    public void incompletePackage(){
+    public void incompletePackage() {
         runTest(graph -> {
             graph.createNode("fr.unice.i3s.TestClass", EntityType.CLASS);
-            Optional <Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.uni");
+            Optional<Node> foundNode = graph.getNodeWithNameInPackage("TestClass", "fr.uni");
             Assertions.assertFalse(foundNode.isPresent());
         });
     }

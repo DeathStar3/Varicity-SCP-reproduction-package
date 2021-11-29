@@ -1,14 +1,11 @@
-
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityVisibility;
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityVisibility;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.RelationType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
-import static org.junit.Assert.assertEquals;
-
-public class MethodConstructorPublicTest extends Neo4jTest{
+public class MethodConstructorPublicTest extends Neo4jTest {
 
     @Test
     public void OnePublicMethod() {
@@ -18,7 +15,7 @@ public class MethodConstructorPublicTest extends Neo4jTest{
             graph.linkTwoNodes(rectangleClass, drawMethod, RelationType.METHOD);
             graph.setPublicMethods();
 
-            Assertions.assertEquals(1,graph.getNbPublicMethods());
+            Assertions.assertEquals(1, graph.getNbPublicMethods());
         });
     }
 
@@ -34,7 +31,7 @@ public class MethodConstructorPublicTest extends Neo4jTest{
             graph.linkTwoNodes(rectangleClass, drawMethod3, RelationType.METHOD);
             graph.setPublicMethods();
 
-            Assertions.assertEquals(2,graph.getNbPublicMethods());
+            Assertions.assertEquals(2, graph.getNbPublicMethods());
         });
     }
 
@@ -46,7 +43,7 @@ public class MethodConstructorPublicTest extends Neo4jTest{
             graph.linkTwoNodes(rectangleClass, drawMethod, RelationType.METHOD);
             graph.setPublicMethods();
 
-            Assertions.assertEquals(0,graph.getNbPublicMethods());
+            Assertions.assertEquals(0, graph.getNbPublicMethods());
         });
     }
 }

@@ -19,13 +19,11 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.RelationType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
-
-import static org.junit.Assert.assertEquals;
 
 public class ConstructorVariantsTest extends Neo4jTest {
 
@@ -68,18 +66,18 @@ public class ConstructorVariantsTest extends Neo4jTest {
         });
     }
 
-   @Test
+    @Test
     public void TwoClassesNoConstructorVariant() {
-       runTest(graph -> {
-           Node rectangleClass = graph.createNode("Rectangle", EntityType.CLASS);
-           Node rectangleConstructor = graph.createNode("Rectangle", EntityType.CONSTRUCTOR);
-           Node circleClass = graph.createNode("Circle", EntityType.CLASS);
-           Node circleConstructor = graph.createNode("Circle", EntityType.METHOD);
-           graph.linkTwoNodes(rectangleClass, rectangleConstructor, RelationType.METHOD);
-           graph.linkTwoNodes(circleClass, circleConstructor, RelationType.METHOD);
-           graph.setConstructorVariants();
-           Assertions.assertEquals(0, graph.getNbConstructorVariants());
-       });
+        runTest(graph -> {
+            Node rectangleClass = graph.createNode("Rectangle", EntityType.CLASS);
+            Node rectangleConstructor = graph.createNode("Rectangle", EntityType.CONSTRUCTOR);
+            Node circleClass = graph.createNode("Circle", EntityType.CLASS);
+            Node circleConstructor = graph.createNode("Circle", EntityType.METHOD);
+            graph.linkTwoNodes(rectangleClass, rectangleConstructor, RelationType.METHOD);
+            graph.linkTwoNodes(circleClass, circleConstructor, RelationType.METHOD);
+            graph.setConstructorVariants();
+            Assertions.assertEquals(0, graph.getNbConstructorVariants());
+        });
     }
 
     @Test
