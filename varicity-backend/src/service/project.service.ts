@@ -1,12 +1,10 @@
-import {JsonDB} from "node-json-db";
-import {Config} from "node-json-db/dist/lib/JsonDBConfig";
 import {DisksProjectPaths, JsonInputInterface, MetricClassInterface} from "../model/jsonInput.interface";
+import {AppModule} from "../app.module";
 
 var fs = require('fs');
 
 export class ProjectService {
 
-    private DB = new JsonDB(new Config("index-db", true, true, '/'));
     private static pathToJsons = "./data/symfinder_files/";
 
     /******************
@@ -78,14 +76,14 @@ export class ProjectService {
      * Return a list with all the project names
      */
     public getAllProjectsName(): string[] {
-        return Object.keys(this.DB.getData("/data"));
+        return Object.keys(AppModule.DB.getData("/data"));
     }
 
     /**
      * Return an object that contain the SymFinder and external jsons locations
      */
     private getProjectPaths(projectName: string): DisksProjectPaths {
-        const allFilePaths = this.DB.getData("/data/" + projectName);
+        const allFilePaths = AppModule.DB.getData("/data/" + projectName);
 
         let symFinderFilesPath: string;
         let externalFilesPaths = [];

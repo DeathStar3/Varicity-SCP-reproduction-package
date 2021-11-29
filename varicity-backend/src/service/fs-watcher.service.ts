@@ -1,12 +1,9 @@
-import {JsonDB} from "node-json-db";
-import {Config} from "node-json-db/dist/lib/JsonDBConfig";
+import {AppModule} from "../app.module";
 
 export class FsWatcherService {
 
     private CONFIG_DIRECTORY = 'dist/../config';
     private DATA_DIRECTORY = 'dist/../data/symfinder_files';
-
-    private DB = new JsonDB(new Config("index-db", true, true, '/'));
 
     /**
      * Instantiate watchers for config files and data files
@@ -15,7 +12,7 @@ export class FsWatcherService {
     public async instantiateWatcher() {
 
         //Clean local database
-        this.DB.delete("/");
+        AppModule.DB.delete("/");
 
         const chokidar = require('chokidar');
 
@@ -52,11 +49,11 @@ export class FsWatcherService {
      */
     public indexConfigFile(configFilePath: string) {
         const paths: string[] = []
-        if (this.DB.exists('/config/' + this.getConfigProjectName(configFilePath))) {
-            paths.push(...this.DB.getData('/config/' + this.getConfigProjectName(configFilePath)))
+        if (AppModule.DB.exists('/config/' + this.getConfigProjectName(configFilePath))) {
+            paths.push(...AppModule.DB.getData('/config/' + this.getConfigProjectName(configFilePath)))
         }
         paths.push(this.normalizeConfigFileName(configFilePath))
-        this.DB.push('/config/' + this.getConfigProjectName(configFilePath), paths);
+        AppModule.DB.push('/config/' + this.getConfigProjectName(configFilePath), paths);
     }
 
     /**
@@ -64,16 +61,20 @@ export class FsWatcherService {
      */
     public deIndexConfigFile(configFilePath: string) {
         const paths: string[] = []
-        if (this.DB.exists('/config/' + this.getConfigProjectName(configFilePath))) {
+        if (AppModule.DB.exists('/config/' + this.getConfigProjectName(configFilePath))) {
 
-            paths.push(...this.DB.getData('/config/' + this.getConfigProjectName(configFilePath)))
+            paths.push(...AppModule.DB.getData('/config/' + this.getConfigProjectName(configFilePath)))
 
             const index = paths.indexOf(this.normalizeConfigFileName(configFilePath));
             if (index > -1) {
                 paths.splice(index, 1);
             }
         }
-        this.DB.push('/config/' + this.getConfigProjectName(configFilePath), paths);
+        if (paths.length === 0){
+            AppModule.DB.delete('/config/' + this.getConfigProjectName(configFilePath));
+        } else {
+            AppModule.DB.push('/config/' + this.getConfigProjectName(configFilePath), paths);
+        }
     }
 
     /**
@@ -81,11 +82,11 @@ export class FsWatcherService {
      */
     public indexDataFile(dataFilePath: string) {
         const paths: string[] = []
-        if (this.DB.exists('/data/' + this.getDataProjectName(dataFilePath))) {
-            paths.push(...this.DB.getData('/data/' + this.getDataProjectName(dataFilePath)))
+        if (AppModule.DB.exists('/data/' + this.getDataProjectName(dataFilePath))) {
+            paths.push(...AppModule.DB.getData('/data/' + this.getDataProjectName(dataFilePath)))
         }
         paths.push(this.normalizeDataFileName(dataFilePath))
-        this.DB.push('/data/' + this.getDataProjectName(dataFilePath), paths);
+        AppModule.DB.push('/data/' + this.getDataProjectName(dataFilePath), paths);
     }
 
     /**
@@ -93,16 +94,21 @@ export class FsWatcherService {
      */
     public deIndexDataFile(dataFilePath: string) {
         const paths: string[] = []
-        if (this.DB.exists('/config/' + this.getDataProjectName(dataFilePath))) {
+        if (AppModule.DB.exists('/data/' + this.getDataProjectName(dataFilePath))) {
 
-            paths.push(...this.DB.getData('/config/' + this.getDataProjectName(dataFilePath)))
+            paths.push(...AppModule.DB.getData('/data/' + this.getDataProjectName(dataFilePath)))
 
             const index = paths.indexOf(this.normalizeDataFileName(dataFilePath));
             if (index > -1) {
                 paths.splice(index, 1);
             }
         }
-        this.DB.push('/config/' + this.getDataProjectName(dataFilePath), paths);
+        if (paths.length === 0){
+            AppModule.DB.delete('/data/' + this.getDataProjectName(dataFilePath));
+        } else {
+            AppModule.DB.push('/data/' + this.getDataProjectName(dataFilePath), paths);
+        }
+
     }
 
     /**
