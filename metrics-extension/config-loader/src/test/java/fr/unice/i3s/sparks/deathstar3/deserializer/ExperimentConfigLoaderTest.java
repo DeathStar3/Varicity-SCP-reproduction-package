@@ -5,14 +5,14 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class ConfigLoaderTest {
+public class ExperimentConfigLoaderTest {
 
     private ConfigLoader configLoader = new ConfigLoader();
 
     @Test
     public void loadConfigFromStringTest() throws IOException {
         var source = new String(
-                ConfigLoaderTest.class.getClassLoader().getResourceAsStream("config.yaml").readAllBytes());
+                ExperimentConfigLoaderTest.class.getClassLoader().getResourceAsStream("config.yaml").readAllBytes());
         var config = this.configLoader.deserializeConfigFile(source);
 
         Assert.assertEquals(config.get(0).getProjectName(), "jfreechart");

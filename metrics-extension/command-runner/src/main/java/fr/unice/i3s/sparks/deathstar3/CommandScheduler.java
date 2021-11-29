@@ -1,6 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3;
 
-import fr.unice.i3s.sparks.deathstar3.model.Config;
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.MetricSource;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,13 +10,13 @@ import java.util.List;
 @Slf4j
 public class CommandScheduler {
 
-    public void schedule(List<Config> configs) {
+    public void schedule(List<ExperimentConfig> configs) {
 
         MetricGatherer metricGatherer = new MetricGatherer();
 
         List<Thread> threads = new ArrayList<>();
 
-        for (Config config : configs) {
+        for (ExperimentConfig config : configs) {
             for (MetricSource source : config.getSources()) {
                 if (source.isEnabled()) {
 
