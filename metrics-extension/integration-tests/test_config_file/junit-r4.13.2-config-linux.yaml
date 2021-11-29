@@ -4,15 +4,15 @@ junit-r4.13.2:
     - name: "sonarqube"
       enabled: true
       # --- --- EXECUTION CONFIG --- --- #
-      shell-location: ""
-      working-directory: "test_projects/junit-r4.13.2"
+      shellLocation: ""
+      workingDirectory: "test_projects/junit-r4.13.2"
       commands:
         - "docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -e SONAR_FORCEAUTHENTICATION=false -p 9000:9000 sonarqube:latest"
         - "sleep 60"
         - "mvn clean package -Pcoverage sonar:sonar"
         - "sleep 30"
       # --- --- API CONFIG --- --- #
-      root-url: "http://localhost:9000"
-      component-name: "junit%3Ajunit"
+      rootUrl: "http://localhost:9000"
+      componentName: "junit%3Ajunit"
       metrics:
         - "coverage"
