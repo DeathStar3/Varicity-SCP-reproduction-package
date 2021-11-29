@@ -1,62 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Symfinder Varicity</title>
-    <link rel="stylesheet" href="style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Welcome to Varicity</title>
 </head>
 
 <body>
-<div id="main">
-    <div id="console" class="overflowable">
-        <input id="searchbar" style="display: none;">
-        <div id="project_selector" class="parent"></div>
-        <div id="documentation" class="parent">Documentation</div>
-        <div id="doc_content">
-            Use left click + drag to rotate camera<br/>
-            Use right click + drag to move camera<br/>
-            Use mouse wheel to zoom in/out<br/>
-            Hover on building to display class info in the details section below<br/>
-            Click on building to lock the info display on it<br/>
-            Legend for design patterns:<br/>
-            <ul>
-                <li>
-                    Chimneys: A building with chimneys represents a Factory class<br/>
-                    <img id="factory_img"/>
-                </li>
-                <li>
-                    Dome: A building with a dome represents a Strategy class<br/>
-                    <img id="strategy_img"/>
-                </li>
-                <li>
-                    Inverted pyramid: A building with an inverted pyramid represents a Template class<br/>
-                    <img id="template_img"/>
-                </li>
-                <li>
-                    Sphere: A building with a sphere represents a Decorator class<br/>
-                    <img id="decorator_img"/>
-                </li>
-            </ul>
 
+    <div class="m-3" action="#" method="post">
+        <label class="form-label">Username</label>
+        <input class="form-control" type="text" name="Username" id="username">
+        <select class="form-select mt-2" name="userType" id="user-type">
+            <option value="">--Please choose an option--</option>
+            <option value="EXPERT">Expert</option>
+            <option value="NEWCOMER">Newcomer</option>
+        </select>
+        <div class="text-center mt-2">
+            <button id="loginbtn" class="btn btn-primary "> Register/Connect </button>
         </div>
-        <div id="config" class="parent"></div>
-        <div class="parent">
-            <label for="comp-level">Usage level</label>
-            <input type="number" id="comp-level" name="comp-level" min="0" max="0" onkeydown="return false">
-            <button id="filter-button">Filter</button>
-        </div>
-        <div id="nodes_details" class="parent"></div>
+
     </div>
-</div>
-<!-- <div id="project_selector">
-  <div id="metricity">Using Metricity View</div>
-  <div id="evostreet">Using EvoStreet View</div>
-</div> -->
-<!--  <div id="ui_square">-->
-<!--    <button id="reset_camera">Reset camera</button>-->
-<!--    &lt;!&ndash; <p id="nodes_details"></p> &ndash;&gt;-->
-<!--  </div>-->
+    <a href="ui.html"> UI</a>
 </body>
 
 </html>

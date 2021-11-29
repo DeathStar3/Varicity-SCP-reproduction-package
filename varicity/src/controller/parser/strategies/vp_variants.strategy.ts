@@ -12,7 +12,8 @@ import {MetricObject} from "../../../model/entitiesImplems/metricObject.model";
 
 export class VPVariantsStrategy implements ParsingStrategy {
     public parse(data: JsonInputInterface, config: Config, project: string) : EntitiesList {
-        // console.log('Analyzing with VP and variants strategy: ', data);
+        console.log('Analyzing with VP and variants strategy: ', data);
+        console.log('Config used: ', config);
 
         let nodesList: NodeElement[] = [];
         const apiList: NodeElement[] = [];

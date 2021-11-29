@@ -1,18 +1,23 @@
-import { SearchbarController } from './searchbar.controller';
-import { Building3D } from './../../view/common/3Delements/building3D';
-import { Color } from '../../model/entities/config.interface';
-import { Config, CriticalLevel } from '../../model/entitiesImplems/config.model';
-import { SceneRenderer } from '../../view/sceneRenderer';
-import { ConfigController } from './config.controller';
-import { DetailsController } from './details.controller';
-import { ProjectController } from './project-selector.controller';
+import {SearchbarController} from './searchbar.controller';
+import {Building3D} from './../../view/common/3Delements/building3D';
+import {Color} from '../../model/entities/config.interface';
+import {Config, CriticalLevel} from '../../model/entitiesImplems/config.model';
+import {SceneRenderer} from '../../view/sceneRenderer';
+import {ConfigController} from './config.controller';
+import {DetailsController} from './details.controller';
+import {ProjectController} from './project-selector.controller';
 import {LogsController} from "./logs.controller";
 import {DocController} from "./doc.controller";
+import {ConfigSelectorController} from "./config-selector.controller";
+import {ConfigLoader} from "../parser/configLoader";
+import {SaveController} from "./save.controller";
 
 export class UIController {
 
     public static scene: SceneRenderer;
+    public static configsName: string[];
     public static config: Config;
+    public static configName: string;
 
     public static createHeader(): void {
 
@@ -29,12 +34,18 @@ export class UIController {
     public static addEntry(k: string, v: Building3D): void {
         SearchbarController.addEntry(k, v);
     }
+
     public static clearMap() {
         SearchbarController.emptyMap();
     }
 
     public static createProjectSelector(keys: string[]): void {
         ProjectController.createProjectSelector(keys);
+    }
+
+    public static createConfigSelector(configs: string[], filename: string): void {
+        this.configsName = configs;
+        ConfigSelectorController.createConfigSelector(configs, filename);
     }
 
     public static createConfig(config: Config): void {
@@ -50,8 +61,21 @@ export class UIController {
         DetailsController.displayObjectInfo(obj, force);
     }
 
+    public static createSaveSection(): void {
+        SaveController.addSaveListeners();
+    }
+
     public static createFooter(): void {
 
+    }
+
+
+    public static async reloadConfigAndConfigSelector(filename: string) {
+        this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
+        this.configName = this.configsName[0];
+        const config = (await ConfigLoader.loadConfigFromName(filename, this.configName)).data;
+        this.createConfig(config);
+        this.createConfigSelector(this.configsName, filename);
     }
 
     public static changeConfig(arr: string[], value: [string, string] | Color) {
@@ -67,12 +91,14 @@ export class UIController {
                     LogsController.updateLogs(this.scene.entitiesList);
                     break;
                 case CriticalLevel.REPARSE_DATA: // Changed variables that modify the parsing method, need to reparse the entire file and rebuild
-                    ProjectController.reParse();
+                    // TODO fix issue when adding a new Entrypoint, the scene is only loading the new entry point class and not all the others, but it works after clicking on the config again
+                    // ProjectController.reParse();
+                    ConfigSelectorController.reParse();
                     break;
-                default: throw new Error("didn't receive the correct result from altering config field: " + critical);
+                default:
+                    throw new Error("didn't receive the correct result from altering config field: " + critical);
             }
-        }
-        else {
+        } else {
             console.log("not initialized");
         }
     }

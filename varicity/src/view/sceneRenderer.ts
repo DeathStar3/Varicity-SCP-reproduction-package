@@ -1,4 +1,4 @@
-import { Config } from './../model/entitiesImplems/config.model';
+import {Config, Vector3_Local} from './../model/entitiesImplems/config.model';
 import { Scene, Engine, ArcRotateCamera, HemisphericLight, Vector3 } from "@babylonjs/core";
 import { EntitiesList } from "../model/entitiesList";
 
@@ -14,6 +14,7 @@ export abstract class SceneRenderer {
     canvas: HTMLCanvasElement;
 
     constructor(config: Config, entitiesList: EntitiesList) {
+        this.config = config;
         // create the canvas html element and attach it to the webpage
         this.canvas = document.createElement("canvas");
         // this.canvas.style.width = "100%";
@@ -25,13 +26,16 @@ export abstract class SceneRenderer {
         this.engine = new Engine(this.canvas, true);
         this.scene = new Scene(this.engine);
 
-        this.camera = new ArcRotateCamera("Camera", 2 * Math.PI / 3, Math.PI / 3, 500, Vector3.Zero(), this.scene);
+        this.camera = new ArcRotateCamera("Camera", this.config.camera_data.alpha, this.config.camera_data.beta, this.config.camera_data.radius, Vector3_Local.toVector3(this.config.camera_data.target), this.scene);
         this.camera.attachControl(this.canvas, true);
+        
         this.camera.panningSensibility = 10;
+        
+        
+        //console.log(" *** Camera position here"+ this.camera.position);
         this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
         this.entitiesList = entitiesList;
 
-        this.config = config;
         // this.config = ConfigLoader.loadDataFile("config");
 
         // document.getElementById("reset_camera").addEventListener("click", () => {

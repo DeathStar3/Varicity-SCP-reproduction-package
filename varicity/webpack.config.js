@@ -5,10 +5,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
+
     entry: {
       'main': path.resolve(appDirectory, "src/main.ts"),
-      'parserTest':'./tests/parser.test.ts',
-      'parserVPTest':'./tests/parserVP.test.ts'
+      //'parserTest':'./tests/parser.test.ts',
+      //'parserVPTest':'./tests/parserVP.test.ts',
+      'login':path.resolve(appDirectory, 'src/controller/ui/login.controller.ts')
     },
     optimization: {
         splitChunks: {
@@ -25,11 +27,12 @@ module.exports = {
     devServer: {
         host: '0.0.0.0',
         port: 9090, //port that we're using for local host (localhost:9090)
-        disableHostCheck: true,
-        contentBase: path.resolve(appDirectory, "public"), //tells webpack to serve from the public folder
-        publicPath: '/',
         hot: true
+        /* object { allowedHosts?, bonjour?, client?, compress?, devMiddleware?, headers?, historyApiFallback?, host?, hot?,
+           http2?, https?, ipc?, liveReload?, magicHtml?, onAfterSetupMiddleware?, 
+          onBeforeSetupMiddleware?, onListening?, open?, port?, proxy?, server?, setupExitSignals?, static?, watchFiles?, webSocketServer? }*/
     },
+    devtool: 'eval-source-map',
     module: {
       rules: [
         {
@@ -51,8 +54,14 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            inject: true,
+            chunks:['login'],
+            
             template: path.resolve(appDirectory, "public/index.html")
+        }),
+        new HtmlWebpackPlugin({
+          chunks:['main'],
+          template: path.resolve(appDirectory, "public/ui.html"),
+          filename: 'ui.html'
         }),
         new CleanWebpackPlugin()
     ],

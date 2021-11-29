@@ -1,0 +1,87 @@
+# config file for varicity
+# you may alter this file before running the program
+# pick your color at https://htmlcolorcodes.com/
+
+description: "specific config for the Junit project"
+
+building:
+  padding: 0.2
+  colors:
+
+    faces: # ordered by importance, descending : in case of conflict, the first color to match will be displayed
+      - name: "!HOTSPOT"
+        color: "#555555"
+      - name: "VP"
+        color: "#FF6F33"
+      - name: "STRATEGY"
+        color: "#17202a" # black
+      - name: "FACTORY"
+        color: "#7d3c98" # purple
+      - name: "INTERFACE"
+        color: "#e67e22" # orange
+      - name: "ABSTRACT"
+        color: "#2c3e50" # dark blue
+      - name: "CLASS"
+        color: "#17202a"
+
+    edges:
+      - name: "API"
+        color: "#000000"
+
+    outlines:
+
+
+district:
+  padding: 1
+  colors:
+    faces:
+      - name: "PACKAGE"
+        color: "#801A2E"
+      - name: "VP"
+        color: "#1A8039"
+
+link:
+  colors:
+    - name: "IMPLEMENTS"
+      color: "#ef2222"
+    - name: "EXTENDS"
+      color: "#3f97ff"
+    - name: "DUPLICATES"
+      color: "#2B914A"
+    - name: "INSTANTIATE"
+      color: "#1A8039"
+  display:
+    air_traffic:
+      - "IMPLEMENTS"
+      - "EXTENDS"
+    underground_road:
+      - "INSTANTIATE"
+
+hierarchy_links:
+  - "INSTANTIATE"
+  - "IMPLEMENTS"
+  - "EXTENDS"
+
+blacklist: []
+
+api_classes:
+  junit-r4.12: # 3 IN/OUT
+    - "org.junit.Assert"
+    - "org.junit.rules.TestRule"
+
+variables: #variables to be used for width and height of a building
+  width: "complexity"
+  height: "coverage"
+
+orientation: "OUT"
+
+default_level: 2
+
+camera_data:
+  alpha: 3.015890806449781
+  beta: 1.250454924046084
+  radius: 97.7683987470442
+  target:
+    x: 14
+    y: 30.2
+    z: 32.8

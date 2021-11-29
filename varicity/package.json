@@ -1,7 +1,7 @@
 {
   "name": "varicity",
   "version": "1.0.0",
-  "description": "",
+  "description": "Front end of Varicity",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
@@ -20,26 +20,34 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
     "json-loader": "^0.5.7",
-    "karma": "^5.2.3",
+    "karma": "^6.3.9",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-firefox-launcher": "^2.1.0",
     "karma-mocha": "^2.0.1",
     "karma-spec-reporter": "0.0.32",
-    "karma-typescript-preprocessor2": "^1.2.1",
-    "karma-webpack": "^4.0.2",
+    "karma-typescript-preprocessor2": "^1.0.0",
+    "karma-webpack": "^5.0.0",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
     "ts-loader": "^8.0.7",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5",
-    "webpack": "^5.6.0",
-    "webpack-cli": "^4.1.0",
-    "webpack-dev-server": "^3.11.0",
+    "webpack": "^5.64.4",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.5.0",
     "yaml-loader": "^0.6.0"
   },
   "dependencies": {
+    "@material/mwc-button": "^0.25.3",
+    "@material/mwc-dialog": "^0.25.3",
+    "@material/mwc-formfield": "^0.25.3",
+    "@material/mwc-radio": "^0.25.3",
+    "@material/mwc-textfield": "^0.25.3",
+    "@types/js-cookie": "^3.0.1",
     "@types/webpack-env": "^1.15.3",
-    "fs": "0.0.1-security"
+    "axios": "^0.24.0",
+    "fs": "0.0.1-security",
+    "js-cookie": "^3.0.1"
   }
 }

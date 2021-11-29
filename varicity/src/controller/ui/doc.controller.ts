@@ -14,14 +14,13 @@ export class DocController {
         (document.getElementById("template_img") as HTMLImageElement).src = Template;
         (document.getElementById("decorator_img") as HTMLImageElement).src = Decorator;
 
-        document.getElementById("doc_content").style.display = "none";
+        
 
         document.getElementById("documentation").onclick = (me) => {
-            if (me.target == document.getElementById("documentation")) {
-                const content = document.getElementById("doc_content");
-                if (content.style.display == "block") content.style.display = "none";
-                else content.style.display = "block";
-            }
+            //?if (me.target == document.getElementById("documentation")) {
+                document.getElementById("doc_content").setAttribute('open', 'true');
+               
+           // }
         }
     }
 }

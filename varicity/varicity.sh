@@ -21,7 +21,7 @@
 #
 
 
-export TAG=vissoft2021
+export TAG=local
 
 
 ARGUMENT_LIST=("local")
@@ -48,5 +48,4 @@ done
 
 echo "Using $TAG VariCity image"
 
-docker-compose -f varicity.yaml up
-docker-compose -f varicity.yaml down
+docker run --rm -p 8080:80 varicity-nginx
