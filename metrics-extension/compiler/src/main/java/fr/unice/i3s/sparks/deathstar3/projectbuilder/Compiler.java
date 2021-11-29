@@ -1,6 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
-import java.io.ObjectInputFilter.Config;
+
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -67,12 +67,12 @@ public class Compiler {
         utils.removeOldExitedContainer(SCANNER_NAME);
 
         if (projectConfig.isBuildCmdIncludeSonar()) {
-            log.info("Hello " + projectConfig);
+            
             try {
                 var compileAndScanProjectId = this.compileAndScanProject(projectConfig);
                 waitForContainerCorrectExit(compileAndScanProjectId);
             } catch (JsonProcessingException | InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         } else {
             var compileProjectId = compileProject(projectConfig);
@@ -85,7 +85,7 @@ public class Compiler {
                 String scannerContainerId = this.runSonarScannerCli(projectConfig, result);
                 waitForContainerCorrectExit(scannerContainerId);
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
         }
@@ -140,7 +140,8 @@ public class Compiler {
         if (projectConfig.getBuildEnv().equals("maven")) { // to use sonar in maven jdk version need to be greater or
                                                            // equals to 11
 
-            List<String> mvnCommmands = new ArrayList<>(projectConfig.getBuildCmd());
+            //List.of() result is not mutable so we transform it in mutable through new ArrayList<>()
+            List<String> mvnCommmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip() .split("\\s+")));
             mvnCommmands.add("-Dsonar.login=" + result.token());
             mvnCommmands.add("-Dsonar.host.url=" + SONARQUBE_LOCAL_URL);// TODO
             mvnCommmands.add("-Dsonar.projectKey=" + projectConfig.getProjectName());
@@ -170,12 +171,14 @@ public class Compiler {
         }
 
         Volume volume = new Volume("/project");
+        List<String> commands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip() .split("\\s+")));
         CreateContainerResponse container = dockerClient
                 .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())// .withUser(utils.getUserIdentity())
                 .withName(COMPILER_NAME)
                 .withHostConfig(
                         HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
-                .withEntrypoint(projectConfig.getBuildCmd()).exec(); // TODO assuming the project is a mvn project
+
+                .withEntrypoint(commands).exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
 

@@ -36,7 +36,7 @@ public class ExperimentConfig {
     private List<String> commitIds;
     private String buildEnv;
     private String buildEnvTag;
-    private List<String> buildCmd;
+    private String buildCmd;
     /**
      * whether ther build command contains a sonar;  eg: mvn clean package sonar:sonar
      */
@@ -52,7 +52,7 @@ public class ExperimentConfig {
     private List<MetricSource> sources;
 
     public ExperimentConfig(String projectName, String path, String buildEnv, String buildEnvTag,
-                            List<String> buildCmd, boolean buildCmdIncludeSonar) {
+                           String buildCmd, boolean buildCmdIncludeSonar) {
         this.projectName = projectName;
         this.path = path;
         this.buildEnv = buildEnv;
