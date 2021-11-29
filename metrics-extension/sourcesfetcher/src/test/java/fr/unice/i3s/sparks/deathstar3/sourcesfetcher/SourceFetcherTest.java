@@ -17,7 +17,7 @@ public class SourceFetcherTest {
     @Test
     public void cloneRepositoryTest() throws GitAPIException, IOException {
 
-        Path path= Files.createTempDirectory("varicity-test-dir");
+        Path path = Files.createTempDirectory("varicity-test-dir");
         ExperimentConfig config = new ExperimentConfig();
         config.setRepositoryUrl("https://github.com/DeathStar3-projects/4A_ISA_TheCookieFactory.git");
         config.setTagIds(List.of("v2.2", "persistent"));
@@ -27,7 +27,7 @@ public class SourceFetcherTest {
 
         this.sourceFetcher.cloneRepository(config);
 
-        //1 clone original + 2 tagIds + 1 commitIds
+        // 1 clone original + 2 tagIds + 1 commitIds
 
         Assertions.assertEquals(4, path.toFile().list().length);
     }

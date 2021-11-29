@@ -25,17 +25,15 @@ public class SourceFetcher {
         }
     }
 
-
     public List<String> cloneRepository(ExperimentConfig config) throws GitAPIException, IOException {
         List<String> destinations = new ArrayList<>();
         if (config.getPath() != null && !config.getPath().isBlank()) {
-
-            Path originalDestinationPath = Path.of(config.getPath(), getRepositoryNameFromUrl(config.getRepositoryUrl()));
+            Path originalDestinationPath = Path.of(config.getPath(),
+                    getRepositoryNameFromUrl(config.getRepositoryUrl()));
             Git gitRepo;
             if (Files.notExists(originalDestinationPath)) {
-                gitRepo = Git.cloneRepository().setURI(config.getRepositoryUrl()).
-                        setCloneAllBranches(true).setDirectory(originalDestinationPath.toFile())
-                        .call();
+                gitRepo = Git.cloneRepository().setURI(config.getRepositoryUrl()).setCloneAllBranches(true)
+                        .setDirectory(originalDestinationPath.toFile()).call();
             } else {
                 gitRepo = Git.open(originalDestinationPath.toFile());
             }
@@ -45,36 +43,28 @@ public class SourceFetcher {
             if (config.getTagIds() != null && !config.getTagIds().isEmpty()) {
                 allVersions.addAll(config.getTagIds());
             }
+
             if (config.getCommitIds() != null && !config.getCommitIds().isEmpty()) {
                 allVersions.addAll(config.getCommitIds());
             }
 
             for (String version : allVersions) {
-                logger.info("**************************************************************************************************************************");
                 gitRepo.checkout().setName(version).call();
-                Path specificTagPath = Path.of(originalDestinationPath.getParent().toString(), getRepositoryNameFromUrl(config.getRepositoryUrl()) + "-" + version);
+                Path specificTagPath = Path.of(originalDestinationPath.getParent().toString(),
+                        getRepositoryNameFromUrl(config.getRepositoryUrl()) + "-" + version);
                 FileUtils.copyDirectory(originalDestinationPath.toFile(), specificTagPath.toFile());
-
                 destinations.add(specificTagPath.toString());
-
                 logger.info(destinations.toString());
             }
         }
-            //TODO ajouter des vérifications et de la robustesse
-
-
         return destinations;
-
     }
 
-
     public String getRepositoryNameFromUrl(String repositoryUrl) {
-
         if (repositoryUrl.endsWith(".git")) {
             repositoryUrl = repositoryUrl.substring(0, repositoryUrl.length() - 4);
         }
         String[] parts = repositoryUrl.split("/");
         return parts[parts.length - 1];
-
     }
 }
