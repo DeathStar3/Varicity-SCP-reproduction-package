@@ -1,12 +1,19 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
+
+import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 
 @Getter
 @Setter
@@ -70,7 +77,7 @@ public class ExperimentConfig {
             return true;
         if (obj == null || obj.getClass() != this.getClass())
             return false;
-        var that = (ExperimentConfig) obj;
+        ExperimentConfig that = (ExperimentConfig) obj;
         return Objects.equals(this.projectName, that.projectName)
                 && Objects.equals(this.repositoryUrl, that.repositoryUrl)
                 && Objects.equals(this.sourcePackage, that.sourcePackage) && Objects.equals(this.tagIds, that.tagIds);

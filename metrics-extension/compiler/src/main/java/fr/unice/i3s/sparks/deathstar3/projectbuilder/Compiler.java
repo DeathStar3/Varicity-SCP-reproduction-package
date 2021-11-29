@@ -1,11 +1,8 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
-
-
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -29,9 +26,10 @@ import com.github.dockerjava.transport.DockerHttpClient;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpHeaders;
+
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
 import fr.unice.i3s.sparks.deathstar3.utils.Utils;
@@ -48,8 +46,11 @@ public class Compiler {
     public static final String COMPILER_SCANNER_NAME = "varicity-compiler-scanner-container";
     public static final String COMPILER_NAME = "varicity-compiler-container";
     public static final String SCANNER_NAME = "varicity-scanner-container";
-    private final Utils utils = new Utils();
+    private static final Utils utils = new Utils();
     private static final String SONARQUBE_LOCAL_URL = "http://localhost:9000";
+    private static final String SONARQUBE_DOCKER_URL = "http://sonarqubehost:9000";
+    private static final String SONAR_SCANNER_IMAGE = "sonarsource/sonar-scanner-cli";
+    private static final String SONAR_SCANNER_IMAGE_TAG = "4";
 
     public Compiler() {
 
@@ -66,13 +67,13 @@ public class Compiler {
         utils.removeOldExitedContainer(COMPILER_NAME);
         utils.removeOldExitedContainer(SCANNER_NAME);
 
+
         if (projectConfig.isBuildCmdIncludeSonar()) {
-            
             try {
                 var compileAndScanProjectId = this.compileAndScanProject(projectConfig);
                 waitForContainerCorrectExit(compileAndScanProjectId);
-            } catch (JsonProcessingException | InterruptedException e) {
-                throw new RuntimeException(e);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
             }
         } else {
             var compileProjectId = compileProject(projectConfig);
@@ -85,7 +86,7 @@ public class Compiler {
                 String scannerContainerId = this.runSonarScannerCli(projectConfig, result);
                 waitForContainerCorrectExit(scannerContainerId);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
 
         }
@@ -94,6 +95,8 @@ public class Compiler {
 
     private void waitForContainerCorrectExit(String containerId) {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
+
+       
 
         while (!container.getState().getStatus().strip().equals("exited")) {
             log.info(container.getState().toString());
@@ -108,8 +111,9 @@ public class Compiler {
         }
 
         if (container.getState().getExitCodeLong() != 0) {
-
             log.error("Container exited with non-zero code");
+            throw new RuntimeException(container.getState().toString());
+
         }
 
         log.info("End waiting for " + containerId + " " + container.getState());
@@ -121,11 +125,14 @@ public class Compiler {
      * @param projectConfig
      * @return the containerId
      */
-    public String compileAndScanProject(ExperimentConfig projectConfig)
-            throws JsonProcessingException, InterruptedException {
-        if (!this.utils.checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
-
-            downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
+    public String compileAndScanProject(ExperimentConfig projectConfig) throws JsonProcessingException {
+        if (!utils.checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
+            try {
+                downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
+            } catch (InterruptedException exception) {
+                log.error("Cannot pull image necessary to compile project");
+                return "";
+            }
 
         }
 
@@ -135,21 +142,21 @@ public class Compiler {
 
         System.out.println(utils.getUserIdentity());
         var command = dockerClient
-                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())// .withUser(utils.getUserIdentity())
+                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())//.withUser(utils.getUserIdentity())
                 .withName(COMPILER_SCANNER_NAME);
         if (projectConfig.getBuildEnv().equals("maven")) { // to use sonar in maven jdk version need to be greater or
-                                                           // equals to 11
+            // equals to 11
 
             //List.of() result is not mutable so we transform it in mutable through new ArrayList<>()
             List<String> mvnCommmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip() .split("\\s+")));
             mvnCommmands.add("-Dsonar.login=" + result.token());
-            mvnCommmands.add("-Dsonar.host.url=" + SONARQUBE_LOCAL_URL);// TODO
+            mvnCommmands.add("-Dsonar.host.url=" + SONARQUBE_DOCKER_URL);
             mvnCommmands.add("-Dsonar.projectKey=" + projectConfig.getProjectName());
             command = command.withEntrypoint(mvnCommmands);
         }
 
         var container = command.withHostConfig(HostConfig.newHostConfig()
-                .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)).withNetworkMode(NETWORK_NAME))
+                        .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)).withNetworkMode(NETWORK_NAME))
                 .exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
@@ -171,14 +178,12 @@ public class Compiler {
         }
 
         Volume volume = new Volume("/project");
-        List<String> commands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip() .split("\\s+")));
+        List<String> commmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip() .split("\\s+")));
         CreateContainerResponse container = dockerClient
-                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())// .withUser(utils.getUserIdentity())
+                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())//.withUser(utils.getUserIdentity())
                 .withName(COMPILER_NAME)
-                .withHostConfig(
-                        HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
-
-                .withEntrypoint(commands).exec();
+                .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
+                .withEntrypoint(commmands).exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
 
@@ -186,9 +191,10 @@ public class Compiler {
 
     }
 
+
     private void downloadImage(String image, String tag) throws InterruptedException {
 
-        dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(5,
+        dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(7,
                 TimeUnit.MINUTES);
     }
 
@@ -222,6 +228,16 @@ public class Compiler {
 
     public String runSonarScannerCli(ExperimentConfig projectConfig, SonarQubeToken token) {
 
+        if (!utils.checkIfImageExists(SONAR_SCANNER_IMAGE, SONAR_SCANNER_IMAGE_TAG)) {
+            try {
+                downloadImage(SONAR_SCANNER_IMAGE, SONAR_SCANNER_IMAGE_TAG);
+            } catch (InterruptedException exception) {
+                log.error("Cannot pull image necessary to Scan project");
+                return "";
+            }
+
+        }
+
         Volume volume = new Volume("/usr/src");
         String completePath = "";
         if (projectConfig.getSourcePackage() == null || projectConfig.getSourcePackage().isBlank()
@@ -231,15 +247,17 @@ public class Compiler {
             completePath = projectConfig.getPath() + "/" + projectConfig.getSourcePackage();
         }
 
-        CreateContainerResponse container = dockerClient.createContainerCmd("sonarsource/sonar-scanner-cli")// .withUser(utils.getUserIdentity())
+        CreateContainerResponse container = dockerClient.createContainerCmd(SONAR_SCANNER_IMAGE + ":" + SONAR_SCANNER_IMAGE_TAG)
+                //.withUser(utils.getUserIdentity())
                 .withName(SCANNER_NAME).withEnv("SONAR_LOGIN=" + token.token())
                 .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(completePath, volume, AccessMode.rw))
                         .withNetworkMode(NETWORK_NAME))
-                .withEnv("SONAR_HOST_URL=" + SONARQUBE_LOCAL_URL).exec();// TODO fix next commit merge
+                .withEnv("SONAR_HOST_URL=" + SONARQUBE_DOCKER_URL).exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
 
         return container.getId();
     }
+
 
 }

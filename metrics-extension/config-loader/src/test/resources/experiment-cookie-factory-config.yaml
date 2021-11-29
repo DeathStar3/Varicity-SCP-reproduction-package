@@ -7,13 +7,8 @@ CookieFactoryClient: #Project name
     - "b52f267ce7c17e0a2017b4d0d23cc0cd35c2c591"
   buildEnv: "maven"
   buildEnvTag: "3.8-openjdk-8"
-  buildCmd: # a single command to build the project, the first word is the command the rest are the arguments and options
-    - "mvn"
-    - "clean"
-    - "install"
-    - "-f"
-    - "/project/client/pom.xml" #The buildRoot is mounted in a docker container at the path /project
-    - "-DskipTests=true"
+  # a single command to build the project, the first word is the command the rest are the arguments and options
+  buildCmd: "mvn clean install -f /project/client/pom.xml -DskipTests=true"
   buildCmdIncludeSonar: false # no sonar:sonar in the previous command so false, this means we will use sonar-scanner-cli
   # if above parameter is true the project must be using at least JDK 11
   sonarqubeNeeded: true # for now this means that a varicity-sonarqube instance will be started (if not already started) and a compilation followed by the scan will be done.
