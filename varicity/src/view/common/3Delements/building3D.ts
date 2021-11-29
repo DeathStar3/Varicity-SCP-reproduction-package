@@ -170,7 +170,6 @@ export class Building3D extends Element3D {
             if (this.config.building.colors.faces) {
                 const buildingColor = this.getColor(this.config.building.colors.faces, this.elementModel.types);
                 if (buildingColor !== undefined) {
-                    console.log("b color " + buildingColor)
                     mat.ambientColor = Color3.FromHexString(buildingColor);
                     mat.diffuseColor = Color3.FromHexString(buildingColor);
                     mat.emissiveColor = Color3.FromHexString(buildingColor);
@@ -189,39 +188,40 @@ export class Building3D extends Element3D {
             }
         }
 
+        // New way to display a metric: city fade
+        if (this.config.variables.fade) {
+            if (this.elementModel.metrics.metrics.has(this.config.variables.fade)) { //Check if the metric wanted exist
+                const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.fade).value;
+
+                let intensity = 1 - this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
+
+                var hue = ((1 - intensity) * 120);
+                let rgb = this.hsl2Rgb(hue / 360, 1, 0.5);
+
+                mat.emissiveColor = new Color3(rgb[0], rgb[1], rgb[2])
+                mat.diffuseColor = new Color3(rgb[0] / 2, rgb[1] / 2, rgb[2] / 2)
+                mat.ambientColor = new Color3(0, 0, 0)
+            } else {
+                mat.ambientColor = Color3.FromHexString("#555555");
+                mat.diffuseColor = Color3.FromHexString("#555555");
+                mat.emissiveColor = Color3.FromHexString("#555555");
+            }
+        }
+
         // New way to display a metric: building opacity
-        if (this.elementModel.metrics.metrics.has(this.config.variables.intensity)) { //Check if the metric wanted exist
-            const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.intensity).value;
+        if (this.config.variables.intensity) {
+            if (this.elementModel.metrics.metrics.has(this.config.variables.intensity)) { //Check if the metric wanted exist
+                const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.intensity).value;
 
-            let hsv: number[];
-            let rgb: number[];
-            let colorHSV: Color3;
+                let intensity = 1 - this.normalize(metricValue, 100, 0, 0, 0.93); //TODO Need to change dynamically the parameters max_v and min_v
 
-            let intensity =  1 - this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
+                let hsv = this.rgb2Hsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
+                let rgb = this.hsv2Rgb(hsv[0], hsv[1], intensity)
 
-            hsv = this.rgbToHsv(mat.ambientColor.r, mat.ambientColor.g, mat.ambientColor.b)
-            colorHSV = new Color3(hsv[0], hsv[1], hsv[2])
-            colorHSV.b = intensity //Update V (value) of HSV
-            rgb = this.hsvToRgb(colorHSV.r, colorHSV.g, colorHSV.b)
-            mat.ambientColor = new Color3(rgb[0], rgb[1], rgb[2])
-
-            hsv = this.rgbToHsv(mat.diffuseColor.r, mat.diffuseColor.g, mat.diffuseColor.b)
-            colorHSV = new Color3(hsv[0], hsv[1], hsv[2])
-            colorHSV.b = intensity //Update V (value) of HSV
-            rgb = this.hsvToRgb(colorHSV.r, colorHSV.g, colorHSV.b)
-            mat.diffuseColor = new Color3(rgb[0], rgb[1], rgb[2])
-
-            hsv = this.rgbToHsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
-            colorHSV = new Color3(hsv[0], hsv[1], hsv[2])
-            colorHSV.b = intensity //Update V (value) of HSV
-            rgb = this.hsvToRgb(colorHSV.r, colorHSV.g, colorHSV.b)
-            mat.emissiveColor = new Color3(rgb[0], rgb[1], rgb[2])
-
-            // hsv = this.rgbToHsv(mat.specularColor.r, mat.specularColor.g, mat.specularColor.b)
-            // colorHSV = new Color3(hsv[0], hsv[1], hsv[2])
-            // colorHSV.b = intensity //Update V (value) of HSV
-            // rgb = this.hsvToRgb(colorHSV.r, colorHSV.g, colorHSV.b)
-            // mat.specularColor = new Color3(rgb[0], rgb[1], rgb[2])
+                mat.ambientColor = new Color3(rgb[0], rgb[1], rgb[2])
+                mat.diffuseColor = new Color3(rgb[0], rgb[1], rgb[2])
+                mat.emissiveColor = new Color3(rgb[0], rgb[1], rgb[2])
+            }
         }
 
         this.d3Model.material = mat;
@@ -312,6 +312,14 @@ export class Building3D extends Element3D {
             this.d3ModelPyramid.material.backFaceCulling = false;
             this.d3Model = Mesh.MergeMeshes([this.d3Model, this.d3ModelPyramid], true);
         }
+
+        // Default edge coloring
+        this.d3Model.enableEdgesRendering();
+        this.d3Model.edgesWidth = this.edgesWidth;
+
+        let hsv = this.rgb2Hsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
+        let rgb = this.hsv2Rgb(hsv[0], hsv[1], Math.max(hsv[2] - 0.2, 0))
+        this.d3Model.edgesColor = new Color4(rgb[0], rgb[1], rgb[2], 1)
 
         if (this.config.building.colors.edges) {
             const edgesColor = this.getColor(this.config.building.colors.edges, this.elementModel.types);
@@ -425,7 +433,7 @@ export class Building3D extends Element3D {
      * @param   Number  b       The blue color value
      * @return  Array           The HSV representation
      */
-    public rgbToHsv(r, g, b) {
+    public rgb2Hsv(r, g, b) {
 
         var max = Math.max(r, g, b), min = Math.min(r, g, b);
         var h, s, v = max;
@@ -465,7 +473,7 @@ export class Building3D extends Element3D {
      * @param   Number  v       The value
      * @return  Array           The RGB representation
      */
-    public hsvToRgb(h, s, v) {
+    public hsv2Rgb(h, s, v) {
         var r, g, b;
 
         var i = Math.floor(h * 6);
@@ -493,6 +501,42 @@ export class Building3D extends Element3D {
             case 5:
                 r = v, g = p, b = q;
                 break;
+        }
+
+        return [r, g, b];
+    }
+
+    /**
+     * Converts an HSL color value to RGB. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+     * Assumes h, s, and l are contained in the set [0, 1] and
+     * returns r, g, and b in the set [0, 1].
+     *
+     * @param   {number}  h       The hue
+     * @param   {number}  s       The saturation
+     * @param   {number}  l       The lightness
+     * @return  {Array}           The RGB representation
+     */
+    public hsl2Rgb(h, s, l) {
+        var r, g, b;
+
+        if (s == 0) {
+            r = g = b = l; // achromatic
+        } else {
+            var hue2rgb = function hue2rgb(p, q, t) {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                if (t < 1 / 2) return q;
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                return p;
+            }
+
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1 / 3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1 / 3);
         }
 
         return [r, g, b];

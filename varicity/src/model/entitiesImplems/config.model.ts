@@ -36,6 +36,7 @@ export class Config implements ConfigInterface {
         width: string;
         height: string;
         intensity: string;
+        fade: string;
     };
 
     camera_data: CameraData;
