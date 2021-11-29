@@ -1,6 +1,6 @@
-import { UIController } from './../../../controller/ui/ui.controller';
-import { Config } from './../../../model/entitiesImplems/config.model';
-import { Element3D } from '../3Dinterfaces/element3D.interface';
+import {UIController} from './../../../controller/ui/ui.controller';
+import {Config} from './../../../model/entitiesImplems/config.model';
+import {Element3D} from '../3Dinterfaces/element3D.interface';
 import {
     ActionManager,
     Color3,
@@ -13,8 +13,8 @@ import {
     StandardMaterial,
     Vector3
 } from '@babylonjs/core';
-import { Building } from '../../../model/entities/building.interface';
-import { Link3D } from '../3Dinterfaces/link3D.interface';
+import {Building} from '../../../model/entities/building.interface';
+import {Link3D} from '../3Dinterfaces/link3D.interface';
 
 export class Building3D extends Element3D {
     elementModel: Building;
@@ -170,6 +170,7 @@ export class Building3D extends Element3D {
             if (this.config.building.colors.faces) {
                 const buildingColor = this.getColor(this.config.building.colors.faces, this.elementModel.types);
                 if (buildingColor !== undefined) {
+                    console.log("b color " + buildingColor)
                     mat.ambientColor = Color3.FromHexString(buildingColor);
                     mat.diffuseColor = Color3.FromHexString(buildingColor);
                     mat.emissiveColor = Color3.FromHexString(buildingColor);
@@ -186,6 +187,41 @@ export class Building3D extends Element3D {
                 mat.emissiveColor = new Color3(1, 0, 0);
                 mat.specularColor = new Color3(0, 0, 0);
             }
+        }
+
+        // New way to display a metric: building opacity
+        if (this.elementModel.metrics.metrics.has(this.config.variables.intensity)) { //Check if the metric wanted exist
+            const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.intensity).value;
+
+            let hsv: number[];
+            let rgb: number[];
+            let colorHSV: Color3;
+
+            let intensity =  1 - this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
+
+            hsv = this.rgbToHsv(mat.ambientColor.r, mat.ambientColor.g, mat.ambientColor.b)
+            colorHSV = new Color3(hsv[0], hsv[1], hsv[2])
+            colorHSV.b = intensity //Update V (value) of HSV
+            rgb = this.hsvToRgb(colorHSV.r, colorHSV.g, colorHSV.b)
+            mat.ambientColor = new Color3(rgb[0], rgb[1], rgb[2])
+
+            hsv = this.rgbToHsv(mat.diffuseColor.r, mat.diffuseColor.g, mat.diffuseColor.b)
+            colorHSV = new Color3(hsv[0], hsv[1], hsv[2])
+            colorHSV.b = intensity //Update V (value) of HSV
+            rgb = this.hsvToRgb(colorHSV.r, colorHSV.g, colorHSV.b)
+            mat.diffuseColor = new Color3(rgb[0], rgb[1], rgb[2])
+
+            hsv = this.rgbToHsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
+            colorHSV = new Color3(hsv[0], hsv[1], hsv[2])
+            colorHSV.b = intensity //Update V (value) of HSV
+            rgb = this.hsvToRgb(colorHSV.r, colorHSV.g, colorHSV.b)
+            mat.emissiveColor = new Color3(rgb[0], rgb[1], rgb[2])
+
+            // hsv = this.rgbToHsv(mat.specularColor.r, mat.specularColor.g, mat.specularColor.b)
+            // colorHSV = new Color3(hsv[0], hsv[1], hsv[2])
+            // colorHSV.b = intensity //Update V (value) of HSV
+            // rgb = this.hsvToRgb(colorHSV.r, colorHSV.g, colorHSV.b)
+            // mat.specularColor = new Color3(rgb[0], rgb[1], rgb[2])
         }
 
         this.d3Model.material = mat;
@@ -249,7 +285,7 @@ export class Building3D extends Element3D {
                 diameter: (this.getWidth() - this.padding) / 6,
                 height: this.getWidth() - this.padding
             }, this.scene);
-            this.d3ModelChimney1.setPositionWithLocalVector(this.center.add(new Vector3(- ((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
+            this.d3ModelChimney1.setPositionWithLocalVector(this.center.add(new Vector3(-((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney2.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney3.setPositionWithLocalVector(this.center.add(new Vector3(((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney1.material = mat;
@@ -376,5 +412,100 @@ export class Building3D extends Element3D {
         // this.links.forEach(l => {
         //     if (l.src.elementModel.name === this.getName()) l.render(this.config);
         // });
+    }
+
+    /**
+     * Converts an RGB color value to HSV. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes r, g, and b are contained in the set [0, 1] and
+     * returns h, s, and v in the set [0, 1].
+     *
+     * @param   Number  r       The red color value
+     * @param   Number  g       The green color value
+     * @param   Number  b       The blue color value
+     * @return  Array           The HSV representation
+     */
+    public rgbToHsv(r, g, b) {
+
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, v = max;
+
+        var d = max - min;
+        s = max == 0 ? 0 : d / max;
+
+        if (max == min) {
+            h = 0; // achromatic
+        } else {
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+
+            h /= 6;
+        }
+
+        return [h, s, v];
+    }
+
+    /**
+     * Converts an HSV color value to RGB. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes h, s, and v are contained in the set [0, 1] and
+     * returns r, g, and b in the set [0, 255].
+     *
+     * @param   Number  h       The hue
+     * @param   Number  s       The saturation
+     * @param   Number  v       The value
+     * @return  Array           The RGB representation
+     */
+    public hsvToRgb(h, s, v) {
+        var r, g, b;
+
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+
+        switch (i % 6) {
+            case 0:
+                r = v, g = t, b = p;
+                break;
+            case 1:
+                r = q, g = v, b = p;
+                break;
+            case 2:
+                r = p, g = v, b = t;
+                break;
+            case 3:
+                r = p, g = q, b = v;
+                break;
+            case 4:
+                r = t, g = p, b = v;
+                break;
+            case 5:
+                r = v, g = p, b = q;
+                break;
+        }
+
+        return [r, g, b];
+    }
+
+    public normalize(val, max_v, min_v, min, max): number {
+        let n = ((val - min_v) / (max_v - min_v))
+        n = Math.max(min_v, n)
+        n = Math.min(max_v, n)
+
+        let c = (n * (max - min)) + min
+        c = Math.max(min, c)
+        c = Math.min(max, c)
+        return c;
     }
 }

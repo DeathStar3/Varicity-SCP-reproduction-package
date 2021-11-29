@@ -72,6 +72,7 @@ api_classes:
 variables: #variables to be used for width and height of a building
   width: "nbMethodVariants"
   height: "nbConstructorVariants"
+  intensity: "coverage"
 
 orientation: "OUT"
 
