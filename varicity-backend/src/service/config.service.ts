@@ -11,151 +11,96 @@ const YAML = require('yaml');
 
 export class ConfigService {
 
-    db = new JsonDB(new Config("configs-db", true, true, '/'));
-    private configs: Map<string, VaricityConfig[]> = undefined; // TODO replace with json DB or just look up on FS
-    private static defaultConfigName = "config";
+    db = new JsonDB(new Config("index-db", true, true, '/'));
+
     private static defaultConfigsPath = "./config/";
+    private static defaultConfigsDirectory = "default";
 
-    constructor() {
-        this.loadConfigs();
-    }
-
+    /**
+     * Load the first default config that it finds on disk
+     */
     public loadDefaultConfig(): VaricityConfig {
-        // Get document, or throw exception on error
         try {
-            return ConfigService.getYamlFromDisk(ConfigService.defaultConfigsPath + ".yaml") as VaricityConfig;
-            // return yaml.load(fs.readFileSync(path.join(process.cwd(), 'config/config.yaml'), 'utf8'));
+            const defaultConfigs = this.getDefaultConfigPaths();
+            return this.getConfigsFromPath(defaultConfigs[0]);
         } catch (e) {
             console.log(e);
         }
     }
 
-    public getAllFilenamesFromDisk(): string[] {
-        let pathsWithStartDir = UtilsService.traverseDir(ConfigService.defaultConfigsPath);
-        let paths = [];
+    /**
+     * Load the first config of the projectName specified,
+     * if not found load the first default config
+     * @param projectName
+     */
+    public getFirstProjectConfigOrDefaultOne(projectName: string): VaricityConfig {
+        const configsPaths = this.getConfigsPaths(projectName);
+        return this.getConfigsFromPath(configsPaths[0]);
+    }
 
-        pathsWithStartDir.forEach(path => {
-            let newPath =  path.replace(/\\+/g, "/");
-            let newPathSplit = newPath.split('\/');
-            newPathSplit.shift();
-            paths.push(newPathSplit.join('/'))
+    /**
+     * Load the YAML file from the disk to JS object
+     * @param pathToYamlOnDisk
+     * @private
+     */
+    private static getYamlFromDisk(pathToYamlOnDisk: string): any{
+        console.log("pathToYamlOnDisk", pathToYamlOnDisk)
+        return yaml.load(fs.readFileSync(path.join(process.cwd(), ConfigService.defaultConfigsPath, pathToYamlOnDisk), 'utf8'));
+    }
+
+    /**
+     * Load all the Varicity configs of the specified project
+     * @param projectName
+     */
+    public getConfigsFromProjectName(projectName: string): VaricityConfig[]{
+        const configsPaths = this.getConfigsPaths(projectName);
+        console.log("configsPaths", configsPaths)
+        let configs = [];
+        configsPaths.forEach(configPath => {
+                configs.push(this.getConfigsFromPath(configPath));
         })
 
-        return paths;
+        return configs;
     }
 
-
-    getAllConfigsName(projectName: string): string[] {
-        const allFilesPaths = this.getAllFilenamesFromDisk();
-        let projectNames = [];
-
-        allFilesPaths.forEach(path => {
-            if (!path.includes('/')) {
-                projectNames.push(path.split('.json')[0]);
-            }
-        })
-
-        return projectNames;
-    }
-
-    private loadConfigs(): void {
-        // TODO: filter only .yaml or yml files, rn fetch all types of files
-        const ymlFilePaths = this.getAllFilenamesFromDisk();
-        console.log("ymlFilePaths", ymlFilePaths);
-
-        this.configs = new Map<string, VaricityConfig[]>();
-
-        ymlFilePaths.forEach((key) => {
-            const config = ConfigService.getYamlFromDisk(key) as VaricityConfig;
-            // console.log(config)
-
-            if(config.camera_data === undefined){
-                config.camera_data = new CameraData(2 * Math.PI / 3, Math.PI / 3, 100, new Vector3());
-            }
-
-            // check if config file is for specific project
-            const projectName = ConfigService.getConfigProjectName(key);
-            if (projectName !== undefined) {
-                if (this.configs.has(projectName)) {
-                    this.configs.get(projectName).push(config);
-                } else {
-                    this.configs.set(projectName, [config]);
-                }
-
-                // check if config file is the default one
-            } else if (ConfigService.isDefaultProject(key)) {
-                this.configs.set(ConfigService.defaultConfigName, [config]);
-            }
-        });
-
-        // console.log('Loaded yaml files : ', this.configs);
-    }
-
-    public loadDataFile(fileName: string): VaricityConfig {
-        if (this.configs === undefined) {
-            this.loadConfigs();
+    /**
+     * Load a Varicity Config from the yaml file specified on disk
+     * @param configPath path to the config .yaml file on the disk
+     */
+    public getConfigsFromPath(configPath: string): VaricityConfig {
+        const config = ConfigService.getYamlFromDisk(configPath) as VaricityConfig;
+        if(config.camera_data === undefined){
+            config.camera_data = new CameraData(2 * Math.PI / 3, Math.PI / 3, 100, new Vector3());
         }
-
-        if (this.configs.has(fileName)) {
-            return this.configs.get(fileName)[0];
-        } else {
-            return this.configs.get(ConfigService.defaultConfigName)[0];
-        }
+        config.fileName = ConfigService.getFileNameOnly(configPath);
+        config.filePath = configPath;
+        // config.projectId = ConfigService.getProjectNameFromConfigPath(configPath);
+        return config;
     }
 
-    public loadConfigFiles(fileName: string): VaricityConfig[] {
-        console.log("fileName", fileName)
-        if (this.configs === undefined) {
-            this.loadConfigs();
-        }
-
-        if (this.configs.has(fileName)) {
-            return this.configs.get(fileName);
-        } else {
-            return this.configs.get(ConfigService.defaultConfigName);
-        }
-    }
-
-    private static getConfigProjectName(key: string) {
-        const myRegexp = new RegExp("^([a-zA-Z\\-\\_.0-9]+)\\/[a-zA-Z\\-\\_.0-9]+\\.ya?ml$", "g");
-        let match = myRegexp.exec(key);
-        if (match !== undefined && match != null) {
-            return match[1];
-        } else {
-            return undefined;
-        }
-    }
-
-    private static isDefaultProject(key: string): boolean {
-        const myRegexp = new RegExp("^([a-zA-Z\\-\\_.0-9]+)\\.ya?ml$", "g");
-        let match = myRegexp.exec(key);
-        return match !== undefined && match != null && match[1] === ConfigService.defaultConfigName;
-    }
-
-    private static getYamlFromDisk(pathLocal: string): any{
-        return yaml.load(fs.readFileSync(path.join(process.cwd(), ConfigService.defaultConfigsPath, pathLocal), 'utf8'));
-    }
-
+    /**
+     * Save a config for a specific project on the disk
+     * @param config to save
+     */
     public saveConfig(config: VaricityConfig) {
-
         if (!config.projectId) {
             console.warn('projectId of config is not defined');
             return config;
-        }
-
-        if(this.configs.has(config.projectId)){
-            this.configs.set(config.projectId, [...this.configs.get(config.projectId), config]);
-        }else{
-            this.configs.set(config.projectId, [config]);
         }
 
         // Saves file in filesystem
         const doc = new YAML.Document();
         doc.contents = config;
 
-        console.log(doc.toString());
+        let pathDirToConfig = path.join(ConfigService.defaultConfigsPath, config.projectId);
 
-        fs.writeFile(path.join(ConfigService.defaultConfigsPath, config.projectId, "config-" + config.projectId + "-" + this.configs.get(config.projectId).length + ".yaml"),  doc.toString(), err => {
+        if (!fs.existsSync(pathDirToConfig)){
+            fs.mkdirSync(pathDirToConfig);
+        }
+
+        const version = this.getConfigsPaths(config.projectId).length;
+
+        fs.writeFile(path.join(pathDirToConfig, "config-" + config.projectId + "-" + version + ".yaml"),  doc.toString(), err => {
             if (err) {
                 console.error(err)
                 return
@@ -166,7 +111,53 @@ export class ConfigService {
         return config;    
     }
 
-    loadConfigFilesNames(configName: string) {
+    /**
+     * Get the path of all the default configs
+     * @private
+     */
+    private getDefaultConfigPaths(): string[] {
+        if(this.db.exists('/config/' + ConfigService.defaultConfigsDirectory)){
+            console.log("default exist")
+            return this.db.getData('/config/' + ConfigService.defaultConfigsDirectory);
+        }
+
+        console.log("default not exist" + '/config/' + ConfigService.defaultConfigsDirectory )
         return [];
+    }
+
+    /**
+     * Get the path of all the configs for a specified project
+     * @param projectName
+     * @private
+     */
+    private getConfigsPaths(projectName: string): string[] {
+        if(this.db.exists('/config/' + projectName)){
+            console.log("this.db.exists('/config/'" + projectName)
+            return this.db.getData('/config/' + projectName);
+        }else{
+            const test = this.getDefaultConfigPaths();
+            console.log("test", test);
+            return test;
+        }
+    }
+
+
+    public getConfigByNameFromProject(projectName: string, configName: string): VaricityConfig {
+        const configsPaths = this.getConfigsPaths(projectName);
+        configsPaths.forEach(configPath => {
+            if(ConfigService.getFileNameOnly(configPath) === configName){
+                return this.getConfigsFromPath(configPath);
+            }
+        })
+        console.warn("Config: " + configName + " not found, sending default config");
+        return this.loadDefaultConfig();
+    }
+
+    public static getFileNameOnly(filePath: string): string {
+        return filePath.split('/').pop().split(/\.y?aml/g).shift();
+    }
+
+    private static getProjectNameFromConfigPath(configPath: string) {
+        return configPath.split('/')[0];
     }
 }

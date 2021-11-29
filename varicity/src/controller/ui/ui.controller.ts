@@ -72,7 +72,7 @@ export class UIController {
     public static async reloadConfigAndConfigSelector(filename: string) {
         this.configs = (await ConfigLoader.loadConfigFiles(filename)).data;
         this.createConfigSelector(this.configs, filename);
-        this.createConfig(this.configs[0])
+        this.createConfig(this.configs[0]);
     }
 
     public static changeConfig(arr: string[], value: [string, string] | Color) {

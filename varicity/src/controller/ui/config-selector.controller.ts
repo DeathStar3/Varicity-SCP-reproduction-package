@@ -7,6 +7,7 @@ import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
 import { UIController } from "./ui.controller";
+import {ConfigLoader} from "../parser/configLoader";
 
 export class ConfigSelectorController {
 
@@ -24,8 +25,6 @@ export class ConfigSelectorController {
 
         parent.innerHTML = "Config selection: " + ((UIController.config !== undefined) ? UIController.config.name : "[no config found]");
 
-
-
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
         inputElement.value = UIController.config.default_level.toString();
 
@@ -41,7 +40,7 @@ export class ConfigSelectorController {
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
-                UIController.config = config;
+                this.defineConfig(config.filePath);
 
                 parent.childNodes[0].nodeValue = "Config selection: " + config.name;
                 inputElement.value = UIController.config.default_level.toString();
@@ -96,5 +95,9 @@ export class ConfigSelectorController {
 
         })
 
+    }
+
+    private static async defineConfig(configPath: string) {
+        UIController.config = (await ConfigLoader.loadConfigFromPath(configPath)).data
     }
 }

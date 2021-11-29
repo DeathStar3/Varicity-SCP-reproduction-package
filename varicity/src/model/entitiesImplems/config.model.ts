@@ -43,6 +43,8 @@ export class Config implements ConfigInterface {
     parsing_mode: string;
     orientation: Orientation;
     default_level: number;
+    fileName: string;
+    filePath: string;
 
     constructor() { }
 

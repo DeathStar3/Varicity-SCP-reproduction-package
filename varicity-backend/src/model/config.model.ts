@@ -81,6 +81,8 @@ export class VaricityConfig {
     parsing_mode: string;
     orientation: Orientation;
     default_level: number;
+    fileName: string;
+    filePath: string;
 
     camera_data: CameraData;
 }

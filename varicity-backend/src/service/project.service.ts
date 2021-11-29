@@ -69,7 +69,7 @@ export class ProjectService {
         // aggregate externals metrics if any
         const externalsMetricsPaths = projectPaths.externalFilePaths;
 
-        if(externalsMetricsPaths.length !== 0){
+        if (externalsMetricsPaths.length !== 0) {
 
             // index all classes indexes to reduce the complexity of merging external jsons.
             let mapSymFinderClassesIndex = ProjectService.indexSymFinderClassesToMap(symfinderObj);
