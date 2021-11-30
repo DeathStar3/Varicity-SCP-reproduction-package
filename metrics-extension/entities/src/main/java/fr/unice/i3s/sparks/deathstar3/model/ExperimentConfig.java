@@ -54,9 +54,8 @@ public class ExperimentConfig {
 
     private boolean sonarqubeNeeded = false;
     private String outputPath = "generated_visualizations/data/externals"; // Optional
-    @JsonProperty("source-code-path")
+    
     private String sourceCodePath = "sources"; // Optional
-    @JsonProperty("sources")
     private List<MetricSource> sources;
 
     public ExperimentConfig(String projectName, String path, String buildEnv, String buildEnvTag,

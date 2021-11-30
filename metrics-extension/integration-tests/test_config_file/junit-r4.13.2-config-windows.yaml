@@ -1,5 +1,5 @@
 junit-r4.13.2:
-  output-path: "./test_actual_result"
+  outputPath: "./test_actual_result"
   sources:
     - name: "sonarqube"
       enabled: true
