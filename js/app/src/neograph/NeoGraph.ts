@@ -38,6 +38,14 @@ export default class NeoGraph{
         });
     }
 
+    async getNodeWithModule(name: string, moduleName: string): Promise<Node | undefined>{
+        const request = "MATCH (n {name: $name})<--(m {name: $moduleName}) RETURN (n)";
+
+        return this.submitRequest(request, {name:name, moduleName:moduleName}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
     async getNodeWithType(name: string, type: EntityType): Promise<Node | undefined>{
         const request = "MATCH (n:"+type+" {name: $name}) RETURN (n)";
 
@@ -54,6 +62,21 @@ export default class NeoGraph{
         "WITH a,b\n" +
         "WHERE ID(b)=$bId\n" +
         "CREATE (a)-[r:"+type+"]->(b)";
+        await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
+    }
+
+    async updateLinkTwoNode(node1: Node, node2: Node, oldType: RelationType, newType: RelationType): Promise<void> {
+        const request = "MATCH(a)\n" +
+        "WHERE ID(a)=$aId\n" +
+        "WITH a\n" +
+        "MATCH (b)\n" +
+        "WITH a,b\n" +
+        "WHERE ID(b)=$bId\n" +
+        "MATCH(a)-[r1:"+oldType+"]->(b)\n" +
+        "DELETE r1\n" +
+        "CREATE (a)-[r2:"+newType+"]->(b)";
+
+        console.log(request)
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
@@ -106,7 +129,7 @@ export default class NeoGraph{
         await this.submitRequest("MATCH (c:CLASS)-->(a:METHOD) MATCH (c:CLASS)-->(b:METHOD)\n" +
         "WHERE a.name = b.name AND ID(a) <> ID(b)\n" +
         "WITH count(DISTINCT a) AS cnt, c\n" +
-        "SET c.methodVariants = cnt",{});
+        "SET c.methodVariants = cnt - 1",{});
         await this.submitRequest("MATCH (c:CLASS)\n" +
         "WHERE NOT EXISTS(c.methodVariants)\n" +
         "SET c.methodVariants = 0",{});

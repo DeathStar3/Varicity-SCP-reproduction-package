@@ -11,10 +11,8 @@ export default class Parser{
     }
 
     async accept(visitor: SymfinderVisitor) {
-        for(let node of this.sourceFile.statements) {
-            await visitor.visit(node);
-            await this.visit(node, visitor);
-        }
+        await visitor.visit(this.sourceFile);
+        await this.visit(this.sourceFile, visitor);
     }
 
     async visit(node: Node, visitor: SymfinderVisitor){

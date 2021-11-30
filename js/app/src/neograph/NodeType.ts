@@ -10,7 +10,10 @@ export enum EntityType {
     CLASS = "CLASS",
     METHOD = "METHOD",
     CONSTRUCTOR = "CONSTRUCTOR",
-    INTERFACE = "INTERFACE"
+    INTERFACE = "INTERFACE",
+    MODULE = "MODULE",
+    FUNCTION = "FUNCTION",
+    VARIABLE = "VARIABLE"
 }
 
 export enum EntityVisibility {
@@ -27,7 +30,11 @@ export enum RelationType {
     INNER = "INNER",
     IMPLEMENTS = "IMPLEMENTS",
     EXTENDS = "EXTENDS",
-    INSTANTIATE = "INSTANTIATE"
+    INSTANTIATE = "INSTANTIATE",
+    EXPORT = "EXPORT",
+    INTERNAL = "INTERNAL",
+    IMPORT = "IMPORT",
+    LOAD = "LOAD"
 }
 
 export enum DesignPatternType {
