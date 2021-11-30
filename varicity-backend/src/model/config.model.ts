@@ -80,5 +80,20 @@ export class VaricityConfig {
     parsing_mode: string;
     orientation: Orientation;
     default_level: number;
+
+    metrics: Map<string, MetricSpec>;
+
     camera_data: CameraData;
+}
+
+export class MetricSpec {
+    min: number;
+    max: number;
+    higherIsBetter: boolean;
+
+    constructor() {
+        this.min = 0
+        this.max = 100
+        this.higherIsBetter = false;
+    }
 }

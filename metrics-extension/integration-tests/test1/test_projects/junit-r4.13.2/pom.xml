@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>junit</groupId>
@@ -64,8 +65,8 @@
         <connection>scm:git:git://github.com/junit-team/junit4.git</connection>
         <developerConnection>scm:git:git@github.com:junit-team/junit4.git</developerConnection>
         <url>https://github.com/junit-team/junit4</url>
-      <tag>r4.13.2</tag>
-  </scm>
+        <tag>r4.13.2</tag>
+    </scm>
     <issueManagement>
         <system>github</system>
         <url>https://github.com/junit-team/junit4/issues</url>
@@ -100,7 +101,7 @@
         <jarPluginVersion>2.6</jarPluginVersion>
         <javadocPluginVersion>2.10.3</javadocPluginVersion>
         <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-        <arguments />
+        <arguments/>
         <gpg.keyname>67893CC4</gpg.keyname>
     </properties>
 
@@ -132,8 +133,8 @@
             </resource>
         </resources>
         <plugins>
-		
-		<plugin>
+
+            <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.9.0.2155</version>
@@ -180,7 +181,7 @@
                     </execution>
                 </executions>
             </plugin>
-		
+
             <!--
             Both "org.apache" and "org.codehaus" are default providers of MOJO plugins
             which are especially dedicated to Maven projects.
@@ -406,7 +407,7 @@
                         </manifest>
                         <manifestEntries>
                             <Automatic-Module-Name>junit</Automatic-Module-Name>
-                        </manifestEntries>                        
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -534,7 +535,7 @@
                 </plugins>
             </build>
         </profile>
-	
+
         <profile>
             <id>junit-release</id>
             <!--

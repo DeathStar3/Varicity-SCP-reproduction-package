@@ -133,51 +133,58 @@ export class ConfigController {
                 input.addEventListener("keyup", (ke) => this.stringArrayListener(ke, input, parent));
             }
             else {
-                for (let key in config) {
-                    if (key !== "default_level") {
-                        let node = this.createKey(key, parent);
+                if(config instanceof Map && parent.getAttribute("value") === "metrics"){
+                    console.log(config);
+                    config.forEach((value: any, key: any) => {
+                        this.populateChildren({[key]: value}, parent);
+                    });
+                }else{
+                    for (let key in config) {
+                        if (key !== "default_level") {
+                            let node = this.createKey(key, parent);
 
-                        if ((config[key]) instanceof Object) {
-                            this.populateChildren(config[key], node); // the child will be an array of values
-                            node.className = "parent";
+                            if ((config[key]) instanceof Object) {
+                                this.populateChildren(config[key], node); // the child will be an array of values
+                                node.className = "parent";
 
-                            /* @ts-ignore */
-                            for (let child of node.children) {
-                                child.style.display = "none";
-                            }
-                            node.onclick = (me) => {
-                                if (me.target == node) {
-                                    /* @ts-ignore */
-                                    for (let child of node.children) {
-                                        if (child.style.display == "block") child.style.display = "none";
-                                        else child.style.display = "block";
+                                /* @ts-ignore */
+                                for (let child of node.children) {
+                                    child.style.display = "none";
+                                }
+                                node.onclick = (me) => {
+                                    if (me.target == node) {
+                                        /* @ts-ignore */
+                                        for (let child of node.children) {
+                                            if (child.style.display == "block") child.style.display = "none";
+                                            else child.style.display = "block";
+                                        }
                                     }
                                 }
                             }
-                        }
-                        else {
-                            let input;
-                            if (key == "orientation") {
-                                input = this.createSelect(config[key], node);
-                            } else {
-                                input = this.createInput(config[key], node);
-                            }
-                            node.className = "child";
-                            if(parent.getAttribute("value") === "variables") {
-                                input.setAttribute("list", "attributelist");
-                            }
-                            if (key == "orientation") {
-                                input.addEventListener("change", () => {
-                                    let arr = this.findValidParents(input);
-                                    UIController.changeConfig(arr, ["", input.value]);
-                                })
-                            } else {
-                                input.addEventListener("keyup", (ke) => {
-                                    if (ke.key == "Enter") {
+                            else {
+                                let input;
+                                if (key == "orientation") {
+                                    input = this.createSelect(config[key], node);
+                                } else {
+                                    input = this.createInput(config[key], node);
+                                }
+                                node.className = "child";
+                                if(parent.getAttribute("value") === "variables") {
+                                    input.setAttribute("list", "attributelist");
+                                }
+                                if (key == "orientation") {
+                                    input.addEventListener("change", () => {
                                         let arr = this.findValidParents(input);
                                         UIController.changeConfig(arr, ["", input.value]);
-                                    }
-                                });
+                                    })
+                                } else {
+                                    input.addEventListener("keyup", (ke) => {
+                                        if (ke.key == "Enter") {
+                                            let arr = this.findValidParents(input);
+                                            UIController.changeConfig(arr, ["", input.value]);
+                                        }
+                                    });
+                                }
                             }
                         }
                     }

@@ -72,6 +72,9 @@ api_classes:
 variables: #variables to be used for width and height of a building
   width: "complexity"
   height: "coverage"
+  intensity: ""
+  fade: ""
+  crack: ""
 
 orientation: "OUT"
 

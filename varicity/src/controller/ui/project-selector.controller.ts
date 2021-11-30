@@ -17,16 +17,25 @@ export class ProjectController {
 
     static createProjectSelector(keys: string[]) {
         let parent = document.getElementById("project_selector");
-        parent.innerHTML = "Project selection";
+
+        parent.addEventListener('change', function(event) {
+            const projectName = (event.target as HTMLInputElement).value;
+            if(projectName !== undefined){
+                ProjectController.loadProject(projectName);
+                parent.childNodes[0].nodeValue = "Project selection: " + projectName;
+            }
+        });
 
         for (let key of keys) {
-            let node = document.createElement("div");
-            node.innerHTML = " - " + key;
+            let node = document.createElement("option") as HTMLOptionElement;
+            node.value=key
+            node.text= key;
+            
             parent.appendChild(node);
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
-                this.projectListener.projectChange(key);
+                console.log("teeest")
                 this.previousParser = new VPVariantsStrategy();
                 this.filename = key;
                 this.reParse();
@@ -49,29 +58,34 @@ export class ProjectController {
                 }
                 run().then();
 
-                // this.projectListener.projectChange(key);
-
                 parent.childNodes[0].nodeValue = "Project selection: " + key;
-
-                /* @ts-ignore */
-                for (let child of parent.children) {
-                    child.style.display = "none";
-                }
             });
         }
-        /* @ts-ignore */
-        for (let child of parent.children) {
-            child.style.display = "none";
+
+    }
+
+    public static loadProject(projectName: string){
+        this.previousParser = new VPVariantsStrategy();
+        this.filename = projectName;
+        this.reParse();
+
+        const run = async () => {
+
+            await UIController.reloadConfigAndConfigSelector(this.filename);
+
+            // TODO find alternative
+            ProjectService.fetchVisualizationData(this.filename).then(async response=>{
+                const config = (await ConfigLoader.loadDataFile(this.filename)).data
+                console.log("config", config)
+                this.el = this.previousParser.parse(response.data, config, this.filename);
+                let inputElement = document.getElementById("comp-level") as HTMLInputElement;
+                UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(+inputElement.value));
+                UIController.scene.buildScene();
+            })
+
+            this.projectListener.projectChange(projectName);
         }
-        parent.onclick = (me) => {
-            if (me.target == parent) {
-                /* @ts-ignore */
-                for (let child of parent.children) {
-                    if (child.style.display == "block") child.style.display = "none";
-                    else child.style.display = "block";
-                }
-            }
-        }
+        run().then();
     }
 
     public static reParse() {
@@ -80,19 +94,5 @@ export class ProjectController {
         }
 
         UIController.clearMap();
-        // const run = async () => {
-        //
-        //     await UIController.reloadConfigAndConfigSelector(this.filename);
-        //
-        // }
-        //
-        // ProjectService.fetchVisualizationData(this.filename).then(async response=>{
-        //     const config = (await ConfigLoader.loadDataFile(this.filename)).data
-        //     console.log("config", config)
-        //     this.el = this.previousParser.parse(response.data, config, this.filename);
-        //     let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-        //     UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(+inputElement.value));
-        //     UIController.scene.buildScene();
-        // })
     }
 }

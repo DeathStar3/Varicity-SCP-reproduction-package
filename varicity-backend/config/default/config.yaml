@@ -99,10 +99,18 @@ api_classes: # configuration given in the paper
     - "org.netbeans.api.java.platform.JavaPlatform"
   riptide-2.11.0: # 6, IN/OUT
     - "org.zalando.riptide.Http"
+  jmeter-v5.4.1-rc2: # 6, IN/OUT
+    - "org.apache.jmeter.JMeter"
+  regatta:
+    - "fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal"
+    - "fr.unice.polytech.si3.qgl.stormbreakers.math.Surface"
 
 variables: #variables to be used for width and height of a building
   width: "nbConstructorVariants"
   height: "nbMethodVariants"
+  intensity: ""
+  fade: ""
+  crack: ""
 
 orientation: "OUT"
 

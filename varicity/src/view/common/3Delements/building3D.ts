@@ -1,6 +1,6 @@
-import { UIController } from './../../../controller/ui/ui.controller';
-import { Config } from './../../../model/entitiesImplems/config.model';
-import { Element3D } from '../3Dinterfaces/element3D.interface';
+import {UIController} from '../../../controller/ui/ui.controller';
+import {Config, MetricSpec} from '../../../model/entitiesImplems/config.model';
+import {Element3D} from '../3Dinterfaces/element3D.interface';
 import {
     ActionManager,
     Color3,
@@ -10,11 +10,11 @@ import {
     Mesh,
     MeshBuilder,
     Scene,
-    StandardMaterial,
+    StandardMaterial, Texture,
     Vector3
 } from '@babylonjs/core';
-import { Building } from '../../../model/entities/building.interface';
-import { Link3D } from '../3Dinterfaces/link3D.interface';
+import {Building} from '../../../model/entities/building.interface';
+import {Link3D} from '../3Dinterfaces/link3D.interface';
 
 export class Building3D extends Element3D {
     elementModel: Building;
@@ -188,6 +188,71 @@ export class Building3D extends Element3D {
             }
         }
 
+        // New way to display a metric: city fade
+        if (this.config.variables.fade) {
+            if (this.elementModel.metrics.metrics.has(this.config.variables.fade)) { //Check if the metric wanted exist
+                const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.fade).value;
+
+                const configSpec = UIController.config.metrics.get(this.config.variables.fade) || new MetricSpec();
+                let fade = this.normalize(metricValue, configSpec.max, configSpec.min, 0, 1);
+                if(configSpec.higherIsBetter){
+                    fade =  1 - fade;
+                }
+
+                var hue = ((1 - fade) * 120);
+                let rgb = this.hsl2Rgb(Math.max(hue / 360, 0), 1, 0.5);
+
+                mat.emissiveColor = new Color3(rgb[0], rgb[1], rgb[2])
+                mat.diffuseColor = new Color3(rgb[0] / 2, rgb[1] / 2, rgb[2] / 2)
+                mat.ambientColor = new Color3(0, 0, 0)
+            } else {
+                mat.ambientColor = Color3.FromHexString("#555555");
+                mat.diffuseColor = Color3.FromHexString("#555555");
+                mat.emissiveColor = Color3.FromHexString("#555555");
+            }
+        }
+
+        // New way to display a metric: building opacity
+        if (this.config.variables.intensity) {
+            if (this.elementModel.metrics.metrics.has(this.config.variables.intensity)) { //Check if the metric wanted exist
+                const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.intensity).value;
+
+                const configSpec = UIController.config.metrics.get(this.config.variables.intensity) || new MetricSpec();
+                let intensity = 1 - this.normalize(metricValue, configSpec.max, configSpec.min, 0, 0.93);
+                if(configSpec.higherIsBetter){
+                    intensity =  1 - intensity;
+                }
+
+                let hsv = this.rgb2Hsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
+                let rgb = this.hsv2Rgb(hsv[0], hsv[1], intensity)
+
+                mat.ambientColor = new Color3(rgb[0], rgb[1], rgb[2])
+                mat.diffuseColor = new Color3(rgb[0], rgb[1], rgb[2])
+                mat.emissiveColor = new Color3(rgb[0], rgb[1], rgb[2])
+            }
+        }
+
+        // New way to display a metric: building cracks
+        if (this.config.variables.crack) {
+            if (this.elementModel.metrics.metrics.has(this.config.variables.crack)) { //Check if the metric wanted exist
+                const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.crack).value;
+
+                const configSpec = UIController.config.metrics.get(this.config.variables.crack) || new MetricSpec();
+                let crack = this.normalize(metricValue, configSpec.max, configSpec.min, 0, 1);
+                if(configSpec.higherIsBetter){
+                    crack =  1 - crack;
+                }
+
+                const numberOfLevels = 8;
+                const level = Math.floor(crack * numberOfLevels);
+                if (level > 0 && level < 8) {
+                    mat.diffuseTexture = new Texture("./images/crack/level" + level + ".png", this.scene);
+                } else if (level >= 8){
+                    mat.diffuseTexture = new Texture("./images/crack/level" + 7 + ".png", this.scene);
+                }
+            }
+        }
+
         this.d3Model.material = mat;
 
         let offSet = 0;
@@ -249,7 +314,7 @@ export class Building3D extends Element3D {
                 diameter: (this.getWidth() - this.padding) / 6,
                 height: this.getWidth() - this.padding
             }, this.scene);
-            this.d3ModelChimney1.setPositionWithLocalVector(this.center.add(new Vector3(- ((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
+            this.d3ModelChimney1.setPositionWithLocalVector(this.center.add(new Vector3(-((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney2.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney3.setPositionWithLocalVector(this.center.add(new Vector3(((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney1.material = mat;
@@ -276,6 +341,14 @@ export class Building3D extends Element3D {
             this.d3ModelPyramid.material.backFaceCulling = false;
             this.d3Model = Mesh.MergeMeshes([this.d3Model, this.d3ModelPyramid], true);
         }
+
+        // Default edge coloring
+        this.d3Model.enableEdgesRendering();
+        this.d3Model.edgesWidth = this.edgesWidth;
+
+        let hsv = this.rgb2Hsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
+        let rgb = this.hsv2Rgb(hsv[0], hsv[1], Math.max(hsv[2] - 0.2, 0))
+        this.d3Model.edgesColor = new Color4(rgb[0], rgb[1], rgb[2], 1)
 
         if (this.config.building.colors.edges) {
             const edgesColor = this.getColor(this.config.building.colors.edges, this.elementModel.types);
@@ -376,5 +449,136 @@ export class Building3D extends Element3D {
         // this.links.forEach(l => {
         //     if (l.src.elementModel.name === this.getName()) l.render(this.config);
         // });
+    }
+
+    /**
+     * Converts an RGB color value to HSV. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes r, g, and b are contained in the set [0, 1] and
+     * returns h, s, and v in the set [0, 1].
+     *
+     * @param   Number  r       The red color value
+     * @param   Number  g       The green color value
+     * @param   Number  b       The blue color value
+     * @return  Array           The HSV representation
+     */
+    public rgb2Hsv(r, g, b) {
+
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, v = max;
+
+        var d = max - min;
+        s = max == 0 ? 0 : d / max;
+
+        if (max == min) {
+            h = 0; // achromatic
+        } else {
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+
+            h /= 6;
+        }
+
+        return [h, s, v];
+    }
+
+    /**
+     * Converts an HSV color value to RGB. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+     * Assumes h, s, and v are contained in the set [0, 1] and
+     * returns r, g, and b in the set [0, 255].
+     *
+     * @param   Number  h       The hue
+     * @param   Number  s       The saturation
+     * @param   Number  v       The value
+     * @return  Array           The RGB representation
+     */
+    public hsv2Rgb(h, s, v) {
+        var r, g, b;
+
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+
+        switch (i % 6) {
+            case 0:
+                r = v, g = t, b = p;
+                break;
+            case 1:
+                r = q, g = v, b = p;
+                break;
+            case 2:
+                r = p, g = v, b = t;
+                break;
+            case 3:
+                r = p, g = q, b = v;
+                break;
+            case 4:
+                r = t, g = p, b = v;
+                break;
+            case 5:
+                r = v, g = p, b = q;
+                break;
+        }
+
+        return [r, g, b];
+    }
+
+    /**
+     * Converts an HSL color value to RGB. Conversion formula
+     * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+     * Assumes h, s, and l are contained in the set [0, 1] and
+     * returns r, g, and b in the set [0, 1].
+     *
+     * @param   {number}  h       The hue
+     * @param   {number}  s       The saturation
+     * @param   {number}  l       The lightness
+     * @return  {Array}           The RGB representation
+     */
+    public hsl2Rgb(h, s, l) {
+        var r, g, b;
+
+        if (s == 0) {
+            r = g = b = l; // achromatic
+        } else {
+            var hue2rgb = function hue2rgb(p, q, t) {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                if (t < 1 / 2) return q;
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                return p;
+            }
+
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1 / 3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1 / 3);
+        }
+
+        return [r, g, b];
+    }
+
+    public normalize(val, max_v, min_v, min, max): number {
+        let n = ((val - min_v) / (max_v - min_v))
+        n = Math.max(min, n)
+        n = Math.min(max, n)
+
+        let c = (n * (max - min)) + min
+        c = Math.max(min, c)
+        c = Math.min(max, c)
+        return c;
     }
 }
