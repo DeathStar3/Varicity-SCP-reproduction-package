@@ -49,7 +49,7 @@ public class MetricExtensionEntrypoint {
 
         Map<String, List<Node>> metricsResult = new HashMap<>();
 
-        if (config.getPath() == null || config.getPath().isBlank()) {// implique que skipClone est false
+        if (config.getPath() == null || config.getPath().isBlank()) {// imply  skipClone is false
             config.setPath(Files.createTempDirectory("varicity-xp-projects").toString());
         }
 
@@ -65,18 +65,15 @@ public class MetricExtensionEntrypoint {
             qualityMetrics = new Thread(() -> {
                 sonarQubeStarter.startSonarqube();
                 compiler.executeProject(config);
-                // la mise à jour de sonarqube par rapport au nouveau projet n'est pas immédiate
-                // le sleep introduit un délai pour attendre que la mise à jour se fasse avant
-                // que le metric gatherer ne soit appelé
+                //the update of sonarqube is not immediate, the sleep introduce a dealy so that the update of sonarqube is done before
+                //MetricGatherer is called
                 try {
                     Thread.sleep(30_000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             });
-
             qualityMetrics.start();
-
         }
 
         Path workingDirectory;

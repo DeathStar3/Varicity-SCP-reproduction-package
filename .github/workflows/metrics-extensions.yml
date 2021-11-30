@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - us/58-only-sonar
+  workflow_dispatch:
 jobs:
   sourcesfetchertest:
     runs-on: ubuntu-latest
