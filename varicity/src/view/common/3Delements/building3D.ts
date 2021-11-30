@@ -194,7 +194,7 @@ export class Building3D extends Element3D {
             if (this.elementModel.metrics.metrics.has(this.config.variables.fade)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.fade).value;
 
-                let intensity = 1 - this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
+                let intensity = this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
 
                 var hue = ((1 - intensity) * 120);
                 let rgb = this.hsl2Rgb(hue / 360, 1, 0.5);
@@ -230,11 +230,13 @@ export class Building3D extends Element3D {
             if (this.elementModel.metrics.metrics.has(this.config.variables.crack)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.crack).value;
 
-                let intensity = 1 - this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
+                let intensity = this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
 
                 let level = Math.floor(intensity / 0.125)
                 if (level > 0 && level < 8) {
                     mat.diffuseTexture = new Texture("./images/crack/level" + level + ".png", this.scene);
+                } else if (level >= 8){
+                    mat.diffuseTexture = new Texture("./images/crack/level" + 7 + ".png", this.scene);
                 }
             }
         }
