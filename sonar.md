@@ -119,3 +119,4 @@ sonar.java.source=1.8
 sonar.java.target=1.8
 
 ```
+mvn package assembly:single -DskipTests=true

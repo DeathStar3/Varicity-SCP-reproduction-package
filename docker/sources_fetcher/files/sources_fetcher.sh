@@ -19,5 +19,4 @@
 # Copyright 2018-2021 Xhevahire Tërnava <t.xheva@gmail.com>
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
-
 python3 download_projects.py

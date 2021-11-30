@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import fr.unice.i3s.sparks.deathstar3.model.Config;
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -23,16 +23,16 @@ public class ConfigLoader {
     /**
      * Parse the config file
      */
-    public List<Config> deserializeConfigFile(String source) {
+    public List<ExperimentConfig> deserializeConfigFile(String source) {
         try {
-            Map<String, Config> configsMap = mapper.readValue(source, new TypeReference<HashMap<String, Config>>() {
+            Map<String, ExperimentConfig> configsMap = mapper.readValue(source, new TypeReference<HashMap<String, ExperimentConfig>>() {
             });
 
             configsMap.forEach((name, config) -> {
                 config.setProjectName(name);
             });
 
-            List<Config> configs = new ArrayList<>(configsMap.values());
+            List<ExperimentConfig> configs = new ArrayList<>(configsMap.values());
 
             //Check there is at least one config
             if (!configs.isEmpty()) {
@@ -50,7 +50,7 @@ public class ConfigLoader {
     /**
      * Load the config file
      */
-    public List<Config> loadConfigFile(String fileName) {
+    public List<ExperimentConfig> loadConfigFile(String fileName) {
 
         try {
             return deserializeConfigFile(Files.readString(Path.of(fileName)));

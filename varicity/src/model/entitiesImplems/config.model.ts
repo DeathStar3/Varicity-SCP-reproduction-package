@@ -24,6 +24,7 @@ export class Config implements ConfigInterface {
 
     id?:string; //for persistence
     projectId?:string; //for persistence
+    name?: string;
     description: string;
     building: D3Config;
     // building: ConfigColor;

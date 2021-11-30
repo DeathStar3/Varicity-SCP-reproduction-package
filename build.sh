@@ -20,7 +20,9 @@
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
 
+cd docker/sources_fetcher/
 docker build -f docker/sources_fetcher/Dockerfile -t deathstar3/symfinder-fetcher:local .
+cd ../../
 docker build -f docker/neo4j/Dockerfile -t deathstar3/symfinder-neo4j:local --build-arg BUILD_PARAMS="$@" .
 docker build -f docker/symfinder/Dockerfile -t deathstar3/symfinder-engine:local --build-arg BUILD_PARAMS="$@" .
 docker build -f docker/runner/Dockerfile -t deathstar3/symfinder-runner:local .

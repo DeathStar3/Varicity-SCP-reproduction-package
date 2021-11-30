@@ -36,7 +36,8 @@ jobs:
       - name: Building symfinder engine
         run: docker build -f docker/symfinder/Dockerfile -t deathstar3/symfinder-engine:local .
       - name: Building sources fetcher
-        run: docker build -f docker/sources_fetcher/Dockerfile -t deathstar3/symfinder-fetcher:local .
+        working-directory: ./docker/sources_fetcher
+        run: docker build -f Dockerfile -t deathstar3/symfinder-fetcher:local .
       - name: Building symfinder runner
         run: docker build -f docker/runner/Dockerfile -t deathstar3/symfinder-runner:local .
       - name: Building Neo4j procedures
@@ -46,6 +47,7 @@ jobs:
 
   integration_tests:
     runs-on: ubuntu-latest
+    needs: [unit_tests]
     steps:
       - uses: actions/checkout@v2
       - name: Tests on sample projects
@@ -55,6 +57,7 @@ jobs:
 
   varicity_project:
     runs-on: ubuntu-latest
+    needs: [unit_tests]
     steps:
       - uses: actions/checkout@v2
       - name: Varicity unit tests
@@ -63,6 +66,7 @@ jobs:
         run: chmod +x ./run_varicity_integration_tests.sh && ./run_varicity_integration_tests.sh
         
   cross_check:
+    needs: [unit_tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
