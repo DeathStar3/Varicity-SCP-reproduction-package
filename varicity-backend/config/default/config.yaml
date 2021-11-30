@@ -103,6 +103,9 @@ api_classes: # configuration given in the paper
 variables: #variables to be used for width and height of a building
   width: "nbConstructorVariants"
   height: "nbMethodVariants"
+  intensity: ""
+  fade: ""
+  crack: ""
 
 orientation: "OUT"
 

@@ -1,5 +1,5 @@
-import {UIController} from './../../../controller/ui/ui.controller';
-import {Config} from './../../../model/entitiesImplems/config.model';
+import {UIController} from '../../../controller/ui/ui.controller';
+import {Config, MetricSpec} from '../../../model/entitiesImplems/config.model';
 import {Element3D} from '../3Dinterfaces/element3D.interface';
 import {
     ActionManager,
@@ -10,7 +10,7 @@ import {
     Mesh,
     MeshBuilder,
     Scene,
-    StandardMaterial,
+    StandardMaterial, Texture,
     Vector3
 } from '@babylonjs/core';
 import {Building} from '../../../model/entities/building.interface';
@@ -193,10 +193,14 @@ export class Building3D extends Element3D {
             if (this.elementModel.metrics.metrics.has(this.config.variables.fade)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.fade).value;
 
-                let intensity = this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
+                const configSpec = UIController.config.metrics.get(this.config.variables.fade) || new MetricSpec();
+                let fade = this.normalize(metricValue, configSpec.max, configSpec.min, 0, 1);
+                if(configSpec.higherIsBetter){
+                    fade =  1 - fade;
+                }
 
-                var hue = ((1 - intensity) * 120);
-                let rgb = this.hsl2Rgb(hue / 360, 1, 0.5);
+                var hue = ((1 - fade) * 120);
+                let rgb = this.hsl2Rgb(Math.max(hue / 360, 0), 1, 0.5);
 
                 mat.emissiveColor = new Color3(rgb[0], rgb[1], rgb[2])
                 mat.diffuseColor = new Color3(rgb[0] / 2, rgb[1] / 2, rgb[2] / 2)
@@ -213,7 +217,11 @@ export class Building3D extends Element3D {
             if (this.elementModel.metrics.metrics.has(this.config.variables.intensity)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.intensity).value;
 
-                let intensity = 1 - this.normalize(metricValue, 100, 0, 0, 0.93); //TODO Need to change dynamically the parameters max_v and min_v
+                const configSpec = UIController.config.metrics.get(this.config.variables.intensity) || new MetricSpec();
+                let intensity = 1 - this.normalize(metricValue, configSpec.max, configSpec.min, 0, 0.93);
+                if(configSpec.higherIsBetter){
+                    intensity =  1 - intensity;
+                }
 
                 let hsv = this.rgb2Hsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
                 let rgb = this.hsv2Rgb(hsv[0], hsv[1], intensity)
@@ -229,9 +237,14 @@ export class Building3D extends Element3D {
             if (this.elementModel.metrics.metrics.has(this.config.variables.crack)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.crack).value;
 
-                let intensity = this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
+                const configSpec = UIController.config.metrics.get(this.config.variables.crack) || new MetricSpec();
+                let crack = this.normalize(metricValue, configSpec.max, configSpec.min, 0, 1);
+                if(configSpec.higherIsBetter){
+                    crack =  1 - crack;
+                }
 
-                let level = Math.floor(intensity / 0.125)
+                const numberOfLevels = 8;
+                const level = Math.floor(crack * numberOfLevels);
                 if (level > 0 && level < 8) {
                     mat.diffuseTexture = new Texture("./images/crack/level" + level + ".png", this.scene);
                 } else if (level >= 8){
@@ -560,8 +573,8 @@ export class Building3D extends Element3D {
 
     public normalize(val, max_v, min_v, min, max): number {
         let n = ((val - min_v) / (max_v - min_v))
-        n = Math.max(min_v, n)
-        n = Math.min(max_v, n)
+        n = Math.max(min, n)
+        n = Math.min(max, n)
 
         let c = (n * (max - min)) + min
         c = Math.max(min, c)

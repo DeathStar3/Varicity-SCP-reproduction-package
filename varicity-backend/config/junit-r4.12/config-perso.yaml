@@ -74,6 +74,7 @@ variables: #variables to be used for width and height of a building
   height: "nbConstructorVariants"
   intensity: "complexity"
   fade: "coverage"
+  crack: ""
 
 orientation: "OUT"
 
