@@ -51,18 +51,11 @@ public class NeoGraph {
     public NeoGraph(Configuration configuration) {
         driver = GraphDatabase.driver(configuration.getNeo4JBoltAddress(), AuthTokens.basic(configuration.getNeo4JUser(), configuration.getNeo4JPassword()));
         this.configuration=configuration;
-
-
-
-
     }
 
     public NeoGraph(Driver driver,Configuration configuration) {
         this.driver = driver;
         this.configuration=configuration;
-
-
-
     }
 
     public static String getClauseForNodesMatchingLabels(String nodeName, NodeType... types) {

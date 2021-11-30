@@ -36,7 +36,8 @@ jobs:
       - name: Building symfinder engine
         run: docker build -f docker/symfinder/Dockerfile -t deathstar3/symfinder-engine:local .
       - name: Building sources fetcher
-        run: docker build -f docker/sources_fetcher/Dockerfile -t deathstar3/symfinder-fetcher:local .
+        working-directory: ./docker/sources_fetcher
+        run: docker build -f Dockerfile -t deathstar3/symfinder-fetcher:local .
       - name: Building symfinder runner
         run: docker build -f docker/runner/Dockerfile -t deathstar3/symfinder-runner:local .
       - name: Building Neo4j procedures

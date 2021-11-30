@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - us/54-call-symfinder
+  workflow_dispatch:
 jobs:
   sourcesfetchertest:
     runs-on: ubuntu-latest

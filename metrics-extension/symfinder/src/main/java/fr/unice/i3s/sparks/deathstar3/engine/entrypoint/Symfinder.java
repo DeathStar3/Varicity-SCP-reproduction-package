@@ -135,10 +135,7 @@ public class Symfinder {
         long symfinderExecutionTime = System.currentTimeMillis() - symfinderStartTime;
         logger.printf(Level.getLevel("MY_LEVEL"), "Total execution time: %s", formatExecutionTime(symfinderExecutionTime));
 
-
         return result;
-
-
     }
 
     private void visitPackage(String classpathPath, List<File> files, ASTVisitor visitor) throws IOException {
