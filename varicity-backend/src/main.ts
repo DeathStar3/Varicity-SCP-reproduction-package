@@ -13,7 +13,7 @@ const run = async () => {
     //Start server
     await startServer();
     //Start file system watcher
-    await fsWatcherService.instantiateWatcher();
+    //await fsWatcherService.instantiateWatcher();
 
 }
 run().catch(console.error)

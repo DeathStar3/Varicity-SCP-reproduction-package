@@ -17,11 +17,13 @@ export class ProjectController {
 
     static createProjectSelector(keys: string[]) {
         let parent = document.getElementById("project_selector");
-        parent.innerHTML = "Project selection";
+        
 
         for (let key of keys) {
-            let node = document.createElement("div");
-            node.innerHTML = " - " + key;
+            let node = document.createElement("option") as HTMLOptionElement;
+            node.value=key
+            node.text= key;
+            
             parent.appendChild(node);
 
             // projets en vision evostreet

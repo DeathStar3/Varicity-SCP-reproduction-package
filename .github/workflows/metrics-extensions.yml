@@ -2,9 +2,9 @@ name: Testing metrics extension
 on:
   push:
     branches:
-      - us-26-automated-build
+      - us/48-java-source-fetcher-min
 jobs:
-  compiletests:
+  sourcesfetchertest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,17 +14,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
-
-      - name: Test Compiler on JfreeChart
-        working-directory: ./metrics-extensions/integrations-test/test-jfreechart
-        run: bash runtest.sh
-      - name: Test Compiler on Junit4
-        working-directory: ./metrics-extensions/integrations-test/test-junit4
-        run: bash runtest.sh
-#      - name: Test Compiler on ArgoUML-SPL
-#        working-directory: ./metrics-extensions/integrations-test/test-argouml-spl
-#        run: bash runtest.sh
-
-
-
-
+      - name: Test source fetcher clone method
+        working-directory: ./metrics-extension
+        run: mvn clean package -Dtest=SourceFetcherTest#cloneRepositoryTest -DfailIfNoTests=false
