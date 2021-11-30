@@ -30,11 +30,11 @@ jobs:
           cache: maven
 
       - name: Test Whole Chain on Cookie Factory
-        working-directory: ./metrics-extension-integration-tests/test-cookie-factory
+        working-directory: ./metrics-extension/integration-tests/test-cookie-factory
         run: bash runtest.sh
       - name: Non Regression Test on Cookie Factory
         working-directory: ./metrics-extension-integration-tests/test-non-regression-cf
         run: bash runtest.sh
       - name: Test Possibility to Skip Symfinder #58
-        working-directory: ./metrics-extension-integration-tests/test-skip-symfinder-engine
+        working-directory: ./metrics-extension/integration-tests/test-non-regression-cf
         run: bash runtest.sh

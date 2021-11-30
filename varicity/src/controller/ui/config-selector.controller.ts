@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
 import { EntitiesList } from "../../model/entitiesList";
 import { ProjectService } from "../../services/project.service";
 import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";

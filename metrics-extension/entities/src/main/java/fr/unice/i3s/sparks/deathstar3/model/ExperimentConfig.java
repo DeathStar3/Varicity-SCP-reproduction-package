@@ -47,11 +47,10 @@ public class ExperimentConfig {
     private String buildEnvTag;
     private String buildCmd;
     /**
-     * whether ther build command contains a sonar; eg: mvn clean package
+     * whether the build command contains a sonar; eg: mvn clean package
      * sonar:sonar
      */
     private boolean buildCmdIncludeSonar;
-
     private boolean sonarqubeNeeded = false;
     private String outputPath = "generated_visualizations/data/externals"; // Optional
     
@@ -64,9 +63,7 @@ public class ExperimentConfig {
         this.path = path;
         this.buildEnv = buildEnv;
         this.buildEnvTag = buildEnvTag;
-
         this.buildCmd = buildCmd;
-
         this.buildCmdIncludeSonar = buildCmdIncludeSonar;
     }
 
