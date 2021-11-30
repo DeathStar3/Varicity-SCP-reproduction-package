@@ -26,7 +26,6 @@ export class ProjectController {
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
-                this.projectListener.projectChange(key);
                 this.previousParser = new VPVariantsStrategy();
                 this.filename = key;
                 this.reParse();
