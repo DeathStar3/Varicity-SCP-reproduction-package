@@ -70,5 +70,96 @@ public class MetricExtensionEntrypointTest {
 
     }
 
+    @Test
+    void whenSkipSymfinderIsTrueAndMetricSourceIsInriaSonarQube() throws IOException {
+        ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
+                new HotspotsParameters(20, 5), "");
+
+
+        ExperimentConfig iutas201 = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+                getResourceAsStream("iutas201_vehicule.yaml").readAllBytes())).get(0);
+
+        System.out.println(iutas201);
+
+
+        Assertions.assertDoesNotThrow(() -> {
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(iutas201, parametersObject);
+
+            System.out.println(experimentResult);
+            Assertions.assertNotNull(experimentResult);
+            Assertions.assertNotNull(experimentResult.symfinderResult());
+            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
+            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
+            
+            
+            Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
+
+            Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
+
+            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());
+
+        });
+
+
+    }
+
+    @Test
+    void whenSkipSymfinderIsTrueAndMetricSourceIsLocalSonarQube() throws IOException {
+        ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
+                new HotspotsParameters(20, 5), "");
+
+
+        ExperimentConfig regatta = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+                getResourceAsStream("regatta.yaml").readAllBytes())).get(0);
+
+        System.out.println(regatta);
+        
+        Assertions.assertDoesNotThrow(() -> {
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject);
+
+            System.out.println(experimentResult);
+
+            Assertions.assertNotNull(experimentResult);
+            Assertions.assertNotNull(experimentResult.symfinderResult());
+            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
+            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
+            
+            
+            Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
+            Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
+            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());
+
+        });
+    }
+
+
+    @Test
+    void runExperimentOnRegattaWithSymfinderAndSonarqube() throws IOException {
+        ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
+                new HotspotsParameters(20, 5), "");
+
+
+        ExperimentConfig regatta = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+                getResourceAsStream("regatta-with-symfinder.yaml").readAllBytes())).get(0);
+
+        System.out.println(regatta);
+
+        Assertions.assertDoesNotThrow(() -> {
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject);
+
+            System.out.println(experimentResult);
+
+            /*Assertions.assertNotNull(experimentResult);
+            Assertions.assertNotNull(experimentResult.symfinderResult());
+            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
+            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
+            
+            
+            Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
+            Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
+            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());*/
+
+        });
+    }
 
 }
