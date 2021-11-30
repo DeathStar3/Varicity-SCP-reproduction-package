@@ -50,13 +50,10 @@ public class ExperimentConfig {
      * sonar:sonar
      */
     private boolean buildCmdIncludeSonar;
-
     private boolean sonarqubeNeeded = false;
-
     private String outputPath = "generated_visualizations/data/externals"; // Optional
-    @JsonProperty("source-code-path")
     private String sourceCodePath = "sources"; // Optional
-    @JsonProperty("sources")
+    
     private List<MetricSource> sources;
 
     public ExperimentConfig(String projectName, String path, String buildEnv, String buildEnvTag,
@@ -65,9 +62,7 @@ public class ExperimentConfig {
         this.path = path;
         this.buildEnv = buildEnv;
         this.buildEnvTag = buildEnvTag;
-
         this.buildCmd = buildCmd;
-
         this.buildCmdIncludeSonar = buildCmdIncludeSonar;
     }
 
