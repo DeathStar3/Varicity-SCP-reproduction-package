@@ -96,7 +96,7 @@ export class ConfigService {
         fs.writeFile(path.join(pathDirToConfig, filename + ".yaml"),  doc.toString(), err => {
             if (err) {
                 console.error(err)
-                return
+                return;
             }
             //file written successfully
         })

@@ -20,15 +20,13 @@ public class CommandScheduler {
             for (MetricSource source : config.getSources()) {
                 if (source.isEnabled()) {
 
-                    Thread t = new Thread() {
-                        public void run() {
+                    Thread t = new Thread(() -> {
 
-                            new CommandRunner(source.getWorkingDirectory(), source.getShellLocation(), source.getCommands()).execute();
-                            log.info("All commands from " + config.getProjectName() + ":" + source.getName() + " were executed");
+                        new CommandRunner(source.getWorkingDirectory(), source.getShellLocation(), source.getCommands()).execute();
+                        log.info("All commands from " + config.getProjectName() + ":" + source.getName() + " were executed");
 
-                            metricGatherer.gatherMetrics(config.getProjectName(), config.getOutputPath(), source);
-                        }
-                    };
+                        metricGatherer.gatherMetrics(config.getProjectName(), config.getOutputPath(), source);
+                    });
                     threads.add(t);
                 }
             }

@@ -3,8 +3,8 @@ import { EntitiesList } from "../../model/entitiesList";
 import { ProjectService } from "../../services/project.service";
 import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
 import { ConfigLoader } from "../parser/configLoader";
-import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from '../parser/strategies/parsing.strategy.interface';
+import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { UIController } from "./ui.controller";
 
 export class ProjectController {
@@ -26,6 +26,7 @@ export class ProjectController {
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
+                this.projectListener.projectChange(key);
                 this.previousParser = new VPVariantsStrategy();
                 this.filename = key;
                 this.reParse();
