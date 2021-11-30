@@ -28,5 +28,5 @@ for /f "usebackq tokens=*" %%a in (`git rev-parse --verify HEAD`) do @set symfin
 SET TAG=vissoft2021
 SET SYMFINDER_COMPOSE_FILE=symfinder-compose.yaml
 
-docker run -it -v %cd%\experiments:/experiments -v %cd%\symfinder.yaml:/symfinder.yaml -v %cd%\resources:/resources -v %cd%\d3:/d3 -v %cd%\generated_visualizations:/generated_visualizations --user 1000:1000 -e SYMFINDER_VERSION=%symfinder_version% -e SYMFINDER_PROJECTS="%*" --rm deathstar3/symfinder-fetcher:%TAG%
+docker run -it -v "%cd%"\experiments:/experiments -v "%cd%"\symfinder.yaml:/symfinder.yaml -v "%cd%"\resources:/resources -v "%cd%"\d3:/d3 -v "%cd%"\generated_visualizations:/generated_visualizations --user 1000:1000 -e SYMFINDER_VERSION=%symfinder_version% -e SYMFINDER_PROJECTS="%*" --rm deathstar3/symfinder-fetcher:%TAG%
 rerun.bat %*
