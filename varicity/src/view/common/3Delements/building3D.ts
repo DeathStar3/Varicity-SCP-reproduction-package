@@ -11,6 +11,7 @@ import {
     MeshBuilder,
     Scene,
     StandardMaterial,
+    Texture,
     Vector3
 } from '@babylonjs/core';
 import {Building} from '../../../model/entities/building.interface';
@@ -221,6 +222,20 @@ export class Building3D extends Element3D {
                 mat.ambientColor = new Color3(rgb[0], rgb[1], rgb[2])
                 mat.diffuseColor = new Color3(rgb[0], rgb[1], rgb[2])
                 mat.emissiveColor = new Color3(rgb[0], rgb[1], rgb[2])
+            }
+        }
+
+        // New way to display a metric: building cracks
+        if (this.config.variables.crack) {
+            if (this.elementModel.metrics.metrics.has(this.config.variables.crack)) { //Check if the metric wanted exist
+                const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.crack).value;
+
+                let intensity = 1 - this.normalize(metricValue, 100, 0, 0, 1); //TODO Need to change dynamically the parameters max_v and min_v
+
+                let level = Math.floor(intensity / 0.125)
+                if (level > 0 && level < 8) {
+                    mat.diffuseTexture = new Texture("./images/crack/level" + level + ".png", this.scene);
+                }
             }
         }
 
