@@ -128,15 +128,6 @@ export class Config implements ConfigInterface {
             }
             return CriticalLevel.RERENDER_SCENE;
         }
-<<<<<<< HEAD
-=======
-        if (fields.includes("name")) {
-            if (Array.isArray(value)) {
-                config.name = value[1];
-                return CriticalLevel.LOW_IMPACT;
-            }
-        }
->>>>>>> ab4344f... start integration with symfinder, compiler metric gatherer ...
         if (fields.includes("description")) {
             if (Array.isArray(value)) {
                 config.description = value[1];

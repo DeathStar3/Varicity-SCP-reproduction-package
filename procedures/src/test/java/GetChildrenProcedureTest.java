@@ -1,4 +1,7 @@
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.neo4j.driver.*;
 import org.neo4j.driver.types.MapAccessor;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -8,19 +11,17 @@ import org.neo4j.harness.internal.InProcessNeo4jBuilder;
 import java.util.List;
 import java.util.Map;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.neo4j.driver.Values.parameters;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GetChildrenProcedureTest {
-    private  final Config driverConfig = Config.defaultConfig();
-    private  Neo4j embeddedDatabaseServer;
-    protected GraphDatabaseService graphDatabaseService;
+    private static final Config driverConfig = Config.defaultConfig();
+    private static Neo4j embeddedDatabaseServer;
+    protected static GraphDatabaseService graphDatabaseService;
 
     @BeforeAll
-    public void setUp() {
+    static void setUp() {
         embeddedDatabaseServer = new InProcessNeo4jBuilder().withProcedure(GetChildrenProcedure.class).build();
         graphDatabaseService = embeddedDatabaseServer.defaultDatabaseService();
     }
@@ -31,7 +32,7 @@ public class GetChildrenProcedureTest {
     }
 
     @AfterAll
-    public void tearAll() {
+    public static void tearAll() {
         embeddedDatabaseServer.close();
     }
 

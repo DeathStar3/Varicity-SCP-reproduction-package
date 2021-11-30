@@ -6,7 +6,6 @@
     "noResolve": false,
     "noImplicitAny": false,
     "sourceMap": true,
-    
     "downlevelIteration": true,
     "moduleResolution": "node",
     "preserveConstEnums": true,
