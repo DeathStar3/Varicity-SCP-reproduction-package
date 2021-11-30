@@ -133,4 +133,33 @@ public class MetricExtensionEntrypointTest {
     }
 
 
+    @Test
+    void runExperimentOnRegattaWithSymfinderAndSonarqube() throws IOException {
+        ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
+                new HotspotsParameters(20, 5), "");
+
+
+        ExperimentConfig regatta = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+                getResourceAsStream("regatta-with-symfinder.yaml").readAllBytes())).get(0);
+
+        System.out.println(regatta);
+
+        Assertions.assertDoesNotThrow(() -> {
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject);
+
+            System.out.println(experimentResult);
+
+            /*Assertions.assertNotNull(experimentResult);
+            Assertions.assertNotNull(experimentResult.symfinderResult());
+            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
+            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
+            
+            
+            Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
+            Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
+            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());*/
+
+        });
+    }
+
 }
