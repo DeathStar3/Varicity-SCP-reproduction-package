@@ -24,6 +24,8 @@ export class ProjectService {
     public loadProject(projectName: string): JsonInputInterface {
         const projectPaths = this.getProjectPaths(projectName);
 
+        // TODO save the merged file instead of re-parsing it every time
+
         // fetch SymFinder input json
         let symfinderObj = ProjectService.getJsonFromDisk(projectPaths.symFinderFilePath) as JsonInputInterface;
 
@@ -98,4 +100,19 @@ export class ProjectService {
         return new DisksProjectPaths(symFinderFilesPath, externalFilesPaths);
     }
 
+    public getProjectMetrics(projectName): string[] {
+        const project = this.loadProject(projectName);
+        let metrics = new Set<string>();
+
+        // TODO save in DB after first time
+        project.nodes.forEach(node => {
+            if(node.additionalMetrics !== undefined){
+                node.additionalMetrics.forEach(metric => {
+                    metrics.add(metric.name);
+                })
+            }
+        })
+
+        return [...metrics.keys()];
+    }
 }

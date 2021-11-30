@@ -11,7 +11,6 @@ import {
     MeshBuilder,
     Scene,
     StandardMaterial,
-    Texture,
     Vector3
 } from '@babylonjs/core';
 import {Building} from '../../../model/entities/building.interface';

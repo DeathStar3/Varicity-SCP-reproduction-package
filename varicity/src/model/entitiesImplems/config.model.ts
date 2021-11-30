@@ -8,6 +8,18 @@ export enum CriticalLevel {
     REPARSE_DATA = 2
 }
 
+export class MetricSpec {
+    min: number;
+    max: number;
+    higherIsBetter: boolean;
+
+    constructor() {
+        this.min = 0
+        this.max = 100
+        this.higherIsBetter = false;
+    }
+}
+
 export class Config implements ConfigInterface {
 
     id?:string; //for persistence
@@ -45,6 +57,8 @@ export class Config implements ConfigInterface {
     parsing_mode: string;
     orientation: Orientation;
     default_level: number;
+
+    metrics: Map<string, MetricSpec>;
 
     constructor() { }
 
@@ -88,16 +102,20 @@ export class Config implements ConfigInterface {
                 return CriticalLevel.RERENDER_SCENE;
             }
         }
+        if (fields.includes("metrics")) {
+            console.log(fields);
+            console.log(value);
+            if (Array.isArray(value)) {
+                if(fields[2] === "higherIsBetter"){
+                    config.metrics.get(fields[1])[fields[2]] = (value[1].toLowerCase() === 'true');
+                }else{
+                    config.metrics.get(fields[1])[fields[2]] = +value[1];
+                }
+                return CriticalLevel.RERENDER_SCENE;
+            }
+        }
         if (fields.includes("camera_data")){
             if (Array.isArray(value)) {
-
-                // let obj = config;
-                // for (let i = 0; i < fields.length - 1; i++) {
-                //     obj = config[fields[i]];
-                // }
-                // obj[fields.length - 1] = +value[1];
-
-
                 if(fields.length == 2){
                     config[fields[0]][fields[1]] = +value[1];
                 }else{
