@@ -113,14 +113,6 @@ export class Config implements ConfigInterface {
         }
         if (fields.includes("camera_data")){
             if (Array.isArray(value)) {
-
-                // let obj = config;
-                // for (let i = 0; i < fields.length - 1; i++) {
-                //     obj = config[fields[i]];
-                // }
-                // obj[fields.length - 1] = +value[1];
-
-
                 if(fields.length == 2){
                     config[fields[0]][fields[1]] = +value[1];
                 }else{
