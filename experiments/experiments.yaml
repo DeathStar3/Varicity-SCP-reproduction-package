@@ -1,3 +1,8 @@
+jmeter:
+  repositoryUrl: https://github.com/apache/jmeter
+  sourcePackage: .
+  tagIds:
+    - v5.4.1-rc2
 awt:
   repositoryUrl: https://github.com/JetBrains/jdk8u_jdk
   sourcePackage: src/share/classes/java/awt
