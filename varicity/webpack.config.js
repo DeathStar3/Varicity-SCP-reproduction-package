@@ -8,8 +8,8 @@ module.exports = {
 
     entry: {
       'main': path.resolve(appDirectory, "src/main.ts"),
-      //'parserTest':'./tests/parser.test.ts',
-      //'parserVPTest':'./tests/parserVP.test.ts',
+      'parserTest':'./tests/parser.test.ts',
+      'parserVPTest':'./tests/parserVP.test.ts',
       'login':path.resolve(appDirectory, 'src/controller/ui/login.controller.ts')
     },
     optimization: {
@@ -18,6 +18,7 @@ module.exports = {
         },
     },
     output: {
+      globalObject: 'this',
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
@@ -55,7 +56,6 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             chunks:['login'],
-            
             template: path.resolve(appDirectory, "public/index.html")
         }),
         new HtmlWebpackPlugin({
