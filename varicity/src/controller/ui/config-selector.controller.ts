@@ -17,8 +17,6 @@ export class ConfigSelectorController {
 
         this.filename = filename;
 
-
-
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
         inputElement.value = UIController.config.default_level.toString();
 
@@ -27,27 +25,31 @@ export class ConfigSelectorController {
             this.reParse();
         }
 
-        for (let config of configs) {
-            let node = document.createElement("option") as HTMLOptionElement;
-            node.textContent = config;
-            node.value = config;
-            parent.appendChild(node);
+        parent.addEventListener('change', function(event) {
+            const configName = (event.target as HTMLInputElement).value;
+            if(configName !== undefined){
+                ConfigSelectorController.defineConfig(configName);
 
-            // projets en vision evostreet
-            node.addEventListener("click", () => {
-                this.defineConfig(config);
-
-                parent.childNodes[0].nodeValue = "Config selection: " + config;
+                parent.childNodes[0].nodeValue = "Config selection: " + configName;
                 inputElement.value = UIController.config.default_level.toString();
 
-                this.reParse();
+                ConfigSelectorController.reParse();
+            }
+        });
 
-                // Uncomment below if want to have the config selector window closing on config selection
-                // /* @ts-ignore */
-                // for (let child of parent.children) {
-                //     child.style.display = "none";
-                // }
-            });
+        const configIndex = new Set<string>();
+        for (let i = 0; i < parent.children.length; i++) {
+            const child = parent.children[i];
+            configIndex.add(child.innerHTML);
+        }
+
+        for (let config of configs) {
+            if(!configIndex.has(config)){
+                let node = document.createElement("option") as HTMLOptionElement;
+                node.textContent = config;
+                node.value = config;
+                parent.appendChild(node);
+            }
         }
 
     }

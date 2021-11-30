@@ -36,7 +36,7 @@ export class SaveController {
 
             //Fetch input text and set it as Config's name
             axios.post(`${backendUrl}/projects/configs`, {...UIController.config, metrics: Object.fromEntries(UIController.config.metrics)}).then(response => {
-                console.log('Config saved successfully');
+                console.log('Config saved successfully', response.data);
                 UIController.config = response.data.config;
                 UIController.configName = response.data.filename;
                 UIController.configsName.push(UIController.configName);
