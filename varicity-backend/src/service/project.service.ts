@@ -100,6 +100,10 @@ export class ProjectService {
         return new DisksProjectPaths(symFinderFilesPath, externalFilesPaths);
     }
 
+    /**
+     * Get the external metric names from the project specified
+     * @param projectName
+     */
     public getProjectMetrics(projectName): string[] {
         const project = this.loadProject(projectName);
         let metrics = new Set<string>();

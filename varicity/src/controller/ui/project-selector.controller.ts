@@ -28,6 +28,7 @@ export class ProjectController {
 
             // projets en vision evostreet
             node.addEventListener("click", () => {
+                console.log("teeest")
                 this.previousParser = new VPVariantsStrategy();
                 this.filename = key;
                 this.reParse();
@@ -50,29 +51,10 @@ export class ProjectController {
                 }
                 run().then();
 
-                // this.projectListener.projectChange(key);
-
                 parent.childNodes[0].nodeValue = "Project selection: " + key;
-
-                /* @ts-ignore */
-                for (let child of parent.children) {
-                    child.style.display = "none";
-                }
             });
         }
-        /* @ts-ignore */
-        for (let child of parent.children) {
-            child.style.display = "none";
-        }
-        parent.onclick = (me) => {
-            if (me.target == parent) {
-                /* @ts-ignore */
-                for (let child of parent.children) {
-                    if (child.style.display == "block") child.style.display = "none";
-                    else child.style.display = "block";
-                }
-            }
-        }
+
     }
 
     public static reParse() {
