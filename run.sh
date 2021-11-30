@@ -38,7 +38,7 @@ ARGUMENT_LIST=(
 
 SYMFINDER_PROJECTS=()
 
-export TAG=vissoft2021
+export TAG=local
 export SYMFINDER_COMPOSE_FILE="symfinder-compose.yaml"
 
 create_directory resources
@@ -70,8 +70,9 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+
 echo "Using $TAG images"
 
-docker run -v $(pwd)/experiments:/experiments -v $(pwd)/symfinder.yaml:/symfinder.yaml -v $(pwd)/resources:/resources -v $(pwd)/d3:/d3 -v $(pwd)/generated_visualizations:/generated_visualizations --user $(id -u):$(id -g) -e SYMFINDER_VERSION=$(git rev-parse --short=0 HEAD) -e SYMFINDER_PROJECTS="${SYMFINDER_PROJECTS[@]}" --rm deathstar3/symfinder-fetcher:${TAG}
+#docker run -v $(pwd)/experiments:/experiments -v $(pwd)/symfinder.yaml:/symfinder.yaml -v $(pwd)/resources:/resources -v $(pwd)/d3:/d3 -v $(pwd)/generated_visualizations:/generated_visualizations --user $(id -u):$(id -g) -e SYMFINDER_VERSION=$(git rev-parse --short=0 HEAD) -e SYMFINDER_PROJECTS="${SYMFINDER_PROJECTS[@]}" --rm deathstar3/symfinder-fetcher:${TAG}
 
-./rerun.sh "$SYMFINDER_PROJECTS"
+#./rerun.sh "$SYMFINDER_PROJECTS"

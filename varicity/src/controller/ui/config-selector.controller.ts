@@ -1,11 +1,10 @@
-
 import { EntitiesList } from "../../model/entitiesList";
 import { ProjectService } from "../../services/project.service";
 import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
+import { ConfigLoader } from "../parser/configLoader";
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
 import { UIController } from "./ui.controller";
-import { ConfigLoader } from "../parser/configLoader";
 
 export class ConfigSelectorController {
 

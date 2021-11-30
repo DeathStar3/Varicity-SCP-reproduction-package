@@ -53,6 +53,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
                     displayAvailableMetrics(rootUrl, componentName);
                 }
                 Thread.currentThread().stop(); // Kill thread: an error occur
+                //TODO fix above
             }
 
             SonarResults sonarResultsTemp = objectMapper.readValue(json, SonarResults.class);

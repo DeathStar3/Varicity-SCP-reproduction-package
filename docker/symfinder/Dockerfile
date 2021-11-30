@@ -19,15 +19,15 @@
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
 
-FROM maven:3.6.1-jdk-13-alpine as building
+FROM maven:3.8.4-openjdk-17-slim as building
 ARG BUILD_PARAMS
 ARG SOURCES_PACKAGE
 ARG GRAPH_OUTPUT_PATH
-ADD src/ /src
-ADD pom.xml /pom.xml
+ADD metrics-extension/symfinder/src/ /src
+ADD metrics-extension/symfinder/pom.xml /pom.xml
 RUN mvn --no-transfer-progress clean install $BUILD_PARAMS
 
-FROM openjdk:14-jdk-alpine3.10
+FROM openjdk:17-alpine3.14
 RUN apk add --no-cache git
 COPY --from=building target/symfinder-1.0-SNAPSHOT-jar-with-dependencies.jar /symfinder.jar
 ADD docker/symfinder/exec_symfinder.sh /exec_symfinder.sh

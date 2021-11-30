@@ -2,7 +2,8 @@ name: Testing metrics extension
 on:
   push:
     branches:
-      - us/48-java-source-fetcher-min
+      - us/54-call-symfinder
+  workflow_dispatch:
 jobs:
   sourcesfetchertest:
     runs-on: ubuntu-latest
@@ -17,3 +18,21 @@ jobs:
       - name: Test source fetcher clone method
         working-directory: ./metrics-extension
         run: mvn clean package -Dtest=SourceFetcherTest#cloneRepositoryTest -DfailIfNoTests=false
+  configloadertests:
+    needs: [sourcesfetchertest]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: maven
+
+      - name: Test Whole Chain on Cookie Factory
+        working-directory: ./metrics-extension/integration-tests/test-cookie-factory
+        run: bash runtest.sh
+      - name: Non Regression Test on Cookie Factory
+        working-directory: ./metrics-extension/integration-tests/test-non-regression-cf
+        run: bash runtest.sh
