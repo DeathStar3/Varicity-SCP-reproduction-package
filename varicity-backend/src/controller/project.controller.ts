@@ -18,4 +18,9 @@ export class ProjectController {
     loadProject(@Param() params): JsonInputInterface {
         return this.projectService.loadProject(params.name);
     }
+
+    @Get('/projects/:name/metrics')
+    getProjectMetrics(@Param('name') params): string[] {
+        return this.projectService.getProjectMetrics(params);
+    }
 }

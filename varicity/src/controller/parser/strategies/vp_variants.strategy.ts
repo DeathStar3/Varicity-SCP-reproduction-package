@@ -5,10 +5,10 @@ import {LinkElement} from "../symfinder_elements/links/link.element";
 import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
 import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.model";
 import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInput.interface";
-import {Config} from "../../../model/entitiesImplems/config.model";
+import {Config, MetricSpec} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
-import {MetricObject} from "../../../model/entitiesImplems/metricObject.model";
+import {UIController} from "../../ui/ui.controller";
 
 export class VPVariantsStrategy implements ParsingStrategy {
     public parse(data: JsonInputInterface, config: Config, project: string) : EntitiesList {
@@ -17,6 +17,8 @@ export class VPVariantsStrategy implements ParsingStrategy {
 
         let nodesList: NodeElement[] = [];
         const apiList: NodeElement[] = [];
+        const metricsName = new Set<string>();
+
         data.nodes.forEach(n => {
             let node = new NodeElement(n.name);
 
@@ -44,6 +46,11 @@ export class VPVariantsStrategy implements ParsingStrategy {
             }
 
             node.fillMetricsFromNodeInterface(n);
+
+            node.metrics.metrics.forEach((metricObj, metricName) => {
+                metricsName.add(metricName);
+            })
+
             nodesList.push(node);
         });
 
@@ -54,6 +61,29 @@ export class VPVariantsStrategy implements ParsingStrategy {
         nodesList.forEach(n => {
             n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
         });
+
+        if(nodesList.length > 0){
+            let node =  [...nodesList][0];
+            node.metrics.metrics.forEach((v, k) => {
+                metricsName.add(v.name);
+            })
+        }
+
+        // init the metrics to a Map
+        if(config.metrics === undefined){
+            config.metrics = new Map<string, MetricSpec>();
+        }else if(!(config.metrics instanceof Map)){
+            config.metrics =  new Map(Object.entries(config.metrics));;
+        }
+
+        metricsName.forEach((v, k ) => {
+            // add a placeholder metric spec for the user to configure
+            if(!config.metrics.has(k)){
+                config.metrics.set(k, new MetricSpec())
+            }
+        })
+
+        UIController.createConfig(config);
 
         this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation);
         //console.log(nodesList.sort((a, b) => a.compositionLevel - b.compositionLevel));
@@ -70,6 +100,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
                     && !nodesList.map(no => no.name).includes(nod.name)
             ).forEach(n => {
                 let node = new NodeElement(n.name);
+
                 node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
                 const attr = n.attributes;
