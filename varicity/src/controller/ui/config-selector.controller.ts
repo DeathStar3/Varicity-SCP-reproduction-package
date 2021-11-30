@@ -5,7 +5,7 @@ import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
 import { UIController } from "./ui.controller";
-import {ConfigLoader} from "../parser/configLoader";
+import { ConfigLoader } from "../parser/configLoader";
 
 export class ConfigSelectorController {
 
@@ -18,7 +18,7 @@ export class ConfigSelectorController {
 
         this.filename = filename;
 
-        parent.innerHTML = "Config selection: " + ((UIController.configName !== undefined) ? UIController.configName : "[no config found]");
+
 
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
         inputElement.value = UIController.config.default_level.toString();
@@ -29,8 +29,9 @@ export class ConfigSelectorController {
         }
 
         for (let config of configs) {
-            let node = document.createElement("div");
-            node.innerHTML = " - " + config;
+            let node = document.createElement("option") as HTMLOptionElement;
+            node.textContent = config;
+            node.value = config;
             parent.appendChild(node);
 
             // projets en vision evostreet
@@ -50,19 +51,6 @@ export class ConfigSelectorController {
             });
         }
 
-        /* @ts-ignore */
-        for (let child of parent.children) {
-            child.style.display = "none";
-        }
-        parent.onclick = (me) => {
-            if (me.target == parent) {
-                /* @ts-ignore */
-                for (let child of parent.children) {
-                    if (child.style.display == "block") child.style.display = "none";
-                    else child.style.display = "block";
-                }
-            }
-        }
     }
 
     public static reParse() {
