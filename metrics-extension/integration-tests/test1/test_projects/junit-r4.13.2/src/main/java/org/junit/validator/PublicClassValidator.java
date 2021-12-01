@@ -9,7 +9,7 @@ import org.junit.runners.model.TestClass;
 
 /**
  * Validates that a {@link TestClass} is public.
- * 
+ *
  * @since 4.12
  */
 public class PublicClassValidator implements TestClassValidator {
@@ -17,10 +17,10 @@ public class PublicClassValidator implements TestClassValidator {
 
     /**
      * Validate that the specified {@link TestClass} is public.
-     * 
+     *
      * @param testClass the {@link TestClass} that is validated.
      * @return an empty list if the class is public or a list with a single
-     *         exception otherwise.
+     * exception otherwise.
      */
     public List<Exception> validateTestClass(TestClass testClass) {
         if (testClass.isPublic()) {

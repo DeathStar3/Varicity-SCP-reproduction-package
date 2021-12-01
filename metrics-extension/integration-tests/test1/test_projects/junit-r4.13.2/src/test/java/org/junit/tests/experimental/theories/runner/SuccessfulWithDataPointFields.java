@@ -150,23 +150,23 @@ public class SuccessfulWithDataPointFields {
         @DataPoint
         public static String B = "B";
 
-        @Before
-        public void incrementBefore() {
-            befores++;
-        }
-
         @BeforeClass
         public static void resetCalls() {
             befores = 0;
         }
 
-        @Theory
-        public void stringsAreOK(String string) {
-        }
-
         @AfterClass
         public static void calledTwice() {
             assertEquals(2, befores);
+        }
+
+        @Before
+        public void incrementBefore() {
+            befores++;
+        }
+
+        @Theory
+        public void stringsAreOK(String string) {
         }
     }
 
@@ -182,15 +182,15 @@ public class SuccessfulWithDataPointFields {
             tests = 0;
         }
 
+        @AfterClass
+        public static void calledTwice() {
+            assertEquals(1, tests);
+        }
+
         @Theory
         @Test
         public void stringsAreOK(String string) {
             tests++;
-        }
-
-        @AfterClass
-        public static void calledTwice() {
-            assertEquals(1, tests);
         }
     }
 

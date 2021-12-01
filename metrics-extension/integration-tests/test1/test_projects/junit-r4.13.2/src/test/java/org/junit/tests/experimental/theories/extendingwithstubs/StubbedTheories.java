@@ -24,11 +24,11 @@ public class StubbedTheories extends Theories {
     }
 
     public static class StubbedTheoryAnchor extends TheoryAnchor {
+        private List<GuesserQueue> queues = new ArrayList<GuesserQueue>();
+
         public StubbedTheoryAnchor(FrameworkMethod method, TestClass testClass) {
             super(method, testClass);
         }
-
-        private List<GuesserQueue> queues = new ArrayList<GuesserQueue>();
 
         @Override
         protected void handleAssumptionViolation(AssumptionViolatedException e) {

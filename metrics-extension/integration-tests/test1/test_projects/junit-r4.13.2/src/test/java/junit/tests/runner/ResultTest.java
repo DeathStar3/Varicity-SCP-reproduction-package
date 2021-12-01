@@ -68,11 +68,6 @@ public class ResultTest extends TestCase {
         assertResultReserializable(result, SerializationFormat.V4_13);
     }
 
-    private enum SerializationFormat {
-        V4_12,
-        V4_13
-    }
-
     private void assertResultSerializable(Result result) throws IOException, ClassNotFoundException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -83,7 +78,7 @@ public class ResultTest extends TestCase {
         Result fromStream = (Result) objectInputStream.readObject();
         assertSerializedCorrectly(result, fromStream, SerializationFormat.V4_13);
     }
- 
+
     private void assertResultReserializable(Result result, SerializationFormat resourceSerializationFormat)
             throws IOException, ClassNotFoundException {
         String resourceName = getName();
@@ -94,6 +89,50 @@ public class ResultTest extends TestCase {
 
         assertSerializedCorrectly(new ResultWithFixedRunTime(result),
                 fromStream, resourceSerializationFormat);
+    }
+
+    private void assertSerializedCorrectly(
+            Result result, Result fromStream, SerializationFormat serializationFormat) {
+        assertNotNull(fromStream);
+
+        // Exceptions don't implement equals() so we need to compare field by field
+        assertEquals("failureCount", result.getFailureCount(), fromStream.getFailureCount());
+        assertEquals("ignoreCount", result.getIgnoreCount(), fromStream.getIgnoreCount());
+
+        if (serializationFormat == SerializationFormat.V4_13) {
+            // assumption failures are serialized
+            assertEquals("assumptionFailureCount",
+                    result.getAssumptionFailureCount(),
+                    fromStream.getAssumptionFailureCount());
+        } else {
+            // assumption failures were not serialized
+            try {
+                fromStream.getAssumptionFailureCount();
+                fail("UnsupportedOperationException expected");
+            } catch (UnsupportedOperationException expected) {
+            }
+        }
+
+        assertEquals("runTime", result.getRunTime(), fromStream.getRunTime());
+        assertEquals("failures", result.getFailures().size(), fromStream.getFailures().size());
+        int index = 0;
+        for (Failure failure : result.getFailures()) {
+            Failure failureFromStream = fromStream.getFailures().get(index);
+            String messagePrefix = String.format("failures[%d]", index++);
+            assertEquals(messagePrefix + ".description",
+                    failure.getDescription(), failureFromStream.getDescription());
+            Throwable exception = failure.getException();
+            Throwable exceptionFromStream = failureFromStream.getException();
+            assertEquals(messagePrefix + ".exception",
+                    exception.getClass(), exceptionFromStream.getClass());
+            assertEquals(messagePrefix + ".exception",
+                    exception.getMessage(), exceptionFromStream.getMessage());
+        }
+    }
+
+    private enum SerializationFormat {
+        V4_12,
+        V4_13
     }
 
     public static class AssumptionFailedTest {
@@ -145,45 +184,6 @@ public class ResultTest extends TestCase {
         @Override
         public int getAssumptionFailureCount() {
             return delegate.getAssumptionFailureCount();
-        }
-    }
-
-    private void assertSerializedCorrectly(
-            Result result, Result fromStream, SerializationFormat serializationFormat) {
-        assertNotNull(fromStream);
-
-        // Exceptions don't implement equals() so we need to compare field by field
-        assertEquals("failureCount", result.getFailureCount(), fromStream.getFailureCount());
-        assertEquals("ignoreCount", result.getIgnoreCount(), fromStream.getIgnoreCount());
-
-        if (serializationFormat == SerializationFormat.V4_13) {
-            // assumption failures are serialized
-            assertEquals("assumptionFailureCount",
-                    result.getAssumptionFailureCount(),
-                    fromStream.getAssumptionFailureCount());
-        } else {
-            // assumption failures were not serialized
-            try {
-                fromStream.getAssumptionFailureCount();
-                fail("UnsupportedOperationException expected");
-            } catch (UnsupportedOperationException expected) {
-            }
-        }
-
-        assertEquals("runTime", result.getRunTime(), fromStream.getRunTime());
-        assertEquals("failures", result.getFailures().size(), fromStream.getFailures().size());
-        int index = 0;
-        for (Failure failure : result.getFailures()) {
-            Failure failureFromStream = fromStream.getFailures().get(index);
-            String messagePrefix = String.format("failures[%d]", index++);
-            assertEquals(messagePrefix + ".description",
-                    failure.getDescription(), failureFromStream.getDescription());
-            Throwable exception = failure.getException();
-            Throwable exceptionFromStream = failureFromStream.getException();
-            assertEquals(messagePrefix + ".exception",
-                    exception.getClass(), exceptionFromStream.getClass());
-            assertEquals(messagePrefix + ".exception",
-                    exception.getMessage(), exceptionFromStream.getMessage());
         }
     }
 }

@@ -101,7 +101,7 @@ public class RunListener {
      * Called when an atomic test is about to be started.
      *
      * @param description the description of the test that is about to be run
-     * (generally a class and method name)
+     *                    (generally a class and method name)
      */
     public void testStarted(Description description) throws Exception {
     }
@@ -136,7 +136,7 @@ public class RunListener {
      * false
      *
      * @param failure describes the test that failed and the
-     * {@link org.junit.AssumptionViolatedException} that was thrown
+     *                {@link org.junit.AssumptionViolatedException} that was thrown
      */
     public void testAssumptionFailure(Failure failure) {
     }

@@ -28,13 +28,17 @@ public class GraphBuilderVisitor extends ImportsVisitor {
         super(neoGraph);
     }
 
+    public static int getNbCorrectedInheritanceLinks() {
+        return nbCorrectedInheritanceLinks;
+    }
+
     @Override
     public boolean visit(TypeDeclaration type) {
         if (super.visit(type)) {
             ITypeBinding classBinding = type.resolveBinding();
             String thisClassName = classBinding.getQualifiedName();
             logger.debug("Class: " + thisClassName);
-            Optional <Node> thisNode = classBinding.isInterface() ? neoGraph.getInterfaceNode(thisClassName) : neoGraph.getClassNode(thisClassName);
+            Optional<Node> thisNode = classBinding.isInterface() ? neoGraph.getInterfaceNode(thisClassName) : neoGraph.getClassNode(thisClassName);
             if (thisNode.isPresent()) {
                 // Link to superclass if exists
                 ITypeBinding superclassType = classBinding.getSuperclass();
@@ -54,9 +58,9 @@ public class GraphBuilderVisitor extends ImportsVisitor {
 
     // TODO: 4/1/19 functional tests : imports from different packages
     private void createImportedClassNode(String thisClassName, Node thisNode, ITypeBinding importedClassType, EntityType entityType, RelationType relationType, String name) {
-        Optional <String> myImportedClass = getClassFullName(importedClassType);
+        Optional<String> myImportedClass = getClassFullName(importedClassType);
         String qualifiedName = getClassBaseName(importedClassType.getQualifiedName());
-        if (myImportedClass.isPresent() && ! myImportedClass.get().equals(qualifiedName)) {
+        if (myImportedClass.isPresent() && !myImportedClass.get().equals(qualifiedName)) {
             nbCorrectedInheritanceLinks++;
             logger.debug(String.format("DIFFERENT %s FULL NAMES FOUND FOR CLASS %s: \n" +
                     "JDT qualified name: %s\n" +
@@ -67,10 +71,5 @@ public class GraphBuilderVisitor extends ImportsVisitor {
         // Therefore, it is considered as out of scope.
         Node superclassNode = neoGraph.getOrCreateNode(myImportedClass.orElse(qualifiedName), entityType, new EntityAttribute[]{EntityAttribute.OUT_OF_SCOPE}, new EntityAttribute[]{});
         neoGraph.linkTwoNodes(superclassNode, thisNode, relationType);
-    }
-
-
-    public static int getNbCorrectedInheritanceLinks() {
-        return nbCorrectedInheritanceLinks;
     }
 }

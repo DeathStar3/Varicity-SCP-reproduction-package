@@ -27,6 +27,56 @@ public class TimeoutRuleTest {
 
     private static volatile boolean run4done = false;
 
+    @Before
+    public void before() {
+        run4done = false;
+        run1Lock.lock();
+    }
+
+    @After
+    public void after() {
+        // set run4done to make sure that the thread won't continue at run4()
+        run4done = true;
+        run1Lock.unlock();
+    }
+
+    @Test
+    public void timeUnitTimeout() {
+        HasGlobalTimeUnitTimeout.logger.setLength(0);
+        Result result = JUnitCore.runClasses(HasGlobalTimeUnitTimeout.class);
+        assertEquals(6, result.getFailureCount());
+        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run1"));
+        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run2"));
+        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run3"));
+        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run4"));
+        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run5"));
+        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run6"));
+    }
+
+    @Test
+    public void longTimeout() {
+        HasGlobalLongTimeout.logger.setLength(0);
+        Result result = JUnitCore.runClasses(HasGlobalLongTimeout.class);
+        assertEquals(6, result.getFailureCount());
+        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run1"));
+        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run2"));
+        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run3"));
+        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run4"));
+        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run5"));
+        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run6"));
+    }
+
+    @Test
+    public void nullTimeUnit() {
+        Result result = JUnitCore.runClasses(HasNullTimeUnit.class);
+        assertEquals(1, result.getFailureCount());
+        Failure failure = result.getFailures().get(0);
+        assertThat(failure.getException().getMessage(),
+                containsString("Invalid parameters for Timeout"));
+        Throwable cause = failure.getException().getCause();
+        assertThat(cause.getMessage(), containsString("TimeUnit cannot be null"));
+    }
+
     public abstract static class AbstractTimeoutTest {
         public static final StringBuffer logger = new StringBuffer();
 
@@ -99,64 +149,14 @@ public class TimeoutRuleTest {
         @Rule
         public final TestRule globalTimeout = new Timeout(200, TimeUnit.MILLISECONDS);
     }
-    
+
     public static class HasNullTimeUnit {
 
         @Rule
         public final TestRule globalTimeout = new Timeout(200, null);
-        
+
         @Test
         public void wouldPass() {
         }
-    }
-
-    @Before
-    public void before() {
-        run4done = false;
-        run1Lock.lock();
-    }
-
-    @After
-    public void after() {
-        // set run4done to make sure that the thread won't continue at run4()
-        run4done = true;
-        run1Lock.unlock();
-    }
-
-    @Test
-    public void timeUnitTimeout() {
-        HasGlobalTimeUnitTimeout.logger.setLength(0);
-        Result result = JUnitCore.runClasses(HasGlobalTimeUnitTimeout.class);
-        assertEquals(6, result.getFailureCount());
-        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run1"));
-        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run2"));
-        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run3"));
-        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run4"));
-        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run5"));
-        assertThat(HasGlobalTimeUnitTimeout.logger.toString(), containsString("run6"));
-    }
-
-    @Test
-    public void longTimeout() {
-        HasGlobalLongTimeout.logger.setLength(0);
-        Result result = JUnitCore.runClasses(HasGlobalLongTimeout.class);
-        assertEquals(6, result.getFailureCount());
-        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run1"));
-        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run2"));
-        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run3"));
-        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run4"));
-        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run5"));
-        assertThat(HasGlobalLongTimeout.logger.toString(), containsString("run6"));
-    }
-
-    @Test
-    public void nullTimeUnit() {
-        Result result = JUnitCore.runClasses(HasNullTimeUnit.class);
-        assertEquals(1, result.getFailureCount());
-        Failure failure = result.getFailures().get(0);
-        assertThat(failure.getException().getMessage(),
-                containsString("Invalid parameters for Timeout"));
-        Throwable cause = failure.getException().getCause();
-        assertThat(cause.getMessage(), containsString("TimeUnit cannot be null"));
     }
 }

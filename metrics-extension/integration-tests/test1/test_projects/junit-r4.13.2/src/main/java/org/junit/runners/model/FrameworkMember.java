@@ -13,7 +13,7 @@ public abstract class FrameworkMember<T extends FrameworkMember<T>> implements
     abstract boolean isShadowedBy(T otherMember);
 
     T handlePossibleBridgeMethod(List<T> members) {
-        for (int i = members.size() - 1; i >=0; i--) {
+        for (int i = members.size() - 1; i >= 0; i--) {
             T otherMember = members.get(i);
             if (isShadowedBy(otherMember)) {
                 if (otherMember.isBridgeMethod()) {

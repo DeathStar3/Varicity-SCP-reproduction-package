@@ -24,7 +24,7 @@ public class Computer {
      * Throws an InitializationError if Runner construction fails
      */
     public Runner getSuite(final RunnerBuilder builder,
-            Class<?>[] classes) throws InitializationError {
+                           Class<?>[] classes) throws InitializationError {
         return new Suite(new RunnerBuilder() {
             @Override
             public Runner runnerForClass(Class<?> testClass) throws Throwable {

@@ -32,26 +32,6 @@ import org.junit.runners.model.Statement;
 public class ExternalResourceRuleTest {
     private static String callSequence;
 
-    public static class UsesExternalResource {
-        @Rule
-        public ExternalResource resource = new ExternalResource() {
-            @Override
-            protected void before() throws Throwable {
-                callSequence += "before ";
-            }
-
-            @Override
-            protected void after() {
-                callSequence += "after ";
-            }
-        };
-
-        @Test
-        public void testFoo() {
-            callSequence += "test ";
-        }
-    }
-
     @Test
     public void externalResourceGeneratesCorrectSequence() {
         callSequence = "";
@@ -80,29 +60,6 @@ public class ExternalResourceRuleTest {
                     containsString("simulated test failure"),
                     containsString("simulating resource tear down failure")
             ));
-        }
-    }
-
-    public static class TestFailsAndTwoClosingResourcesFail {
-        @Rule
-        public ExternalResource resourceRule1 = new ExternalResource() {
-            @Override
-            protected void after() {
-                throw new RuntimeException("simulating resource1 tear down failure");
-            }
-        };
-
-        @Rule
-        public ExternalResource resourceRule2 = new ExternalResource() {
-            @Override
-            protected void after() {
-                throw new RuntimeException("simulating resource2 tear down failure");
-            }
-        };
-
-        @Test
-        public void failingTest() {
-            throw new RuntimeException("simulated test failure");
         }
     }
 
@@ -164,5 +121,48 @@ public class ExternalResourceRuleTest {
     private Matcher<? super List<Throwable>> hasItems(
             Matcher<? super Throwable> one, Matcher<? super Throwable> two) {
         return CoreMatchers.hasItems(one, two);
+    }
+
+    public static class UsesExternalResource {
+        @Rule
+        public ExternalResource resource = new ExternalResource() {
+            @Override
+            protected void before() throws Throwable {
+                callSequence += "before ";
+            }
+
+            @Override
+            protected void after() {
+                callSequence += "after ";
+            }
+        };
+
+        @Test
+        public void testFoo() {
+            callSequence += "test ";
+        }
+    }
+
+    public static class TestFailsAndTwoClosingResourcesFail {
+        @Rule
+        public ExternalResource resourceRule1 = new ExternalResource() {
+            @Override
+            protected void after() {
+                throw new RuntimeException("simulating resource1 tear down failure");
+            }
+        };
+
+        @Rule
+        public ExternalResource resourceRule2 = new ExternalResource() {
+            @Override
+            protected void after() {
+                throw new RuntimeException("simulating resource2 tear down failure");
+            }
+        };
+
+        @Test
+        public void failingTest() {
+            throw new RuntimeException("simulated test failure");
+        }
     }
 }

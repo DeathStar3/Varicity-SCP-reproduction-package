@@ -11,12 +11,6 @@ import junit.framework.TestResult;
  */
 public class ActiveTestTest extends TestCase {
 
-    public static class SuccessTest extends TestCase {
-        @Override
-        public void runTest() {
-        }
-    }
-
     public void testActiveTest() {
         Test test = createActiveTestSuite();
         TestResult result = new TestResult();
@@ -59,6 +53,12 @@ public class ActiveTestTest extends TestCase {
             suite.addTest(new SuccessTest());
         }
         return suite;
+    }
+
+    public static class SuccessTest extends TestCase {
+        @Override
+        public void runTest() {
+        }
     }
 
 }

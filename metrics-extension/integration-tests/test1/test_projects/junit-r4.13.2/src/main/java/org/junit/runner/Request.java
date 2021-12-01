@@ -32,7 +32,7 @@ public abstract class Request {
      * This is done by filtering out all other tests. This method is used to support rerunning
      * single tests.
      *
-     * @param clazz the class of the test
+     * @param clazz      the class of the test
      * @param methodName the name of the test
      * @return a <code>Request</code> that will cause a single test be run
      */
@@ -68,7 +68,7 @@ public abstract class Request {
      * in a set of classes.
      *
      * @param computer Helps construct Runners from classes
-     * @param classes the classes containing the tests
+     * @param classes  the classes containing the tests
      * @return a <code>Request</code> that will cause all tests in the classes to be run
      */
     public static Request classes(Computer computer, Class<?>... classes) {
@@ -187,7 +187,7 @@ public abstract class Request {
      *     }
      *   }
      * }
-     *     
+     *
      * public static main() {
      *   new JUnitCore().run(Request.aClass(AllTests.class).orderWith(reverse()));
      * }

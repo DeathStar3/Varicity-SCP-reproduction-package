@@ -10,7 +10,7 @@ import java.util.List;
  * 10 Swiss francs gives a bag with 22 CHF and 14 USD. Due to
  * the deferred exchange rate conversion we can later value a
  * MoneyBag with different exchange rates.
- *
+ * <p>
  * A MoneyBag is represented as a list of Monies and provides
  * different constructors to create a MoneyBag.
  */

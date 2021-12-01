@@ -15,7 +15,7 @@ import org.junit.runners.model.TestClass;
 /**
  * An {@code AnnotationsValidator} validates all annotations of a test class,
  * including its annotated fields and methods.
- * 
+ *
  * @since 4.12
  */
 public final class AnnotationsValidator implements TestClassValidator {
@@ -25,15 +25,14 @@ public final class AnnotationsValidator implements TestClassValidator {
     /**
      * Validate all annotations of the specified test class that are be
      * annotated with {@link ValidateWith}.
-     * 
-     * @param testClass
-     *            the {@link TestClass} that is validated.
+     *
+     * @param testClass the {@link TestClass} that is validated.
      * @return the errors found by the validator.
      */
     public List<Exception> validateTestClass(TestClass testClass) {
-        List<Exception> validationErrors= new ArrayList<Exception>();
+        List<Exception> validationErrors = new ArrayList<Exception>();
         for (AnnotatableValidator<?> validator : VALIDATORS) {
-            List<Exception> additionalErrors= validator
+            List<Exception> additionalErrors = validator
                     .validateTestClass(testClass);
             validationErrors.addAll(additionalErrors);
         }
@@ -49,16 +48,16 @@ public final class AnnotationsValidator implements TestClassValidator {
                 AnnotationValidator validator, T annotatable);
 
         public List<Exception> validateTestClass(TestClass testClass) {
-            List<Exception> validationErrors= new ArrayList<Exception>();
+            List<Exception> validationErrors = new ArrayList<Exception>();
             for (T annotatable : getAnnotatablesForTestClass(testClass)) {
-                List<Exception> additionalErrors= validateAnnotatable(annotatable);
+                List<Exception> additionalErrors = validateAnnotatable(annotatable);
                 validationErrors.addAll(additionalErrors);
             }
             return validationErrors;
         }
 
         private List<Exception> validateAnnotatable(T annotatable) {
-            List<Exception> validationErrors= new ArrayList<Exception>();
+            List<Exception> validationErrors = new ArrayList<Exception>();
             for (Annotation annotation : annotatable.getAnnotations()) {
                 Class<? extends Annotation> annotationType = annotation
                         .annotationType();
@@ -67,7 +66,7 @@ public final class AnnotationsValidator implements TestClassValidator {
                 if (validateWith != null) {
                     AnnotationValidator annotationValidator = ANNOTATION_VALIDATOR_FACTORY
                             .createAnnotationValidator(validateWith);
-                    List<Exception> errors= validateAnnotatable(
+                    List<Exception> errors = validateAnnotatable(
                             annotationValidator, annotatable);
                     validationErrors.addAll(errors);
                 }

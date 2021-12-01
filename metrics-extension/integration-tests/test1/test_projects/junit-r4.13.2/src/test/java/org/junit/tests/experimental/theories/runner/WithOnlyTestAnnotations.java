@@ -16,6 +16,30 @@ import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 
 public class WithOnlyTestAnnotations {
+    @Test
+    public void honorExpected() throws Exception {
+        assertThat(testResult(HonorExpectedException.class).failureCount(), is(1));
+    }
+
+    @Test
+    public void honorExpectedPassing() throws Exception {
+        assertThat(testResult(HonorExpectedExceptionPasses.class), isSuccessful());
+    }
+
+    @Test
+    public void honorTimeout() throws Exception {
+        assertThat(testResult(HonorTimeout.class), failureCountIs(1));
+    }
+
+    @Test
+    public void testErrorWhenTestHasParametersDespiteTheories() {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(ErrorWhenTestHasParametersDespiteTheories.class);
+        assertEquals(1, result.getFailureCount());
+        String message = result.getFailures().get(0).getMessage();
+        assertThat(message, containsString("should have no parameters"));
+    }
+
     @RunWith(Theories.class)
     public static class HonorExpectedException {
         @Test(expected = NullPointerException.class)
@@ -24,22 +48,12 @@ public class WithOnlyTestAnnotations {
         }
     }
 
-    @Test
-    public void honorExpected() throws Exception {
-        assertThat(testResult(HonorExpectedException.class).failureCount(), is(1));
-    }
-
     @RunWith(Theories.class)
     public static class HonorExpectedExceptionPasses {
         @Test(expected = NullPointerException.class)
         public void shouldThrow() {
             throw new NullPointerException();
         }
-    }
-
-    @Test
-    public void honorExpectedPassing() throws Exception {
-        assertThat(testResult(HonorExpectedExceptionPasses.class), isSuccessful());
     }
 
     @RunWith(Theories.class)
@@ -56,11 +70,6 @@ public class WithOnlyTestAnnotations {
         }
     }
 
-    @Test
-    public void honorTimeout() throws Exception {
-        assertThat(testResult(HonorTimeout.class), failureCountIs(1));
-    }
-
     @RunWith(Theories.class)
     static public class ErrorWhenTestHasParametersDespiteTheories {
         @DataPoint
@@ -69,14 +78,5 @@ public class WithOnlyTestAnnotations {
         @Test
         public void testMethod(int i) {
         }
-    }
-
-    @Test
-    public void testErrorWhenTestHasParametersDespiteTheories() {
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(ErrorWhenTestHasParametersDespiteTheories.class);
-        assertEquals(1, result.getFailureCount());
-        String message = result.getFailures().get(0).getMessage();
-        assertThat(message, containsString("should have no parameters"));
     }
 }

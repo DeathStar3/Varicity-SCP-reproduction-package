@@ -33,7 +33,9 @@ public class Result implements Serializable {
     private final AtomicLong runTime;
     private final AtomicLong startTime;
 
-    /** Only set during deserialization process. */
+    /**
+     * Only set during deserialization process.
+     */
     private SerializedForm serializedForm;
 
     public Result() {
@@ -120,42 +122,8 @@ public class Result implements Serializable {
         serializedForm = SerializedForm.deserialize(s);
     }
 
-    private Object readResolve()  {
+    private Object readResolve() {
         return new Result(serializedForm);
-    }
-
-    @RunListener.ThreadSafe
-    private class Listener extends RunListener {
-        @Override
-        public void testRunStarted(Description description) throws Exception {
-            startTime.set(System.currentTimeMillis());
-        }
-
-        @Override
-        public void testRunFinished(Result result) throws Exception {
-            long endTime = System.currentTimeMillis();
-            runTime.addAndGet(endTime - startTime.get());
-        }
-
-        @Override
-        public void testFinished(Description description) throws Exception {
-            count.getAndIncrement();
-        }
-
-        @Override
-        public void testFailure(Failure failure) throws Exception {
-            failures.add(failure);
-        }
-
-        @Override
-        public void testIgnored(Description description) throws Exception {
-            ignoreCount.getAndIncrement();
-        }
-
-        @Override
-        public void testAssumptionFailure(Failure failure) {
-            assumptionFailureCount.getAndIncrement();
-        }
     }
 
     /**
@@ -197,6 +165,12 @@ public class Result implements Serializable {
             fStartTime = fields.get("fStartTime", 0L);
         }
 
+        public static SerializedForm deserialize(ObjectInputStream s)
+                throws ClassNotFoundException, IOException {
+            ObjectInputStream.GetField fields = s.readFields();
+            return new SerializedForm(fields);
+        }
+
         public void serialize(ObjectOutputStream s) throws IOException {
             ObjectOutputStream.PutField fields = s.putFields();
             fields.put("fCount", fCount);
@@ -207,11 +181,39 @@ public class Result implements Serializable {
             fields.put("assumptionFailureCount", assumptionFailureCount);
             s.writeFields();
         }
+    }
 
-        public static SerializedForm deserialize(ObjectInputStream s)
-                throws ClassNotFoundException, IOException {
-            ObjectInputStream.GetField fields = s.readFields();
-            return new SerializedForm(fields);
+    @RunListener.ThreadSafe
+    private class Listener extends RunListener {
+        @Override
+        public void testRunStarted(Description description) throws Exception {
+            startTime.set(System.currentTimeMillis());
+        }
+
+        @Override
+        public void testRunFinished(Result result) throws Exception {
+            long endTime = System.currentTimeMillis();
+            runTime.addAndGet(endTime - startTime.get());
+        }
+
+        @Override
+        public void testFinished(Description description) throws Exception {
+            count.getAndIncrement();
+        }
+
+        @Override
+        public void testFailure(Failure failure) throws Exception {
+            failures.add(failure);
+        }
+
+        @Override
+        public void testIgnored(Description description) throws Exception {
+            ignoreCount.getAndIncrement();
+        }
+
+        @Override
+        public void testAssumptionFailure(Failure failure) {
+            assumptionFailureCount.getAndIncrement();
         }
     }
 }

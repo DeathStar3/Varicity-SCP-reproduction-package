@@ -21,6 +21,15 @@ public class ObjectContractTest {
     public static Object[] objects = {new FrameworkMethod(toStringMethod()),
             new FrameworkMethod(toStringMethod()), 3, null};
 
+    private static Method toStringMethod() {
+        try {
+            return Object.class.getMethod("toString");
+        } catch (SecurityException e) {
+        } catch (NoSuchMethodException e) {
+        }
+        return null;
+    }
+
     @Theory
     @Test(expected = None.class)
     public void equalsThrowsNoException(Object a, Object b) {
@@ -33,14 +42,5 @@ public class ObjectContractTest {
         assumeNotNull(a, b);
         assumeThat(a, is(b));
         assertThat(a.hashCode(), is(b.hashCode()));
-    }
-
-    private static Method toStringMethod() {
-        try {
-            return Object.class.getMethod("toString");
-        } catch (SecurityException e) {
-        } catch (NoSuchMethodException e) {
-        }
-        return null;
     }
 }

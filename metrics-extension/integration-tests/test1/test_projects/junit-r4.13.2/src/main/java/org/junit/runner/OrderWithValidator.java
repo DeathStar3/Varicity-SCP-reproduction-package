@@ -24,7 +24,6 @@ public final class OrderWithValidator extends AnnotationValidator {
      *
      * @param testClass that is being validated
      * @return A list of exceptions detected
-     *
      * @since 4.13
      */
     @Override

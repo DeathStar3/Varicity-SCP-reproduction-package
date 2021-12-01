@@ -13,6 +13,16 @@ import org.junit.runner.RunWith;
 
 public class TypeMatchingBetweenMultiDataPointsMethod {
 
+    @Test
+    public void ignoreWrongTypedDataPointsMethod() {
+        assertThat(testResult(WithWrongfullyTypedDataPointsMethod.class), isSuccessful());
+    }
+
+    @Test
+    public void pickUpMultiPointDataPointMethods() throws Exception {
+        assertThat(testResult(WithCorrectlyTypedDataPointsMethod.class), isSuccessful());
+    }
+
     @RunWith(Theories.class)
     public static class WithWrongfullyTypedDataPointsMethod {
         @DataPoint
@@ -26,11 +36,6 @@ public class TypeMatchingBetweenMultiDataPointsMethod {
         @Theory
         public void testTheory(String[] array) {
         }
-    }
-
-    @Test
-    public void ignoreWrongTypedDataPointsMethod() {
-        assertThat(testResult(WithWrongfullyTypedDataPointsMethod.class), isSuccessful());
     }
 
     @RunWith(Theories.class)
@@ -48,10 +53,5 @@ public class TypeMatchingBetweenMultiDataPointsMethod {
         @Theory
         public void testTheory(String[] array) {
         }
-    }
-
-    @Test
-    public void pickUpMultiPointDataPointMethods() throws Exception {
-        assertThat(testResult(WithCorrectlyTypedDataPointsMethod.class), isSuccessful());
     }
 }

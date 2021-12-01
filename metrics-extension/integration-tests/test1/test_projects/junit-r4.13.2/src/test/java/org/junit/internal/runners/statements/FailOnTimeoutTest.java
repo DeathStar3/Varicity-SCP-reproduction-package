@@ -38,13 +38,13 @@ import org.junit.runners.model.TestTimedOutException;
 @RunWith(Parameterized.class)
 public class FailOnTimeoutTest {
 
+    @Parameter
+    public boolean lookingForStuckThread;
+
     @Parameters(name = "lookingForStuckThread = {0}")
     public static Iterable<Boolean> getParameters() {
         return Arrays.asList(Boolean.TRUE, Boolean.FALSE);
     }
-
-    @Parameter
-    public boolean lookingForStuckThread;
 
     @Test
     public void noExceptionIsThrownWhenWrappedStatementFinishesBeforeTimeoutWithoutThrowingException()
@@ -155,32 +155,6 @@ public class FailOnTimeoutTest {
                 stackTraceContainsOtherThanTheRealCauseOfTheTimeout);
     }
 
-    private static final class StuckStatement extends Statement {
-
-        @Override
-        public void evaluate() throws Throwable {
-            try {
-                // Must show up in stack trace
-                theRealCauseOfTheTimeout();
-            } catch (InterruptedException e) {
-            } finally {
-                // Must _not_ show up in stack trace
-                notTheRealCauseOfTheTimeout();
-            }
-        }
-
-        private void theRealCauseOfTheTimeout() throws InterruptedException {
-            sleep(MAX_VALUE);
-        }
-
-        private void notTheRealCauseOfTheTimeout() {
-            for (long now = currentTimeMillis(), eta = now + 1000L; now < eta; now = currentTimeMillis()) {
-                // Doesn't matter, just pretend to be busy
-                atan(now);
-            }
-        }
-    }
-
     @Test
     public void lookingForStuckThread_threadGroupNotLeaked() throws Throwable {
         assumeTrue(lookingForStuckThread);
@@ -240,6 +214,32 @@ public class FailOnTimeoutTest {
                 failOnTimeout.evaluate();
             }
         };
+    }
+
+    private static final class StuckStatement extends Statement {
+
+        @Override
+        public void evaluate() throws Throwable {
+            try {
+                // Must show up in stack trace
+                theRealCauseOfTheTimeout();
+            } catch (InterruptedException e) {
+            } finally {
+                // Must _not_ show up in stack trace
+                notTheRealCauseOfTheTimeout();
+            }
+        }
+
+        private void theRealCauseOfTheTimeout() throws InterruptedException {
+            sleep(MAX_VALUE);
+        }
+
+        private void notTheRealCauseOfTheTimeout() {
+            for (long now = currentTimeMillis(), eta = now + 1000L; now < eta; now = currentTimeMillis()) {
+                // Doesn't matter, just pretend to be busy
+                atan(now);
+            }
+        }
     }
 
     private static class DelegatingStatement extends Statement {

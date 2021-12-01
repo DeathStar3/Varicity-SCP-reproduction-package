@@ -37,7 +37,7 @@ public class CommandRunner {
                     builder.command("/bin/bash", "-c", cmd).directory(new File(workingDirectory));
                     log.info("Execute : " + "/bin/bash -c" + " " + cmd);
                 }
-            }else{
+            } else {
                 builder.command(shellLocation, cmd).directory(new File(workingDirectory));
                 log.info("Execute : " + shellLocation + " " + cmd);
             }

@@ -26,30 +26,22 @@ import java.util.Set;
 @ApplicationScoped
 public class ExperimentRunnerService {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @Inject
     @RestClient
     VaricityBackendService varicityBackendService;
-
     MetricExtensionEntrypoint metricExtensionEntrypoint = new MetricExtensionEntrypoint();
-
     ParametersObject parametersObject;
-
     @ConfigProperty(name = "symfinder.neo4j.boltAddress", defaultValue = "bolt://localhost:7687")
     String boltAddress;
-
     String user = "";
-
     String password = "";
-
     @ConfigProperty(name = "symfinder.hotspots.nbAggregationsThreshold", defaultValue = "5")
     int nbAggregationsThreshold;
     @ConfigProperty(name = "symfinder.hotspots.nbVariantsThreshold", defaultValue = "20")
     int nbVariantsThreshold;
-
     @Inject
     Validator validator;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     //TODO more checks
     public void validateExperiment(ExperimentConfig experimentConfig) {
@@ -62,13 +54,12 @@ public class ExperimentRunnerService {
                 (experimentConfig.getPath() == null || experimentConfig.getPath().isBlank())) {
             throw new InvalidExperimentException("If the repositoryUrl is not provided then the path must be provided");
         }
-
         //if sonarqube if needed and compilation is needed then a buildEnv and buildEnvTag must be provided
     }
 
 
-    public void sendExperimentInvalidToUI(Optional<Session> session, Exception experimentException){
-        if(session.isEmpty()){
+    public void sendExperimentInvalidToUI(Optional<Session> session, Exception experimentException) {
+        if (session.isEmpty()) {
             return;
         }
         try {
@@ -81,16 +72,15 @@ public class ExperimentRunnerService {
 
         }
         return;
-
     }
 
-    public void sendExperimentFailedToUI(Optional<Session> session, Throwable exception){
-        if(session.isEmpty()){
+    public void sendExperimentFailedToUI(Optional<Session> session, Throwable exception) {
+        if (session.isEmpty()) {
             return;
         }
         try {
             String message = objectMapper.writeValueAsString(
-                    new SymfinderServiceResponse(SymfinderServiceResponse.SymfinderServiceResponseType.EXPERIMENT_FAILED ,exception.getMessage())
+                    new SymfinderServiceResponse(SymfinderServiceResponse.SymfinderServiceResponseType.EXPERIMENT_FAILED, exception.getMessage())
             );
             session.get().getAsyncRemote().sendObject(message);
         } catch (JsonProcessingException ex) {
@@ -100,13 +90,13 @@ public class ExperimentRunnerService {
         return;
     }
 
-    public void sendExperimentStartedToUI(Optional<Session> session){
-        if(session.isEmpty()){
+    public void sendExperimentStartedToUI(Optional<Session> session) {
+        if (session.isEmpty()) {
             return;
         }
         try {
             String message = objectMapper.writeValueAsString(
-                    new SymfinderServiceResponse(SymfinderServiceResponse.SymfinderServiceResponseType.EXPERIMENT_STARTED ,"Experiment started.")
+                    new SymfinderServiceResponse(SymfinderServiceResponse.SymfinderServiceResponseType.EXPERIMENT_STARTED, "Experiment started.")
             );
             session.get().getAsyncRemote().sendObject(message);
         } catch (JsonProcessingException ex) {
@@ -116,11 +106,11 @@ public class ExperimentRunnerService {
         return;
     }
 
-    public void sendExperimentSucceededToUI(Optional<Session> session, ExperimentResult experimentResult){
+    public void sendExperimentSucceededToUI(Optional<Session> session, ExperimentResult experimentResult) {
         try {
-            String message = objectMapper.writeValueAsString(   new SymfinderServiceResponse(SymfinderServiceResponse.SymfinderServiceResponseType.EXPERIMENT_COMPLETED,
-                            experimentResult.symfinderResult().statisticJson())
-                    );
+            String message = objectMapper.writeValueAsString(new SymfinderServiceResponse(SymfinderServiceResponse.SymfinderServiceResponseType.EXPERIMENT_COMPLETED,
+                    experimentResult.symfinderResult().statisticJson())
+            );
             session.get().getAsyncRemote().sendObject(message);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -129,41 +119,38 @@ public class ExperimentRunnerService {
     }
 
 
-
-    private void sendExperimentResultToVaricityBackend(ExperimentResult experimentResult){
+    private void sendExperimentResultToVaricityBackend(ExperimentResult experimentResult) {
         try {
             this.varicityBackendService.createNewProject(experimentResult);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
 
-    public void runExperimentInBackground(Optional<Session> session, ExperimentConfig experimentConfig){
-        if(session.isEmpty()){
+    public void runExperimentInBackground(Optional<Session> session, ExperimentConfig experimentConfig) {
+        if (session.isEmpty()) {
             return;
         }
-
 
         Uni.createFrom().item(experimentConfig.getProjectName()).emitOn(Infrastructure.getDefaultWorkerPool()).subscribe()
                 .with((i) -> {
 
-                    try {
-                        ExperimentResult experimentResult = metricExtensionEntrypoint.runExperiment(experimentConfig, parametersObject);
+                            try {
+                                ExperimentResult experimentResult = metricExtensionEntrypoint.runExperiment(experimentConfig, parametersObject);
 
-                        this.sendExperimentSucceededToUI(session, experimentResult);
-                        System.out.println("Done with the experiment");
-                        this.sendExperimentResultToVaricityBackend(experimentResult);
-                    }
-                    catch (Exception e){
-                        this.sendExperimentFailedToUI(session, e);
-                    }
+                                this.sendExperimentSucceededToUI(session, experimentResult);
+                                System.out.println("Done with the experiment");
+                                this.sendExperimentResultToVaricityBackend(experimentResult);
+                            } catch (Exception e) {
+                                this.sendExperimentFailedToUI(session, e);
+                            }
                         }
-                , exception -> this.sendExperimentFailedToUI(session, exception) );
+                        , exception -> this.sendExperimentFailedToUI(session, exception));
     }
 
 
     @PostConstruct
-    void postConstruct(){
+    void postConstruct() {
         this.parametersObject = new ParametersObject(new Neo4jParameters(this.boltAddress, this.user, this.password),
                 new HotspotsParameters(this.nbVariantsThreshold, this.nbAggregationsThreshold), "");
 

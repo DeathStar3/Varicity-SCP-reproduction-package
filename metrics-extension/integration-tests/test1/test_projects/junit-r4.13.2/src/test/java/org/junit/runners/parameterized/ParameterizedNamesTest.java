@@ -13,9 +13,19 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
- *         Date: 03.05.14
+ * Date: 03.05.14
  */
 public class ParameterizedNamesTest {
+    @Test
+    public void parameterizedTestsWithSpecialCharsInName() {
+        Request request = Request.aClass(ParameterizedWithSpecialCharsInName.class);
+        for (Description parent : request.getRunner().getDescription().getChildren()) {
+            for (Description description : parent.getChildren()) {
+                assertEquals("test" + parent.getDisplayName(), description.getMethodName());
+            }
+        }
+    }
+
     @RunWith(Parameterized.class)
     public static class ParameterizedWithSpecialCharsInName {
 
@@ -36,16 +46,6 @@ public class ParameterizedNamesTest {
 
         @Test
         public void test() {
-        }
-    }
-
-    @Test
-    public void parameterizedTestsWithSpecialCharsInName() {
-        Request request = Request.aClass(ParameterizedWithSpecialCharsInName.class);
-        for (Description parent : request.getRunner().getDescription().getChildren()) {
-            for (Description description : parent.getChildren()) {
-                assertEquals("test" + parent.getDisplayName(), description.getMethodName());
-            }
         }
     }
 }

@@ -12,7 +12,7 @@ import org.junit.runners.model.TestClass;
  * A {@code TestWithParameters} keeps the data together that are needed for
  * creating a runner for a single data set of a parameterized test. It has a
  * name, the test class and a list of parameters.
- * 
+ *
  * @since 4.12
  */
 public class TestWithParameters {
@@ -23,7 +23,7 @@ public class TestWithParameters {
     private final List<Object> parameters;
 
     public TestWithParameters(String name, TestClass testClass,
-            List<Object> parameters) {
+                              List<Object> parameters) {
         notNull(name, "The name is missing.");
         notNull(testClass, "The test class is missing.");
         notNull(parameters, "The parameters are missing.");

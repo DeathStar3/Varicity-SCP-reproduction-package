@@ -15,9 +15,9 @@ import org.junit.Test;
  * A sample test case, testing {@link java.util.ArrayList}.
  */
 public class ListTest {
+    protected static List<Integer> fgHeavy;
     protected List<Integer> fEmpty;
     protected List<Integer> fFull;
-    protected static List<Integer> fgHeavy;
 
     public static void main(String... args) {
         junit.textui.TestRunner.run(suite());
@@ -31,6 +31,10 @@ public class ListTest {
         }
     }
 
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ListTest.class);
+    }
+
     @Before
     public void setUp() {
         fEmpty = new ArrayList<Integer>();
@@ -38,10 +42,6 @@ public class ListTest {
         fFull.add(1);
         fFull.add(2);
         fFull.add(3);
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ListTest.class);
     }
 
     @Ignore("not today")

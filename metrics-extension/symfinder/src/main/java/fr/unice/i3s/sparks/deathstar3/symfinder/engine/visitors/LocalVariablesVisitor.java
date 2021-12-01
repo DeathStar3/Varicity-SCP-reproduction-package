@@ -16,11 +16,11 @@ import java.util.Optional;
 
 public class LocalVariablesVisitor extends ImportsVisitor {
 
+    private static final Logger logger = LogManager.getLogger(LocalVariablesVisitor.class);
+
     public LocalVariablesVisitor(NeoGraph neoGraph) {
         super(neoGraph);
     }
-
-    private static final Logger logger = LogManager.getLogger(LocalVariablesVisitor.class);
 
     @Override
     public boolean visit(MethodDeclaration method) {

@@ -30,7 +30,7 @@ public class TestWithClassRule {
                 @Override
                 public void evaluate() throws Throwable {
                     Class<?> testClass = description.getTestClass();
-                    if(testClass != null) {
+                    if (testClass != null) {
                         Field field = testClass.getDeclaredField("applyTestClass");
                         field.set(null, description.getTestClass());
                     }

@@ -1,15 +1,5 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
-import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Compiler.NETWORK_NAME;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.Set;
-import java.time.Duration;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
@@ -21,24 +11,34 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
-import com.github.dockerjava.core.DefaultDockerClientConfig;
 import fr.unice.i3s.sparks.deathstar3.models.SonarQubeStatus;
 import fr.unice.i3s.sparks.deathstar3.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.Duration;
+import java.util.List;
+import java.util.Set;
+
+import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Compiler.NETWORK_NAME;
 
 @Slf4j
 public class SonarQubeStarter {
 
+    public static final String SONARQUBE_CONTAINER_NAME = "sonarqubehost";
+    private static final Utils utils = new Utils();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DockerClient dockerClient;
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final Utils utils = new Utils();
-    public static final String SONARQUBE_CONTAINER_NAME = "sonarqubehost";
 
     public SonarQubeStarter() {
         DockerClientConfig standard = DefaultDockerClientConfig.createDefaultConfigBuilder().build();

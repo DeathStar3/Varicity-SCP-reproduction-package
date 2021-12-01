@@ -4,9 +4,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Exception thrown when a test fails on timeout.
- * 
+ *
  * @since 4.12
- * 
  */
 public class TestTimedOutException extends Exception {
 
@@ -17,12 +16,12 @@ public class TestTimedOutException extends Exception {
 
     /**
      * Creates exception with a standard message "test timed out after [timeout] [timeUnit]"
-     * 
-     * @param timeout the amount of time passed before the test was interrupted
+     *
+     * @param timeout  the amount of time passed before the test was interrupted
      * @param timeUnit the time unit for the timeout value
      */
     public TestTimedOutException(long timeout, TimeUnit timeUnit) {
-        super(String.format("test timed out after %d %s", 
+        super(String.format("test timed out after %d %s",
                 timeout, timeUnit.name().toLowerCase()));
         this.timeUnit = timeUnit;
         this.timeout = timeout;

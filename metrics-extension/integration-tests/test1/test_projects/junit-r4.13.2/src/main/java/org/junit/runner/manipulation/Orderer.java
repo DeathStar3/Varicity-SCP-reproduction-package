@@ -13,7 +13,7 @@ import org.junit.runner.Description;
  *
  * @since 4.13
  */
-public final class Orderer  {
+public final class Orderer {
     private final Ordering ordering;
 
     Orderer(Ordering delegate) {
@@ -51,7 +51,7 @@ public final class Orderer  {
      * Order the tests in <code>target</code>.
      *
      * @throws InvalidOrderingException if ordering does something invalid (like remove or add
-     * children)
+     *                                  children)
      */
     public void apply(Object target) throws InvalidOrderingException {
         if (target instanceof Orderable) {

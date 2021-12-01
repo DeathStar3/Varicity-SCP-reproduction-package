@@ -43,11 +43,11 @@ public class FactoryVisitor extends SymfinderVisitor {
         String typeOfReturnedObject;
         if (node.getExpression() != null &&
                 node.getExpression().resolveTypeBinding() != null &&
-                ! node.getExpression().resolveTypeBinding().isNested() &&
+                !node.getExpression().resolveTypeBinding().isNested() &&
                 (typeOfReturnedObject = node.getExpression().resolveTypeBinding().getQualifiedName()) != null &&
-                ! typeOfReturnedObject.equals("null")) {
+                !typeOfReturnedObject.equals("null")) {
             MethodDeclaration methodDeclaration = (MethodDeclaration) getParentOfNodeWithType(node, ASTNode.METHOD_DECLARATION);
-            if (methodDeclaration != null && ! methodDeclaration.isConstructor() && methodDeclaration.getReturnType2().resolveBinding() != null && methodDeclaration.resolveBinding() != null) {
+            if (methodDeclaration != null && !methodDeclaration.isConstructor() && methodDeclaration.getReturnType2().resolveBinding() != null && methodDeclaration.resolveBinding() != null) {
                 logger.debug(methodDeclaration.getName().getIdentifier());
                 // Check for constructor because of java.sourceui/src/org/netbeans/api/java/source/ui/ElementJavadoc.java:391 in netbeans-incubator
                 // TODO: 3/22/19 find why getReturnType2 returns null in core/src/main/java/org/apache/cxf/bus/managers/BindingFactoryManagerImpl.java
@@ -63,7 +63,7 @@ public class FactoryVisitor extends SymfinderVisitor {
                 Node parsedClassNode = neoGraph.getOrCreateNode(parsedClassType, methodDeclaration.resolveBinding().getDeclaringClass().isInterface() ? EntityType.INTERFACE : EntityType.CLASS, new EntityAttribute[]{EntityAttribute.OUT_OF_SCOPE}, new EntityAttribute[]{});
                 Node returnedObjectTypeNode = neoGraph.getNode(typeOfReturnedObject).orElse(null);
                 // TODO: 3/27/19 functional test case with method returning Object → not direct link
-                if(methodReturnTypeNode != null && returnedObjectTypeNode != null){
+                if (methodReturnTypeNode != null && returnedObjectTypeNode != null) {
                     if (neoGraph.relatedTo(methodReturnTypeNode, returnedObjectTypeNode) && neoGraph.getNbVariants(methodReturnTypeNode) >= 2) {
                         neoGraph.addLabelToNode(parsedClassNode, DesignPatternType.FACTORY.toString());
                     }

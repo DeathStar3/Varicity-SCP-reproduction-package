@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * in development. While it seems powerful we expect the runner API to change as we learn
  * how people really use it. Some of the classes that are currently internal will likely
  * be refined and become public.
- *
+ * <p>
  * For example, suites in JUnit 4 are built using RunWith, and a custom runner named Suite:
  *
  * <pre>

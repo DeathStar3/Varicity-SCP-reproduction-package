@@ -21,22 +21,22 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ErrorReportingRunnerTest {
-    
+
     @Test(expected = NullPointerException.class)
     public void cannotCreateWithNullClass() {
         new ErrorReportingRunner(null, new RuntimeException());
     }
-    
+
     @Test(expected = NullPointerException.class)
     public void cannotCreateWithNullClass2() {
         new ErrorReportingRunner(new RuntimeException(), (Class<?>) null);
     }
-    
+
     @Test(expected = NullPointerException.class)
     public void cannotCreateWithNullClasses() {
         new ErrorReportingRunner(new RuntimeException(), (Class<?>[]) null);
     }
-    
+
     @Test(expected = NullPointerException.class)
     public void cannotCreateWithoutClass() {
         new ErrorReportingRunner(new RuntimeException());
@@ -78,10 +78,16 @@ public class ErrorReportingRunnerTest {
     }
 
     private static class TestClassWithErrors {
-        @Before public static void staticBeforeMethod() {}
-        @After public static void staticAfterMethod() {}
+        @Before
+        public static void staticBeforeMethod() {
+        }
 
-        @Test public String testMethodReturningString() {
+        @After
+        public static void staticAfterMethod() {
+        }
+
+        @Test
+        public String testMethodReturningString() {
             return "this should not be allowed";
         }
     }

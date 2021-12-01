@@ -22,11 +22,11 @@ public interface MethodRule {
      * Modifies the method-running {@link Statement} to implement an additional
      * test-running rule.
      *
-     * @param base The {@link Statement} to be modified
+     * @param base   The {@link Statement} to be modified
      * @param method The method to be run
      * @param target The object on which the method will be run.
      * @return a new statement, which may be the same as {@code base},
-     *         a wrapper around {@code base}, or a completely new Statement.
+     * a wrapper around {@code base}, or a completely new Statement.
      */
     Statement apply(Statement base, FrameworkMethod method, Object target);
 }

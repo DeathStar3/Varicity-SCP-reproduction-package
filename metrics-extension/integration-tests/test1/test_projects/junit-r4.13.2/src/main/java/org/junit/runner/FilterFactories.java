@@ -10,11 +10,11 @@ import org.junit.runner.manipulation.Filter;
 class FilterFactories {
     /**
      * Creates a {@link Filter}.
-     *
+     * <p>
      * A filter specification is of the form "package.of.FilterFactory=args-to-filter-factory" or
      * "package.of.FilterFactory".
      *
-     * @param request the request that will be filtered
+     * @param request    the request that will be filtered
      * @param filterSpec the filter specification
      * @throws org.junit.runner.FilterFactory.FilterNotCreatedException
      */
@@ -26,7 +26,7 @@ class FilterFactories {
         if (filterSpec.contains("=")) {
             tuple = filterSpec.split("=", 2);
         } else {
-            tuple = new String[]{ filterSpec, "" };
+            tuple = new String[]{filterSpec, ""};
         }
 
         return createFilter(tuple[0], new FilterFactoryParams(topLevelDescription, tuple[1]));
@@ -36,7 +36,7 @@ class FilterFactories {
      * Creates a {@link Filter}.
      *
      * @param filterFactoryFqcn The fully qualified class name of the {@link FilterFactory}
-     * @param params The arguments to the {@link FilterFactory}
+     * @param params            The arguments to the {@link FilterFactory}
      */
     public static Filter createFilter(String filterFactoryFqcn, FilterFactoryParams params)
             throws FilterFactory.FilterNotCreatedException {
@@ -50,7 +50,6 @@ class FilterFactories {
      *
      * @param filterFactoryClass The class of the {@link FilterFactory}
      * @param params             The arguments to the {@link FilterFactory}
-     *
      */
     public static Filter createFilter(Class<? extends FilterFactory> filterFactoryClass, FilterFactoryParams params)
             throws FilterFactory.FilterNotCreatedException {

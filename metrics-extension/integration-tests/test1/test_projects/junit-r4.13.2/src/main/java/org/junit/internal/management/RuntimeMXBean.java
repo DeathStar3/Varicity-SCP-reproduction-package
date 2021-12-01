@@ -7,8 +7,8 @@ import java.util.List;
  */
 public interface RuntimeMXBean {
 
-  /**
-   * @see java.lang.management.RuntimeMXBean#getInputArguments()
-   */
-  List<String> getInputArguments();
+    /**
+     * @see java.lang.management.RuntimeMXBean#getInputArguments()
+     */
+    List<String> getInputArguments();
 }

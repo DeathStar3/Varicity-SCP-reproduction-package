@@ -20,7 +20,7 @@ public class TestWithParametersTest {
             DummyClass.class);
 
     private static final List<Object> DUMMY_PARAMETERS = Arrays
-            .<Object> asList("a", "b");
+            .<Object>asList("a", "b");
 
     @Rule
     public final ExpectedException thrown = none();
@@ -57,7 +57,7 @@ public class TestWithParametersTest {
 
     @Test
     public void doesNotConsiderParametersWhichChangedAfterTestInstantiation() {
-        List<Object> parameters = Arrays.<Object> asList("dummy parameter");
+        List<Object> parameters = Arrays.<Object>asList("dummy parameter");
         TestWithParameters test = new TestWithParameters(DUMMY_NAME,
                 DUMMY_TEST_CLASS, parameters);
         parameters.set(0, "another parameter");
@@ -67,11 +67,11 @@ public class TestWithParametersTest {
     @Test
     public void isEqualToTestWithSameNameAndTestClassAndParameters() {
         TestWithParameters firstTest = new TestWithParameters(DUMMY_NAME,
-                new TestClass(DummyClass.class), Arrays.<Object> asList("a",
-                        "b"));
+                new TestClass(DummyClass.class), Arrays.<Object>asList("a",
+                "b"));
         TestWithParameters secondTest = new TestWithParameters(DUMMY_NAME,
-                new TestClass(DummyClass.class), Arrays.<Object> asList("a",
-                        "b"));
+                new TestClass(DummyClass.class), Arrays.<Object>asList("a",
+                "b"));
         assertEquals(firstTest, secondTest);
     }
 
@@ -96,9 +96,9 @@ public class TestWithParametersTest {
     @Test
     public void isNotEqualToTestWithDifferentParameters() {
         TestWithParameters firstTest = new TestWithParameters(DUMMY_NAME,
-                DUMMY_TEST_CLASS, Arrays.<Object> asList("a"));
+                DUMMY_TEST_CLASS, Arrays.<Object>asList("a"));
         TestWithParameters secondTest = new TestWithParameters(DUMMY_NAME,
-                DUMMY_TEST_CLASS, Arrays.<Object> asList("b"));
+                DUMMY_TEST_CLASS, Arrays.<Object>asList("b"));
         assertNotEquals(firstTest, secondTest);
     }
 
@@ -121,7 +121,7 @@ public class TestWithParametersTest {
     @Test
     public void hasMeaningfulToString() {
         TestWithParameters test = new TestWithParameters("name", new TestClass(
-                DummyClass.class), Arrays.<Object> asList("first parameter",
+                DummyClass.class), Arrays.<Object>asList("first parameter",
                 "second parameter"));
         assertEquals(
                 "Wrong toString().",

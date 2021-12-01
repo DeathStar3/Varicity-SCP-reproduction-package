@@ -16,32 +16,28 @@ public class ExperimentRunnerController {
 
     @Inject
     ExperimentRunnerService experimentRunnerService;
-    
-    @Inject SessionStore sessionStore;
+
+    @Inject
+    SessionStore sessionStore;
 
     ConfigLoader configLoader = new ConfigLoader();
 
 
-
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @OnOpen
     public void onOpen(Session session, @PathParam("name") String name) {
-
         sessionStore.put(name, session);
-
     }
 
     @OnClose
     public void onClose(Session session, @PathParam("name") String name) {
         sessionStore.remove(name);
-
     }
 
     @OnError
     public void onError(Session session, @PathParam("name") String name, Throwable throwable) {
         sessionStore.remove(name);
-
     }
 
     @OnMessage
@@ -53,7 +49,7 @@ public class ExperimentRunnerController {
             experimentConfig = configLoader.deserializeConfigFile(experimentConfigString).get(0);
             experimentRunnerService.validateExperiment(experimentConfig);
         } catch (Exception e) {
-            experimentRunnerService.sendExperimentInvalidToUI(sessionStore.get(name),e);
+            experimentRunnerService.sendExperimentInvalidToUI(sessionStore.get(name), e);
         }
         if (experimentConfig != null) {
             this.experimentRunnerService.sendExperimentStartedToUI(sessionStore.get(name));

@@ -22,38 +22,15 @@ public class TestClassTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    public static class TwoConstructors {
-        public TwoConstructors() {
-        }
-
-        public TwoConstructors(int x) {
-        }
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void complainIfMultipleConstructors() {
         new TestClass(TwoConstructors.class);
-    }
-
-    public static class SuperclassWithField {
-        @Rule
-        public TestRule x;
-    }
-
-    public static class SubclassWithField extends SuperclassWithField {
-        @Rule
-        public TestRule x;
     }
 
     @Test
     public void fieldsOnSubclassesShadowSuperclasses() {
         assertThat(new TestClass(SubclassWithField.class).getAnnotatedFields(
                 Rule.class).size(), is(1));
-    }
-
-    public static class OuterClass {
-        public class NonStaticInnerClass {
-        }
     }
 
     @Test
@@ -64,11 +41,6 @@ public class TestClassTest {
                 is(true));
     }
 
-    public static class OuterClass2 {
-        public static class StaticInnerClass {
-        }
-    }
-
     @Test
     public void dontMarkStaticInnerClassAsNonStatic() {
         assertThat(
@@ -77,33 +49,19 @@ public class TestClassTest {
                 is(false));
     }
 
-    public static class SimpleClass {
-    }
-
     @Test
     public void dontMarkNonInnerClassAsInnerClass() {
         assertThat(new TestClass(SimpleClass.class).isANonStaticInnerClass(),
                 is(false));
     }
 
-    public static class FieldAnnotated {
-        @Rule
-        public String fieldC= "andromeda";
-
-        @Rule
-        public boolean fieldA;
-
-        @Rule
-        public boolean fieldB;
-    }
-
     @Test
     public void providesAnnotatedFieldsSortedByName() {
-        TestClass tc= new TestClass(FieldAnnotated.class);
-        List<FrameworkField> annotatedFields= tc.getAnnotatedFields();
+        TestClass tc = new TestClass(FieldAnnotated.class);
+        List<FrameworkField> annotatedFields = tc.getAnnotatedFields();
         assertThat("Wrong number of annotated fields.", annotatedFields.size(), is(3));
         assertThat("First annotated field is wrong.", annotatedFields
-            .iterator().next().getName(), is("fieldA"));
+                .iterator().next().getName(), is("fieldA"));
     }
 
     @Test
@@ -114,37 +72,13 @@ public class TestClassTest {
         assertThat(values.size(), is(1));
     }
 
-    public static class MethodsAnnotated {
-        @Ignore
-        @Test
-        public int methodC() {
-            return 0;
-        }
-
-        @Ignore
-        @Test
-        public String methodA() {
-            return "jupiter";
-        }
-
-        @Ignore
-        @Test
-        public int methodB() {
-            return 0;
-        }
-
-        public int methodWithoutAnnotation() {
-            return 0;
-        }
-    }
-
     @Test
     public void providesAnnotatedMethodsSortedByName() {
         TestClass tc = new TestClass(MethodsAnnotated.class);
         List<FrameworkMethod> annotatedMethods = tc.getAnnotatedMethods();
         List<String> methodNames = extractNames(annotatedMethods);
         assertThat(methodNames.indexOf("methodA"),
-            lessThan(methodNames.indexOf("methodB")));
+                lessThan(methodNames.indexOf("methodB")));
     }
 
     @Test
@@ -157,7 +91,7 @@ public class TestClassTest {
 
     private List<String> extractNames(List<FrameworkMethod> methods) {
         List<String> names = new ArrayList<String>();
-        for (FrameworkMethod method: methods) {
+        for (FrameworkMethod method : methods) {
             names.add(method.getName());
         }
         return names;
@@ -167,7 +101,7 @@ public class TestClassTest {
     public void annotatedMethodValues() {
         TestClass tc = new TestClass(MethodsAnnotated.class);
         List<String> values = tc.getAnnotatedMethodValues(
-            new MethodsAnnotated(), Ignore.class, String.class);
+                new MethodsAnnotated(), Ignore.class, String.class);
         assertThat(values, hasItem("jupiter"));
         assertThat(values.size(), is(1));
     }
@@ -201,12 +135,6 @@ public class TestClassTest {
         assertFalse(testClass.equals(null));
     }
 
-    private static class DummyClass {
-    }
-
-    private static class AnotherDummyClass {
-    }
-
     @Test
     public void hasSameHashCodeAsTestClassThatWrapsSameJavaClass() {
         TestClass testClass = new TestClass(DummyClass.class);
@@ -223,28 +151,16 @@ public class TestClassTest {
         // everything is fine if no exception is thrown.
     }
 
-    public static class PublicClass {
-
-    }
-
     @Test
     public void identifiesPublicModifier() {
         TestClass tc = new TestClass(PublicClass.class);
         assertEquals("Wrong flag 'public',", true, tc.isPublic());
     }
 
-    static class NonPublicClass {
-
-    }
-    
     @Test
     public void identifiesNonPublicModifier() {
         TestClass tc = new TestClass(NonPublicClass.class);
         assertEquals("Wrong flag 'public',", false, tc.isPublic());
-    }
-
-    @Ignore
-    static class AnnotatedClass {
     }
 
     @Test
@@ -259,5 +175,89 @@ public class TestClassTest {
         TestClass tc = new TestClass(AnnotatedClass.class);
         Annotation annotation = tc.getAnnotation(RunWith.class);
         assertThat(annotation, is(nullValue()));
+    }
+
+    public static class TwoConstructors {
+        public TwoConstructors() {
+        }
+
+        public TwoConstructors(int x) {
+        }
+    }
+
+    public static class SuperclassWithField {
+        @Rule
+        public TestRule x;
+    }
+
+    public static class SubclassWithField extends SuperclassWithField {
+        @Rule
+        public TestRule x;
+    }
+
+    public static class OuterClass {
+        public class NonStaticInnerClass {
+        }
+    }
+
+    public static class OuterClass2 {
+        public static class StaticInnerClass {
+        }
+    }
+
+    public static class SimpleClass {
+    }
+
+    public static class FieldAnnotated {
+        @Rule
+        public String fieldC = "andromeda";
+
+        @Rule
+        public boolean fieldA;
+
+        @Rule
+        public boolean fieldB;
+    }
+
+    public static class MethodsAnnotated {
+        @Ignore
+        @Test
+        public int methodC() {
+            return 0;
+        }
+
+        @Ignore
+        @Test
+        public String methodA() {
+            return "jupiter";
+        }
+
+        @Ignore
+        @Test
+        public int methodB() {
+            return 0;
+        }
+
+        public int methodWithoutAnnotation() {
+            return 0;
+        }
+    }
+
+    private static class DummyClass {
+    }
+
+    private static class AnotherDummyClass {
+    }
+
+    public static class PublicClass {
+
+    }
+
+    static class NonPublicClass {
+
+    }
+
+    @Ignore
+    static class AnnotatedClass {
     }
 }

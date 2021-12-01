@@ -25,6 +25,7 @@ public class SymfinderVisitorTest {
         String className = "MyPair<Integer,String>";
         assertEquals("MyPair", SymfinderVisitor.getClassBaseName(className));
     }
+
     @Test
     public void packageGenericClass() {
         String className = "org.MyPair<Integer,String>";

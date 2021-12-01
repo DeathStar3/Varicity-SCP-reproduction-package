@@ -27,35 +27,16 @@ public class TextListenerTest extends TestCase {
         runner.addListener(new TextListener(system));
     }
 
-    public static class OneTest {
-        @Test
-        public void one() {
-        }
-    }
-
     public void testSuccess() throws Exception {
         runner.run(OneTest.class);
         assertTrue(results.toString().startsWith(convert(".\nTime: ")));
         assertTrue(results.toString().endsWith(convert("\n\nOK (1 test)\n\n")));
     }
 
-    public static class ErrorTest {
-        @Test
-        public void error() throws Exception {
-            throw new Exception();
-        }
-    }
-
     public void testError() throws Exception {
         runner.run(ErrorTest.class);
         assertTrue(results.toString().startsWith(convert(".E\nTime: ")));
         assertTrue(results.toString().indexOf(convert("\nThere was 1 failure:\n1) error(org.junit.tests.listening.TextListenerTest$ErrorTest)\njava.lang.Exception")) != -1);
-    }
-
-    public static class Time {
-        @Test
-        public void time() {
-        }
     }
 
     public void testTime() {
@@ -69,5 +50,24 @@ public class TextListenerTest extends TestCase {
         PrintStream writer = new PrintStream(resultsStream);
         writer.println();
         return string.replace("\n", resultsStream.toString());
+    }
+
+    public static class OneTest {
+        @Test
+        public void one() {
+        }
+    }
+
+    public static class ErrorTest {
+        @Test
+        public void error() throws Exception {
+            throw new Exception();
+        }
+    }
+
+    public static class Time {
+        @Test
+        public void time() {
+        }
     }
 }

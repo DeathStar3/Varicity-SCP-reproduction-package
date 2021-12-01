@@ -12,17 +12,6 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 public class TheoriesPerformanceTest {
-    @RunWith(Theories.class)
-    public static class UpToTen {
-        @DataPoints
-        public static int[] ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-
-        @Theory
-        public void threeInts(int x, int y, int z) {
-            // pass always
-        }
-    }
-
     private static final boolean TESTING_PERFORMANCE = false;
 
     // If we do not share the same instance of TestClass, repeatedly parsing the
@@ -34,5 +23,16 @@ public class TheoriesPerformanceTest {
     public void tryCombinationsQuickly() {
         assumeTrue(TESTING_PERFORMANCE);
         assertThat(testResult(UpToTen.class), isSuccessful());
+    }
+
+    @RunWith(Theories.class)
+    public static class UpToTen {
+        @DataPoints
+        public static int[] ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        @Theory
+        public void threeInts(int x, int y, int z) {
+            // pass always
+        }
     }
 }

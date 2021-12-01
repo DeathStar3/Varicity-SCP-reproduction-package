@@ -20,7 +20,7 @@ public class ErrorReportingRunner extends Runner {
     public ErrorReportingRunner(Class<?> testClass, Throwable cause) {
         this(cause, testClass);
     }
-    
+
     public ErrorReportingRunner(Throwable cause, Class<?>... testClasses) {
         if (testClasses == null || testClasses.length == 0) {
             throw new NullPointerException("Test classes cannot be null or empty");
@@ -33,7 +33,7 @@ public class ErrorReportingRunner extends Runner {
         classNames = getClassNames(testClasses);
         causes = getCauses(cause);
     }
-    
+
     @Override
     public Description getDescription() {
         Description description = Description.createSuiteDescription(classNames);

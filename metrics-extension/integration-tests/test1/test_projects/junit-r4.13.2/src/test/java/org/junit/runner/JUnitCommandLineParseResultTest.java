@@ -14,10 +14,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.manipulation.Filter;
 
 public class JUnitCommandLineParseResultTest {
+    private final JUnitCommandLineParseResult jUnitCommandLineParseResult = new JUnitCommandLineParseResult();
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-
-    private final JUnitCommandLineParseResult jUnitCommandLineParseResult = new JUnitCommandLineParseResult();
 
     @Test
     public void shouldStopParsingOptionsUponDoubleHyphenArg() throws Exception {
@@ -29,10 +28,10 @@ public class JUnitCommandLineParseResultTest {
 
     @Test
     public void shouldParseFilterArgWithEqualsSyntax() throws Exception {
-        String value= IncludeCategories.class.getName() + "=" + DummyCategory0.class.getName();
+        String value = IncludeCategories.class.getName() + "=" + DummyCategory0.class.getName();
         jUnitCommandLineParseResult.parseOptions("--filter=" + value);
 
-        List<String> specs= jUnitCommandLineParseResult.getFilterSpecs();
+        List<String> specs = jUnitCommandLineParseResult.getFilterSpecs();
 
         assertThat(specs, hasItems(value));
     }
@@ -49,10 +48,10 @@ public class JUnitCommandLineParseResultTest {
 
     @Test
     public void shouldParseFilterArgInWhichValueIsASeparateArg() throws Exception {
-        String value= IncludeCategories.class.getName() + "=" + DummyCategory0.class.getName();
+        String value = IncludeCategories.class.getName() + "=" + DummyCategory0.class.getName();
         jUnitCommandLineParseResult.parseOptions("--filter", value);
 
-        List<String> specs= jUnitCommandLineParseResult.getFilterSpecs();
+        List<String> specs = jUnitCommandLineParseResult.getFilterSpecs();
 
         assertThat(specs, hasItems(value));
     }
@@ -129,13 +128,13 @@ public class JUnitCommandLineParseResultTest {
         assertThat(description.toString(), containsString("initializationError"));
     }
 
+    public static interface DummyCategory0 {
+    }
+
     public static class FilterFactoryStub implements FilterFactory {
         public Filter createFilter(FilterFactoryParams params) throws FilterNotCreatedException {
             throw new FilterNotCreatedException(new Exception("stub"));
         }
-    }
-
-    public static interface DummyCategory0 {
     }
 
     public static class DummyTest {

@@ -36,6 +36,21 @@ public class AssertionTest {
 
     private static final String ASSERTION_ERROR_EXPECTED = "AssertionError expected";
 
+    private static ThrowingRunnable nonThrowingRunnable() {
+        return new ThrowingRunnable() {
+            public void run() throws Throwable {
+            }
+        };
+    }
+
+    private static ThrowingRunnable throwingRunnable(final Throwable t) {
+        return new ThrowingRunnable() {
+            public void run() throws Throwable {
+                throw t;
+            }
+        };
+    }
+
     @Test(expected = AssertionError.class)
     public void fails() {
         Assert.fail();
@@ -509,7 +524,6 @@ public class AssertionTest {
         assertEquals(new BigDecimal("123.4"), new BigDecimal("123.0"));
     }
 
-
     @Test(expected = AssertionError.class)
     public void doublesNotEqual() {
         assertEquals(1.0d, 2.0d, 0.9d);
@@ -747,13 +761,6 @@ public class AssertionTest {
         assertEquals("null", null);
     }
 
-    private static class NullToString {
-        @Override
-        public String toString() {
-            return null;
-        }
-    }
-
     @Test
     public void nullToString() {
         try {
@@ -945,7 +952,7 @@ public class AssertionTest {
         } catch (AssertionError error) {
             assertEquals(
                     "unexpected exception type thrown; expected:<org.junit.tests.assertion.AssertionTest.NestedException>"
-                    + " but was:<java.lang.NullPointerException>",
+                            + " but was:<java.lang.NullPointerException>",
                     error.getMessage());
             assertSame(npe, error.getCause());
             return;
@@ -963,7 +970,7 @@ public class AssertionTest {
         } catch (AssertionError error) {
             assertEquals(
                     "unexpected exception type thrown; expected:<java.io.IOException>"
-                    + " but was:<org.junit.tests.assertion.AssertionTest$1>",
+                            + " but was:<org.junit.tests.assertion.AssertionTest$1>",
                     error.getMessage());
             assertSame(npe, error.getCause());
             return;
@@ -978,28 +985,20 @@ public class AssertionTest {
         } catch (AssertionError error) {
             assertEquals(
                     "expected org.junit.tests.assertion.AssertionTest.NestedException to be thrown,"
-                    + " but nothing was thrown", error.getMessage());
+                            + " but nothing was thrown", error.getMessage());
             return;
         }
         throw new AssertionError(ASSERTION_ERROR_EXPECTED);
     }
 
+    private static class NullToString {
+        @Override
+        public String toString() {
+            return null;
+        }
+    }
+
     private static class NestedException extends RuntimeException {
         private static final long serialVersionUID = 1L;
-    }
-
-    private static ThrowingRunnable nonThrowingRunnable() {
-        return new ThrowingRunnable() {
-            public void run() throws Throwable {
-            }
-        };
-    }
-
-    private static ThrowingRunnable throwingRunnable(final Throwable t) {
-        return new ThrowingRunnable() {
-            public void run() throws Throwable {
-                throw t;
-            }
-        };
     }
 }

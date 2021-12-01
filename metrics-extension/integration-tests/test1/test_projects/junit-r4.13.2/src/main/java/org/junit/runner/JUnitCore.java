@@ -62,9 +62,13 @@ public class JUnitCore {
         return new JUnitCore().run(computer, classes);
     }
 
+    static Computer defaultComputer() {
+        return new Computer();
+    }
+
     /**
      * @param system
-     * @param args from main()
+     * @param args   from main()
      */
     Result runMain(JUnitSystem system, String... args) {
         system.out().println("JUnit version " + Version.id());
@@ -98,7 +102,7 @@ public class JUnitCore {
      * Run all the tests in <code>classes</code>.
      *
      * @param computer Helps construct Runners from classes
-     * @param classes the classes containing tests
+     * @param classes  the classes containing tests
      * @return a {@link Result} describing the details of the test run and the failed tests.
      */
     public Result run(Computer computer, Class<?>... classes) {
@@ -159,9 +163,5 @@ public class JUnitCore {
      */
     public void removeListener(RunListener listener) {
         notifier.removeListener(listener);
-    }
-
-    static Computer defaultComputer() {
-        return new Computer();
     }
 }

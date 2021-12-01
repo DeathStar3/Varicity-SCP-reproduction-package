@@ -1,19 +1,5 @@
 package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import org.eclipse.jgit.api.errors.GitAPIException;
-
 import fr.unice.i3s.sparks.deathstar3.MetricGatherer;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
@@ -26,6 +12,15 @@ import fr.unice.i3s.sparks.deathstar3.projectbuilder.Compiler;
 import fr.unice.i3s.sparks.deathstar3.projectbuilder.SonarQubeStarter;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
 import fr.unice.i3s.sparks.deathstar3.sourcesfetcher.SourceFetcher;
+import org.eclipse.jgit.api.errors.GitAPIException;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.*;
 
 public class MetricExtensionEntrypoint {
 

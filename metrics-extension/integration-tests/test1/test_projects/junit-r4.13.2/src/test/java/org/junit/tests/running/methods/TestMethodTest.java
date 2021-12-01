@@ -21,13 +21,69 @@ import org.junit.runners.model.InitializationError;
 
 public class TestMethodTest {
 
+    @Test
+    public void testFailures() throws Exception {
+        List<Throwable> problems = validateAllMethods(EverythingWrong.class);
+        int errorCount = 1 + 4 * 5; // missing constructor plus four invalid methods for each annotation */
+        assertEquals(errorCount, problems.size());
+    }
+
+    @Test
+    public void validateInheritedMethods() throws Exception {
+        List<Throwable> problems = validateAllMethods(SubWrong.class);
+        assertEquals(1, problems.size());
+    }
+
+    @Test
+    public void dontValidateShadowedMethods() throws Exception {
+        List<Throwable> problems = validateAllMethods(SubShadows.class);
+        assertTrue(problems.isEmpty());
+    }
+
+    private List<Throwable> validateAllMethods(Class<?> clazz) {
+        try {
+            new BlockJUnit4ClassRunner(clazz);
+        } catch (InitializationError e) {
+            return e.getCauses();
+        }
+        return Collections.emptyList();
+    }
+
+    @Test
+    public void ignoreRunner() {
+        JUnitCore runner = new JUnitCore();
+        Result result = runner.run(IgnoredTest.class);
+        assertEquals(2, result.getIgnoreCount());
+        assertEquals(1, result.getRunCount());
+    }
+
+    @Test
+    public void compatibility() {
+        TestResult result = new TestResult();
+        new JUnit4TestAdapter(IgnoredTest.class).run(result);
+        assertEquals(1, result.runCount());
+    }
+
+    @Test(expected = InitializationError.class)
+    public void overloaded() throws InitializationError {
+        new BlockJUnit4ClassRunner(Confused.class);
+    }
+
+    @Test(expected = InitializationError.class)
+    public void constructorParameter() throws InitializationError {
+        new BlockJUnit4ClassRunner(ConstructorParameter.class);
+    }
+
+    @Test
+    public void onlyIgnoredMethodsIsStillFineTestClass() {
+        Result result = JUnitCore.runClasses(OnlyTestIsIgnored.class);
+        assertEquals(0, result.getFailureCount());
+        assertEquals(1, result.getIgnoreCount());
+    }
+
     @SuppressWarnings("all")
     public static class EverythingWrong {
         private EverythingWrong() {
-        }
-
-        @BeforeClass
-        public void notStaticBC() {
         }
 
         @BeforeClass
@@ -45,10 +101,6 @@ public class TestMethodTest {
 
         @BeforeClass
         public static void fineBC() {
-        }
-
-        @AfterClass
-        public void notStaticAC() {
         }
 
         @AfterClass
@@ -72,6 +124,22 @@ public class TestMethodTest {
         public static void staticA() {
         }
 
+        @Before
+        public static void staticB() {
+        }
+
+        @Test
+        public static void staticT() {
+        }
+
+        @BeforeClass
+        public void notStaticBC() {
+        }
+
+        @AfterClass
+        public void notStaticAC() {
+        }
+
         @After
         void notPublicA() {
         }
@@ -87,10 +155,6 @@ public class TestMethodTest {
 
         @After
         public void fineA() {
-        }
-
-        @Before
-        public static void staticB() {
         }
 
         @Before
@@ -111,10 +175,6 @@ public class TestMethodTest {
         }
 
         @Test
-        public static void staticT() {
-        }
-
-        @Test
         void notPublicT() {
         }
 
@@ -132,13 +192,6 @@ public class TestMethodTest {
         }
     }
 
-    @Test
-    public void testFailures() throws Exception {
-        List<Throwable> problems = validateAllMethods(EverythingWrong.class);
-        int errorCount = 1 + 4 * 5; // missing constructor plus four invalid methods for each annotation */
-        assertEquals(errorCount, problems.size());
-    }
-
     static public class SuperWrong {
         @Test
         void notPublic() {
@@ -151,32 +204,11 @@ public class TestMethodTest {
         }
     }
 
-    @Test
-    public void validateInheritedMethods() throws Exception {
-        List<Throwable> problems = validateAllMethods(SubWrong.class);
-        assertEquals(1, problems.size());
-    }
-
     static public class SubShadows extends SuperWrong {
         @Override
         @Test
         public void notPublic() {
         }
-    }
-
-    @Test
-    public void dontValidateShadowedMethods() throws Exception {
-        List<Throwable> problems = validateAllMethods(SubShadows.class);
-        assertTrue(problems.isEmpty());
-    }
-
-    private List<Throwable> validateAllMethods(Class<?> clazz) {
-        try {
-            new BlockJUnit4ClassRunner(clazz);
-        } catch (InitializationError e) {
-            return e.getCauses();
-        }
-        return Collections.emptyList();
     }
 
     static public class IgnoredTest {
@@ -195,21 +227,6 @@ public class TestMethodTest {
         }
     }
 
-    @Test
-    public void ignoreRunner() {
-        JUnitCore runner = new JUnitCore();
-        Result result = runner.run(IgnoredTest.class);
-        assertEquals(2, result.getIgnoreCount());
-        assertEquals(1, result.getRunCount());
-    }
-
-    @Test
-    public void compatibility() {
-        TestResult result = new TestResult();
-        new JUnit4TestAdapter(IgnoredTest.class).run(result);
-        assertEquals(1, result.runCount());
-    }
-
     public static class Confused {
         @Test
         public void a(Object b) {
@@ -218,11 +235,6 @@ public class TestMethodTest {
         @Test
         public void a() {
         }
-    }
-
-    @Test(expected = InitializationError.class)
-    public void overloaded() throws InitializationError {
-        new BlockJUnit4ClassRunner(Confused.class);
     }
 
     public static class ConstructorParameter {
@@ -234,22 +246,10 @@ public class TestMethodTest {
         }
     }
 
-    @Test(expected = InitializationError.class)
-    public void constructorParameter() throws InitializationError {
-        new BlockJUnit4ClassRunner(ConstructorParameter.class);
-    }
-
     public static class OnlyTestIsIgnored {
         @Ignore
         @Test
         public void ignored() {
         }
-    }
-
-    @Test
-    public void onlyIgnoredMethodsIsStillFineTestClass() {
-        Result result = JUnitCore.runClasses(OnlyTestIsIgnored.class);
-        assertEquals(0, result.getFailureCount());
-        assertEquals(1, result.getIgnoreCount());
     }
 }

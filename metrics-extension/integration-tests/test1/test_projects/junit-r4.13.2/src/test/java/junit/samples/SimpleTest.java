@@ -8,14 +8,9 @@ import junit.framework.TestSuite;
  * Some simple tests.
  */
 public class SimpleTest extends TestCase {
+    public int unused;
     protected int fValue1;
     protected int fValue2;
-
-    @Override
-    protected void setUp() {
-        fValue1 = 2;
-        fValue2 = 3;
-    }
 
     public static Test suite() {
 
@@ -38,9 +33,19 @@ public class SimpleTest extends TestCase {
           */
 
         /*
-           * the dynamic way
-           */
+         * the dynamic way
+         */
         return new TestSuite(SimpleTest.class);
+    }
+
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(suite());
+    }
+
+    @Override
+    protected void setUp() {
+        fValue1 = 2;
+        fValue2 = 3;
     }
 
     public void testAdd() {
@@ -48,8 +53,6 @@ public class SimpleTest extends TestCase {
         // forced failure result == 5
         assertTrue(result == 6);
     }
-
-    public int unused;
 
     public void testDivideByZero() {
         int zero = 0;
@@ -64,9 +67,5 @@ public class SimpleTest extends TestCase {
 
         assertEquals("Size", 12, 13);
         assertEquals("Capacity", 12.0, 11.99, 0.0);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
     }
 }

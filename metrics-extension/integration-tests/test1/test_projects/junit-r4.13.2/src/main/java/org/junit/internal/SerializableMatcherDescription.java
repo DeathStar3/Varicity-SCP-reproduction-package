@@ -23,16 +23,9 @@ class SerializableMatcherDescription<T> extends BaseMatcher<T> implements Serial
         matcherDescription = StringDescription.asString(matcher);
     }
 
-    public boolean matches(Object o) {
-        throw new UnsupportedOperationException("This Matcher implementation only captures the description");
-    }
-
-    public void describeTo(Description description) {
-        description.appendText(matcherDescription);
-    }
-
     /**
      * Factory method that checks to see if the matcher is already serializable.
+     *
      * @param matcher the matcher to make serializable
      * @return The provided matcher if it is null or already serializable,
      * the SerializableMatcherDescription representation of it if it is not.
@@ -43,5 +36,13 @@ class SerializableMatcherDescription<T> extends BaseMatcher<T> implements Serial
         } else {
             return new SerializableMatcherDescription<T>(matcher);
         }
+    }
+
+    public boolean matches(Object o) {
+        throw new UnsupportedOperationException("This Matcher implementation only captures the description");
+    }
+
+    public void describeTo(Description description) {
+        description.appendText(matcherDescription);
     }
 }

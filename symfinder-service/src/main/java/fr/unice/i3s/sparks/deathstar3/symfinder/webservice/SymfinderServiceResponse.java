@@ -25,7 +25,7 @@ public class SymfinderServiceResponse {
         this.content = content;
     }
 
-    public enum SymfinderServiceResponseType{
+    public enum SymfinderServiceResponseType {
         EXPERIMENT_STARTED,
         EXPERIMENT_INVALID,
         EXPERIMENT_FAILED,

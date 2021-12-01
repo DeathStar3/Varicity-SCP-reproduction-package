@@ -11,15 +11,15 @@ public class SessionStore {
 
     Map<String, Session> sessions = new ConcurrentHashMap<>();
 
-    public Optional<Session> get(String name){
-        return Optional.ofNullable ( sessions.get(name));
+    public Optional<Session> get(String name) {
+        return Optional.ofNullable(sessions.get(name));
     }
 
-    public void put(String name, Session session){
-        this.sessions.put(name,session);
+    public void put(String name, Session session) {
+        this.sessions.put(name, session);
     }
 
-    public void remove(String name){
+    public void remove(String name) {
         this.sessions.remove(name);
     }
 }

@@ -43,15 +43,6 @@ public class Timeout implements TestRule {
     private final boolean lookForStuckThread;
 
     /**
-     * Returns a new builder for building an instance.
-     *
-     * @since 4.12
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    /**
      * Create a {@code Timeout} instance with the timeout specified
      * in milliseconds.
      * <p>
@@ -61,7 +52,7 @@ public class Timeout implements TestRule {
      * {@link Timeout#millis(long)}, or {@link Timeout#seconds(long)}.
      *
      * @param millis the maximum time in milliseconds to allow the
-     * test to run before it should timeout
+     *               test to run before it should timeout
      */
     @Deprecated
     public Timeout(int millis) {
@@ -72,8 +63,8 @@ public class Timeout implements TestRule {
      * Create a {@code Timeout} instance with the timeout specified
      * at the timeUnit of granularity of the provided {@code TimeUnit}.
      *
-     * @param timeout the maximum time to allow the test to run
-     * before it should timeout
+     * @param timeout  the maximum time to allow the test to run
+     *                 before it should timeout
      * @param timeUnit the time unit for the {@code timeout}
      * @since 4.12
      */
@@ -93,6 +84,15 @@ public class Timeout implements TestRule {
         timeout = builder.getTimeout();
         timeUnit = builder.getTimeUnit();
         lookForStuckThread = builder.getLookingForStuckThread();
+    }
+
+    /**
+     * Returns a new builder for building an instance.
+     *
+     * @since 4.12
+     */
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
@@ -145,9 +145,9 @@ public class Timeout implements TestRule {
     protected Statement createFailOnTimeoutStatement(
             Statement statement) throws Exception {
         return FailOnTimeout.builder()
-            .withTimeout(timeout, timeUnit)
-            .withLookingForStuckThread(lookForStuckThread)
-            .build(statement);
+                .withTimeout(timeout, timeUnit)
+                .withLookingForStuckThread(lookForStuckThread)
+                .build(statement);
     }
 
     public Statement apply(Statement base, Description description) {
@@ -155,7 +155,8 @@ public class Timeout implements TestRule {
             return createFailOnTimeoutStatement(base);
         } catch (final Exception e) {
             return new Statement() {
-                @Override public void evaluate() throws Throwable {
+                @Override
+                public void evaluate() throws Throwable {
                     throw new RuntimeException("Invalid parameters for Timeout", e);
                 }
             };
@@ -187,7 +188,7 @@ public class Timeout implements TestRule {
          * some property.
          *
          * @param timeout the maximum time to wait
-         * @param unit the time unit of the {@code timeout} argument
+         * @param unit    the time unit of the {@code timeout} argument
          * @return {@code this} for method chaining.
          */
         public Builder withTimeout(long timeout, TimeUnit unit) {
@@ -200,7 +201,7 @@ public class Timeout implements TestRule {
             return timeout;
         }
 
-        protected TimeUnit getTimeUnit()  {
+        protected TimeUnit getTimeUnit() {
             return timeUnit;
         }
 

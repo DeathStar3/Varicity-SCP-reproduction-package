@@ -27,21 +27,6 @@ import org.junit.runners.Suite.SuiteClasses;
 public class SingleMethodTest {
     public static int count;
 
-    public static class OneTimeSetup {
-        @BeforeClass
-        public static void once() {
-            count++;
-        }
-
-        @Test
-        public void one() {
-        }
-
-        @Test
-        public void two() {
-        }
-    }
-
     @Test
     public void oneTimeSetup() throws Exception {
         count = 0;
@@ -50,21 +35,6 @@ public class SingleMethodTest {
 
         assertEquals(1, count);
         assertEquals(1, result.getRunCount());
-    }
-
-    @RunWith(Parameterized.class)
-    public static class ParameterizedOneTimeSetup {
-        @Parameters
-        public static List<Object[]> params() {
-            return Arrays.asList(new Object[]{1}, new Object[]{2});
-        }
-
-        public ParameterizedOneTimeSetup(int x) {
-        }
-
-        @Test
-        public void one() {
-        }
     }
 
     @Test
@@ -76,27 +46,6 @@ public class SingleMethodTest {
 
         assertEquals(1, result.getRunCount());
     }
-
-    @RunWith(Parameterized.class)
-    public static class ParameterizedOneTimeBeforeClass {
-        @Parameters
-        public static List<Object[]> params() {
-            return Arrays.asList(new Object[]{1}, new Object[]{2});
-        }
-
-        public ParameterizedOneTimeBeforeClass(int x) {
-        }
-
-        @BeforeClass
-        public static void once() {
-            count++;
-        }
-
-        @Test
-        public void one() {
-        }
-    }
-
 
     @Test
     public void parameterizedBeforeClass() throws Exception {
@@ -114,7 +63,7 @@ public class SingleMethodTest {
     @Test
     public void nonexistentMethodCreatesFailure() throws Exception {
         assertEquals(1, new JUnitCore().run(
-                Request.method(OneTimeSetup.class, "thisMethodDontExist"))
+                        Request.method(OneTimeSetup.class, "thisMethodDontExist"))
                 .getFailureCount());
     }
 
@@ -132,6 +81,71 @@ public class SingleMethodTest {
                 return null;
             }
         });
+    }
+
+    @Test
+    public void eliminateUnnecessaryTreeBranches() throws Exception {
+        Runner runner = Request.aClass(OneTwoSuite.class).filterWith(
+                        Description.createTestDescription(TestOne.class, "a"))
+                .getRunner();
+        Description description = runner.getDescription();
+        assertEquals(1, description.getChildren().size());
+    }
+
+    @Test
+    public void classesWithSuiteMethodsAreFiltered() {
+        int testCount = Request.method(HasSuiteMethod.class, "a").getRunner().getDescription().testCount();
+        assertThat(testCount, is(1));
+    }
+
+    public static class OneTimeSetup {
+        @BeforeClass
+        public static void once() {
+            count++;
+        }
+
+        @Test
+        public void one() {
+        }
+
+        @Test
+        public void two() {
+        }
+    }
+
+    @RunWith(Parameterized.class)
+    public static class ParameterizedOneTimeSetup {
+        public ParameterizedOneTimeSetup(int x) {
+        }
+
+        @Parameters
+        public static List<Object[]> params() {
+            return Arrays.asList(new Object[]{1}, new Object[]{2});
+        }
+
+        @Test
+        public void one() {
+        }
+    }
+
+    @RunWith(Parameterized.class)
+    public static class ParameterizedOneTimeBeforeClass {
+        public ParameterizedOneTimeBeforeClass(int x) {
+        }
+
+        @Parameters
+        public static List<Object[]> params() {
+            return Arrays.asList(new Object[]{1}, new Object[]{2});
+        }
+
+        @BeforeClass
+        public static void once() {
+            count++;
+        }
+
+        @Test
+        public void one() {
+        }
     }
 
     public static class TestOne {
@@ -159,16 +173,11 @@ public class SingleMethodTest {
     public static class OneTwoSuite {
     }
 
-    @Test
-    public void eliminateUnnecessaryTreeBranches() throws Exception {
-        Runner runner = Request.aClass(OneTwoSuite.class).filterWith(
-                Description.createTestDescription(TestOne.class, "a"))
-                .getRunner();
-        Description description = runner.getDescription();
-        assertEquals(1, description.getChildren().size());
-    }
-
     public static class HasSuiteMethod {
+        public static junit.framework.Test suite() {
+            return new JUnit4TestAdapter(HasSuiteMethod.class);
+        }
+
         @Test
         public void a() {
         }
@@ -176,15 +185,5 @@ public class SingleMethodTest {
         @Test
         public void b() {
         }
-
-        public static junit.framework.Test suite() {
-            return new JUnit4TestAdapter(HasSuiteMethod.class);
-        }
-    }
-
-    @Test
-    public void classesWithSuiteMethodsAreFiltered() {
-        int testCount = Request.method(HasSuiteMethod.class, "a").getRunner().getDescription().testCount();
-        assertThat(testCount, is(1));
     }
 }

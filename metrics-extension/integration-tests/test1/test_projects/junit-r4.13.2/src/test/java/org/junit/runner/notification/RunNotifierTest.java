@@ -33,18 +33,6 @@ public class RunNotifierTest {
         fNotifier.fireTestRunFinished(new Result());
     }
 
-    private static class CorruptListener extends RunListener {
-        @Override
-        public void testRunFinished(Result result) throws Exception {
-            throw new RuntimeException();
-        }
-
-        @Override
-        public void testFailure(Failure failure) throws Exception {
-            throw new RuntimeException();
-        }
-    }
-    
     @Test
     public void addAndRemoveWithNonThreadSafeListener() {
         CountingListener listener = new CountingListener();
@@ -68,7 +56,7 @@ public class RunNotifierTest {
         fNotifier.fireTestStarted(null);
         assertThat(listener.fTestStarted.get(), is(1));
     }
-    
+
     @Test
     public void addAndRemoveWithThreadSafeListener() {
         ThreadSafeListener listener = new ThreadSafeListener();
@@ -106,6 +94,18 @@ public class RunNotifierTest {
         assertThat(wrappedListener, instanceOf(SynchronizedRunListener.class));
     }
 
+    private static class CorruptListener extends RunListener {
+        @Override
+        public void testRunFinished(Result result) throws Exception {
+            throw new RuntimeException();
+        }
+
+        @Override
+        public void testFailure(Failure failure) throws Exception {
+            throw new RuntimeException();
+        }
+    }
+
     private static class FailureListener extends RunListener {
         private Failure failure;
 
@@ -114,7 +114,7 @@ public class RunNotifierTest {
             this.failure = failure;
         }
     }
-    
+
     private static class CountingListener extends RunListener {
         final AtomicInteger fTestStarted = new AtomicInteger(0);
 
@@ -123,7 +123,7 @@ public class RunNotifierTest {
             fTestStarted.incrementAndGet();
         }
     }
-    
+
     @RunListener.ThreadSafe
     private static class ThreadSafeListener extends CountingListener {
     }

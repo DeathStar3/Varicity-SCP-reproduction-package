@@ -8,6 +8,31 @@ import org.junit.experimental.theories.PotentialAssignment;
 import org.junit.internal.AssumptionViolatedException;
 
 public class GuesserQueue extends ArrayList<ReguessableValue> {
+    private static final long serialVersionUID = 1L;
+    private ReguessableValue lastRemoved;
+
+    static GuesserQueue forSingleValues(
+            List<PotentialAssignment> potentials) {
+        GuesserQueue returnThis = new GuesserQueue();
+        for (PotentialAssignment potentialParameterValue : potentials) {
+            returnThis
+                    .add(new GuesserQueue.ReguessableDecorator(potentialParameterValue));
+        }
+        return returnThis;
+    }
+
+    public void update(AssumptionViolatedException e) {
+        if (lastRemoved != null) {
+            addAll(lastRemoved.reguesses(e));
+        }
+    }
+
+    @Override
+    public ReguessableValue remove(int index) {
+        lastRemoved = super.remove(index);
+        return lastRemoved;
+    }
+
     static class ReguessableDecorator extends ReguessableValue {
         private final PotentialAssignment delegate;
 
@@ -29,30 +54,5 @@ public class GuesserQueue extends ArrayList<ReguessableValue> {
         public String getDescription() throws CouldNotGenerateValueException {
             return delegate.getDescription();
         }
-    }
-
-    static GuesserQueue forSingleValues(
-            List<PotentialAssignment> potentials) {
-        GuesserQueue returnThis = new GuesserQueue();
-        for (PotentialAssignment potentialParameterValue : potentials) {
-            returnThis
-                    .add(new GuesserQueue.ReguessableDecorator(potentialParameterValue));
-        }
-        return returnThis;
-    }
-
-    private static final long serialVersionUID = 1L;
-    private ReguessableValue lastRemoved;
-
-    public void update(AssumptionViolatedException e) {
-        if (lastRemoved != null) {
-            addAll(lastRemoved.reguesses(e));
-        }
-    }
-
-    @Override
-    public ReguessableValue remove(int index) {
-        lastRemoved = super.remove(index);
-        return lastRemoved;
     }
 }

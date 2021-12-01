@@ -71,6 +71,16 @@ public class Symfinder {
         this.neoGraph = new NeoGraph(this.configuration);
     }
 
+    static String formatExecutionTime(long execTime) {
+        long ms = execTime % 1000;
+        long seconds = (execTime - ms) / 1000;
+        long s = seconds % 60;
+        long minutes = (seconds - s) / 60;
+        long m = minutes % 60;
+        long hours = (minutes - m) / 60;
+        return String.format("%02d:%02d:%02d.%03d", hours, m, s, ms);
+    }
+
     public SymfinderResult run() throws IOException {
         long symfinderStartTime = System.currentTimeMillis();
         logger.log(Level.getLevel("MY_LEVEL"), "Symfinder version: " + System.getenv("SYMFINDER_VERSION"));
@@ -199,17 +209,6 @@ public class Symfinder {
         }
         return null;
     }
-
-    static String formatExecutionTime(long execTime) {
-        long ms = execTime % 1000;
-        long seconds = (execTime - ms) / 1000;
-        long s = seconds % 60;
-        long minutes = (seconds - s) / 60;
-        long m = minutes % 60;
-        long hours = (minutes - m) / 60;
-        return String.format("%02d:%02d:%02d.%03d", hours, m, s, ms);
-    }
-
 
 
 }

@@ -17,11 +17,11 @@ import static fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityAttribute.
 
 public class ComposeTypeVisitor extends ImportsVisitor {
 
+    private static final Logger logger = LogManager.getLogger(ComposeTypeVisitor.class);
+
     public ComposeTypeVisitor(NeoGraph neoGraph) {
         super(neoGraph);
     }
-
-    private static final Logger logger = LogManager.getLogger(ComposeTypeVisitor.class);
 
     @Override
     public boolean visit(FieldDeclaration field) {

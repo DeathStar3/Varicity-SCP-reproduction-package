@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public class ImportsVisitor extends SymfinderVisitor {
 
-    List<ImportDeclaration> imports = new ArrayList<>();
     protected ITypeBinding thisClassBinding = null;
+    List<ImportDeclaration> imports = new ArrayList<>();
 
 
     public ImportsVisitor(NeoGraph neoGraph) {

@@ -17,27 +17,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 public class InitializationErrorForwardCompatibilityTest {
-    public static class CantInitialize extends Runner {
-        private static final String UNIQUE_ERROR_MESSAGE = "Unique error message";
-
-        public CantInitialize(Class<?> klass) throws Exception {
-            throw new Exception(UNIQUE_ERROR_MESSAGE);
-        }
-
-        @Override
-        public Description getDescription() {
-            return Description.EMPTY;
-        }
-
-        @Override
-        public void run(RunNotifier notifier) {
-        }
-    }
-
-    @RunWith(CantInitialize.class)
-    public static class CantInitializeTests {
-    }
-
     private JUnit4TestAdapter fAdapter;
 
     @Before
@@ -60,28 +39,6 @@ public class InitializationErrorForwardCompatibilityTest {
                 .nextElement().exceptionMessage());
     }
 
-    private final class ErrorRememberingListener implements TestListener {
-        private junit.framework.Test fError;
-
-        public void addError(junit.framework.Test test, Throwable e) {
-            fError = test;
-        }
-
-        public void addFailure(junit.framework.Test test,
-                AssertionFailedError t) {
-        }
-
-        public void endTest(junit.framework.Test test) {
-        }
-
-        public void startTest(junit.framework.Test test) {
-        }
-
-        public junit.framework.Test getError() {
-            return fError;
-        }
-    }
-
     @Test
     public void generatedErrorTestsMatchUp() {
         junit.framework.Test shouldFail = fAdapter.getTests().get(0);
@@ -93,10 +50,53 @@ public class InitializationErrorForwardCompatibilityTest {
         assertTrue(shouldFail == listener.getError());
     }
 
+    public static class CantInitialize extends Runner {
+        private static final String UNIQUE_ERROR_MESSAGE = "Unique error message";
+
+        public CantInitialize(Class<?> klass) throws Exception {
+            throw new Exception(UNIQUE_ERROR_MESSAGE);
+        }
+
+        @Override
+        public Description getDescription() {
+            return Description.EMPTY;
+        }
+
+        @Override
+        public void run(RunNotifier notifier) {
+        }
+    }
+
+    @RunWith(CantInitialize.class)
+    public static class CantInitializeTests {
+    }
+
     public static class InitializesWithError extends BlockJUnit4ClassRunner {
         public InitializesWithError(Class<?> klass) throws Exception {
             super(klass);
             throw new Exception();
+        }
+    }
+
+    private final class ErrorRememberingListener implements TestListener {
+        private junit.framework.Test fError;
+
+        public void addError(junit.framework.Test test, Throwable e) {
+            fError = test;
+        }
+
+        public void addFailure(junit.framework.Test test,
+                               AssertionFailedError t) {
+        }
+
+        public void endTest(junit.framework.Test test) {
+        }
+
+        public void startTest(junit.framework.Test test) {
+        }
+
+        public junit.framework.Test getError() {
+            return fError;
         }
     }
 }

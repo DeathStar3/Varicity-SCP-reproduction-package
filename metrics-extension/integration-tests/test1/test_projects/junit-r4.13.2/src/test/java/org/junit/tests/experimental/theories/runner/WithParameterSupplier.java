@@ -21,9 +21,37 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
 
 public class WithParameterSupplier {
-    
+
+    private static final List<String> DATAPOINTS = Arrays.asList("qwe", "asd");
     @Rule
     public ExpectedException expected = ExpectedException.none();
+
+    @Test
+    public void shouldPickUpDataPointsFromParameterSupplier() throws Throwable {
+        List<PotentialAssignment> assignments = potentialAssignments(TestClassUsingParameterSupplier.class
+                .getMethod("theoryMethod", String.class));
+
+        assertEquals(2, assignments.size());
+        assertEquals(DATAPOINTS.get(0), assignments.get(0).getValue());
+        assertEquals(DATAPOINTS.get(1), assignments.get(1).getValue());
+    }
+
+    @Test
+    public void shouldRejectSuppliersWithUnknownConstructors() throws Exception {
+        expected.expect(InitializationError.class);
+        new Theories(TestClassUsingSupplierWithUnknownConstructor.class);
+    }
+
+    @Test
+    public void shouldRejectSuppliersWithTwoConstructors() throws Exception {
+        expected.expect(InitializationError.class);
+        new Theories(TestClassUsingSupplierWithTwoConstructors.class);
+    }
+
+    @Test
+    public void shouldAcceptSuppliersWithTestClassConstructor() throws Exception {
+        new Theories(TestClassUsingSupplierWithTestClassConstructor.class);
+    }
 
     private static class SimplePotentialAssignment extends PotentialAssignment {
         private String description;
@@ -44,8 +72,6 @@ public class WithParameterSupplier {
             return description;
         }
     }
-
-    private static final List<String> DATAPOINTS = Arrays.asList("qwe", "asd");
 
     public static class SimpleSupplier extends ParameterSupplier {
 
@@ -72,18 +98,8 @@ public class WithParameterSupplier {
 
     }
 
-    @Test
-    public void shouldPickUpDataPointsFromParameterSupplier() throws Throwable {
-        List<PotentialAssignment> assignments = potentialAssignments(TestClassUsingParameterSupplier.class
-                .getMethod("theoryMethod", String.class));
-
-        assertEquals(2, assignments.size());
-        assertEquals(DATAPOINTS.get(0), assignments.get(0).getValue());
-        assertEquals(DATAPOINTS.get(1), assignments.get(1).getValue());
-    }
-    
     public static class SupplierWithUnknownConstructor extends ParameterSupplier {
-        
+
         public SupplierWithUnknownConstructor(String param) {
         }
 
@@ -102,15 +118,9 @@ public class WithParameterSupplier {
         }
 
     }
-    
-    @Test
-    public void shouldRejectSuppliersWithUnknownConstructors() throws Exception {
-        expected.expect(InitializationError.class);
-        new Theories(TestClassUsingSupplierWithUnknownConstructor.class);
-    }
-    
+
     public static class SupplierWithTwoConstructors extends ParameterSupplier {
-        
+
         public SupplierWithTwoConstructors(String param) {
         }
 
@@ -129,15 +139,9 @@ public class WithParameterSupplier {
         }
 
     }
-    
-    @Test
-    public void shouldRejectSuppliersWithTwoConstructors() throws Exception {
-        expected.expect(InitializationError.class);
-        new Theories(TestClassUsingSupplierWithTwoConstructors.class);
-    }
-    
+
     public static class SupplierWithTestClassConstructor extends ParameterSupplier {
-        
+
         public SupplierWithTestClassConstructor(TestClass param) {
         }
 
@@ -155,11 +159,6 @@ public class WithParameterSupplier {
         public void theory(@ParametersSuppliedBy(SupplierWithTestClassConstructor.class) String param) {
         }
 
-    }
-    
-    @Test
-    public void shouldAcceptSuppliersWithTestClassConstructor() throws Exception {
-        new Theories(TestClassUsingSupplierWithTestClassConstructor.class);
     }
 
 }

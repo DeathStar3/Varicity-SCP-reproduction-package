@@ -12,6 +12,14 @@ import org.junit.runners.model.InitializationError;
 
 public class UseSuiteAsASuperclassTest {
 
+    @Test
+    public void ensureTestsAreRun() {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(AllWithMySuite.class);
+        assertEquals(2, result.getRunCount());
+        assertEquals(1, result.getFailureCount());
+    }
+
     public static class TestA {
         @Test
         public void pass() {
@@ -33,13 +41,5 @@ public class UseSuiteAsASuperclassTest {
 
     @RunWith(MySuite.class)
     public static class AllWithMySuite {
-    }
-
-    @Test
-    public void ensureTestsAreRun() {
-        JUnitCore core = new JUnitCore();
-        Result result = core.run(AllWithMySuite.class);
-        assertEquals(2, result.getRunCount());
-        assertEquals(1, result.getFailureCount());
     }
 }

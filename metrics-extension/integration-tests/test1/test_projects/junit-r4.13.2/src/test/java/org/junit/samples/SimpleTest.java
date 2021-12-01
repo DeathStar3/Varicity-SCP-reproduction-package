@@ -12,20 +12,19 @@ import org.junit.Test;
  * <p>This test is expected to fail.
  */
 public class SimpleTest {
+    public int unused;
     protected int fValue1;
     protected int fValue2;
+
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(SimpleTest.class);
+    }
 
     @Before
     public void setUp() {
         fValue1 = 2;
         fValue2 = 3;
     }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(SimpleTest.class);
-    }
-
-    public int unused;
 
     @Test
     public void divideByZero() {

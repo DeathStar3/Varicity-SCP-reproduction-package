@@ -47,17 +47,6 @@ public class MaxStarterTest {
         fMaxFile.delete();
     }
 
-    public static class TwoTests {
-        @Test
-        public void succeed() {
-        }
-
-        @Test
-        public void dontSucceed() {
-            fail();
-        }
-    }
-
     @Test
     public void twoTestsNotRunComeBackInRandomOrder() {
         Request request = Request.aClass(TwoTests.class);
@@ -122,20 +111,6 @@ public class MaxStarterTest {
         assertEquals(dontSucceed, tests.get(1));
     }
 
-    public static class TwoUnEqualTests {
-        @Test
-        public void slow() throws InterruptedException {
-            Thread.sleep(100);
-            fail();
-        }
-
-        @Test
-        public void fast() {
-            fail();
-        }
-
-    }
-
     @Test
     public void rememberOldRuns() {
         fMax.run(TwoUnEqualTests.class);
@@ -176,14 +151,6 @@ public class MaxStarterTest {
             throws Exception {
         Result result = fMax.run(Request.aClass(TwoTests.class));
         assertEquals(2, result.getRunCount());
-    }
-
-    public static class TwoOldTests extends TestCase {
-        public void testOne() {
-        }
-
-        public void testTwo() {
-        }
     }
 
     @Test
@@ -227,25 +194,10 @@ public class MaxStarterTest {
         assertEquals("Counts match up in " + testClass, coreCount, filterCount);
     }
 
-    private static class MalformedJUnit38Test {
-        private MalformedJUnit38Test() {
-        }
-
-        @SuppressWarnings("unused")
-        public void testSucceeds() {
-        }
-    }
-
     @Test
     public void maxShouldSkipMalformedJUnit38Classes() {
         Request request = Request.aClass(MalformedJUnit38Test.class);
         fMax.run(request);
-    }
-
-    public static class MalformedJUnit38TestMethod extends TestCase {
-        @SuppressWarnings("unused")
-        private void testNothing() {
-        }
     }
 
     @Test
@@ -261,21 +213,11 @@ public class MaxStarterTest {
         assertThat(failure.toString(), containsString("isn't public"));
     }
 
-    public static class HalfMalformedJUnit38TestMethod extends TestCase {
-        public void testSomething() {
-        }
-
-        @SuppressWarnings("unused")
-        private void testNothing() {
-        }
-    }
-
     @Test
     public void halfMalformed() {
         assertThat(JUnitCore.runClasses(HalfMalformedJUnit38TestMethod.class)
                 .getFailureCount(), is(1));
     }
-
 
     @Test
     public void correctErrorFromHalfMalformedTest() {
@@ -288,5 +230,62 @@ public class MaxStarterTest {
         assertThat(failure.toString(), containsString("MalformedJUnit38TestMethod"));
         assertThat(failure.toString(), containsString("testNothing"));
         assertThat(failure.toString(), containsString("isn't public"));
+    }
+
+    public static class TwoTests {
+        @Test
+        public void succeed() {
+        }
+
+        @Test
+        public void dontSucceed() {
+            fail();
+        }
+    }
+
+    public static class TwoUnEqualTests {
+        @Test
+        public void slow() throws InterruptedException {
+            Thread.sleep(100);
+            fail();
+        }
+
+        @Test
+        public void fast() {
+            fail();
+        }
+
+    }
+
+    public static class TwoOldTests extends TestCase {
+        public void testOne() {
+        }
+
+        public void testTwo() {
+        }
+    }
+
+    private static class MalformedJUnit38Test {
+        private MalformedJUnit38Test() {
+        }
+
+        @SuppressWarnings("unused")
+        public void testSucceeds() {
+        }
+    }
+
+    public static class MalformedJUnit38TestMethod extends TestCase {
+        @SuppressWarnings("unused")
+        private void testNothing() {
+        }
+    }
+
+    public static class HalfMalformedJUnit38TestMethod extends TestCase {
+        public void testSomething() {
+        }
+
+        @SuppressWarnings("unused")
+        private void testNothing() {
+        }
     }
 }

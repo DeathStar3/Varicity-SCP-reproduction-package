@@ -10,6 +10,17 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
 public class InheritedTestTest {
+    @Test
+    public void subclassWithOnlyInheritedTestsRuns() {
+        Result result = JUnitCore.runClasses(Sub.class);
+        assertTrue(result.wasSuccessful());
+    }
+
+    @Test
+    public void subclassWithInheritedTestAndOwnBeforeRunsBefore() {
+        assertFalse(JUnitCore.runClasses(SubWithBefore.class).wasSuccessful());
+    }
+
     public abstract static class Super {
         @Test
         public void nothing() {
@@ -19,21 +30,10 @@ public class InheritedTestTest {
     public static class Sub extends Super {
     }
 
-    @Test
-    public void subclassWithOnlyInheritedTestsRuns() {
-        Result result = JUnitCore.runClasses(Sub.class);
-        assertTrue(result.wasSuccessful());
-    }
-
     public static class SubWithBefore extends Super {
         @Before
         public void gack() {
             fail();
         }
-    }
-
-    @Test
-    public void subclassWithInheritedTestAndOwnBeforeRunsBefore() {
-        assertFalse(JUnitCore.runClasses(SubWithBefore.class).wasSuccessful());
     }
 } 

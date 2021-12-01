@@ -20,7 +20,7 @@ import org.junit.runners.model.InitializationError;
 /**
  * A replacement for JUnitCore, which keeps track of runtime and failure history, and reorders tests
  * to maximize the chances that a failing test occurs early in the test run.
- *
+ * <p>
  * The rules for sorting are:
  * <ol>
  * <li> Never-run tests first, in arbitrary order
@@ -31,6 +31,11 @@ import org.junit.runners.model.InitializationError;
  */
 public class MaxCore {
     private static final String MALFORMED_JUNIT_3_TEST_CLASS_PREFIX = "malformed JUnit 3 test class: ";
+    private final MaxHistory history;
+
+    private MaxCore(File storedResults) {
+        history = MaxHistory.forFolder(storedResults);
+    }
 
     /**
      * Create a new MaxCore from a serialized file stored at storedResults
@@ -47,12 +52,6 @@ public class MaxCore {
      */
     public static MaxCore storedLocally(File storedResults) {
         return new MaxCore(storedResults);
-    }
-
-    private final MaxHistory history;
-
-    private MaxCore(File storedResults) {
-        history = MaxHistory.forFolder(storedResults);
     }
 
     /**
@@ -76,12 +75,12 @@ public class MaxCore {
 
     /**
      * Run all the tests contained in <code>request</code>.
-     *
+     * <p>
      * This variant should be used if {@code core} has attached listeners that this
      * run should notify.
      *
      * @param request the request describing tests
-     * @param core a JUnitCore to delegate to.
+     * @param core    a JUnitCore to delegate to.
      * @return a {@link Result} describing the details of the test run and the failed tests.
      */
     public Result run(Request request, JUnitCore core) {
@@ -153,7 +152,7 @@ public class MaxCore {
     /**
      * @param request a request to run
      * @return a list of method-level tests to run, sorted in the order
-     *         specified in the class comment.
+     * specified in the class comment.
      */
     public List<Description> sortedLeavesForTest(Request request) {
         return findLeaves(sortRequest(request));

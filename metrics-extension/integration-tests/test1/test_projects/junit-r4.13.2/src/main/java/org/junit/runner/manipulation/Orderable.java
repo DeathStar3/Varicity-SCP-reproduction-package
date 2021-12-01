@@ -15,7 +15,7 @@ public interface Orderable extends Sortable {
      * Orders the tests using <code>orderer</code>
      *
      * @throws InvalidOrderingException if orderer does something invalid (like remove or add
-     * children)
+     *                                  children)
      */
     void order(Orderer orderer) throws InvalidOrderingException;
 }

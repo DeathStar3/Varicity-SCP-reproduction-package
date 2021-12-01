@@ -16,11 +16,11 @@ import java.util.Optional;
 
 public class LocalVariablesVisitor extends ImportsVisitor {
 
+    private static final Logger logger = LogManager.getLogger(LocalVariablesVisitor.class);
+
     public LocalVariablesVisitor(NeoGraph neoGraph) {
         super(neoGraph);
     }
-
-    private static final Logger logger = LogManager.getLogger(LocalVariablesVisitor.class);
 
     @Override
     public boolean visit(MethodDeclaration method) {
@@ -52,7 +52,7 @@ public class LocalVariablesVisitor extends ImportsVisitor {
                                             || node.get("name").asString().contains("int[]") || node.get("name").asString().contains("double[]") || node.get("name").asString().contains("float[]")
                                             || node.get("name").asString().contains("long[]") || node.get("name").asString().contains("bytes[]") || node.get("name").asString().equals("bytes") || node.get("name").asString().equals("byte"))) {
                                         neoGraph.linkTwoNodes(parentClassNode, node, RelationType.INSTANTIATE);
-                                        logger.log(Level.getLevel("MY_LEVEL"),"\n ************* Local variable "+ node.get("name") + " ----- " + parentClassNode.get("name") + " ******** \n"  );
+                                        logger.log(Level.getLevel("MY_LEVEL"), "\n ************* Local variable " + node.get("name") + " ----- " + parentClassNode.get("name") + " ******** \n");
                                     }
                                 });
                             }

@@ -60,7 +60,7 @@ import java.util.concurrent.TimeUnit;
  *     }
  * }
  * </pre>
- *
+ * <p>
  * An example to assert runtime:
  * <pre>
  * &#064;Test
@@ -129,7 +129,7 @@ public class Stopwatch implements TestRule {
         }
         long currentEndNanos = endNanos; // volatile read happens here
         if (currentEndNanos == 0) {
-          currentEndNanos = clock.nanoTime();
+            currentEndNanos = clock.nanoTime();
         }
 
         return currentEndNanos - startNanos;
@@ -148,36 +148,41 @@ public class Stopwatch implements TestRule {
         return new InternalWatcher().apply(base, description);
     }
 
-    private class InternalWatcher extends TestWatcher {
-
-        @Override protected void starting(Description description) {
-            Stopwatch.this.starting();
-        }
-
-        @Override protected void finished(Description description) {
-            Stopwatch.this.finished(getNanos(), description);
-        }
-
-        @Override protected void succeeded(Description description) {
-            Stopwatch.this.stopping();
-            Stopwatch.this.succeeded(getNanos(), description);
-        }
-
-        @Override protected void failed(Throwable e, Description description) {
-            Stopwatch.this.stopping();
-            Stopwatch.this.failed(getNanos(), e, description);
-        }
-
-        @Override protected void skipped(AssumptionViolatedException e, Description description) {
-            Stopwatch.this.stopping();
-            Stopwatch.this.skipped(getNanos(), e, description);
-        }
-    }
-
     static class Clock {
 
         public long nanoTime() {
             return System.nanoTime();
+        }
+    }
+
+    private class InternalWatcher extends TestWatcher {
+
+        @Override
+        protected void starting(Description description) {
+            Stopwatch.this.starting();
+        }
+
+        @Override
+        protected void finished(Description description) {
+            Stopwatch.this.finished(getNanos(), description);
+        }
+
+        @Override
+        protected void succeeded(Description description) {
+            Stopwatch.this.stopping();
+            Stopwatch.this.succeeded(getNanos(), description);
+        }
+
+        @Override
+        protected void failed(Throwable e, Description description) {
+            Stopwatch.this.stopping();
+            Stopwatch.this.failed(getNanos(), e, description);
+        }
+
+        @Override
+        protected void skipped(AssumptionViolatedException e, Description description) {
+            Stopwatch.this.stopping();
+            Stopwatch.this.skipped(getNanos(), e, description);
         }
     }
 }

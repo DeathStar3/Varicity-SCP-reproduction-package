@@ -44,8 +44,8 @@ public class TextListener extends RunListener {
     }
 
     /*
-      * Internal methods
-      */
+     * Internal methods
+     */
 
     private PrintStream getWriter() {
         return writer;

@@ -13,21 +13,13 @@ import org.junit.runners.model.TestClass;
 public class PublicClassValidatorTest {
     private final PublicClassValidator validator = new PublicClassValidator();
 
-    public static class PublicClass {
-
-    }
-
     @Test
     public void acceptsPublicClass() {
         TestClass testClass = new TestClass(PublicClass.class);
         List<Exception> validationErrors = validator
                 .validateTestClass(testClass);
         assertThat(validationErrors,
-                is(equalTo(Collections.<Exception> emptyList())));
-    }
-
-    static class NonPublicClass {
-
+                is(equalTo(Collections.<Exception>emptyList())));
     }
 
     @Test
@@ -37,5 +29,13 @@ public class PublicClassValidatorTest {
                 .validateTestClass(testClass);
         assertThat("Wrong number of errors.", validationErrors.size(),
                 is(equalTo(1)));
+    }
+
+    public static class PublicClass {
+
+    }
+
+    static class NonPublicClass {
+
     }
 }

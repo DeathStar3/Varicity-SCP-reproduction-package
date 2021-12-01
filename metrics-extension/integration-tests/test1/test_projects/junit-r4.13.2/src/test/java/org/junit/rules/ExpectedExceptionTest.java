@@ -30,8 +30,16 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class ExpectedExceptionTest {
     private static final String ARBITRARY_MESSAGE = "arbitrary message";
+    private final Class<?> classUnderTest;
+    private final Matcher<EventCollector> matcher;
 
-    @Parameters(name= "{0}")
+    public ExpectedExceptionTest(Class<?> classUnderTest,
+                                 Matcher<EventCollector> matcher) {
+        this.classUnderTest = classUnderTest;
+        this.matcher = matcher;
+    }
+
+    @Parameters(name = "{0}")
     public static Collection<Object[]> testsWithEventMatcher() {
         return asList(new Object[][]{
                 {EmptyTestExpectingNoException.class, everyTestRunSuccessful()},
@@ -79,28 +87,18 @@ public class ExpectedExceptionTest {
                                 containsString("Caused by: java.lang.NullPointerException: an unexpected cause")))},
                 {
                         UseNoCustomMessage.class,
-                        hasSingleFailureWithMessage("Expected test to throw an instance of java.lang.IllegalArgumentException") },
+                        hasSingleFailureWithMessage("Expected test to throw an instance of java.lang.IllegalArgumentException")},
                 {
                         UseCustomMessageWithoutPlaceHolder.class,
-                        hasSingleFailureWithMessage(ARBITRARY_MESSAGE) },
+                        hasSingleFailureWithMessage(ARBITRARY_MESSAGE)},
                 {
                         UseCustomMessageWithPlaceHolder.class,
                         hasSingleFailureWithMessage(ARBITRARY_MESSAGE
-                                + " - an instance of java.lang.IllegalArgumentException") },
+                                + " - an instance of java.lang.IllegalArgumentException")},
                 {
                         ErrorCollectorShouldFailAlthoughExpectedExceptionDoesNot.class,
-                        hasSingleFailureWithMessage(ARBITRARY_MESSAGE) }
+                        hasSingleFailureWithMessage(ARBITRARY_MESSAGE)}
         });
-    }
-
-    private final Class<?> classUnderTest;
-
-    private final Matcher<EventCollector> matcher;
-
-    public ExpectedExceptionTest(Class<?> classUnderTest,
-            Matcher<EventCollector> matcher) {
-        this.classUnderTest = classUnderTest;
-        this.matcher = matcher;
     }
 
     @Test
@@ -331,11 +329,11 @@ public class ExpectedExceptionTest {
             throw new IllegalArgumentException("Ack!", new NullPointerException("an unexpected cause"));
         }
     }
-    
+
     public static class UseNoCustomMessage {
 
         @Rule
-        public ExpectedException thrown= ExpectedException.none();
+        public ExpectedException thrown = ExpectedException.none();
 
         @Test
         public void noThrow() {
@@ -359,7 +357,7 @@ public class ExpectedExceptionTest {
     public static class UseCustomMessageWithoutPlaceHolder {
 
         @Rule
-        public ExpectedException thrown= ExpectedException.none();
+        public ExpectedException thrown = ExpectedException.none();
 
         @Test
         public void noThrow() {

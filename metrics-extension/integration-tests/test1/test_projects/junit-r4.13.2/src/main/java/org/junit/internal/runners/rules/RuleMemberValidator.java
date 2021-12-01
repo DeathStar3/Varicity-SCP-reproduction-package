@@ -31,42 +31,42 @@ public class RuleMemberValidator {
      */
     public static final RuleMemberValidator CLASS_RULE_VALIDATOR =
             classRuleValidatorBuilder()
-            .withValidator(new DeclaringClassMustBePublic())
-            .withValidator(new MemberMustBeStatic())
-            .withValidator(new MemberMustBePublic())
-            .withValidator(new FieldMustBeATestRule())
-            .build();
+                    .withValidator(new DeclaringClassMustBePublic())
+                    .withValidator(new MemberMustBeStatic())
+                    .withValidator(new MemberMustBePublic())
+                    .withValidator(new FieldMustBeATestRule())
+                    .build();
     /**
      * Validates fields with a {@link Rule} annotation.
      */
     public static final RuleMemberValidator RULE_VALIDATOR =
             testRuleValidatorBuilder()
-            .withValidator(new MemberMustBeNonStaticOrAlsoClassRule())
-            .withValidator(new MemberMustBePublic())
-            .withValidator(new FieldMustBeARule())
-            .build();
+                    .withValidator(new MemberMustBeNonStaticOrAlsoClassRule())
+                    .withValidator(new MemberMustBePublic())
+                    .withValidator(new FieldMustBeARule())
+                    .build();
     /**
      * Validates methods with a {@link ClassRule} annotation.
      */
     public static final RuleMemberValidator CLASS_RULE_METHOD_VALIDATOR =
             classRuleValidatorBuilder()
-            .forMethods()
-            .withValidator(new DeclaringClassMustBePublic())
-            .withValidator(new MemberMustBeStatic())
-            .withValidator(new MemberMustBePublic())
-            .withValidator(new MethodMustBeATestRule())
-            .build();
+                    .forMethods()
+                    .withValidator(new DeclaringClassMustBePublic())
+                    .withValidator(new MemberMustBeStatic())
+                    .withValidator(new MemberMustBePublic())
+                    .withValidator(new MethodMustBeATestRule())
+                    .build();
 
     /**
      * Validates methods with a {@link Rule} annotation.
      */
     public static final RuleMemberValidator RULE_METHOD_VALIDATOR =
             testRuleValidatorBuilder()
-            .forMethods()
-            .withValidator(new MemberMustBeNonStaticOrAlsoClassRule())
-            .withValidator(new MemberMustBePublic())
-            .withValidator(new MethodMustBeARule())
-            .build();
+                    .forMethods()
+                    .withValidator(new MemberMustBeNonStaticOrAlsoClassRule())
+                    .withValidator(new MemberMustBePublic())
+                    .withValidator(new MethodMustBeARule())
+                    .build();
 
     private final Class<? extends Annotation> annotation;
     private final boolean methods;
@@ -76,6 +76,26 @@ public class RuleMemberValidator {
         this.annotation = builder.annotation;
         this.methods = builder.methods;
         this.validatorStrategies = builder.validators;
+    }
+
+    private static Builder classRuleValidatorBuilder() {
+        return new Builder(ClassRule.class);
+    }
+
+    private static Builder testRuleValidatorBuilder() {
+        return new Builder(Rule.class);
+    }
+
+    private static boolean isRuleType(FrameworkMember<?> member) {
+        return isMethodRule(member) || isTestRule(member);
+    }
+
+    private static boolean isTestRule(FrameworkMember<?> member) {
+        return TestRule.class.isAssignableFrom(member.getType());
+    }
+
+    private static boolean isMethodRule(FrameworkMember<?> member) {
+        return MethodRule.class.isAssignableFrom(member.getType());
     }
 
     /**
@@ -100,18 +120,25 @@ public class RuleMemberValidator {
         }
     }
 
-    private static Builder classRuleValidatorBuilder() {
-        return new Builder(ClassRule.class);
-    }
-
-    private static Builder testRuleValidatorBuilder() {
-        return new Builder(Rule.class);
+    /**
+     * Encapsulates a single piece of validation logic, used to determine if {@link org.junit.Rule} and
+     * {@link org.junit.ClassRule} annotations have been used correctly
+     */
+    interface RuleValidator {
+        /**
+         * Examine the given member and add any violations of the strategy's validation logic to the given list of errors
+         *
+         * @param member     The member (field or member) to examine
+         * @param annotation The type of rule annotation on the member
+         * @param errors     The list of errors to add validation violations to
+         */
+        void validate(FrameworkMember<?> member, Class<? extends Annotation> annotation, List<Throwable> errors);
     }
 
     private static class Builder {
         private final Class<? extends Annotation> annotation;
-        private boolean methods;
         private final List<RuleValidator> validators;
+        private boolean methods;
 
         private Builder(Class<? extends Annotation> annotation) {
             this.annotation = annotation;
@@ -132,32 +159,6 @@ public class RuleMemberValidator {
         RuleMemberValidator build() {
             return new RuleMemberValidator(this);
         }
-    }
-
-    private static boolean isRuleType(FrameworkMember<?> member) {
-        return isMethodRule(member) || isTestRule(member);
-    }
-
-    private static boolean isTestRule(FrameworkMember<?> member) {
-        return TestRule.class.isAssignableFrom(member.getType());
-    }
-
-    private static boolean isMethodRule(FrameworkMember<?> member) {
-        return MethodRule.class.isAssignableFrom(member.getType());
-    }
-
-    /**
-     * Encapsulates a single piece of validation logic, used to determine if {@link org.junit.Rule} and
-     * {@link org.junit.ClassRule} annotations have been used correctly
-     */
-    interface RuleValidator {
-        /**
-         * Examine the given member and add any violations of the strategy's validation logic to the given list of errors
-         * @param member The member (field or member) to examine
-         * @param annotation The type of rule annotation on the member
-         * @param errors The list of errors to add validation violations to
-         */
-        void validate(FrameworkMember<?> member, Class<? extends Annotation> annotation, List<Throwable> errors);
     }
 
     /**
@@ -249,27 +250,27 @@ public class RuleMemberValidator {
             }
         }
     }
-    
+
     /**
      * Require the member to return an implementation of {@link org.junit.rules.TestRule}
      */
     private static final class MethodMustBeATestRule implements RuleValidator {
         public void validate(FrameworkMember<?> member,
-                Class<? extends Annotation> annotation, List<Throwable> errors) {
+                             Class<? extends Annotation> annotation, List<Throwable> errors) {
             if (!isTestRule(member)) {
-                errors.add(new ValidationError(member, annotation, 
+                errors.add(new ValidationError(member, annotation,
                         "must return an implementation of TestRule."));
             }
         }
     }
-    
+
     /**
      * Requires the member is a field implementing {@link org.junit.rules.TestRule}
      */
     private static final class FieldMustBeATestRule implements RuleValidator {
 
         public void validate(FrameworkMember<?> member,
-                Class<? extends Annotation> annotation, List<Throwable> errors) {
+                             Class<? extends Annotation> annotation, List<Throwable> errors) {
             if (!isTestRule(member)) {
                 errors.add(new ValidationError(member, annotation,
                         "must implement TestRule."));

@@ -9,6 +9,7 @@ public class Classes {
 
     /**
      * Do not instantiate.
+     *
      * @deprecated will be private soon.
      */
     @Deprecated
@@ -32,7 +33,7 @@ public class Classes {
      * If the current thread does not have a class loader, falls back to the class loader for the
      * passed-in class.
      *
-     * @param className Name of the class.
+     * @param className    Name of the class.
      * @param callingClass Class that is requesting a the class
      * @throws ClassNotFoundException
      * @since 4.13

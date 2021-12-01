@@ -1,10 +1,10 @@
 package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
 
+import fr.unice.i3s.sparks.deathstar3.deserializer.ConfigLoader;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.Neo4jParameters;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
-import fr.unice.i3s.sparks.deathstar3.deserializer.ConfigLoader;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import org.junit.jupiter.api.Assertions;
@@ -62,7 +62,7 @@ public class MetricExtensionEntrypointTest {
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
             System.out.println(experimentResult);
-            
+
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
 
         });
@@ -88,10 +88,10 @@ public class MetricExtensionEntrypointTest {
             System.out.println(experimentResult);
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
-            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
-            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
-            
-            
+            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(), "Symfinder n'est pas executé donc son résultat devrait être vide ");
+            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(), "Symfinder n'est pas executé donc son résultat devrait être vide ");
+
+
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
 
             Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
@@ -113,7 +113,7 @@ public class MetricExtensionEntrypointTest {
                 getResourceAsStream("regatta.yaml").readAllBytes())).get(0);
 
         System.out.println(regatta);
-        
+
         Assertions.assertDoesNotThrow(() -> {
             ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject);
 
@@ -121,10 +121,10 @@ public class MetricExtensionEntrypointTest {
 
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
-            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
-            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
-            
-            
+            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(), "Symfinder n'est pas executé donc son résultat devrait être vide ");
+            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(), "Symfinder n'est pas executé donc son résultat devrait être vide ");
+
+
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
             Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
             Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());

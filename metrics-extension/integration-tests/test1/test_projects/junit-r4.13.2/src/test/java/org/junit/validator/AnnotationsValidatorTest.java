@@ -16,12 +16,46 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.TestClass;
 
 public class AnnotationsValidatorTest {
+    @Test
+    public void validatorIsCalledForAClass() {
+        assertClassHasFailureMessage(AnnotationValidatorClassTest.class,
+                ExampleAnnotationValidator.ANNOTATED_CLASS_CALLED);
+    }
+
+    @Test
+    public void validatorIsCalledForAMethod() {
+        assertClassHasFailureMessage(AnnotationValidatorMethodTest.class,
+                ExampleAnnotationValidator.ANNOTATED_METHOD_CALLED);
+    }
+
+    @Test
+    public void validatorIsCalledForAField() {
+        assertClassHasFailureMessage(AnnotationValidatorFieldTest.class,
+                ExampleAnnotationValidator.ANNOTATED_FIELD_CALLED);
+    }
+
+    private void assertClassHasFailureMessage(Class<?> klass,
+                                              String expectedFailure) {
+        AnnotationsValidator validator = new AnnotationsValidator();
+        Collection<Exception> errors = validator
+                .validateTestClass(new TestClass(klass));
+        assertThat(errors.size(), is(1));
+        assertThat(errors.iterator().next().getMessage(),
+                is(expectedFailure));
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Inherited
+    @ValidateWith(ExampleAnnotationValidator.class)
+    public @interface ExampleAnnotationWithValidator {
+    }
+
     public static class ExampleAnnotationValidator extends AnnotationValidator {
-        private static final String ANNOTATED_METHOD_CALLED= "annotated method called";
+        private static final String ANNOTATED_METHOD_CALLED = "annotated method called";
 
-        private static final String ANNOTATED_FIELD_CALLED= "annotated field called";
+        private static final String ANNOTATED_FIELD_CALLED = "annotated field called";
 
-        private static final String ANNOTATED_CLASS_CALLED= "annotated class called";
+        private static final String ANNOTATED_CLASS_CALLED = "annotated class called";
 
         @Override
         public List<Exception> validateAnnotatedClass(TestClass testClass) {
@@ -37,12 +71,6 @@ public class AnnotationsValidatorTest {
         public List<Exception> validateAnnotatedMethod(FrameworkMethod method) {
             return asList(new Exception(ANNOTATED_METHOD_CALLED));
         }
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Inherited
-    @ValidateWith(ExampleAnnotationValidator.class)
-    public @interface ExampleAnnotationWithValidator {
     }
 
     public static class AnnotationValidatorMethodTest {
@@ -66,33 +94,5 @@ public class AnnotationsValidatorTest {
         @Test
         public void test() {
         }
-    }
-
-    @Test
-    public void validatorIsCalledForAClass() {
-        assertClassHasFailureMessage(AnnotationValidatorClassTest.class,
-                ExampleAnnotationValidator.ANNOTATED_CLASS_CALLED);
-    }
-
-    @Test
-    public void validatorIsCalledForAMethod() {
-        assertClassHasFailureMessage(AnnotationValidatorMethodTest.class,
-                ExampleAnnotationValidator.ANNOTATED_METHOD_CALLED);
-    }
-
-    @Test
-    public void validatorIsCalledForAField() {
-        assertClassHasFailureMessage(AnnotationValidatorFieldTest.class,
-                ExampleAnnotationValidator.ANNOTATED_FIELD_CALLED);
-    }
-
-    private void assertClassHasFailureMessage(Class<?> klass,
-            String expectedFailure) {
-        AnnotationsValidator validator= new AnnotationsValidator();
-        Collection<Exception> errors= validator
-                .validateTestClass(new TestClass(klass));
-        assertThat(errors.size(), is(1));
-        assertThat(errors.iterator().next().getMessage(),
-                is(expectedFailure));
     }
 }

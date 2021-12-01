@@ -79,7 +79,7 @@ public class FrameworkField extends FrameworkMember<FrameworkField> {
     public Class<?> getType() {
         return field.getType();
     }
-    
+
     @Override
     public Class<?> getDeclaringClass() {
         return field.getDeclaringClass();

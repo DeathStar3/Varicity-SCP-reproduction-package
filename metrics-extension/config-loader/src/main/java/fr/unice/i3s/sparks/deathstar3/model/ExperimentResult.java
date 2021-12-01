@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 
-
-public record ExperimentResult(String projectName,SymfinderResult symfinderResult, Map<String, List<Node>> externalMetric) {
+public record ExperimentResult(String projectName, SymfinderResult symfinderResult,
+                               Map<String, List<Node>> externalMetric) {
 
 
 }

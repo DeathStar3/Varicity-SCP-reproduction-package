@@ -23,24 +23,104 @@ import org.junit.runners.model.TestClass;
 public class AllMembersSupplierTest {
     @Rule
     public ExpectedException expected = ExpectedException.none();
-    
+
+    @Test
+    public void dataPointsArrayShouldBeRecognized() throws Throwable {
+        List<PotentialAssignment> assignments = potentialAssignments(
+                HasDataPointsArrayField.class.getMethod("theory", String.class));
+
+        assertEquals(2, assignments.size());
+    }
+
+    @Test
+    public void dataPointsArrayShouldBeRecognizedOnValueTypeNotFieldType() throws Throwable {
+        List<PotentialAssignment> assignments = potentialAssignments(
+                HasDataPointsArrayWithMatchingButInaccurateTypes.class.getMethod("theory", Integer.class));
+
+        assertEquals(2, assignments.size());
+    }
+
+    @Test
+    public void dataPointMethodShouldBeRecognizedForOverlyGeneralParameters() throws Throwable {
+        List<PotentialAssignment> assignments = potentialAssignments(
+                HasDataPointMethodWithOverlyGeneralTypes.class.getMethod("theory", Object.class));
+
+        assertEquals(1, assignments.size());
+    }
+
+    @Test
+    public void dataPointsAnnotationMeansTreatAsArrayOnly() throws Throwable {
+        List<PotentialAssignment> assignments = potentialAssignments(
+                HasDataPointsWithObjectParameter.class.getMethod("theory", Object.class));
+
+        assertEquals(2, assignments.size());
+        for (PotentialAssignment assignment : assignments) {
+            assertNotEquals(HasDataPointsWithObjectParameter.objectField, assignment.getValue());
+        }
+    }
+
+    @Test
+    public void dataPointsArrayFieldMayContainNullValue() throws Throwable {
+        List<PotentialAssignment> valueSources = allMemberValuesFor(
+                HasDataPointsFieldWithNullValue.class, Object.class);
+        assertThat(valueSources.size(), is(2));
+    }
+
+    @Test
+    public void dataPointsArrayMethodMayContainNullValue() throws Throwable {
+        List<PotentialAssignment> valueSources = allMemberValuesFor(
+                HasDataPointsMethodWithNullValue.class, Integer.class);
+        assertThat(valueSources.size(), is(2));
+    }
+
+    @Test
+    public void allMembersFailsOnFailingDataPointsArrayMethod() throws Throwable {
+        expected.expect(RuntimeException.class);
+        expected.expectMessage("failing method");
+        allMemberValuesFor(HasFailingDataPointsArrayMethod.class, Object.class);
+    }
+
+    private List<PotentialAssignment> allMemberValuesFor(Class<?> testClass,
+                                                         Class<?>... constructorParameterTypes) throws Throwable {
+        return new AllMembersSupplier(new TestClass(testClass))
+                .getValueSources(ParameterSignature.signatures(
+                                testClass.getConstructor(constructorParameterTypes))
+                        .get(0));
+    }
+
+    @Test
+    public void dataPointsCollectionFieldsShouldBeRecognized() throws Throwable {
+        List<PotentialAssignment> assignments = potentialAssignments(
+                HasDataPointsListField.class.getMethod("theory", String.class));
+
+        assertEquals(2, assignments.size());
+    }
+
+    @Test
+    public void dataPointsCollectionMethodShouldBeRecognized() throws Throwable {
+        List<PotentialAssignment> assignments = potentialAssignments(
+                HasDataPointsListMethod.class.getMethod("theory", String.class));
+
+        assertEquals(2, assignments.size());
+    }
+
+    @Test
+    public void dataPointsCollectionShouldBeRecognizedIgnoringStrangeTypes() throws Throwable {
+        List<PotentialAssignment> assignments = potentialAssignments(
+                HasDataPointsListFieldWithOverlyGenericTypes.class.getMethod("theory", String.class));
+
+        assertEquals(1, assignments.size());
+    }
+
     public static class HasDataPointsArrayField {
         @DataPoints
-        public static String[] list = new String[] { "qwe", "asd" };
+        public static String[] list = new String[]{"qwe", "asd"};
 
         @Theory
         public void theory(String param) {
         }
     }
-    
-    @Test
-    public void dataPointsArrayShouldBeRecognized() throws Throwable {
-        List<PotentialAssignment> assignments = potentialAssignments(
-                HasDataPointsArrayField.class.getMethod("theory", String.class));
-        
-        assertEquals(2, assignments.size());
-    }
-    
+
     public static class HasDataPointsArrayWithMatchingButInaccurateTypes {
         @DataPoints
         public static Object[] objects = {1, "string!", 2};
@@ -50,14 +130,6 @@ public class AllMembersSupplierTest {
         }
     }
 
-    @Test
-    public void dataPointsArrayShouldBeRecognizedOnValueTypeNotFieldType() throws Throwable {
-        List<PotentialAssignment> assignments = potentialAssignments(
-                HasDataPointsArrayWithMatchingButInaccurateTypes.class.getMethod("theory", Integer.class));
-        
-        assertEquals(2, assignments.size());
-    }
-    
     public static class HasDataPointMethodWithOverlyGeneralTypes {
         @DataPoint
         public static Integer object() {
@@ -69,31 +141,12 @@ public class AllMembersSupplierTest {
         }
     }
 
-    @Test
-    public void dataPointMethodShouldBeRecognizedForOverlyGeneralParameters() throws Throwable {
-        List<PotentialAssignment> assignments = potentialAssignments(
-                HasDataPointMethodWithOverlyGeneralTypes.class.getMethod("theory", Object.class));
-        
-        assertEquals(1, assignments.size());
-    }
-    
     public static class HasDataPointsWithObjectParameter {
         @DataPoints
         public static Object[] objectField = {1, 2};
 
         @Theory
         public void theory(Object obj) {
-        }
-    }
-
-    @Test
-    public void dataPointsAnnotationMeansTreatAsArrayOnly() throws Throwable {
-        List<PotentialAssignment> assignments = potentialAssignments(
-                HasDataPointsWithObjectParameter.class.getMethod("theory", Object.class));
-        
-        assertEquals(2, assignments.size());
-        for (PotentialAssignment assignment : assignments) {
-            assertNotEquals(HasDataPointsWithObjectParameter.objectField, assignment.getValue());
         }
     }
 
@@ -105,55 +158,26 @@ public class AllMembersSupplierTest {
         }
     }
 
-    @Test
-    public void dataPointsArrayFieldMayContainNullValue() throws Throwable {
-        List<PotentialAssignment> valueSources = allMemberValuesFor(
-                HasDataPointsFieldWithNullValue.class, Object.class);
-        assertThat(valueSources.size(), is(2));
-    }
-
     public static class HasDataPointsMethodWithNullValue {
-        @DataPoints
-        public static Integer[] getObjects() {
-            return new Integer[] {null, 1};
-        }
-
         public HasDataPointsMethodWithNullValue(Integer i) {
         }
+
+        @DataPoints
+        public static Integer[] getObjects() {
+            return new Integer[]{null, 1};
+        }
     }
 
-    @Test
-    public void dataPointsArrayMethodMayContainNullValue() throws Throwable {
-        List<PotentialAssignment> valueSources = allMemberValuesFor(
-                HasDataPointsMethodWithNullValue.class, Integer.class);
-        assertThat(valueSources.size(), is(2));
-    }
-    
     public static class HasFailingDataPointsArrayMethod {
+        public HasFailingDataPointsArrayMethod(Object obj) {
+        }
+
         @DataPoints
         public static Object[] objects() {
             throw new RuntimeException("failing method");
         }
-
-        public HasFailingDataPointsArrayMethod(Object obj) {
-        }
     }
 
-    @Test
-    public void allMembersFailsOnFailingDataPointsArrayMethod() throws Throwable {
-        expected.expect(RuntimeException.class);
-        expected.expectMessage("failing method");
-        allMemberValuesFor(HasFailingDataPointsArrayMethod.class, Object.class);
-    }
-
-    private List<PotentialAssignment> allMemberValuesFor(Class<?> testClass,
-            Class<?>... constructorParameterTypes) throws Throwable {
-        return new AllMembersSupplier(new TestClass(testClass))
-                .getValueSources(ParameterSignature.signatures(
-                        testClass.getConstructor(constructorParameterTypes))
-                        .get(0));
-    }
-    
     public static class HasDataPointsListField {
         @DataPoints
         public static List<String> list = Arrays.asList("one", "two");
@@ -163,14 +187,6 @@ public class AllMembersSupplierTest {
         }
     }
 
-    @Test
-    public void dataPointsCollectionFieldsShouldBeRecognized() throws Throwable {
-        List<PotentialAssignment> assignments = potentialAssignments(
-            HasDataPointsListField.class.getMethod("theory", String.class));
-
-        assertEquals(2, assignments.size());
-    }
-    
     public static class HasDataPointsListMethod {
         @DataPoints
         public static List<String> getList() {
@@ -182,14 +198,6 @@ public class AllMembersSupplierTest {
         }
     }
 
-    @Test
-    public void dataPointsCollectionMethodShouldBeRecognized() throws Throwable {
-        List<PotentialAssignment> assignments = potentialAssignments(
-            HasDataPointsListMethod.class.getMethod("theory", String.class));
-
-        assertEquals(2, assignments.size());
-    }
-    
     public static class HasDataPointsListFieldWithOverlyGenericTypes {
         @DataPoints
         public static List<Object> list = Arrays.asList("string", new Object());
@@ -197,13 +205,5 @@ public class AllMembersSupplierTest {
         @Theory
         public void theory(String param) {
         }
-    }
-
-    @Test
-    public void dataPointsCollectionShouldBeRecognizedIgnoringStrangeTypes() throws Throwable {
-        List<PotentialAssignment> assignments = potentialAssignments(
-            HasDataPointsListFieldWithOverlyGenericTypes.class.getMethod("theory", String.class));
-
-        assertEquals(1, assignments.size());
     }
 }

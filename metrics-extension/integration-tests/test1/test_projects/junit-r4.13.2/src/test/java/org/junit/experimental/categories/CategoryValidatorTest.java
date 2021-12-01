@@ -15,35 +15,6 @@ import org.junit.runners.model.TestClass;
 
 public class CategoryValidatorTest {
 
-    public static class SampleCategory {
-    }
-
-    public static class CategoryTest {
-        @BeforeClass
-        @Category(value = SampleCategory.class)
-        public static void methodWithCategoryAndBeforeClass() {
-        }
-
-        @AfterClass
-        @Category(value = SampleCategory.class)
-        public static void methodWithCategoryAndAfterClass() {
-        }
-
-        @Before
-        @Category(value = SampleCategory.class)
-        public static void methodWithCategoryAndBefore() {
-        }
-
-        @After
-        @Category(value = SampleCategory.class)
-        public static void methodWithCategoryAndAfter() {
-        }
-
-        @Category(value = SampleCategory.class)
-        public static void methodWithCategory() {
-        }
-    }
-
     @Test
     public void errorIsAddedWhenCategoryIsUsedWithBeforeClass() {
         FrameworkMethod method = new TestClass(CategoryTest.class).getAnnotatedMethods(BeforeClass.class).get(0);
@@ -82,5 +53,34 @@ public class CategoryValidatorTest {
         List<Exception> errors = new CategoryValidator().validateAnnotatedMethod(method);
 
         assertThat(errors.size(), is(0));
+    }
+
+    public static class SampleCategory {
+    }
+
+    public static class CategoryTest {
+        @BeforeClass
+        @Category(value = SampleCategory.class)
+        public static void methodWithCategoryAndBeforeClass() {
+        }
+
+        @AfterClass
+        @Category(value = SampleCategory.class)
+        public static void methodWithCategoryAndAfterClass() {
+        }
+
+        @Before
+        @Category(value = SampleCategory.class)
+        public static void methodWithCategoryAndBefore() {
+        }
+
+        @After
+        @Category(value = SampleCategory.class)
+        public static void methodWithCategoryAndAfter() {
+        }
+
+        @Category(value = SampleCategory.class)
+        public static void methodWithCategory() {
+        }
     }
 }

@@ -9,6 +9,13 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
 public class IgnoreClassTest {
+    @Test
+    public void ignoreClass() {
+        Result result = JUnitCore.runClasses(IgnoreMe.class);
+        assertEquals(0, result.getFailureCount());
+        assertEquals(1, result.getIgnoreCount());
+    }
+
     @Ignore("For a good reason")
     public static class IgnoreMe {
         @Test
@@ -20,12 +27,5 @@ public class IgnoreClassTest {
         public void iFailToo() {
             fail();
         }
-    }
-
-    @Test
-    public void ignoreClass() {
-        Result result = JUnitCore.runClasses(IgnoreMe.class);
-        assertEquals(0, result.getFailureCount());
-        assertEquals(1, result.getIgnoreCount());
     }
 }

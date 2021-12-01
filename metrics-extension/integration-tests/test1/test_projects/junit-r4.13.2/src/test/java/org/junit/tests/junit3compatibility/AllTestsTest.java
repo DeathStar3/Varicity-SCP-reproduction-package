@@ -16,21 +16,6 @@ public class AllTestsTest {
 
     private static boolean run;
 
-    public static class OneTest extends TestCase {
-        public void testSomething() {
-            run = true;
-        }
-    }
-
-    @RunWith(AllTests.class)
-    public static class All {
-        public static junit.framework.Test suite() {
-            TestSuite suite = new TestSuite();
-            suite.addTestSuite(OneTest.class);
-            return suite;
-        }
-    }
-
     @org.junit.Test
     public void ensureTestIsRun() {
         JUnitCore runner = new JUnitCore();
@@ -51,6 +36,32 @@ public class AllTestsTest {
         assertThat(tests.getDescription().toString(), containsString("OneTest"));
     }
 
+    @org.junit.Test
+    public void correctTestCountAdapted() throws Throwable {
+        AllTests tests = new AllTests(AllJUnit4.class);
+        assertEquals(1, tests.testCount());
+    }
+
+    @org.junit.Test(expected = RuntimeException.class)
+    public void exceptionThrownWhenSuiteIsBad() throws Throwable {
+        new AllTests(BadSuiteMethod.class);
+    }
+
+    public static class OneTest extends TestCase {
+        public void testSomething() {
+            run = true;
+        }
+    }
+
+    @RunWith(AllTests.class)
+    public static class All {
+        public static junit.framework.Test suite() {
+            TestSuite suite = new TestSuite();
+            suite.addTestSuite(OneTest.class);
+            return suite;
+        }
+    }
+
     public static class JUnit4Test {
         @org.junit.Test
         public void testSomething() {
@@ -67,21 +78,10 @@ public class AllTestsTest {
         }
     }
 
-    @org.junit.Test
-    public void correctTestCountAdapted() throws Throwable {
-        AllTests tests = new AllTests(AllJUnit4.class);
-        assertEquals(1, tests.testCount());
-    }
-
     @RunWith(AllTests.class)
     public static class BadSuiteMethod {
         public static junit.framework.Test suite() {
             throw new RuntimeException("can't construct");
         }
-    }
-
-    @org.junit.Test(expected = RuntimeException.class)
-    public void exceptionThrownWhenSuiteIsBad() throws Throwable {
-        new AllTests(BadSuiteMethod.class);
     }
 }

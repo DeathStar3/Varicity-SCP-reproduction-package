@@ -11,19 +11,6 @@ import junit.tests.WasRun;
  * A test case testing the extensions to the testing framework.
  */
 public class ExtensionTest extends TestCase {
-    static class TornDown extends TestSetup {
-        boolean fTornDown = false;
-
-        TornDown(Test test) {
-            super(test);
-        }
-
-        @Override
-        protected void tearDown() {
-            fTornDown = true;
-        }
-    }
-
     public void testRunningErrorInTestSetup() {
         TestCase test = new TestCase("failure") {
             @Override
@@ -100,5 +87,18 @@ public class ExtensionTest extends TestCase {
 
         assertTrue(!test.fWasRun);
         assertTrue(!result.wasSuccessful());
+    }
+
+    static class TornDown extends TestSetup {
+        boolean fTornDown = false;
+
+        TornDown(Test test) {
+            super(test);
+        }
+
+        @Override
+        protected void tearDown() {
+            fTornDown = true;
+        }
     }
 }

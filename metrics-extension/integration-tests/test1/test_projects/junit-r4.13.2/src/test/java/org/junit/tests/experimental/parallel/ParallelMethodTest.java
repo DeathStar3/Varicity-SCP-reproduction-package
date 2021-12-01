@@ -21,6 +21,21 @@ public class ParallelMethodTest {
     private static volatile Thread fOne = null;
     private static volatile Thread fTwo = null;
 
+    @Before
+    public void init() {
+        fOne = null;
+        fTwo = null;
+    }
+
+    @Test
+    public void testsRunInParallel() {
+        Result result = JUnitCore.runClasses(ParallelComputer.methods(), Example.class);
+        assertTrue(result.wasSuccessful());
+        assertNotNull(fOne);
+        assertNotNull(fTwo);
+        assertThat(fOne, is(not(fTwo)));
+    }
+
     public static class Example {
         private static volatile CountDownLatch fSynchronizer;
 
@@ -42,20 +57,5 @@ public class ParallelMethodTest {
             assertTrue(fSynchronizer.await(TIMEOUT, TimeUnit.SECONDS));
             fTwo = Thread.currentThread();
         }
-    }
-
-    @Before
-    public void init() {
-        fOne = null;
-        fTwo = null;
-    }
-
-    @Test
-    public void testsRunInParallel() {
-        Result result = JUnitCore.runClasses(ParallelComputer.methods(), Example.class);
-        assertTrue(result.wasSuccessful());
-        assertNotNull(fOne);
-        assertNotNull(fTwo);
-        assertThat(fOne, is(not(fTwo)));
     }
 }
