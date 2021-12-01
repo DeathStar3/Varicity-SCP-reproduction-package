@@ -193,3 +193,13 @@ export class Vector3_Local {
         return new Vector3_Local(v.x, v.y, v.z);
     }
 }
+
+export class ConfigName {
+    name: string;
+    filename: string;
+
+    constructor(name: string, filename: string) {
+        this.name = name;
+        this.filename = filename;
+    }
+}

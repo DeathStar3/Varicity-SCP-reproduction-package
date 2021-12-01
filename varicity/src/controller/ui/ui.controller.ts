@@ -1,7 +1,7 @@
 import {SearchbarController} from './searchbar.controller';
-import {Building3D} from './../../view/common/3Delements/building3D';
+import {Building3D} from '../../view/common/3Delements/building3D';
 import {Color} from '../../model/entities/config.interface';
-import {Config, CriticalLevel, MetricSpec} from '../../model/entitiesImplems/config.model';
+import {Config, ConfigName, CriticalLevel, MetricSpec} from '../../model/entitiesImplems/config.model';
 import {SceneRenderer} from '../../view/sceneRenderer';
 import {ConfigController} from './config.controller';
 import {DetailsController} from './details.controller';
@@ -16,7 +16,7 @@ import {ProjectService} from "../../services/project.service";
 export class UIController {
 
     public static scene: SceneRenderer;
-    public static configsName: string[];
+    public static configsName: ConfigName[];
     public static config: Config;
     public static configName: string;
 
@@ -44,7 +44,7 @@ export class UIController {
         ProjectController.createProjectSelector(keys);
     }
 
-    public static createConfigSelector(configs: string[], filename: string): void {
+    public static createConfigSelector(configs: ConfigName[], filename: string): void {
         this.configsName = configs;
         ConfigSelectorController.createConfigSelector(configs, filename);
     }
@@ -75,7 +75,7 @@ export class UIController {
         console.log("filename", filename)
         this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
         // this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
-        this.configName = this.configsName[0];
+        this.configName = this.configsName[0].filename;
         // const config = (await ConfigLoader.loadConfigFromName(filename, this.configName)).data;
         let config: Config;
         await ConfigLoader.loadConfig(ConfigLoader.loadConfigFromName(filename, this.configName)).then((res) =>  config = res);

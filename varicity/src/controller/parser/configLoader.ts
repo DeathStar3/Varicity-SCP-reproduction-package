@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { backendUrl } from '../../constants';
-import {Config, MetricSpec} from '../../model/entitiesImplems/config.model';
+import {Config, ConfigName, MetricSpec} from '../../model/entitiesImplems/config.model';
 
 export class ConfigLoader {
 
@@ -16,8 +16,8 @@ export class ConfigLoader {
         return axios.get<Config[]>(`${backendUrl}/projects/configs?name=${fileName}`);
     }
 
-    public static loadConfigNames(fileName: string): Promise<AxiosResponse<string[],any>>  {
-        return axios.get<string[]>(`${backendUrl}/projects/configs/names?name=${fileName}`);
+    public static loadConfigNames(fileName: string): Promise<AxiosResponse<ConfigName[],any>>  {
+        return axios.get<ConfigName[]>(`${backendUrl}/projects/${fileName}/configs/filenames-and-names`);
     }
 
     static async loadConfigFromName(projectName: string, configName: string): Promise<AxiosResponse<Config,any>> {

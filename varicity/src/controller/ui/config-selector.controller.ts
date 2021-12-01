@@ -6,6 +6,7 @@ import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
 import { UIController } from "./ui.controller";
 import {ProjectController} from "./project-selector.controller";
+import {ConfigName} from "../../model/entitiesImplems/config.model";
 
 export class ConfigSelectorController {
 
@@ -13,7 +14,7 @@ export class ConfigSelectorController {
     private static previousParser: ParsingStrategy;
     private static filename: string;
 
-    static createConfigSelector(configs: string[], filename: string) {
+    static createConfigSelector(configs: ConfigName[], filename: string) {
         let parent = document.getElementById("config_selector");
         parent.innerHTML = '';
         this.filename = filename;
@@ -38,24 +39,16 @@ export class ConfigSelectorController {
             }
         });
 
-        const configIndex = new Set<string>();
-        for (let i = 0; i < parent.children.length; i++) {
-            const child = parent.children[i];
-            configIndex.add(child.innerHTML);
-        }
-
         let node = document.createElement("option") as HTMLOptionElement;
         node.textContent = " ---Select a Config --- ";
         node.value = "";
         parent.appendChild(node);
 
         for (let config of configs) {
-            if(!configIndex.has(config)){
                 let node = document.createElement("option") as HTMLOptionElement;
-                node.textContent = config;
-                node.value = config;
+                node.textContent = config.name;
+                node.value = config.filename;
                 parent.appendChild(node);
-            }
         }
 
     }
@@ -94,4 +87,5 @@ export class ConfigSelectorController {
         UIController.configName = configName;
         await UIController.initDefaultConfigValues(this.filename, UIController.config);
     }
+
 }
