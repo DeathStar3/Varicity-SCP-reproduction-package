@@ -12,4 +12,10 @@ export class ProjectService{
     public static fetchVisualizationData(projectName: string):  Promise<AxiosResponse<JsonInputInterface, any>> {
       return axios.get<JsonInputInterface>(`${backendUrl}/projects/json/${projectName}`)
     }
+
+
+    public static getProjectMetrics(projectName: string):  Promise<AxiosResponse<string[], any>> {
+        return axios.get<string[]>(`${backendUrl}/projects/${projectName}/metrics`)
+    }
+
 }

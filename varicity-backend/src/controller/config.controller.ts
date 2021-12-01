@@ -1,6 +1,6 @@
 import {Body, Controller, Get, Param, Post, Query} from '@nestjs/common';
 import {ConfigService} from '../service/config.service';
-import {VaricityConfig} from '../model/config.model';
+import {ConfigName, VaricityConfig} from '../model/config.model';
 
 
 @Controller()
@@ -16,21 +16,25 @@ export class ConfigController {
     }
 
     @Get('/projects/configs/names')
-    getConfigsNamesOfProject(@Query() query: Record<string, any>): string[] {
+    getConfigsFilenamesOfProject(@Query() query: Record<string, any>): string[] {
         console.log("/projects/configs/names - getConfigsNamesOfProject", query)
-        return this.configService.getConfigsNames(query['name']);
+        return this.configService.getConfigsFilesNames(query['name']);
     }
 
     @Get('/projects/:projectName/configs')
     getConfigByNameFromProject(@Param('projectName') projectName: string, @Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/{" + projectName + "}/configs/{" + query["configName"] + "} - getConfigByNameFromProject");
-        return this.configService.getConfigByNameFromProject(projectName, query["configName"]);
+        const config = this.configService.getConfigByNameFromProject(projectName, query["configName"]);
+        console.log(config);
+        return config;
     }
 
     @Get('/projects/configs/path')
     getConfigByPath(@Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/configs/paths/{" + query["configPath"] + "} - getConfigsFromPath");
-        return this.configService.getConfigsFromPath(query["configPath"]);
+        let config = this.configService.getConfigsFromPath(query["configPath"]);
+        console.log(config);
+        return config;
     }
 
     @Get('/projects/configs')
@@ -42,6 +46,14 @@ export class ConfigController {
     @Get('/projects/configs/firstOrDefault')
     getFirstOrDefaultConfigProject(@Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/configs/firstOrDefault - getFirstOrDefaultConfigProject", query)
-        return this.configService.getFirstProjectConfigOrDefaultOne(query['name']);
+        let config = this.configService.getFirstProjectConfigOrDefaultOne(query['name']);
+        console.log(config);
+        return config;
+    }
+
+    @Get('/projects/:projectName/configs/filenames-and-names')
+    getConfigsNamesOfProject(@Param('projectName') projectName: string, ): ConfigName[] {
+        console.log(`/projects/${projectName}/configs/filenames-and-names - getConfigsNamesAndFileNames`);
+        return this.configService.getConfigsNamesAndFileNames(projectName);
     }
 }

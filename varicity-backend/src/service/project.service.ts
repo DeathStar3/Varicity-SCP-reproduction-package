@@ -101,10 +101,26 @@ export class ProjectService {
     }
 
     /**
-     * Get the external metric names from the project specified
+     * Return all the External and Variability metrics from the specified project
      * @param projectName
      */
     public getProjectMetrics(projectName): string[] {
+        return [...this.getProjectMetricsExternal(projectName), ...this.getProjectMetricsVariability(projectName)]
+    }
+
+    /**
+     * Get only the variability metrics that are calculated in Varicity
+     * @param projectName
+     */
+    getProjectMetricsVariability(projectName): string[] {
+        return [VariabilityMetricsName.NB_METHOD_VARIANTS, VariabilityMetricsName.NB_ATTRIBUTES, VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, VariabilityMetricsName.NB_VARIANTS];
+    }
+
+    /**
+     * Get the external metric names from the project specified
+     * @param projectName
+     */
+    getProjectMetricsExternal(projectName): string[] {
         const project = this.loadProject(projectName);
         let metrics = new Set<string>();
 
