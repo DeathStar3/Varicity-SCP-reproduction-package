@@ -76,7 +76,6 @@ export default class NeoGraph{
         "DELETE r1\n" +
         "CREATE (a)-[r2:"+newType+"]->(b)";
 
-        console.log(request)
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
@@ -112,6 +111,8 @@ export default class NeoGraph{
         await this.setAllMethods();
         await this.detectStrategiesWithComposition();
         await this.detectDensity();
+        await this.setModuleVP();
+        await this.setModuleVariant();
     }
 
     async setMethodVPs(): Promise<void>{
@@ -206,6 +207,20 @@ export default class NeoGraph{
         await this.submitRequest("MATCH (c:CLASS)\n" +
         "WHERE NOT EXISTS(c.allMethods)\n" +
         "SET c.allMethods = 0", {});
+    }
+
+    async setModuleVP(){
+        const request = "MATCH (c1:CLASS) MATCH (c2:CLASS)\n"+
+        "WHERE c1.name = c2.name\n" +
+        "AND ID(c1)<>ID(c2)\n" +
+        "SET c1:"+EntityAttribut.MODULE_VP+"\n" +
+        "SET c2:"+EntityAttribut.MODULE_VP;
+        await this.submitRequest(request,{});
+    }
+
+    async setModuleVariant(){
+        const request = "MATCH (m:MODULE)-[:EXPORT]->(c:MODULE_VP) SET m:"+EntityAttribut.MODULE_VARIANT;
+        await this.submitRequest(request, {});  
     }
 
     async detectStrategiesWithComposition(){

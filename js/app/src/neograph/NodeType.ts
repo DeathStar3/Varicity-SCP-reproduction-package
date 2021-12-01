@@ -3,7 +3,9 @@ export enum EntityAttribut {
     OUT_OF_SCOPE = "OUT_OF_SCOPE",
     VP = "VP",
     METHOD_LEVEL_VP = "METHOD_LEVEL_VP",
-    VARIANT = "VARIANT"
+    VARIANT = "VARIANT",
+    MODULE_VP = "MODULE_VP",
+    MODULE_VARIANT = "MODULE_VARIANT"
 }
 
 export enum EntityType {

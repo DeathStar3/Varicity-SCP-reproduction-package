@@ -19,7 +19,7 @@ export class Symfinder{
         await this.neoGraph.clearNodes();
 
         console.log("Detect variability in : '" + src + "'")
-        var files: string[] = glob.sync(src + "/**/*.ts", {"ignore": [src +"/**/*.spec.ts"]});
+        var files: string[] = glob.sync(src + "/**/*.ts", {"ignore": [src +"/**/*.spec.ts", src +"/**/*.test.ts", src +"/**/*Test.ts"]});
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes");
         await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations");
         await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies");
