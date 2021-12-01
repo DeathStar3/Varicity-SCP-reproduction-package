@@ -6,7 +6,7 @@ import org.junit.runners.model.InitializationError;
 /**
  * A {@link ParametersRunnerFactory} that creates
  * {@link BlockJUnit4ClassRunnerWithParameters}.
- * 
+ *
  * @since 4.12
  */
 public class BlockJUnit4ClassRunnerWithParametersFactory implements

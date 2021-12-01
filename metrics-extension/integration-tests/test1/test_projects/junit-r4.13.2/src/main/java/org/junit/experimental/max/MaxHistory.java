@@ -25,6 +25,17 @@ import org.junit.runner.notification.RunListener;
  */
 public class MaxHistory implements Serializable {
     private static final long serialVersionUID = 1L;
+    /*
+     * We have to use the f prefix until the next major release to ensure
+     * serialization compatibility.
+     * See https://github.com/junit-team/junit4/issues/976
+     */
+    private final Map<String, Long> fDurations = new HashMap<String, Long>();
+    private final Map<String, Long> fFailureTimestamps = new HashMap<String, Long>();
+    private final File fHistoryStore;
+    private MaxHistory(File storedResults) {
+        fHistoryStore = storedResults;
+    }
 
     /**
      * Loads a {@link MaxHistory} from {@code file}, or generates a new one that
@@ -61,19 +72,6 @@ public class MaxHistory implements Serializable {
         }
     }
 
-    /*
-     * We have to use the f prefix until the next major release to ensure
-     * serialization compatibility. 
-     * See https://github.com/junit-team/junit4/issues/976
-     */
-    private final Map<String, Long> fDurations = new HashMap<String, Long>();
-    private final Map<String, Long> fFailureTimestamps = new HashMap<String, Long>();
-    private final File fHistoryStore;
-
-    private MaxHistory(File storedResults) {
-        fHistoryStore = storedResults;
-    }
-
     private void save() throws IOException {
         ObjectOutputStream stream = null;
         try {
@@ -104,6 +102,22 @@ public class MaxHistory implements Serializable {
 
     void putTestDuration(Description description, long duration) {
         fDurations.put(description.toString(), duration);
+    }
+
+    /**
+     * @return a listener that will update this history based on the test
+     * results reported.
+     */
+    public RunListener listener() {
+        return new RememberingListener();
+    }
+
+    /**
+     * @return a comparator that ranks tests based on the JUnit Max sorting
+     * rules, as described in the {@link MaxCore} class comment.
+     */
+    public Comparator<Description> testComparator() {
+        return new TestComparator();
     }
 
     private final class RememberingListener extends RunListener {
@@ -158,21 +172,5 @@ public class MaxHistory implements Serializable {
             }
             return result;
         }
-    }
-
-    /**
-     * @return a listener that will update this history based on the test
-     *         results reported.
-     */
-    public RunListener listener() {
-        return new RememberingListener();
-    }
-
-    /**
-     * @return a comparator that ranks tests based on the JUnit Max sorting
-     *         rules, as described in the {@link MaxCore} class comment.
-     */
-    public Comparator<Description> testComparator() {
-        return new TestComparator();
     }
 }

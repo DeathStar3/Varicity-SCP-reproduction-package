@@ -17,20 +17,7 @@ class JUnitCommandLineParseResult {
     /**
      * Do not use. Testing purposes only.
      */
-    JUnitCommandLineParseResult() {}
-
-    /**
-     * Returns filter specs parsed from command line.
-     */
-    public List<String> getFilterSpecs() {
-        return Collections.unmodifiableList(filterSpecs);
-    }
-
-    /**
-     * Returns test classes parsed from command line.
-     */
-    public List<Class<?>> getClasses() {
-        return Collections.unmodifiableList(classes);
+    JUnitCommandLineParseResult() {
     }
 
     /**
@@ -44,6 +31,20 @@ class JUnitCommandLineParseResult {
         result.parseArgs(args);
 
         return result;
+    }
+
+    /**
+     * Returns filter specs parsed from command line.
+     */
+    public List<String> getFilterSpecs() {
+        return Collections.unmodifiableList(filterSpecs);
+    }
+
+    /**
+     * Returns test classes parsed from command line.
+     */
+    public List<Class<?>> getClasses() {
+        return Collections.unmodifiableList(classes);
     }
 
     private void parseArgs(String[] args) {
@@ -138,7 +139,7 @@ class JUnitCommandLineParseResult {
      * Exception used if there's a problem parsing the command line.
      */
     public static class CommandLineParserError extends Exception {
-        private static final long serialVersionUID= 1L;
+        private static final long serialVersionUID = 1L;
 
         public CommandLineParserError(String message) {
             super(message);

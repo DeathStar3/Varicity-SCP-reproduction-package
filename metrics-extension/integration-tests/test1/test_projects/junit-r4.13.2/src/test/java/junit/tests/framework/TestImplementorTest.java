@@ -9,6 +9,25 @@ import junit.framework.TestResult;
  * Test an implementor of junit.framework.Test other than TestCase or TestSuite
  */
 public class TestImplementorTest extends TestCase {
+    private DoubleTestCase fTest;
+
+    public TestImplementorTest() {
+        TestCase testCase = new TestCase() {
+            @Override
+            public void runTest() {
+            }
+        };
+        fTest = new DoubleTestCase(testCase);
+    }
+
+    public void testSuccessfulRun() {
+        TestResult result = new TestResult();
+        fTest.run(result);
+        assertEquals(fTest.countTestCases(), result.runCount());
+        assertEquals(0, result.errorCount());
+        assertEquals(0, result.failureCount());
+    }
+
     public static class DoubleTestCase implements Test {
         private TestCase fTestCase;
 
@@ -31,24 +50,5 @@ public class TestImplementorTest extends TestCase {
             result.runProtected(this, p);
             result.endTest(this);
         }
-    }
-
-    private DoubleTestCase fTest;
-
-    public TestImplementorTest() {
-        TestCase testCase = new TestCase() {
-            @Override
-            public void runTest() {
-            }
-        };
-        fTest = new DoubleTestCase(testCase);
-    }
-
-    public void testSuccessfulRun() {
-        TestResult result = new TestResult();
-        fTest.run(result);
-        assertEquals(fTest.countTestCases(), result.runCount());
-        assertEquals(0, result.errorCount());
-        assertEquals(0, result.failureCount());
     }
 }

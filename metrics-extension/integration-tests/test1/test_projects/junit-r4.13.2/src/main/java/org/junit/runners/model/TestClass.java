@@ -60,19 +60,6 @@ public class TestClass implements Annotatable {
         this.fieldsForAnnotations = makeDeeplyUnmodifiable(fieldsForAnnotations);
     }
 
-    protected void scanAnnotatedMembers(Map<Class<? extends Annotation>, List<FrameworkMethod>> methodsForAnnotations, Map<Class<? extends Annotation>, List<FrameworkField>> fieldsForAnnotations) {
-        for (Class<?> eachClass : getSuperClasses(clazz)) {
-            for (Method eachMethod : MethodSorter.getDeclaredMethods(eachClass)) {
-                addToAnnotationLists(new FrameworkMethod(eachMethod), methodsForAnnotations);
-            }
-            // ensuring fields are sorted to make sure that entries are inserted
-            // and read from fieldForAnnotations in a deterministic order
-            for (Field eachField : getSortedDeclaredFields(eachClass)) {
-                addToAnnotationLists(new FrameworkField(eachField), fieldsForAnnotations);
-            }
-        }
-    }
-
     private static Field[] getSortedDeclaredFields(Class<?> clazz) {
         Field[] declaredFields = clazz.getDeclaredFields();
         Arrays.sort(declaredFields, FIELD_COMPARATOR);
@@ -80,7 +67,7 @@ public class TestClass implements Annotatable {
     }
 
     protected static <T extends FrameworkMember<T>> void addToAnnotationLists(T member,
-            Map<Class<? extends Annotation>, List<T>> map) {
+                                                                              Map<Class<? extends Annotation>, List<T>> map) {
         for (Annotation each : member.getAnnotations()) {
             Class<? extends Annotation> type = each.annotationType();
             List<T> members = getAnnotatedMembers(map, type, true);
@@ -97,7 +84,7 @@ public class TestClass implements Annotatable {
     }
 
     private static <T extends FrameworkMember<T>> Map<Class<? extends Annotation>, List<T>>
-            makeDeeplyUnmodifiable(Map<Class<? extends Annotation>, List<T>> source) {
+    makeDeeplyUnmodifiable(Map<Class<? extends Annotation>, List<T>> source) {
         Map<Class<? extends Annotation>, List<T>> copy =
                 new LinkedHashMap<Class<? extends Annotation>, List<T>>();
         for (Map.Entry<Class<? extends Annotation>, List<T>> entry : source.entrySet()) {
@@ -106,10 +93,47 @@ public class TestClass implements Annotatable {
         return Collections.unmodifiableMap(copy);
     }
 
+    private static <T> List<T> getAnnotatedMembers(Map<Class<? extends Annotation>, List<T>> map,
+                                                   Class<? extends Annotation> type, boolean fillIfAbsent) {
+        if (!map.containsKey(type) && fillIfAbsent) {
+            map.put(type, new ArrayList<T>());
+        }
+        List<T> members = map.get(type);
+        return members == null ? Collections.<T>emptyList() : members;
+    }
+
+    private static boolean runsTopToBottom(Class<? extends Annotation> annotation) {
+        return annotation.equals(Before.class)
+                || annotation.equals(BeforeClass.class);
+    }
+
+    private static List<Class<?>> getSuperClasses(Class<?> testClass) {
+        List<Class<?>> results = new ArrayList<Class<?>>();
+        Class<?> current = testClass;
+        while (current != null) {
+            results.add(current);
+            current = current.getSuperclass();
+        }
+        return results;
+    }
+
+    protected void scanAnnotatedMembers(Map<Class<? extends Annotation>, List<FrameworkMethod>> methodsForAnnotations, Map<Class<? extends Annotation>, List<FrameworkField>> fieldsForAnnotations) {
+        for (Class<?> eachClass : getSuperClasses(clazz)) {
+            for (Method eachMethod : MethodSorter.getDeclaredMethods(eachClass)) {
+                addToAnnotationLists(new FrameworkMethod(eachMethod), methodsForAnnotations);
+            }
+            // ensuring fields are sorted to make sure that entries are inserted
+            // and read from fieldForAnnotations in a deterministic order
+            for (Field eachField : getSortedDeclaredFields(eachClass)) {
+                addToAnnotationLists(new FrameworkField(eachField), fieldsForAnnotations);
+            }
+        }
+    }
+
     /**
      * Returns, efficiently, all the non-overridden methods in this class and
      * its superclasses that are annotated}.
-     * 
+     *
      * @since 4.12
      */
     public List<FrameworkMethod> getAnnotatedMethods() {
@@ -130,7 +154,7 @@ public class TestClass implements Annotatable {
     /**
      * Returns, efficiently, all the non-overridden fields in this class and its
      * superclasses that are annotated.
-     * 
+     *
      * @since 4.12
      */
     public List<FrameworkField> getAnnotatedFields() {
@@ -152,30 +176,6 @@ public class TestClass implements Annotatable {
             values.addAll(additionalValues);
         }
         return new ArrayList<T>(values);
-    }
-
-    private static <T> List<T> getAnnotatedMembers(Map<Class<? extends Annotation>, List<T>> map,
-            Class<? extends Annotation> type, boolean fillIfAbsent) {
-        if (!map.containsKey(type) && fillIfAbsent) {
-            map.put(type, new ArrayList<T>());
-        }
-        List<T> members = map.get(type);
-        return members == null ? Collections.<T>emptyList() : members;
-    }
-
-    private static boolean runsTopToBottom(Class<? extends Annotation> annotation) {
-        return annotation.equals(Before.class)
-                || annotation.equals(BeforeClass.class);
-    }
-
-    private static List<Class<?>> getSuperClasses(Class<?> testClass) {
-        List<Class<?>> results = new ArrayList<Class<?>>();
-        Class<?> current = testClass;
-        while (current != null) {
-            results.add(current);
-            current = current.getSuperclass();
-        }
-        return results;
     }
 
     /**
@@ -224,7 +224,7 @@ public class TestClass implements Annotatable {
     }
 
     public <T> List<T> getAnnotatedFieldValues(Object test,
-            Class<? extends Annotation> annotationClass, Class<T> valueClass) {
+                                               Class<? extends Annotation> annotationClass, Class<T> valueClass) {
         final List<T> results = new ArrayList<T>();
         collectAnnotatedFieldValues(test, annotationClass, valueClass,
                 new MemberValueConsumer<T>() {
@@ -242,8 +242,8 @@ public class TestClass implements Annotatable {
      * @since 4.13
      */
     public <T> void collectAnnotatedFieldValues(Object test,
-            Class<? extends Annotation> annotationClass, Class<T> valueClass,
-            MemberValueConsumer<T> consumer) {
+                                                Class<? extends Annotation> annotationClass, Class<T> valueClass,
+                                                MemberValueConsumer<T> consumer) {
         for (FrameworkField each : getAnnotatedFields(annotationClass)) {
             try {
                 Object fieldValue = each.get(test);
@@ -258,7 +258,7 @@ public class TestClass implements Annotatable {
     }
 
     public <T> List<T> getAnnotatedMethodValues(Object test,
-            Class<? extends Annotation> annotationClass, Class<T> valueClass) {
+                                                Class<? extends Annotation> annotationClass, Class<T> valueClass) {
         final List<T> results = new ArrayList<T>();
         collectAnnotatedMethodValues(test, annotationClass, valueClass,
                 new MemberValueConsumer<T>() {
@@ -276,14 +276,14 @@ public class TestClass implements Annotatable {
      * @since 4.13
      */
     public <T> void collectAnnotatedMethodValues(Object test,
-            Class<? extends Annotation> annotationClass, Class<T> valueClass,
-            MemberValueConsumer<T> consumer) {
+                                                 Class<? extends Annotation> annotationClass, Class<T> valueClass,
+                                                 MemberValueConsumer<T> consumer) {
         for (FrameworkMethod each : getAnnotatedMethods(annotationClass)) {
             try {
                 /*
                  * A method annotated with @Rule may return a @TestRule or a @MethodRule,
                  * we cannot call the method to check whether the return type matches our
-                 * expectation i.e. subclass of valueClass. If we do that then the method 
+                 * expectation i.e. subclass of valueClass. If we do that then the method
                  * will be invoked twice and we do not want to do that. So we first check
                  * whether return type matches our expectation and only then call the method
                  * to fetch the MethodRule

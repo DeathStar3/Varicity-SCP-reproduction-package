@@ -120,6 +120,12 @@ public class FilterOptionIntegrationTest {
                 testListener.wasRun(testClass));
     }
 
+    public static interface DummyCategory0 {
+    }
+
+    public static interface DummyCategory1 {
+    }
+
     private static class TestListener extends RunListener {
         private Set<String> startedTests = new HashSet<String>();
         private Set<String> finishedTests = new HashSet<String>();
@@ -180,11 +186,5 @@ public class FilterOptionIntegrationTest {
         @Test
         public void dummyTest() {
         }
-    }
-
-    public static interface DummyCategory0 {
-    }
-
-    public static interface DummyCategory1 {
     }
 }

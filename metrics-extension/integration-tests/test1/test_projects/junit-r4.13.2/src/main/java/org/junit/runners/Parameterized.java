@@ -114,14 +114,14 @@ import org.junit.runners.parameterized.TestWithParameters;
  *
  * <p>
  * The parameters can be provided as an array, too:
- * 
+ *
  * <pre>
  * &#064;Parameters
  * public static Object[][] data() {
  * 	return new Object[][] { { 0, 0, 0 }, { 1, 1, 2 }, { 3, 2, 5 }, { 4, 3, 7 } } };
  * }
  * </pre>
- * 
+ *
  * <h3>Tests with single parameter</h3>
  * <p>
  * If your test needs a single parameter only, you don't have to wrap it with an
@@ -200,102 +200,10 @@ import org.junit.runners.parameterized.TestWithParameters;
  * 	return Arrays.asList(&quot;first test&quot;, &quot;second test&quot;);
  * }
  * </pre>
+ *
  * @since 4.0
  */
 public class Parameterized extends Suite {
-    /**
-     * Annotation for a method which provides parameters to be injected into the
-     * test class constructor by <code>Parameterized</code>. The method has to
-     * be public and static.
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
-    public @interface Parameters {
-        /**
-         * Optional pattern to derive the test's name from the parameters. Use
-         * numbers in braces to refer to the parameters or the additional data
-         * as follows:
-         * <pre>
-         * {index} - the current parameter index
-         * {0} - the first parameter value
-         * {1} - the second parameter value
-         * etc...
-         * </pre>
-         * <p>
-         * Default value is "{index}" for compatibility with previous JUnit
-         * versions.
-         *
-         * @return {@link MessageFormat} pattern string, except the index
-         *         placeholder.
-         * @see MessageFormat
-         */
-        String name() default "{index}";
-    }
-
-    /**
-     * Annotation for fields of the test class which will be initialized by the
-     * method annotated by <code>Parameters</code>.
-     * By using directly this annotation, the test class constructor isn't needed.
-     * Index range must start at 0.
-     * Default value is 0.
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public @interface Parameter {
-        /**
-         * Method that returns the index of the parameter in the array
-         * returned by the method annotated by <code>Parameters</code>.
-         * Index range must start at 0.
-         * Default value is 0.
-         *
-         * @return the index of the parameter.
-         */
-        int value() default 0;
-    }
-
-    /**
-     * Add this annotation to your test class if you want to generate a special
-     * runner. You have to specify a {@link ParametersRunnerFactory} class that
-     * creates such runners. The factory must have a public zero-arg
-     * constructor.
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Inherited
-    @Target(ElementType.TYPE)
-    public @interface UseParametersRunnerFactory {
-        /**
-         * @return a {@link ParametersRunnerFactory} class (must have a default
-         *         constructor)
-         */
-        Class<? extends ParametersRunnerFactory> value() default BlockJUnit4ClassRunnerWithParametersFactory.class;
-    }
-
-    /**
-     * Annotation for {@code public static void} methods which should be executed before
-     * evaluating tests with particular parameters.
-     *
-     * @see org.junit.BeforeClass
-     * @see org.junit.Before
-     * @since 4.13
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
-    public @interface BeforeParam {
-    }
-
-    /**
-     * Annotation for {@code public static void} methods which should be executed after
-     * evaluating tests with particular parameters.
-     *
-     * @see org.junit.AfterClass
-     * @see org.junit.After
-     * @since 4.13
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
-    public @interface AfterParam {
-    }
-
     /**
      * Only called reflectively. Do not use programmatically.
      */
@@ -334,12 +242,105 @@ public class Parameterized extends Suite {
         }
     }
 
+    /**
+     * Annotation for a method which provides parameters to be injected into the
+     * test class constructor by <code>Parameterized</code>. The method has to
+     * be public and static.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public @interface Parameters {
+        /**
+         * Optional pattern to derive the test's name from the parameters. Use
+         * numbers in braces to refer to the parameters or the additional data
+         * as follows:
+         * <pre>
+         * {index} - the current parameter index
+         * {0} - the first parameter value
+         * {1} - the second parameter value
+         * etc...
+         * </pre>
+         * <p>
+         * Default value is "{index}" for compatibility with previous JUnit
+         * versions.
+         *
+         * @return {@link MessageFormat} pattern string, except the index
+         * placeholder.
+         * @see MessageFormat
+         */
+        String name() default "{index}";
+    }
+
+    /**
+     * Annotation for fields of the test class which will be initialized by the
+     * method annotated by <code>Parameters</code>.
+     * By using directly this annotation, the test class constructor isn't needed.
+     * Index range must start at 0.
+     * Default value is 0.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface Parameter {
+        /**
+         * Method that returns the index of the parameter in the array
+         * returned by the method annotated by <code>Parameters</code>.
+         * Index range must start at 0.
+         * Default value is 0.
+         *
+         * @return the index of the parameter.
+         */
+        int value() default 0;
+    }
+
+    /**
+     * Add this annotation to your test class if you want to generate a special
+     * runner. You have to specify a {@link ParametersRunnerFactory} class that
+     * creates such runners. The factory must have a public zero-arg
+     * constructor.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Inherited
+    @Target(ElementType.TYPE)
+    public @interface UseParametersRunnerFactory {
+        /**
+         * @return a {@link ParametersRunnerFactory} class (must have a default
+         * constructor)
+         */
+        Class<? extends ParametersRunnerFactory> value() default BlockJUnit4ClassRunnerWithParametersFactory.class;
+    }
+
+    /**
+     * Annotation for {@code public static void} methods which should be executed before
+     * evaluating tests with particular parameters.
+     *
+     * @see org.junit.BeforeClass
+     * @see org.junit.Before
+     * @since 4.13
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public @interface BeforeParam {
+    }
+
+    /**
+     * Annotation for {@code public static void} methods which should be executed after
+     * evaluating tests with particular parameters.
+     *
+     * @see org.junit.AfterClass
+     * @see org.junit.After
+     * @since 4.13
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public @interface AfterParam {
+    }
+
     private static class AssumptionViolationRunner extends Runner {
         private final Description description;
         private final AssumptionViolatedException exception;
 
         AssumptionViolationRunner(TestClass testClass, String methodName,
-                AssumptionViolatedException exception) {
+                                  AssumptionViolatedException exception) {
             this.description = Description
                     .createTestDescription(testClass.getJavaClass(),
                             methodName + "() assumption violation");
@@ -384,38 +385,9 @@ public class Parameterized extends Suite {
                     allParameters.isEmpty() ? 0 : normalizeParameters(allParameters.get(0)).length;
         }
 
-        private List<Runner> createRunners() throws Exception {
-            if (runnerOverride != null) {
-                return Collections.singletonList(runnerOverride);
-            }
-            Parameters parameters = parametersMethod.getAnnotation(Parameters.class);
-            return Collections.unmodifiableList(createRunnersForParameters(
-                    allParameters, parameters.name(),
-                    getParametersRunnerFactory()));
-        }
-
-        private ParametersRunnerFactory getParametersRunnerFactory()
-                throws InstantiationException, IllegalAccessException {
-            UseParametersRunnerFactory annotation = testClass
-                    .getAnnotation(UseParametersRunnerFactory.class);
-            if (annotation == null) {
-                return DEFAULT_FACTORY;
-            } else {
-                Class<? extends ParametersRunnerFactory> factoryClass = annotation
-                        .value();
-                return factoryClass.newInstance();
-            }
-        }
-
-        private TestWithParameters createTestWithNotNormalizedParameters(
-                String pattern, int index, Object parametersOrSingleParameter) {
-            Object[] parameters = normalizeParameters(parametersOrSingleParameter);
-            return createTestWithParameters(testClass, pattern, index, parameters);
-        }
-
         private static Object[] normalizeParameters(Object parametersOrSingleParameter) {
             return (parametersOrSingleParameter instanceof Object[]) ? (Object[]) parametersOrSingleParameter
-                    : new Object[] { parametersOrSingleParameter };
+                    : new Object[]{parametersOrSingleParameter};
         }
 
         @SuppressWarnings("unchecked")
@@ -452,6 +424,45 @@ public class Parameterized extends Suite {
                     + testClass.getName());
         }
 
+        private static Exception parametersMethodReturnedWrongType(
+                TestClass testClass, FrameworkMethod parametersMethod) throws Exception {
+            String className = testClass.getName();
+            String methodName = parametersMethod.getName();
+            String message = MessageFormat.format(
+                    "{0}.{1}() must return an Iterable of arrays.", className,
+                    methodName);
+            return new Exception(message);
+        }
+
+        private List<Runner> createRunners() throws Exception {
+            if (runnerOverride != null) {
+                return Collections.singletonList(runnerOverride);
+            }
+            Parameters parameters = parametersMethod.getAnnotation(Parameters.class);
+            return Collections.unmodifiableList(createRunnersForParameters(
+                    allParameters, parameters.name(),
+                    getParametersRunnerFactory()));
+        }
+
+        private ParametersRunnerFactory getParametersRunnerFactory()
+                throws InstantiationException, IllegalAccessException {
+            UseParametersRunnerFactory annotation = testClass
+                    .getAnnotation(UseParametersRunnerFactory.class);
+            if (annotation == null) {
+                return DEFAULT_FACTORY;
+            } else {
+                Class<? extends ParametersRunnerFactory> factoryClass = annotation
+                        .value();
+                return factoryClass.newInstance();
+            }
+        }
+
+        private TestWithParameters createTestWithNotNormalizedParameters(
+                String pattern, int index, Object parametersOrSingleParameter) {
+            Object[] parameters = normalizeParameters(parametersOrSingleParameter);
+            return createTestWithParameters(testClass, pattern, index, parameters);
+        }
+
         private List<Runner> createRunnersForParameters(
                 Iterable<Object> allParameters, String namePattern,
                 ParametersRunnerFactory runnerFactory) throws Exception {
@@ -479,16 +490,6 @@ public class Parameterized extends Suite {
                         i++, parametersOfSingleTest));
             }
             return children;
-        }
-
-        private static Exception parametersMethodReturnedWrongType(
-                TestClass testClass, FrameworkMethod parametersMethod) throws Exception {
-            String className = testClass.getName();
-            String methodName = parametersMethod.getName();
-            String message = MessageFormat.format(
-                    "{0}.{1}() must return an Iterable of arrays.", className,
-                    methodName);
-            return new Exception(message);
         }
 
         private TestWithParameters createTestWithParameters(

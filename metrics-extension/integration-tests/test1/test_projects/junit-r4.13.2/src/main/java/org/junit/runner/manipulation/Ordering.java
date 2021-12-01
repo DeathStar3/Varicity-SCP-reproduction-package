@@ -22,7 +22,7 @@ import org.junit.runner.OrderWith;
 public abstract class Ordering {
     private static final String CONSTRUCTOR_ERROR_FORMAT
             = "Ordering class %s should have a public constructor with signature "
-                    + "%s(Ordering.Context context)";
+            + "%s(Ordering.Context context)";
 
     /**
      * Creates an {@link Ordering} that shuffles the items using the given
@@ -48,7 +48,7 @@ public abstract class Ordering {
      * Creates an {@link Ordering} from the given factory class. The class must have a public no-arg
      * constructor.
      *
-     * @param factoryClass class to use to create the ordering
+     * @param factoryClass       class to use to create the ordering
      * @param annotatedTestClass test class that is annotated with {@link OrderWith}.
      * @throws InvalidOrderingException if the instance could not be created
      */
@@ -81,7 +81,7 @@ public abstract class Ordering {
     /**
      * Creates an {@link Ordering} from the given factory.
      *
-     * @param factory factory to use to create the ordering
+     * @param factory            factory to use to create the ordering
      * @param annotatedTestClass test class that is annotated with {@link OrderWith}.
      * @throws InvalidOrderingException if the instance could not be created
      */
@@ -110,7 +110,7 @@ public abstract class Ordering {
      * Order the tests in <code>target</code> using this ordering.
      *
      * @throws InvalidOrderingException if ordering does something invalid (like remove or add
-     * children)
+     *                                  children)
      */
     public void apply(Object target) throws InvalidOrderingException {
         /*
@@ -139,22 +139,6 @@ public abstract class Ordering {
      */
     protected abstract List<Description> orderItems(Collection<Description> descriptions);
 
-    /** Context about the ordering being applied. */
-    public static class Context {
-        private final Description description;
-
-        /**
-         * Gets the description for the top-level target being ordered.
-         */
-        public Description getTarget() {
-            return description;
-        }
-
-        private Context(Description description) {
-            this.description = description;
-        }
-    }
-
     /**
      * Factory for creating {@link Ordering} instances.
      *
@@ -168,5 +152,23 @@ public abstract class Ordering {
          * same instance every time.
          */
         Ordering create(Context context);
+    }
+
+    /**
+     * Context about the ordering being applied.
+     */
+    public static class Context {
+        private final Description description;
+
+        private Context(Description description) {
+            this.description = description;
+        }
+
+        /**
+         * Gets the description for the top-level target being ordered.
+         */
+        public Description getTarget() {
+            return description;
+        }
     }
 }

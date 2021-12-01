@@ -3,6 +3,7 @@ package org.junit.validator;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -19,13 +20,6 @@ public class AnnotationValidatorFactoryTest {
         assertThat(annotationValidator, is(instanceOf(Validator.class)));
     }
 
-    @ValidateWith(value = Validator.class)
-    public @interface SampleAnnotationWithValidator {
-    }
-
-    public static class Validator extends AnnotationValidator {
-    }
-
     @Test
     public void exceptionWhenAnnotationValidatorCantBeCreated() {
         ValidateWith validateWith = SampleAnnotationWithValidatorThatThrowsException.class.getAnnotation(ValidateWith.class);
@@ -35,8 +29,15 @@ public class AnnotationValidatorFactoryTest {
         new AnnotationValidatorFactory().createAnnotationValidator(validateWith);
     }
 
+    @ValidateWith(value = Validator.class)
+    public @interface SampleAnnotationWithValidator {
+    }
+
     @ValidateWith(value = ValidatorThatThrowsException.class)
     public @interface SampleAnnotationWithValidatorThatThrowsException {
+    }
+
+    public static class Validator extends AnnotationValidator {
     }
 
     public static class ValidatorThatThrowsException extends AnnotationValidator {

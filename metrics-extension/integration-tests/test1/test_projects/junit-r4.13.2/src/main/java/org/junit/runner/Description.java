@@ -28,16 +28,54 @@ import java.util.regex.Pattern;
  * @since 4.0
  */
 public class Description implements Serializable {
+    /**
+     * Describes a Runner which runs no tests
+     */
+    public static final Description EMPTY = new Description(null, "No Tests");
+    /**
+     * Describes a step in the test-running mechanism that goes so wrong no
+     * other description can be used (for example, an exception thrown from a Runner's
+     * constructor
+     */
+    public static final Description TEST_MECHANISM = new Description(null, "Test mechanism");
     private static final long serialVersionUID = 1L;
-
     private static final Pattern METHOD_AND_CLASS_NAME_PATTERN = Pattern
             .compile("([\\s\\S]*)\\((.*)\\)");
+    /*
+     * We have to use the f prefix until the next major release to ensure
+     * serialization compatibility.
+     * See https://github.com/junit-team/junit4/issues/976
+     */
+    private final Collection<Description> fChildren = new ConcurrentLinkedQueue<Description>();
+    private final String fDisplayName;
+    private final Serializable fUniqueId;
+    private final Annotation[] fAnnotations;
+    private volatile /* write-once */ Class<?> fTestClass;
+
+    private Description(Class<?> clazz, String displayName, Annotation... annotations) {
+        this(clazz, displayName, displayName, annotations);
+    }
+
+    private Description(Class<?> testClass, String displayName, Serializable uniqueId, Annotation... annotations) {
+        if ((displayName == null) || (displayName.length() == 0)) {
+            throw new IllegalArgumentException(
+                    "The display name must not be empty.");
+        }
+        if ((uniqueId == null)) {
+            throw new IllegalArgumentException(
+                    "The unique id must not be null.");
+        }
+        this.fTestClass = testClass;
+        this.fDisplayName = displayName;
+        this.fUniqueId = uniqueId;
+        this.fAnnotations = annotations;
+    }
 
     /**
      * Create a <code>Description</code> named <code>name</code>.
      * Generally, you will add children to this <code>Description</code>.
      *
-     * @param name the name of the <code>Description</code>
+     * @param name        the name of the <code>Description</code>
      * @param annotations meta-data about the test, for downstream interpreters
      * @return a <code>Description</code> named <code>name</code>
      */
@@ -49,8 +87,8 @@ public class Description implements Serializable {
      * Create a <code>Description</code> named <code>name</code>.
      * Generally, you will add children to this <code>Description</code>.
      *
-     * @param name the name of the <code>Description</code>
-     * @param uniqueId an arbitrary object used to define uniqueness (in {@link #equals(Object)}
+     * @param name        the name of the <code>Description</code>
+     * @param uniqueId    an arbitrary object used to define uniqueness (in {@link #equals(Object)}
      * @param annotations meta-data about the test, for downstream interpreters
      * @return a <code>Description</code> named <code>name</code>
      */
@@ -64,8 +102,8 @@ public class Description implements Serializable {
      * than {@link #createTestDescription(Class, String, Annotation...)} for test runners whose test cases are not
      * defined in an actual Java <code>Class</code>.
      *
-     * @param className the class name of the test
-     * @param name the name of the test (a method name for test annotated with {@link org.junit.Test})
+     * @param className   the class name of the test
+     * @param name        the name of the test (a method name for test annotated with {@link org.junit.Test})
      * @param annotations meta-data about the test, for downstream interpreters
      * @return a <code>Description</code> named <code>name</code>
      */
@@ -77,8 +115,8 @@ public class Description implements Serializable {
      * Create a <code>Description</code> of a single test named <code>name</code> in the class <code>clazz</code>.
      * Generally, this will be a leaf <code>Description</code>.
      *
-     * @param clazz the class of the test
-     * @param name the name of the test (a method name for test annotated with {@link org.junit.Test})
+     * @param clazz       the class of the test
+     * @param name        the name of the test (a method name for test annotated with {@link org.junit.Test})
      * @param annotations meta-data about the test, for downstream interpreters
      * @return a <code>Description</code> named <code>name</code>
      */
@@ -92,7 +130,7 @@ public class Description implements Serializable {
      * (This remains for binary compatibility with clients of JUnit 4.3)
      *
      * @param clazz the class of the test
-     * @param name the name of the test (a method name for test annotated with {@link org.junit.Test})
+     * @param name  the name of the test (a method name for test annotated with {@link org.junit.Test})
      * @return a <code>Description</code> named <code>name</code>
      */
     public static Description createTestDescription(Class<?> clazz, String name) {
@@ -127,54 +165,12 @@ public class Description implements Serializable {
     /**
      * Create a <code>Description</code> named after <code>testClass</code>
      *
-     * @param testClass A not null {@link Class} containing tests
+     * @param testClass   A not null {@link Class} containing tests
      * @param annotations meta-data about the test, for downstream interpreters
      * @return a <code>Description</code> of <code>testClass</code>
      */
     public static Description createSuiteDescription(Class<?> testClass, Annotation... annotations) {
         return new Description(testClass, testClass.getName(), annotations);
-    }
-
-    /**
-     * Describes a Runner which runs no tests
-     */
-    public static final Description EMPTY = new Description(null, "No Tests");
-
-    /**
-     * Describes a step in the test-running mechanism that goes so wrong no
-     * other description can be used (for example, an exception thrown from a Runner's
-     * constructor
-     */
-    public static final Description TEST_MECHANISM = new Description(null, "Test mechanism");
-
-    /*
-     * We have to use the f prefix until the next major release to ensure
-     * serialization compatibility. 
-     * See https://github.com/junit-team/junit4/issues/976
-     */
-    private final Collection<Description> fChildren = new ConcurrentLinkedQueue<Description>();
-    private final String fDisplayName;
-    private final Serializable fUniqueId;
-    private final Annotation[] fAnnotations;
-    private volatile /* write-once */ Class<?> fTestClass;
-
-    private Description(Class<?> clazz, String displayName, Annotation... annotations) {
-        this(clazz, displayName, displayName, annotations);
-    }
-
-    private Description(Class<?> testClass, String displayName, Serializable uniqueId, Annotation... annotations) {
-        if ((displayName == null) || (displayName.length() == 0)) {
-            throw new IllegalArgumentException(
-                    "The display name must not be empty.");
-        }
-        if ((uniqueId == null)) {
-            throw new IllegalArgumentException(
-                    "The unique id must not be null.");
-        }
-        this.fTestClass = testClass;
-        this.fDisplayName = displayName;
-        this.fUniqueId = uniqueId;
-        this.fAnnotations = annotations;
     }
 
     /**
@@ -257,7 +253,7 @@ public class Description implements Serializable {
 
     /**
      * @return a copy of this description, with no children (on the assumption that some of the
-     *         children will be added back)
+     * children will be added back)
      */
     public Description childlessCopy() {
         return new Description(fTestClass, fDisplayName, fAnnotations);
@@ -265,7 +261,7 @@ public class Description implements Serializable {
 
     /**
      * @return the annotation of type annotationType that is attached to this description node,
-     *         or null if none exists
+     * or null if none exists
      */
     public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
         for (Annotation each : fAnnotations) {
@@ -285,7 +281,7 @@ public class Description implements Serializable {
 
     /**
      * @return If this describes a method invocation,
-     *         the class of the test instance.
+     * the class of the test instance.
      */
     public Class<?> getTestClass() {
         if (fTestClass != null) {
@@ -305,7 +301,7 @@ public class Description implements Serializable {
 
     /**
      * @return If this describes a method invocation,
-     *         the name of the class of the test instance
+     * the name of the class of the test instance
      */
     public String getClassName() {
         return fTestClass != null ? fTestClass.getName() : methodAndClassNamePatternGroupOrDefault(2, toString());
@@ -313,14 +309,14 @@ public class Description implements Serializable {
 
     /**
      * @return If this describes a method invocation,
-     *         the name of the method (or null if not)
+     * the name of the method (or null if not)
      */
     public String getMethodName() {
         return methodAndClassNamePatternGroupOrDefault(1, null);
     }
 
     private String methodAndClassNamePatternGroupOrDefault(int group,
-            String defaultString) {
+                                                           String defaultString) {
         Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN.matcher(toString());
         return matcher.matches() ? matcher.group(group) : defaultString;
     }

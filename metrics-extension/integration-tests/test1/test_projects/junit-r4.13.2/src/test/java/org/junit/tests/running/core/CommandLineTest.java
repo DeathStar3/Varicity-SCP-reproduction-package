@@ -12,9 +12,10 @@ import org.junit.Test;
 import org.junit.runner.JUnitCore;
 
 public class CommandLineTest {
+    private static boolean testWasRun;
+    private static int fCount;
     private ByteArrayOutputStream results;
     private PrintStream oldOut;
-    private static boolean testWasRun;
 
     @Before
     public void before() {
@@ -26,13 +27,6 @@ public class CommandLineTest {
     @After
     public void after() {
         System.setOut(oldOut);
-    }
-
-    public static class Example {
-        @Test
-        public void test() {
-            testWasRun = true;
-        }
     }
 
     @Test
@@ -53,15 +47,6 @@ public class CommandLineTest {
         assertTrue(testWasRun);
     }
 
-    private static int fCount;
-
-    public static class Count {
-        @Test
-        public void increment() {
-            fCount++;
-        }
-    }
-
     @Test
     public void runTwoClassesAsArray() {
         fCount = 0;
@@ -74,5 +59,19 @@ public class CommandLineTest {
         fCount = 0;
         JUnitCore.runClasses(Count.class, Count.class);
         assertEquals(2, fCount);
+    }
+
+    public static class Example {
+        @Test
+        public void test() {
+            testWasRun = true;
+        }
+    }
+
+    public static class Count {
+        @Test
+        public void increment() {
+            fCount++;
+        }
     }
 }

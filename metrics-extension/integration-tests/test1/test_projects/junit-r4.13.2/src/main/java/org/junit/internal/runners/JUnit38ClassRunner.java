@@ -25,6 +25,129 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 public class JUnit38ClassRunner extends Runner implements Filterable, Orderable {
+    private volatile Test test;
+
+    public JUnit38ClassRunner(Class<?> klass) {
+        this(new TestSuite(klass.asSubclass(TestCase.class)));
+    }
+
+    public JUnit38ClassRunner(Test test) {
+        super();
+        setTest(test);
+    }
+
+    private static Description makeDescription(Test test) {
+        if (test instanceof TestCase) {
+            TestCase tc = (TestCase) test;
+            return Description.createTestDescription(tc.getClass(), tc.getName(),
+                    getAnnotations(tc));
+        } else if (test instanceof TestSuite) {
+            TestSuite ts = (TestSuite) test;
+            String name = ts.getName() == null ? createSuiteDescription(ts) : ts.getName();
+            Description description = Description.createSuiteDescription(name);
+            int n = ts.testCount();
+            for (int i = 0; i < n; i++) {
+                Description made = makeDescription(ts.testAt(i));
+                description.addChild(made);
+            }
+            return description;
+        } else if (test instanceof Describable) {
+            Describable adapter = (Describable) test;
+            return adapter.getDescription();
+        } else if (test instanceof TestDecorator) {
+            TestDecorator decorator = (TestDecorator) test;
+            return makeDescription(decorator.getTest());
+        } else {
+            // This is the best we can do in this case
+            return Description.createSuiteDescription(test.getClass());
+        }
+    }
+
+    /**
+     * Get the annotations associated with given TestCase.
+     *
+     * @param test the TestCase.
+     */
+    private static Annotation[] getAnnotations(TestCase test) {
+        try {
+            Method m = test.getClass().getMethod(test.getName());
+            return m.getDeclaredAnnotations();
+        } catch (SecurityException e) {
+        } catch (NoSuchMethodException e) {
+        }
+        return new Annotation[0];
+    }
+
+    private static String createSuiteDescription(TestSuite ts) {
+        int count = ts.countTestCases();
+        String example = count == 0 ? "" : String.format(" [example: %s]", ts.testAt(0));
+        return String.format("TestSuite with %s tests%s", count, example);
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+        TestResult result = new TestResult();
+        result.addListener(createAdaptingListener(notifier));
+        getTest().run(result);
+    }
+
+    public TestListener createAdaptingListener(final RunNotifier notifier) {
+        return new OldTestClassAdaptingListener(notifier);
+    }
+
+    @Override
+    public Description getDescription() {
+        return makeDescription(getTest());
+    }
+
+    public void filter(Filter filter) throws NoTestsRemainException {
+        if (getTest() instanceof Filterable) {
+            Filterable adapter = (Filterable) getTest();
+            adapter.filter(filter);
+        } else if (getTest() instanceof TestSuite) {
+            TestSuite suite = (TestSuite) getTest();
+            TestSuite filtered = new TestSuite(suite.getName());
+            int n = suite.testCount();
+            for (int i = 0; i < n; i++) {
+                Test test = suite.testAt(i);
+                if (filter.shouldRun(makeDescription(test))) {
+                    filtered.addTest(test);
+                }
+            }
+            setTest(filtered);
+            if (filtered.testCount() == 0) {
+                throw new NoTestsRemainException();
+            }
+        }
+    }
+
+    public void sort(Sorter sorter) {
+        if (getTest() instanceof Sortable) {
+            Sortable adapter = (Sortable) getTest();
+            adapter.sort(sorter);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 4.13
+     */
+    public void order(Orderer orderer) throws InvalidOrderingException {
+        if (getTest() instanceof Orderable) {
+            Orderable adapter = (Orderable) getTest();
+            adapter.order(orderer);
+        }
+    }
+
+    private Test getTest() {
+        return test;
+    }
+
+    private void setTest(Test test) {
+        this.test = test;
+    }
+
     private static final class OldTestClassAdaptingListener implements
             TestListener {
         private final RunNotifier notifier;
@@ -70,127 +193,5 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Orderable 
         public void addFailure(Test test, AssertionFailedError t) {
             addError(test, t);
         }
-    }
-
-    private volatile Test test;
-
-    public JUnit38ClassRunner(Class<?> klass) {
-        this(new TestSuite(klass.asSubclass(TestCase.class)));
-    }
-
-    public JUnit38ClassRunner(Test test) {
-        super();
-        setTest(test);
-    }
-
-    @Override
-    public void run(RunNotifier notifier) {
-        TestResult result = new TestResult();
-        result.addListener(createAdaptingListener(notifier));
-        getTest().run(result);
-    }
-
-    public TestListener createAdaptingListener(final RunNotifier notifier) {
-        return new OldTestClassAdaptingListener(notifier);
-    }
-
-    @Override
-    public Description getDescription() {
-        return makeDescription(getTest());
-    }
-
-    private static Description makeDescription(Test test) {
-        if (test instanceof TestCase) {
-            TestCase tc = (TestCase) test;
-            return Description.createTestDescription(tc.getClass(), tc.getName(),
-                    getAnnotations(tc));
-        } else if (test instanceof TestSuite) {
-            TestSuite ts = (TestSuite) test;
-            String name = ts.getName() == null ? createSuiteDescription(ts) : ts.getName();
-            Description description = Description.createSuiteDescription(name);
-            int n = ts.testCount();
-            for (int i = 0; i < n; i++) {
-                Description made = makeDescription(ts.testAt(i));
-                description.addChild(made);
-            }
-            return description;
-        } else if (test instanceof Describable) {
-            Describable adapter = (Describable) test;
-            return adapter.getDescription();
-        } else if (test instanceof TestDecorator) {
-            TestDecorator decorator = (TestDecorator) test;
-            return makeDescription(decorator.getTest());
-        } else {
-            // This is the best we can do in this case
-            return Description.createSuiteDescription(test.getClass());
-        }
-    }
-
-    /**
-     * Get the annotations associated with given TestCase.
-     * @param test the TestCase.
-     */
-    private static Annotation[] getAnnotations(TestCase test) {
-        try {
-            Method m = test.getClass().getMethod(test.getName());
-            return m.getDeclaredAnnotations();
-        } catch (SecurityException e) {
-        } catch (NoSuchMethodException e) {
-        }
-        return new Annotation[0];
-    }
-
-    private static String createSuiteDescription(TestSuite ts) {
-        int count = ts.countTestCases();
-        String example = count == 0 ? "" : String.format(" [example: %s]", ts.testAt(0));
-        return String.format("TestSuite with %s tests%s", count, example);
-    }
-
-    public void filter(Filter filter) throws NoTestsRemainException {
-        if (getTest() instanceof Filterable) {
-            Filterable adapter = (Filterable) getTest();
-            adapter.filter(filter);
-        } else if (getTest() instanceof TestSuite) {
-            TestSuite suite = (TestSuite) getTest();
-            TestSuite filtered = new TestSuite(suite.getName());
-            int n = suite.testCount();
-            for (int i = 0; i < n; i++) {
-                Test test = suite.testAt(i);
-                if (filter.shouldRun(makeDescription(test))) {
-                    filtered.addTest(test);
-                }
-            }
-            setTest(filtered);
-            if (filtered.testCount() == 0) {
-                throw new NoTestsRemainException();
-            }
-        }
-    }
-
-    public void sort(Sorter sorter) {
-        if (getTest() instanceof Sortable) {
-            Sortable adapter = (Sortable) getTest();
-            adapter.sort(sorter);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 4.13
-     */
-    public void order(Orderer orderer) throws InvalidOrderingException {
-        if (getTest() instanceof Orderable) {
-            Orderable adapter = (Orderable) getTest();
-            adapter.order(orderer);
-        }
-    }
-
-    private void setTest(Test test) {
-        this.test = test;
-    }
-
-    private Test getTest() {
-        return test;
     }
 }

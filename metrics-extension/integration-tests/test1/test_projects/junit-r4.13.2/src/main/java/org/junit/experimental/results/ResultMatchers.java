@@ -17,6 +17,7 @@ public class ResultMatchers {
 
     /**
      * Do not instantiate.
+     *
      * @deprecated will be private soon.
      */
     @Deprecated

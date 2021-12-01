@@ -1,6 +1,7 @@
 package org.junit.tests.experimental.theories;
 
 import static org.junit.tests.experimental.theories.TheoryTestUtils.runTheoryClass;
+
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;

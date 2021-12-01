@@ -34,7 +34,7 @@ import org.junit.runners.model.Statement;
  *   }
  * }
  * </pre>
- *
+ * <p>
  * writes the log
  *
  * <pre>
@@ -45,7 +45,7 @@ import org.junit.runners.model.Statement;
  * finished middle rule
  * finished outer rule
  * </pre>
- *
+ * <p>
  * In older versions of JUnit (before 4.13) {@code RuleChain} was used for
  * ordering rules. We recommend to not use it for this purpose anymore. You can
  * use the attribute {@code order} of the annotation {@link Rule#order() Rule}
@@ -60,6 +60,10 @@ public class RuleChain implements TestRule {
             Collections.<TestRule>emptyList());
 
     private List<TestRule> rulesStartingWithInnerMost;
+
+    private RuleChain(List<TestRule> rules) {
+        this.rulesStartingWithInnerMost = rules;
+    }
 
     /**
      * Returns a {@code RuleChain} without a {@link TestRule}. This method may
@@ -80,10 +84,6 @@ public class RuleChain implements TestRule {
      */
     public static RuleChain outerRule(TestRule outerRule) {
         return emptyRuleChain().around(outerRule);
-    }
-
-    private RuleChain(List<TestRule> rules) {
-        this.rulesStartingWithInnerMost = rules;
     }
 
     /**

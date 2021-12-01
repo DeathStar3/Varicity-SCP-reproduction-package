@@ -16,6 +16,12 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 public class FilterableTest {
+    @Test
+    public void testFilterInRunnerConstructor() {
+        Result result = JUnitCore.runClasses(FilteredTest.class);
+        assertTrue(result.wasSuccessful());
+    }
+
     public static class FilteredRunner extends Parameterized {
         public FilteredRunner(Class<?> klass) throws Throwable {
             super(klass);
@@ -36,12 +42,12 @@ public class FilterableTest {
 
     @RunWith(FilteredRunner.class)
     public static class FilteredTest {
+        public FilteredTest(int x) {
+        }
+
         @Parameters
         public static List<Object[]> parameters() {
             return Arrays.asList(new Object[]{3}, new Object[]{4});
-        }
-
-        public FilteredTest(int x) {
         }
 
         @Test
@@ -52,11 +58,5 @@ public class FilterableTest {
         @Test
         public void runThis() {
         }
-    }
-
-    @Test
-    public void testFilterInRunnerConstructor() {
-        Result result = JUnitCore.runClasses(FilteredTest.class);
-        assertTrue(result.wasSuccessful());
     }
 }

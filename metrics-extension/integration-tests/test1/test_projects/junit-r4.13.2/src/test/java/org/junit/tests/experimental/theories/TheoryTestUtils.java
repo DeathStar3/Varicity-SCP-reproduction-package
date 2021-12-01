@@ -14,16 +14,17 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
 
 public final class TheoryTestUtils {
-    
-    private TheoryTestUtils() { }
-    
+
+    private TheoryTestUtils() {
+    }
+
     public static List<PotentialAssignment> potentialAssignments(Method method)
             throws Throwable {
         return Assignments.allUnassigned(method,
-                new TestClass(method.getDeclaringClass()))
+                        new TestClass(method.getDeclaringClass()))
                 .potentialsForNextUnassigned();
     }
-    
+
     public static Result runTheoryClass(Class<?> testClass) throws InitializationError {
         Runner theoryRunner = new Theories(testClass);
         Request request = Request.runner(theoryRunner);

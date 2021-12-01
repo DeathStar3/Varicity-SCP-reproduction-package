@@ -14,6 +14,9 @@ public class ListTest extends TestCase {
     private List<Integer> emptyList;
     private List<Integer> fullList;
 
+    public static Test suite() {
+        return new TestSuite(ListTest.class);
+    }
 
     @Override
     protected void setUp() {
@@ -22,10 +25,6 @@ public class ListTest extends TestCase {
         fullList.add(1);
         fullList.add(2);
         fullList.add(3);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ListTest.class);
     }
 
     public void testCapacity() {
@@ -43,7 +42,7 @@ public class ListTest extends TestCase {
 
     public void testElementAt() {
         int i = fullList.get(0);
-        assertEquals(1,i);
+        assertEquals(1, i);
 
         try {
             fullList.get(fullList.size());

@@ -12,13 +12,6 @@ import junit.framework.TestSuite;
 public class RepeatedTestTest extends TestCase {
     private TestSuite fSuite;
 
-    public static class SuccessTest extends TestCase {
-
-        @Override
-        public void runTest() {
-        }
-    }
-
     public RepeatedTestTest(String name) {
         super(name);
         fSuite = new TestSuite();
@@ -58,5 +51,12 @@ public class RepeatedTestTest extends TestCase {
             return;
         }
         fail("Should throw an IllegalArgumentException");
+    }
+
+    public static class SuccessTest extends TestCase {
+
+        @Override
+        public void runTest() {
+        }
     }
 }

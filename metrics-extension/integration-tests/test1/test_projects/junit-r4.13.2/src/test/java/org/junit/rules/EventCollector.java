@@ -14,6 +14,14 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 public class EventCollector extends RunListener {
+    private final List<Description> fTestRunsStarted = new ArrayList<Description>();
+    private final List<Result> fTestRunsFinished = new ArrayList<Result>();
+    private final List<Description> fTestsStarted = new ArrayList<Description>();
+    private final List<Description> fTestsFinished = new ArrayList<Description>();
+    private final List<Failure> fFailures = new ArrayList<Failure>();
+    private final List<Failure> fAssumptionFailures = new ArrayList<Failure>();
+    private final List<Description> fTestsIgnored = new ArrayList<Description>();
+
     static Matcher<EventCollector> everyTestRunSuccessful() {
         return allOf(hasNoFailure(), hasNoAssumptionFailure());
     }
@@ -34,7 +42,7 @@ public class EventCollector extends RunListener {
 
             @Override
             protected void describeMismatchSafely(EventCollector item,
-                    org.hamcrest.Description description) {
+                                                  org.hamcrest.Description description) {
                 description.appendValue(item.fFailures.size());
                 description.appendText(" failures");
             }
@@ -94,11 +102,11 @@ public class EventCollector extends RunListener {
 
             @Override
             protected void describeMismatchSafely(EventCollector item,
-                    org.hamcrest.Description description) {
+                                                  org.hamcrest.Description description) {
                 description.appendText("was ");
                 hasSingleFailure().describeMismatch(item, description);
                 description.appendText(": ");
-                boolean first= true;
+                boolean first = true;
                 for (Failure f : item.fFailures) {
                     if (!first) {
                         description.appendText(" ,");
@@ -106,7 +114,7 @@ public class EventCollector extends RunListener {
                     description.appendText("'");
                     description.appendText(f.getMessage());
                     description.appendText("'");
-                    first= false;
+                    first = false;
                 }
             }
         };
@@ -128,20 +136,6 @@ public class EventCollector extends RunListener {
             }
         };
     }
-
-    private final List<Description> fTestRunsStarted = new ArrayList<Description>();
-
-    private final List<Result> fTestRunsFinished = new ArrayList<Result>();
-
-    private final List<Description> fTestsStarted = new ArrayList<Description>();
-
-    private final List<Description> fTestsFinished = new ArrayList<Description>();
-
-    private final List<Failure> fFailures = new ArrayList<Failure>();
-
-    private final List<Failure> fAssumptionFailures = new ArrayList<Failure>();
-
-    private final List<Description> fTestsIgnored = new ArrayList<Description>();
 
     @Override
     public void testRunStarted(Description description) throws Exception {
@@ -181,11 +175,11 @@ public class EventCollector extends RunListener {
     @Override
     public String toString() {
         return fTestRunsStarted.size() + " test runs started, "
-            + fTestRunsFinished.size() + " test runs finished, "
-            + fTestsStarted.size() + " tests started, "
-            + fTestsFinished.size() + " tests finished, "
-            + fFailures.size() + " failures, "
-            + fAssumptionFailures.size() + " assumption failures, "
-            + fTestsIgnored.size() + " tests ignored";
+                + fTestRunsFinished.size() + " test runs finished, "
+                + fTestsStarted.size() + " tests started, "
+                + fTestsFinished.size() + " tests finished, "
+                + fFailures.size() + " failures, "
+                + fAssumptionFailures.size() + " assumption failures, "
+                + fTestsIgnored.size() + " tests ignored";
     }
 }

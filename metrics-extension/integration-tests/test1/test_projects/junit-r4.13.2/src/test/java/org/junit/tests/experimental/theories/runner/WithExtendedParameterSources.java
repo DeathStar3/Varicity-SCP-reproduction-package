@@ -18,19 +18,62 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 
 public class WithExtendedParameterSources {
-    @RunWith(Theories.class)
-    public static class ParameterAnnotations {
-        @Theory
-        public void everythingIsOne(@TestedOn(ints = {1})
-        int number) {
-            assertThat(number, is(1));
-        }
-    }
-
     @Test
     public void testedOnLimitsParameters() throws Exception {
         assertThat(testResult(ParameterAnnotations.class), ResultMatchers
                 .isSuccessful());
+    }
+
+    @Test
+    public void shouldFilterOutNullSingleDataPoints() {
+        assertThat(testResult(ShouldFilterOutNullSingleDataPoints.class), isSuccessful());
+    }
+
+    @Test
+    public void shouldFilterOutNullElementsFromDataPointArrays() {
+        assertThat(testResult(ShouldFilterOutNullElementsFromDataPointArrays.class), isSuccessful());
+    }
+
+    @Test
+    public void ShouldRejectTheoriesWithOnlyDisallowedNullData() {
+        assertThat(testResult(ShouldRejectTheoriesWithOnlyDisallowedNullData.class), not(isSuccessful()));
+    }
+
+    @Test
+    public void getDataPointsFromArray() {
+        DataPointArrays.log = "";
+        JUnitCore.runClasses(DataPointArrays.class);
+        assertThat(DataPointArrays.log, is("AB"));
+    }
+
+    @Test
+    public void getDataPointsFromArrayMethod() {
+        DataPointArrayMethod.log = "";
+        JUnitCore.runClasses(DataPointArrayMethod.class);
+        assertThat(DataPointArrayMethod.log, is("AB"));
+    }
+
+    @Test
+    public void getDataPointsFromArrayMethodInSpiteOfMalformedness() {
+        DataPointArrayMethod.log = "";
+        JUnitCore.runClasses(DataPointArrayMethod.class);
+        assertThat(DataPointArrayMethod.log, is("AB"));
+    }
+
+    @Test
+    public void dataPointCanBeArray() {
+        DataPointArrayToBeUsedForWholeParameter.log = "";
+        JUnitCore.runClasses(DataPointArrayToBeUsedForWholeParameter.class);
+        assertThat(DataPointArrayToBeUsedForWholeParameter.log, is("A"));
+    }
+
+    @RunWith(Theories.class)
+    public static class ParameterAnnotations {
+        @Theory
+        public void everythingIsOne(@TestedOn(ints = {1})
+                                            int number) {
+            assertThat(number, is(1));
+        }
     }
 
     @RunWith(Theories.class)
@@ -38,7 +81,7 @@ public class WithExtendedParameterSources {
 
         @DataPoint
         public static String A = "a";
-        
+
         @DataPoint
         public static String NULL = null;
 
@@ -48,15 +91,10 @@ public class WithExtendedParameterSources {
         }
     }
 
-    @Test
-    public void shouldFilterOutNullSingleDataPoints() {
-        assertThat(testResult(ShouldFilterOutNullSingleDataPoints.class), isSuccessful());
-    }
-
     @RunWith(Theories.class)
     public static class ShouldFilterOutNullElementsFromDataPointArrays {
         @DataPoints
-        public static String[] SOME_NULLS = { "non-null", null };
+        public static String[] SOME_NULLS = {"non-null", null};
 
         @Theory(nullsAccepted = false)
         public void allStringsAreNonNull(String s) {
@@ -64,11 +102,6 @@ public class WithExtendedParameterSources {
         }
     }
 
-    @Test
-    public void shouldFilterOutNullElementsFromDataPointArrays() {
-        assertThat(testResult(ShouldFilterOutNullElementsFromDataPointArrays.class), isSuccessful());
-    }
-    
     @RunWith(Theories.class)
     public static class ShouldRejectTheoriesWithOnlyDisallowedNullData {
         @DataPoints
@@ -78,11 +111,6 @@ public class WithExtendedParameterSources {
         public void allStringsAreNonNull(String s) {
         }
     }
-
-    @Test
-    public void ShouldRejectTheoriesWithOnlyDisallowedNullData() {
-        assertThat(testResult(ShouldRejectTheoriesWithOnlyDisallowedNullData.class), not(isSuccessful()));
-    }    
 
     @RunWith(Theories.class)
     public static class DataPointArrays {
@@ -95,13 +123,6 @@ public class WithExtendedParameterSources {
         public void addToLog(String string) {
             log += string;
         }
-    }
-
-    @Test
-    public void getDataPointsFromArray() {
-        DataPointArrays.log = "";
-        JUnitCore.runClasses(DataPointArrays.class);
-        assertThat(DataPointArrays.log, is("AB"));
     }
 
     @RunWith(Theories.class)
@@ -117,13 +138,6 @@ public class WithExtendedParameterSources {
         public void addToLog(String string) {
             log += string;
         }
-    }
-
-    @Test
-    public void getDataPointsFromArrayMethod() {
-        DataPointArrayMethod.log = "";
-        JUnitCore.runClasses(DataPointArrayMethod.class);
-        assertThat(DataPointArrayMethod.log, is("AB"));
     }
 
     @RunWith(Theories.class)
@@ -151,13 +165,6 @@ public class WithExtendedParameterSources {
         }
     }
 
-    @Test
-    public void getDataPointsFromArrayMethodInSpiteOfMalformedness() {
-        DataPointArrayMethod.log = "";
-        JUnitCore.runClasses(DataPointArrayMethod.class);
-        assertThat(DataPointArrayMethod.log, is("AB"));
-    }
-
     @RunWith(Theories.class)
     public static class DataPointArrayToBeUsedForWholeParameter {
         public static String log = "";
@@ -169,12 +176,5 @@ public class WithExtendedParameterSources {
         public void addToLog(String[] strings) {
             log += strings[0];
         }
-    }
-
-    @Test
-    public void dataPointCanBeArray() {
-        DataPointArrayToBeUsedForWholeParameter.log = "";
-        JUnitCore.runClasses(DataPointArrayToBeUsedForWholeParameter.class);
-        assertThat(DataPointArrayToBeUsedForWholeParameter.log, is("A"));
     }
 }

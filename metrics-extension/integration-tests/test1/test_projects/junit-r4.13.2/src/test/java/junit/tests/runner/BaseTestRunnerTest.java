@@ -6,6 +6,17 @@ import junit.framework.TestSuite;
 import junit.runner.BaseTestRunner;
 
 public class BaseTestRunnerTest extends TestCase {
+    public void testInvokeNonStaticSuite() {
+        BaseTestRunner runner = new MockRunner();
+        runner.getTest("junit.tests.runner.BaseTestRunnerTest$NonStatic"); // Used to throw NullPointerException
+    }
+
+    public void testInvokeSuiteOnNonSubclassOfTestCase() {
+        MockRunner runner = new MockRunner();
+        runner.getTest(DoesntExtendTestCase.class.getName());
+        assertFalse(runner.fRunFailed);
+    }
+
     public static class MockRunner extends BaseTestRunner {
         private boolean fRunFailed = false;
 
@@ -33,20 +44,9 @@ public class BaseTestRunnerTest extends TestCase {
         }
     }
 
-    public void testInvokeNonStaticSuite() {
-        BaseTestRunner runner = new MockRunner();
-        runner.getTest("junit.tests.runner.BaseTestRunnerTest$NonStatic"); // Used to throw NullPointerException
-    }
-
     public static class DoesntExtendTestCase {
         public static Test suite() {
             return new TestSuite();
         }
-    }
-
-    public void testInvokeSuiteOnNonSubclassOfTestCase() {
-        MockRunner runner = new MockRunner();
-        runner.getTest(DoesntExtendTestCase.class.getName());
-        assertFalse(runner.fRunFailed);
     }
 }

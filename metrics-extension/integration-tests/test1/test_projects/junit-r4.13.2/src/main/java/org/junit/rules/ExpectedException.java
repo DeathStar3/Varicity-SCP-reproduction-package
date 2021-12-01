@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.internal.matchers.ThrowableCauseMatcher.hasCause;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
+
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.AssumptionViolatedException;
@@ -33,7 +34,7 @@ import org.junit.runners.model.Statement;
  *         throw new NullPointerException();
  *     }
  * }</pre>
- * 
+ *
  * <p>You have to add the {@code ExpectedException} rule to your test.
  * This doesn't affect your existing tests (see {@code throwsNothing()}).
  * After specifying the type of the expected exception your test is
@@ -109,6 +110,12 @@ import org.junit.runners.model.Statement;
  * @since 4.7
  */
 public class ExpectedException implements TestRule {
+    private final ExpectedExceptionMatcherBuilder matcherBuilder = new ExpectedExceptionMatcherBuilder();
+    private String missingExceptionMessage = "Expected test to throw %s";
+
+    private ExpectedException() {
+    }
+
     /**
      * Returns a {@linkplain TestRule rule} that expects no exception to
      * be thrown (identical to behavior without this rule).
@@ -123,17 +130,11 @@ public class ExpectedException implements TestRule {
         return new ExpectedException();
     }
 
-    private final ExpectedExceptionMatcherBuilder matcherBuilder = new ExpectedExceptionMatcherBuilder();
-
-    private String missingExceptionMessage= "Expected test to throw %s";
-
-    private ExpectedException() {
-    }
-
     /**
      * This method does nothing. Don't use it.
+     *
      * @deprecated AssertionErrors are handled by default since JUnit 4.12. Just
-     *             like in JUnit &lt;= 4.10.
+     * like in JUnit &lt;= 4.10.
      */
     @Deprecated
     public ExpectedException handleAssertionErrors() {
@@ -142,8 +143,9 @@ public class ExpectedException implements TestRule {
 
     /**
      * This method does nothing. Don't use it.
+     *
      * @deprecated AssumptionViolatedExceptions are handled by default since
-     *             JUnit 4.12. Just like in JUnit &lt;= 4.10.
+     * JUnit 4.12. Just like in JUnit &lt;= 4.10.
      */
     @Deprecated
     public ExpectedException handleAssumptionViolatedExceptions() {
@@ -151,7 +153,7 @@ public class ExpectedException implements TestRule {
     }
 
     /**
-     * Specifies the failure message for tests that are expected to throw 
+     * Specifies the failure message for tests that are expected to throw
      * an exception but do not throw any. You can use a {@code %s} placeholder for
      * the description of the expected exception. E.g. "Test doesn't throw %s."
      * will fail with the error message
@@ -166,7 +168,7 @@ public class ExpectedException implements TestRule {
     }
 
     public Statement apply(Statement base,
-            org.junit.runner.Description description) {
+                           org.junit.runner.Description description) {
         return new ExpectedExceptionStatement(base);
     }
 
@@ -211,7 +213,7 @@ public class ExpectedException implements TestRule {
     }
 
     /**
-     * Verify that your code throws an exception whose message is matched 
+     * Verify that your code throws an exception whose message is matched
      * by a Hamcrest matcher.
      * <pre> &#064;Test
      * public void throwsExceptionWhoseMessageCompliesWithMatcher() {
@@ -224,7 +226,7 @@ public class ExpectedException implements TestRule {
     }
 
     /**
-     * Verify that your code throws an exception whose cause is matched by 
+     * Verify that your code throws an exception whose cause is matched by
      * a Hamcrest matcher.
      * <pre> &#064;Test
      * public void throwsExceptionWhoseCauseCompliesWithMatcher() {
@@ -239,10 +241,28 @@ public class ExpectedException implements TestRule {
 
     /**
      * Check if any Exception is expected.
+     *
      * @since 4.13
      */
     public final boolean isAnyExceptionExpected() {
         return matcherBuilder.expectsThrowable();
+    }
+
+    private void handleException(Throwable e) throws Throwable {
+        if (isAnyExceptionExpected()) {
+            assertThat(e, matcherBuilder.build());
+        } else {
+            throw e;
+        }
+    }
+
+    private void failDueToMissingException() throws AssertionError {
+        fail(missingExceptionMessage());
+    }
+
+    private String missingExceptionMessage() {
+        String expectation = StringDescription.toString(matcherBuilder.build());
+        return format(missingExceptionMessage, expectation);
     }
 
     private class ExpectedExceptionStatement extends Statement {
@@ -264,22 +284,5 @@ public class ExpectedException implements TestRule {
                 failDueToMissingException();
             }
         }
-    }
-
-    private void handleException(Throwable e) throws Throwable {
-        if (isAnyExceptionExpected()) {
-            assertThat(e, matcherBuilder.build());
-        } else {
-            throw e;
-        }
-    }
-
-    private void failDueToMissingException() throws AssertionError {
-        fail(missingExceptionMessage());
-    }
-    
-    private String missingExceptionMessage() {
-        String expectation= StringDescription.toString(matcherBuilder.build());
-        return format(missingExceptionMessage, expectation);
     }
 }

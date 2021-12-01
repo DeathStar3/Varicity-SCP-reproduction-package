@@ -15,7 +15,7 @@ public class AssumptionViolatedException extends org.junit.internal.AssumptionVi
     private static final long serialVersionUID = 1L;
 
     /**
-     * An assumption exception with the given <i>actual</i> value and a <i>matcher</i> describing 
+     * An assumption exception with the given <i>actual</i> value and a <i>matcher</i> describing
      * the expectation that failed.
      */
     public <T> AssumptionViolatedException(T actual, Matcher<T> matcher) {

@@ -20,10 +20,10 @@ import org.junit.runner.manipulation.Sorter;
  *
  * <p> To use it, add the following to a test class:
  * <pre>
-      public static Test suite() {
-        return new JUnit4TestAdapter(<em>YourJUnit4TestClass</em>.class);
-      }
-</pre>
+ * public static Test suite() {
+ * return new JUnit4TestAdapter(<em>YourJUnit4TestClass</em>.class);
+ * }
+ * </pre>
  */
 public class JUnit4TestAdapter implements Test, Filterable, Orderable, Describable {
     private final Class<?> fNewTestClass;

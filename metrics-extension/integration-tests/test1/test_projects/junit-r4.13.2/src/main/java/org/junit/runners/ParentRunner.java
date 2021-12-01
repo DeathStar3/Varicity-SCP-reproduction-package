@@ -92,19 +92,19 @@ public abstract class ParentRunner<T> extends Runner implements Filterable,
         validate();
     }
 
-   /**
-    * Constructs a new {@code ParentRunner} that will run the {@code TestClass}.
-    *
-    * @since 4.13
-    */
+    /**
+     * Constructs a new {@code ParentRunner} that will run the {@code TestClass}.
+     *
+     * @since 4.13
+     */
     protected ParentRunner(TestClass testClass) throws InitializationError {
-       this.testClass = notNull(testClass);
-       validate();
+        this.testClass = notNull(testClass);
+        validate();
     }
 
     /**
-     * @deprecated Please use {@link #ParentRunner(org.junit.runners.model.TestClass)}.
      * @since 4.12
+     * @deprecated Please use {@link #ParentRunner(org.junit.runners.model.TestClass)}.
      */
     @Deprecated
     protected TestClass createTestClass(Class<?> testClass) {
@@ -171,7 +171,7 @@ public abstract class ParentRunner<T> extends Runner implements Filterable,
      * </ul>
      */
     protected void validatePublicVoidNoArgMethods(Class<? extends Annotation> annotation,
-            boolean isStatic, List<Throwable> errors) {
+                                                  boolean isStatic, List<Throwable> errors) {
         List<FrameworkMethod> methods = getTestClass().getAnnotatedMethods(annotation);
 
         for (FrameworkMethod eachTestMethod : methods) {
@@ -262,7 +262,7 @@ public abstract class ParentRunner<T> extends Runner implements Filterable,
      *
      * @param statement the base statement
      * @return a RunRules statement if any class-level {@link Rule}s are
-     *         found, or the base statement
+     * found, or the base statement
      */
     private Statement withClassRules(Statement statement) {
         List<TestRule> classRules = classRules();
@@ -272,7 +272,7 @@ public abstract class ParentRunner<T> extends Runner implements Filterable,
 
     /**
      * @return the {@code ClassRule}s that can transform the block that runs
-     *         each method in the tested class.
+     * each method in the tested class.
      */
     protected List<TestRule> classRules() {
         ClassRuleCollector collector = new ClassRuleCollector();
@@ -314,7 +314,7 @@ public abstract class ParentRunner<T> extends Runner implements Filterable,
     /**
      * Evaluates whether a child is ignored. The default implementation always
      * returns <code>false</code>.
-     * 
+     *
      * <p>{@link BlockJUnit4ClassRunner}, for example, overrides this method to
      * filter tests based on the {@link Ignore} annotation.
      */
@@ -359,7 +359,7 @@ public abstract class ParentRunner<T> extends Runner implements Filterable,
      * Runs a {@link Statement} that represents a leaf (aka atomic) test.
      */
     protected final void runLeaf(Statement statement, Description description,
-            RunNotifier notifier) {
+                                 RunNotifier notifier) {
         EachTestNotifier eachNotifier = new EachTestNotifier(notifier, description);
         eachNotifier.fireTestStarted();
         try {
@@ -375,7 +375,7 @@ public abstract class ParentRunner<T> extends Runner implements Filterable,
 
     /**
      * @return the annotations that should be attached to this runner's
-     *         description.
+     * description.
      */
     protected Annotation[] getRunnerAnnotations() {
         return testClass.getAnnotations();

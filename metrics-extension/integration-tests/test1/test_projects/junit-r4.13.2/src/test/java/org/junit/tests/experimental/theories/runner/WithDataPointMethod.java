@@ -24,6 +24,38 @@ import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
 public class WithDataPointMethod {
+    @Test
+    public void pickUpDataPointMethods() {
+        assertThat(testResult(HasDataPointMethod.class), isSuccessful());
+    }
+
+    @Test
+    public void mutableObjectsAreCreatedAfresh() {
+        assertThat(failures(DataPointMethodReturnsMutableObject.class), empty());
+    }
+
+    @Test
+    public void ignoreDataPointMethodsWithWrongTypes() throws Throwable {
+        assertThat(potentialAssignments(
+                HasDateMethod.class.getMethod("onlyStringsOk", String.class))
+                .toString(), not(containsString("100")));
+    }
+
+    @Test
+    public void ignoreDataPointMethodsWithoutAnnotation() throws Throwable {
+        assertThat(potentialAssignments(
+                HasDateMethod.class.getMethod("onlyDatesOk", Date.class))
+                .size(), is(0));
+    }
+
+    private List<Failure> failures(Class<?> type) {
+        return JUnitCore.runClasses(type).getFailures();
+    }
+
+    private Matcher<Iterable<Failure>> empty() {
+        return everyItem(nullValue(Failure.class));
+    }
+
     @RunWith(Theories.class)
     public static class HasDataPointMethod {
         @DataPoint
@@ -36,34 +68,23 @@ public class WithDataPointMethod {
         }
     }
 
-    @Test
-    public void pickUpDataPointMethods() {
-        assertThat(testResult(HasDataPointMethod.class), isSuccessful());
-    }
-
     @RunWith(Theories.class)
     public static class DataPointMethodReturnsMutableObject {
+        @DataPoint
+        public static int ONE = 1;
+        @DataPoint
+        public static int TWO = 2;
+
         @DataPoint
         public static List<Object> empty() {
             return new ArrayList<Object>();
         }
-
-        @DataPoint
-        public static int ONE = 1;
-
-        @DataPoint
-        public static int TWO = 2;
 
         @Theory
         public void everythingsEmpty(List<Object> first, int number) {
             assertThat(first.size(), is(0));
             first.add("a");
         }
-    }
-
-    @Test
-    public void mutableObjectsAreCreatedAfresh() {
-        assertThat(failures(DataPointMethodReturnsMutableObject.class), empty());
     }
 
     @RunWith(Theories.class)
@@ -88,27 +109,5 @@ public class WithDataPointMethod {
         @Theory
         public void onlyDatesOk(Date d) {
         }
-    }
-
-    @Test
-    public void ignoreDataPointMethodsWithWrongTypes() throws Throwable {
-        assertThat(potentialAssignments(
-                HasDateMethod.class.getMethod("onlyStringsOk", String.class))
-                .toString(), not(containsString("100")));
-    }
-
-    @Test
-    public void ignoreDataPointMethodsWithoutAnnotation() throws Throwable {
-        assertThat(potentialAssignments(
-                HasDateMethod.class.getMethod("onlyDatesOk", Date.class))
-                .size(), is(0));
-    }
-
-    private List<Failure> failures(Class<?> type) {
-        return JUnitCore.runClasses(type).getFailures();
-    }
-
-    private Matcher<Iterable<Failure>> empty() {
-        return everyItem(nullValue(Failure.class));
     }
 }

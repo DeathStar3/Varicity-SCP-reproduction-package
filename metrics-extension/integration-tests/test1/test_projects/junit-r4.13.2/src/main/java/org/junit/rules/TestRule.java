@@ -14,14 +14,14 @@ import org.junit.runners.model.Statement;
  * {@link org.junit.AfterClass}, but they are more powerful, and more easily
  * shared
  * between projects and classes.
- *
+ * <p>
  * The default JUnit test runners for suites and
  * individual test cases recognize {@link TestRule}s introduced in two different
  * ways.  {@link org.junit.Rule} annotates method-level
  * {@link TestRule}s, and {@link org.junit.ClassRule}
  * annotates class-level {@link TestRule}s.  See Javadoc for those annotations
  * for more information.
- *
+ * <p>
  * Multiple {@link TestRule}s can be applied to a test or suite execution. The
  * {@link Statement} that executes the method or suite is passed to each annotated
  * {@link org.junit.Rule} in turn, and each may return a substitute or modified
@@ -47,10 +47,10 @@ public interface TestRule {
      * Modifies the method-running {@link Statement} to implement this
      * test-running rule.
      *
-     * @param base The {@link Statement} to be modified
+     * @param base        The {@link Statement} to be modified
      * @param description A {@link Description} of the test implemented in {@code base}
      * @return a new statement, which may be the same as {@code base},
-     *         a wrapper around {@code base}, or a completely new Statement.
+     * a wrapper around {@code base}, or a completely new Statement.
      */
     Statement apply(Statement base, Description description);
 }

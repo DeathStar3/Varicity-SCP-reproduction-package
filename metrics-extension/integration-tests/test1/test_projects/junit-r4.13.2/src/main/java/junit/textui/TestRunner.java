@@ -28,11 +28,10 @@ import junit.runner.Version;
  * summary at the end.
  */
 public class TestRunner extends BaseTestRunner {
-    private ResultPrinter fPrinter;
-
     public static final int SUCCESS_EXIT = 0;
     public static final int FAILURE_EXIT = 1;
     public static final int EXCEPTION_EXIT = 2;
+    private ResultPrinter fPrinter;
 
     /**
      * Constructs a TestRunner.
@@ -86,6 +85,20 @@ public class TestRunner extends BaseTestRunner {
         aTestRunner.doRun(suite, true);
     }
 
+    public static void main(String[] args) {
+        TestRunner aTestRunner = new TestRunner();
+        try {
+            TestResult r = aTestRunner.start(args);
+            if (!r.wasSuccessful()) {
+                System.exit(FAILURE_EXIT);
+            }
+            System.exit(SUCCESS_EXIT);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(EXCEPTION_EXIT);
+        }
+    }
+
     @Override
     public void testFailed(int status, Test test, Throwable e) {
     }
@@ -128,20 +141,6 @@ public class TestRunner extends BaseTestRunner {
         try {
             System.in.read();
         } catch (Exception e) {
-        }
-    }
-
-    public static void main(String[] args) {
-        TestRunner aTestRunner = new TestRunner();
-        try {
-            TestResult r = aTestRunner.start(args);
-            if (!r.wasSuccessful()) {
-                System.exit(FAILURE_EXIT);
-            }
-            System.exit(SUCCESS_EXIT);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            System.exit(EXCEPTION_EXIT);
         }
     }
 

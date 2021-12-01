@@ -22,8 +22,8 @@ public final class FilterRequest extends Request {
      * Creates a filtered Request
      *
      * @param request a {@link Request} describing your Tests
-     * @param filter {@link Filter} to apply to the Tests described in
-     * <code>request</code>
+     * @param filter  {@link Filter} to apply to the Tests described in
+     *                <code>request</code>
      */
     public FilterRequest(Request request, Filter filter) {
         this.request = request;

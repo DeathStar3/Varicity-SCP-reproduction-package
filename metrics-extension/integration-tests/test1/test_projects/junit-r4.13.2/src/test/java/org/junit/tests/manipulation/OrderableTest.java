@@ -1,6 +1,7 @@
 package org.junit.tests.manipulation;
 
 import static org.junit.Assert.assertEquals;
+
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -21,9 +22,59 @@ import org.junit.runners.MethodSorters;
 
 @RunWith(Enclosed.class)
 public class OrderableTest {
- 
+
     public static class TestClassRunnerIsOrderable {
         private static String log = "";
+
+        @Before
+        public void resetLog() {
+            log = "";
+        }
+
+        @Test
+        public void orderingForwardWorksOnTestClassRunner() {
+            Request forward = Request.aClass(OrderMe.class).orderWith(
+                    AlphanumericOrdering.INSTANCE);
+
+            new JUnitCore().run(forward);
+            assertEquals("abc", log);
+        }
+
+        @Test
+        public void orderingBackwardWorksOnTestClassRunner() {
+            Request backward = Request.aClass(OrderMe.class).orderWith(
+                    new ReverseAlphanumericOrdering());
+
+            new JUnitCore().run(backward);
+            assertEquals("cba", log);
+        }
+
+        @Test
+        public void orderingBackwardDoesNothingOnTestClassRunnerWithFixMethodOrder() {
+            Request backward = Request.aClass(DoNotOrderMe.class).orderWith(
+                    new ReverseAlphanumericOrdering());
+
+            new JUnitCore().run(backward);
+            assertEquals("abc", log);
+        }
+
+        @Test
+        public void orderingForwardWorksOnSuite() {
+            Request forward = Request.aClass(Enclosing.class).orderWith(
+                    AlphanumericOrdering.INSTANCE);
+
+            new JUnitCore().run(forward);
+            assertEquals("AaAbAcBaBbBc", log);
+        }
+
+        @Test
+        public void orderingBackwardWorksOnSuite() {
+            Request backward = Request.aClass(Enclosing.class).orderWith(
+                    new ReverseAlphanumericOrdering());
+
+            new JUnitCore().run(backward);
+            assertEquals("BcBbBaAcAbAa", log);
+        }
 
         public static class OrderMe {
             @Test
@@ -58,38 +109,6 @@ public class OrderableTest {
             public void c() {
                 log += "c";
             }
-        }
-
-        @Before
-        public void resetLog() {
-            log = "";
-        }
-
-        @Test
-        public void orderingForwardWorksOnTestClassRunner() {
-            Request forward = Request.aClass(OrderMe.class).orderWith(
-                    AlphanumericOrdering.INSTANCE);
-
-            new JUnitCore().run(forward);
-            assertEquals("abc", log);
-        }
-
-        @Test
-        public void orderingBackwardWorksOnTestClassRunner() {
-            Request backward = Request.aClass(OrderMe.class).orderWith(
-                    new ReverseAlphanumericOrdering());
-
-            new JUnitCore().run(backward);
-            assertEquals("cba", log);
-        }
-        
-        @Test
-        public void orderingBackwardDoesNothingOnTestClassRunnerWithFixMethodOrder() {
-            Request backward = Request.aClass(DoNotOrderMe.class).orderWith(
-                    new ReverseAlphanumericOrdering());
-
-            new JUnitCore().run(backward);
-            assertEquals("abc", log);
         }
 
         @RunWith(Enclosed.class)
@@ -128,28 +147,33 @@ public class OrderableTest {
                 }
             }
         }
-
-        @Test
-        public void orderingForwardWorksOnSuite() {
-            Request forward = Request.aClass(Enclosing.class).orderWith(
-                    AlphanumericOrdering.INSTANCE);
-
-            new JUnitCore().run(forward);
-            assertEquals("AaAbAcBaBbBc", log);
-        }
-
-        @Test
-        public void orderingBackwardWorksOnSuite() {
-            Request backward = Request.aClass(Enclosing.class).orderWith(
-                    new ReverseAlphanumericOrdering());
-
-            new JUnitCore().run(backward);
-            assertEquals("BcBbBaAcAbAa", log);
-        }
     }
 
     public static class TestOrderableClassRunnerIsSortable {
         private static String log = "";
+
+        @Before
+        public void resetLog() {
+            log = "";
+        }
+
+        @Test
+        public void orderingorwardWorksOnTestClassRunner() {
+            Request forward = Request.aClass(OrderMe.class).orderWith(
+                    AlphanumericOrdering.INSTANCE);
+
+            new JUnitCore().run(forward);
+            assertEquals("abc", log);
+        }
+
+        @Test
+        public void orderedBackwardWorksOnTestClassRunner() {
+            Request backward = Request.aClass(OrderMe.class).orderWith(
+                    new ReverseAlphanumericOrdering());
+
+            new JUnitCore().run(backward);
+            assertEquals("cba", log);
+        }
 
         /**
          * A Runner that implements {@link Orderable}.
@@ -160,12 +184,12 @@ public class OrderableTest {
             public OrderableRunner(Class<?> klass) throws Throwable {
                 delegate = new BlockJUnit4ClassRunner(klass);
             }
-            
+
             @Override
             public void run(RunNotifier notifier) {
                 delegate.run(notifier);
             }
-                
+
             @Override
             public Description getDescription() {
                 return delegate.getDescription();
@@ -197,54 +221,10 @@ public class OrderableTest {
                 log += "c";
             }
         }
-
-        @Before
-        public void resetLog() {
-            log = "";
-        }
-
-        @Test
-        public void orderingorwardWorksOnTestClassRunner() {
-            Request forward = Request.aClass(OrderMe.class).orderWith(
-                    AlphanumericOrdering.INSTANCE);
-
-            new JUnitCore().run(forward);
-            assertEquals("abc", log);
-        }
-
-        @Test
-        public void orderedBackwardWorksOnTestClassRunner() {
-            Request backward = Request.aClass(OrderMe.class).orderWith(
-                    new ReverseAlphanumericOrdering());
-
-            new JUnitCore().run(backward);
-            assertEquals("cba", log);
-        }
     }
 
     public static class TestClassRunnerIsOrderableWithSuiteMethod {
         private static String log = "";
-
-        public static class OrderMe {
-            @Test
-            public void a() {
-                log += "a";
-            }
-
-            @Test
-            public void b() {
-                log += "b";
-            }
-
-            @Test
-            public void c() {
-                log += "c";
-            }
-
-            public static junit.framework.Test suite() {
-                return new JUnit4TestAdapter(OrderMe.class);
-            }
-        }
 
         @Before
         public void resetLog() {
@@ -267,9 +247,37 @@ public class OrderableTest {
             new JUnitCore().run(backward);
             assertEquals("cba", log);
         }
+
+        public static class OrderMe {
+            public static junit.framework.Test suite() {
+                return new JUnit4TestAdapter(OrderMe.class);
+            }
+
+            @Test
+            public void a() {
+                log += "a";
+            }
+
+            @Test
+            public void b() {
+                log += "b";
+            }
+
+            @Test
+            public void c() {
+                log += "c";
+            }
+        }
     }
 
     public static class UnOrderableRunnersAreHandledWithoutCrashing {
+        @Test
+        public void unOrderablesAreHandledWithoutCrashing() {
+            Request unordered = Request.aClass(UnOrderable.class).orderWith(
+                    AlphanumericOrdering.INSTANCE);
+            new JUnitCore().run(unordered);
+        }
+
         public static class UnOrderableRunner extends Runner {
             public UnOrderableRunner(Class<?> klass) {
             }
@@ -289,13 +297,6 @@ public class OrderableTest {
             @Test
             public void a() {
             }
-        }
-
-        @Test
-        public void unOrderablesAreHandledWithoutCrashing() {
-            Request unordered = Request.aClass(UnOrderable.class).orderWith(
-                    AlphanumericOrdering.INSTANCE);
-            new JUnitCore().run(unordered);
         }
     }
 }

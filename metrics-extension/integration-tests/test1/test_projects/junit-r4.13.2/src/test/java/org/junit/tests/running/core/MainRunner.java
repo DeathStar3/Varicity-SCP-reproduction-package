@@ -5,6 +5,32 @@ import java.io.PrintStream;
 import java.security.Permission;
 
 public class MainRunner {
+    /**
+     * Execute runnable.run(), preventing System.exit(). If System.exit() is called
+     * in runnable.run(), the value is returned. If System.exit()
+     * is not called, null is returned.
+     *
+     * @return null if System.exit() is not called, Integer.valueof(status) if not
+     */
+    public Integer runWithCheckForSystemExit(Runnable runnable) {
+        SecurityManager oldSecurityManager = System.getSecurityManager();
+        System.setSecurityManager(new NoExitSecurityManager());
+        PrintStream oldOut = System.out;
+
+        System.setOut(new PrintStream(new ByteArrayOutputStream()));
+        try {
+            runnable.run();
+            System.out.println("System.exit() not called, return null");
+            return null;
+        } catch (ExitException e) {
+            System.out.println("System.exit() called, value=" + e.getStatus());
+            return e.getStatus();
+        } finally {
+            System.setSecurityManager(oldSecurityManager);
+            System.setOut(oldOut);
+        }
+    }
+
     private static class ExitException extends SecurityException {
         private static final long serialVersionUID = -9104651568237766642L;
 
@@ -36,32 +62,6 @@ public class MainRunner {
             if (perm.getName().startsWith("exitVM")) {
                 super.checkPermission(perm);
             }
-        }
-    }
-
-    /**
-     * Execute runnable.run(), preventing System.exit(). If System.exit() is called
-     * in runnable.run(), the value is returned. If System.exit()
-     * is not called, null is returned.
-     *
-     * @return null if System.exit() is not called, Integer.valueof(status) if not
-     */
-    public Integer runWithCheckForSystemExit(Runnable runnable) {
-        SecurityManager oldSecurityManager = System.getSecurityManager();
-        System.setSecurityManager(new NoExitSecurityManager());
-        PrintStream oldOut = System.out;
-
-        System.setOut(new PrintStream(new ByteArrayOutputStream()));
-        try {
-            runnable.run();
-            System.out.println("System.exit() not called, return null");
-            return null;
-        } catch (ExitException e) {
-            System.out.println("System.exit() called, value=" + e.getStatus());
-            return e.getStatus();
-        } finally {
-            System.setSecurityManager(oldSecurityManager);
-            System.setOut(oldOut);
         }
     }
 }

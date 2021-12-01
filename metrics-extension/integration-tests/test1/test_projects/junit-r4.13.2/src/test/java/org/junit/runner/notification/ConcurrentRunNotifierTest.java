@@ -28,13 +28,14 @@ public final class ConcurrentRunNotifierTest {
     private static final long TIMEOUT = 3;
     private final RunNotifier fNotifier = new RunNotifier();
 
-    private static class ConcurrentRunListener extends RunListener {
-        final AtomicInteger fTestStarted = new AtomicInteger(0);
-
-        @Override
-        public void testStarted(Description description) throws Exception {
-            fTestStarted.incrementAndGet();
+    private static int countReportedTestFailures(ExaminedListener[] listeners) {
+        int count = 0;
+        for (ExaminedListener listener : listeners) {
+            if (listener.hasTestFailure) {
+                ++count;
+            }
         }
+        return count;
     }
 
     @Test
@@ -61,6 +62,43 @@ public final class ConcurrentRunNotifierTest {
 
         assertThat(listener1.fTestStarted.get(), is(numParallelTests));
         assertThat(listener2.fTestStarted.get(), is(numParallelTests));
+    }
+
+    /**
+     * Verifies that listeners added while tests are run concurrently are
+     * notified about test failures.
+     */
+    @Test
+    public void reportConcurrentFailuresAfterAddListener() throws Exception {
+        new AbstractConcurrentFailuresTest() {
+            @Override
+            protected void addListener(ExaminedListener listener) {
+                fNotifier.addListener(listener);
+            }
+        }.test();
+    }
+
+    /**
+     * Verifies that listeners added with addFirstListener() while tests are run concurrently are
+     * notified about test failures.
+     */
+    @Test
+    public void reportConcurrentFailuresAfterAddFirstListener() throws Exception {
+        new AbstractConcurrentFailuresTest() {
+            @Override
+            protected void addListener(ExaminedListener listener) {
+                fNotifier.addFirstListener(listener);
+            }
+        }.test();
+    }
+
+    private static class ConcurrentRunListener extends RunListener {
+        final AtomicInteger fTestStarted = new AtomicInteger(0);
+
+        @Override
+        public void testStarted(Description description) throws Exception {
+            fTestStarted.incrementAndGet();
+        }
     }
 
     private static class ExaminedListener extends RunListener {
@@ -125,7 +163,7 @@ public final class ConcurrentRunNotifierTest {
             latch.await(TIMEOUT, TimeUnit.SECONDS);
 
             for (ExaminedListener examinedListener : examinedListeners) {
-              addListener(examinedListener);
+                addListener(examinedListener);
             }
 
             notificationsPool.shutdown();
@@ -138,43 +176,5 @@ public final class ConcurrentRunNotifierTest {
                 assertThat(totalListenersFailures, is(countTestFailures));
             }
         }
-    }
-
-    /**
-     * Verifies that listeners added while tests are run concurrently are
-     * notified about test failures.
-     */
-    @Test
-    public void reportConcurrentFailuresAfterAddListener() throws Exception {
-        new AbstractConcurrentFailuresTest() {
-            @Override
-            protected void addListener(ExaminedListener listener) {
-                fNotifier.addListener(listener);
-            }
-        }.test();
-    }
-
-    /**
-     * Verifies that listeners added with addFirstListener() while tests are run concurrently are
-     * notified about test failures.
-     */
-    @Test
-    public void reportConcurrentFailuresAfterAddFirstListener() throws Exception {
-        new AbstractConcurrentFailuresTest() {
-            @Override
-            protected void addListener(ExaminedListener listener) {
-                fNotifier.addFirstListener(listener);
-            }
-        }.test();
-    }
-
-    private static int countReportedTestFailures(ExaminedListener[] listeners) {
-        int count = 0;
-        for (ExaminedListener listener : listeners) {
-            if (listener.hasTestFailure) {
-                ++count;
-            }
-        }
-        return count;
     }
 }

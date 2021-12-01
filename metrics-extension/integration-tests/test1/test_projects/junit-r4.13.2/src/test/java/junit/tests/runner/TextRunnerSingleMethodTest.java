@@ -14,17 +14,6 @@ public class TextRunnerSingleMethodTest extends TestCase {
 
     static boolean fgWasInvoked;
 
-    public static class InvocationTest extends TestCase {
-
-        public void testWasInvoked() {
-            TextRunnerSingleMethodTest.fgWasInvoked = true;
-        }
-
-        public void testNotInvoked() {
-            fail("Shouldn't get here.");
-        }
-    }
-
     public void testSingle() throws Exception {
         TestRunner t = new TestRunner();
         t.setPrinter(new ResultPrinter(new PrintStream(new ByteArrayOutputStream())));
@@ -34,6 +23,17 @@ public class TextRunnerSingleMethodTest extends TestCase {
         fgWasInvoked = false;
         t.start(args);
         assertTrue(fgWasInvoked);
+    }
+
+    public static class InvocationTest extends TestCase {
+
+        public void testWasInvoked() {
+            TextRunnerSingleMethodTest.fgWasInvoked = true;
+        }
+
+        public void testNotInvoked() {
+            fail("Shouldn't get here.");
+        }
     }
 
 }

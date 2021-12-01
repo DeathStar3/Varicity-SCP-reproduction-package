@@ -20,44 +20,10 @@ import org.junit.Test;
  */
 public class SynchronizedRunListenerTest {
 
-    private static class MethodSignature {
-        private final Method fMethod;
-        private final String fName;
-        private final List<Class<?>> fParameterTypes;
-
-        public MethodSignature(Method method) {
-            fMethod = method;
-            fName = method.getName();
-            fParameterTypes = Arrays.asList(method.getParameterTypes());
-        }
-
-        @Override
-        public String toString() {
-            return fMethod.toString();
-        }
-
-        @Override
-        public int hashCode() {
-            return fName.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (!(obj instanceof MethodSignature)) {
-                return false;
-            }
-            MethodSignature that = (MethodSignature) obj;
-            return fName.equals(that.fName) && fParameterTypes.equals(that.fParameterTypes);
-        }
-    }
-
     private Set<MethodSignature> getAllDeclaredMethods(Class<?> type) {
         Set<MethodSignature> methods = new HashSet<MethodSignature>();
         for (Method method : type.getDeclaredMethods()) {
-          methods.add(new MethodSignature(method));
+            methods.add(new MethodSignature(method));
         }
         return methods;
     }
@@ -69,36 +35,6 @@ public class SynchronizedRunListenerTest {
                 SynchronizedRunListener.class);
 
         assertTrue(synchronizedRunListenerMethods.containsAll(runListenerMethods));
-    }
-
-    private static class NamedListener extends RunListener {
-        private final String fName;
-
-        public NamedListener(String name) {
-            fName = name;
-        }
-
-        @Override
-        public String toString() {
-          return "NamedListener";
-        }
-
-        @Override
-        public int hashCode() {
-            return fName.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (!(obj instanceof NamedListener)) {
-                return false;
-            }
-            NamedListener that = (NamedListener) obj;
-            return this.fName.equals(that.fName);
-        }
     }
 
     @Test
@@ -152,5 +88,69 @@ public class SynchronizedRunListenerTest {
 
     private SynchronizedRunListener wrap(RunListener listener) {
         return new SynchronizedRunListener(listener, this);
+    }
+
+    private static class MethodSignature {
+        private final Method fMethod;
+        private final String fName;
+        private final List<Class<?>> fParameterTypes;
+
+        public MethodSignature(Method method) {
+            fMethod = method;
+            fName = method.getName();
+            fParameterTypes = Arrays.asList(method.getParameterTypes());
+        }
+
+        @Override
+        public String toString() {
+            return fMethod.toString();
+        }
+
+        @Override
+        public int hashCode() {
+            return fName.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof MethodSignature)) {
+                return false;
+            }
+            MethodSignature that = (MethodSignature) obj;
+            return fName.equals(that.fName) && fParameterTypes.equals(that.fParameterTypes);
+        }
+    }
+
+    private static class NamedListener extends RunListener {
+        private final String fName;
+
+        public NamedListener(String name) {
+            fName = name;
+        }
+
+        @Override
+        public String toString() {
+            return "NamedListener";
+        }
+
+        @Override
+        public int hashCode() {
+            return fName.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof NamedListener)) {
+                return false;
+            }
+            NamedListener that = (NamedListener) obj;
+            return this.fName.equals(that.fName);
+        }
     }
 }

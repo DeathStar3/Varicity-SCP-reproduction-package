@@ -53,7 +53,7 @@ public class ParameterizedAssertionErrorTest {
 
     @Theory
     public void equalsReturnsTrue(Throwable targetException, String methodName,
-            Object[] params) {
+                                  Object[] params) {
         assertThat(
                 new ParameterizedAssertionError(targetException, methodName, params),
                 is(new ParameterizedAssertionError(targetException, methodName, params)));
@@ -61,7 +61,7 @@ public class ParameterizedAssertionErrorTest {
 
     @Theory
     public void sameHashCodeWhenEquals(Throwable targetException, String methodName,
-            Object[] params) {
+                                       Object[] params) {
         ParameterizedAssertionError one = new ParameterizedAssertionError(
                 targetException, methodName, params);
         ParameterizedAssertionError two = new ParameterizedAssertionError(
@@ -74,7 +74,7 @@ public class ParameterizedAssertionErrorTest {
     @Theory(nullsAccepted = false)
     public void buildParameterizedAssertionError(String methodName, String param) {
         assertThat(new ParameterizedAssertionError(
-                new RuntimeException(), methodName, param).toString(),
+                        new RuntimeException(), methodName, param).toString(),
                 containsString(methodName));
     }
 

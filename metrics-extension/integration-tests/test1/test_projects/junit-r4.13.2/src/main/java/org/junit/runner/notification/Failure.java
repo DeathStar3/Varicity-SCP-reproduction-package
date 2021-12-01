@@ -19,7 +19,7 @@ public class Failure implements Serializable {
 
     /*
      * We have to use the f prefix until the next major release to ensure
-     * serialization compatibility. 
+     * serialization compatibility.
      * See https://github.com/junit-team/junit4/issues/976
      */
     private final Description fDescription;
@@ -28,7 +28,7 @@ public class Failure implements Serializable {
     /**
      * Constructs a <code>Failure</code> with the given description and exception.
      *
-     * @param description a {@link org.junit.runner.Description} of the test that failed
+     * @param description     a {@link org.junit.runner.Description} of the test that failed
      * @param thrownException the exception that was thrown while running the test
      */
     public Failure(Description description, Throwable thrownException) {

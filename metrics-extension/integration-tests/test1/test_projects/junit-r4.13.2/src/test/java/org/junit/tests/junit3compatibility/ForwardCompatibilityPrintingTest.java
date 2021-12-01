@@ -14,20 +14,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ForwardCompatibilityPrintingTest extends TestCase {
-    static class TestResultPrinter extends ResultPrinter {
-        TestResultPrinter(PrintStream writer) {
-            super(writer);
-        }
-
-        /*
-           * Spoof printing time so the tests are deterministic
-           */
-        @Override
-        protected String elapsedTimeAsString(long runTime) {
-            return "0";
-        }
-    }
-
     public void testError() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         TestRunner runner = new TestRunner(new TestResultPrinter(
@@ -52,13 +38,6 @@ public class ForwardCompatibilityPrintingTest extends TestCase {
         });
         runner.doRun(suite);
         assertEquals(expected, output.toString());
-    }
-
-    public static class ATest {
-        @Test
-        public void error() {
-            Assert.fail();
-        }
     }
 
     public void testErrorAdapted() {
@@ -87,5 +66,26 @@ public class ForwardCompatibilityPrintingTest extends TestCase {
             expectedWriter.println(lines[i]);
         }
         return expected.toString();
+    }
+
+    static class TestResultPrinter extends ResultPrinter {
+        TestResultPrinter(PrintStream writer) {
+            super(writer);
+        }
+
+        /*
+         * Spoof printing time so the tests are deterministic
+         */
+        @Override
+        protected String elapsedTimeAsString(long runTime) {
+            return "0";
+        }
+    }
+
+    public static class ATest {
+        @Test
+        public void error() {
+            Assert.fail();
+        }
     }
 }

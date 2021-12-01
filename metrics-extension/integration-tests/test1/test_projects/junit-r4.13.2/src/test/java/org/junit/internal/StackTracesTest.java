@@ -40,7 +40,72 @@ public class StackTracesTest {
     public static void shutDownExecutorService() {
         executorService.shutdown();
         executorService = null;
-    } 
+    }
+
+    /**
+     * Returns a matcher that matches the message line in a stack trace.
+     */
+    private static StringMatcher message(String message) {
+        return new ExceptionMessageMatcher(message);
+    }
+
+    /**
+     * Returns a matcher that matches the "at ..." line in a stack trace.
+     */
+    private static StringMatcher at(String method) {
+        return new StackTraceLineMatcher(method);
+    }
+
+    /**
+     * Returns a matcher that matches the "\t...x more" line in a stack trace.
+     */
+    private static StringMatcher framesInCommon() {
+        return new FramesRemovedMatcher("more");
+    }
+
+    /**
+     * Returns a matcher that matches the "\t...x trimmed" line in a stack trace.
+     */
+    private static StringMatcher framesTrimmed() {
+        return new FramesRemovedMatcher("trimmed");
+    }
+
+    private static Result runTest(final Class<?> testClass) {
+        Future<Result> future = executorService.submit(new Callable<Result>() {
+            public Result call() throws Exception {
+                JUnitCore core = new JUnitCore();
+                return core.run(testClass);
+            }
+        });
+
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Could not run test " + testClass, e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Could not run test " + testClass, e);
+        }
+    }
+
+    private static void assertHasTrimmedTrace(Failure failure, StringMatcher... matchers) {
+        String trimmedTrace = failure.getTrimmedTrace();
+        String[] lines = trimmedTrace.split(EOL);
+
+        int index = 0;
+        for (; index < lines.length && index < matchers.length; index++) {
+            String line = lines[index];
+            StringMatcher matcher = matchers[index];
+            assertThat(line, matcher);
+        }
+        if (index < lines.length) {
+            String extraLine = lines[index];
+            fail("Extra line in trimmed trace: " + extraLine);
+        } else if (index < matchers.length) {
+            StringDescription description = new StringDescription();
+            matchers[index].describeTo(description);
+            fail("Missing line in trimmed trace: " + description.toString());
+        }
+    }
 
     @Test
     public void getTrimmedStackForJUnit4TestFailingInTestMethod() {
@@ -107,7 +172,7 @@ public class StackTracesTest {
                 at("junit.tests.SampleJUnit3Tests$TestWithOneThrowingTestMethod.testAlwaysThrows"));
         assertNotEquals(failure.getTrace(), failure.getTrimmedTrace());
     }
-    
+
     @Test
     public void getTrimmedStackForJUnit3TestFailingInSetupMethod() {
         Result result = runTest(SampleJUnit3Tests.TestWithThrowingSetUpMethod.class);
@@ -208,11 +273,6 @@ public class StackTracesTest {
         }
     }
 
-    /** Returns a matcher that matches the message line in a stack trace. */
-    private static StringMatcher message(String message) {
-        return new ExceptionMessageMatcher(message);
-    }
-
     /**
      * A matcher that matches the "at ..." line in a stack trace.
      */
@@ -246,11 +306,6 @@ public class StackTracesTest {
         }
     }
 
-    /** Returns a matcher that matches the "at ..." line in a stack trace. */
-    private static StringMatcher at(String method) {
-        return new StackTraceLineMatcher(method);
-    }
-
     /**
      * A matcher that matches the line printed when frames were removed from a stack trace.
      */
@@ -280,53 +335,6 @@ public class StackTracesTest {
                 fail("Line does not look like a stack trace line: " + line);
             }
             return suffix.equals(matcher.group(1));
-        }
-    }
-
-    /** Returns a matcher that matches the "\t...x more" line in a stack trace. */
-    private static StringMatcher framesInCommon() {
-        return new FramesRemovedMatcher("more");
-    }
-
-    /** Returns a matcher that matches the "\t...x trimmed" line in a stack trace. */
-    private static StringMatcher framesTrimmed() {
-        return new FramesRemovedMatcher("trimmed");
-    }
-
-    private static Result runTest(final Class<?> testClass) {
-        Future<Result> future = executorService.submit(new Callable<Result>() {
-            public Result call() throws Exception {
-                JUnitCore core = new JUnitCore();
-                return core.run(testClass);
-            }
-        });
-
-        try {
-            return future.get();
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Could not run test " + testClass, e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException("Could not run test " + testClass, e);
-        }
-    }
-    
-    private static void assertHasTrimmedTrace(Failure failure, StringMatcher... matchers) {
-        String trimmedTrace = failure.getTrimmedTrace();
-        String[] lines = trimmedTrace.split(EOL);
-
-        int index = 0;
-        for (; index < lines.length && index < matchers.length; index++) {
-            String line = lines[index];
-            StringMatcher matcher = matchers[index];
-            assertThat(line, matcher);
-        }
-        if (index < lines.length) {
-            String extraLine = lines[index];
-            fail("Extra line in trimmed trace: " + extraLine);
-        } else if (index < matchers.length) {
-            StringDescription description = new StringDescription();
-            matchers[index].describeTo(description);
-            fail("Missing line in trimmed trace: " + description.toString());
         }
     }
 }

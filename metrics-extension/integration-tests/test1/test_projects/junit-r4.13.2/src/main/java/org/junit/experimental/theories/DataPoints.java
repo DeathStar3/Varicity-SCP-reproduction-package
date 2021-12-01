@@ -34,29 +34,29 @@ import java.lang.annotation.Target;
  * methods must always be called though, as this information is not available
  * here after generic type erasure, so expensive methods returning iterable
  * datapoints are a bad idea.
- * 
+ *
  * <pre>
  * &#064;DataPoints
  * public static String[] dataPoints = new String[] { ... };
- * 
+ *
  * &#064;DataPoints
  * public static String[] generatedDataPoints() {
  *     return new String[] { ... };
  * }
- * 
+ *
  * &#064;Theory
  * public void theoryMethod(String param) {
  *     ...
  * }
  * </pre>
- * 
+ *
  * @see org.junit.experimental.theories.Theories
  * @see org.junit.experimental.theories.Theory
  * @see org.junit.experimental.theories.DataPoint
  * @see org.junit.experimental.theories.FromDataPoints
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ FIELD, METHOD })
+@Target({FIELD, METHOD})
 public @interface DataPoints {
     String[] value() default {};
 

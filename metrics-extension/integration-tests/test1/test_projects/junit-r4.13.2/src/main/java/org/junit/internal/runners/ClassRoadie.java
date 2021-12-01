@@ -12,18 +12,18 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
  * @deprecated Included for backwards compatibility with JUnit 4.4. Will be
- *             removed in the next major release. Please use
- *             {@link BlockJUnit4ClassRunner} in place of {@link JUnit4ClassRunner}.
+ * removed in the next major release. Please use
+ * {@link BlockJUnit4ClassRunner} in place of {@link JUnit4ClassRunner}.
  */
 @Deprecated
 public class ClassRoadie {
+    private final Runnable runnable;
     private RunNotifier notifier;
     private TestClass testClass;
     private Description description;
-    private final Runnable runnable;
 
     public ClassRoadie(RunNotifier notifier, TestClass testClass,
-            Description description, Runnable runnable) {
+                       Description description, Runnable runnable) {
         this.notifier = notifier;
         this.testClass = testClass;
         this.description = description;

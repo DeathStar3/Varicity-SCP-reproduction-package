@@ -10,18 +10,29 @@ import org.junit.Assert;
  * may demand exact equality, or, for example, equality within a given delta.
  */
 public abstract class ComparisonCriteria {
+    private static final Object END_OF_ARRAY_SENTINEL = objectWithToString("end of array");
+
+    private static Object objectWithToString(final String string) {
+        return new Object() {
+            @Override
+            public String toString() {
+                return string;
+            }
+        };
+    }
+
     /**
      * Asserts that two arrays are equal, according to the criteria defined by
      * the concrete subclass. If they are not, an {@link AssertionError} is
      * thrown with the given message. If <code>expecteds</code> and
      * <code>actuals</code> are <code>null</code>, they are considered equal.
      *
-     * @param message the identifying message for the {@link AssertionError} (
-     * <code>null</code> okay)
+     * @param message   the identifying message for the {@link AssertionError} (
+     *                  <code>null</code> okay)
      * @param expecteds Object array or array of arrays (multi-dimensional array) with
-     * expected values.
-     * @param actuals Object array or array of arrays (multi-dimensional array) with
-     * actual values
+     *                  expected values.
+     * @param actuals   Object array or array of arrays (multi-dimensional array) with
+     *                  actual values
      */
     public void arrayEquals(String message, Object expecteds, Object actuals)
             throws ArrayComparisonFailure {
@@ -31,7 +42,7 @@ public abstract class ComparisonCriteria {
     private void arrayEquals(String message, Object expecteds, Object actuals, boolean outer)
             throws ArrayComparisonFailure {
         if (expecteds == actuals
-            || Arrays.deepEquals(new Object[] {expecteds}, new Object[] {actuals})) {
+                || Arrays.deepEquals(new Object[]{expecteds}, new Object[]{actuals})) {
             // The reflection-based loop below is potentially very slow, especially for primitive
             // arrays. The deepEquals check allows us to circumvent it in the usual case where
             // the arrays are exactly equal.
@@ -91,8 +102,6 @@ public abstract class ComparisonCriteria {
         }
     }
 
-    private static final Object END_OF_ARRAY_SENTINEL = objectWithToString("end of array");
-
     private Object getToStringableArrayElement(Object array, int length, int index) {
         if (index < length) {
             Object element = Array.get(array, index);
@@ -104,15 +113,6 @@ public abstract class ComparisonCriteria {
         } else {
             return END_OF_ARRAY_SENTINEL;
         }
-    }
-
-    private static Object objectWithToString(final String string) {
-        return new Object() {
-            @Override
-            public String toString() {
-                return string;
-            }
-        };
     }
 
     private String componentTypeName(Class<?> arrayClass) {

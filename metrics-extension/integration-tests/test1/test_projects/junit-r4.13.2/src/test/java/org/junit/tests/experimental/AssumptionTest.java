@@ -28,12 +28,25 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 public class AssumptionTest {
-    public static class HasFailingAssumption {
-        @Test
-        public void assumptionsFail() {
-            assumeThat(3, is(4));
-            fail();
-        }
+    static final String message = "Some random message string.";
+    static final Throwable e = new Throwable();
+    private static int assumptionFailures = 0;
+
+    /**
+     * Helper method that runs tests on <code>clazz</code> and returns any
+     * {@link Failure} objects that were {@link AssumptionViolatedException}s.
+     */
+    private static List<Failure> runAndGetAssumptionFailures(Class<?> clazz) {
+        final List<Failure> failures = new ArrayList<Failure>();
+        final JUnitCore core = new JUnitCore();
+        core.addListener(new RunListener() {
+            @Override
+            public void testAssumptionFailure(Failure failure) {
+                failures.add(failure);
+            }
+        });
+        core.run(clazz);
+        return failures;
     }
 
     @Test
@@ -43,8 +56,6 @@ public class AssumptionTest {
         assertThat(result.getIgnoreCount(), is(0));
         assertThat(result.getFailureCount(), is(0));
     }
-
-    private static int assumptionFailures = 0;
 
     @Test
     public void failedAssumptionsCanBeDetectedByListeners() {
@@ -59,14 +70,6 @@ public class AssumptionTest {
         core.run(HasFailingAssumption.class);
 
         assertThat(assumptionFailures, is(1));
-    }
-
-    public static class HasPassingAssumption {
-        @Test
-        public void assumptionsFail() {
-            assumeThat(3, is(3));
-            fail();
-        }
     }
 
     @Test
@@ -173,6 +176,68 @@ public class AssumptionTest {
         }
     }
 
+    @Test
+    public void failingAssumptionInBeforePreventsTestRun() {
+        assertThat(testResult(HasFailingAssumeInBefore.class), isSuccessful());
+    }
+
+    @Test
+    public void failingAssumptionInBeforeClassIgnoresClass() {
+        assertThat(testResult(HasFailingAssumeInBeforeClass.class), isSuccessful());
+    }
+
+    @Test
+    public void failingAssumptionInConstructorIgnoresClass() {
+        assertThat(testResult(AssumptionFailureInConstructor.class), isSuccessful());
+    }
+
+    @Test
+    public void assumeWithExpectedExceptionShouldThrowAssumptionViolatedException() {
+        Result result = JUnitCore.runClasses(TestClassWithAssumptionFailure.class);
+        assertThat(result.getAssumptionFailureCount(), is(1));
+    }
+
+    @Test
+    public void assumptionsWithMessage() {
+        final List<Failure> failures =
+                runAndGetAssumptionFailures(HasAssumeWithMessage.class);
+
+        assertTrue(failures.get(0).getMessage().contains(message));
+    }
+
+    @Test
+    public void assumptionsWithMessageAndCause() {
+        final List<Failure> failures =
+                runAndGetAssumptionFailures(HasAssumeWithMessageAndCause.class);
+        assertTrue(failures.get(0).getMessage().contains(message));
+        assertSame(failures.get(0).getException().getCause(), e);
+    }
+
+    @Test
+    public void failedAssumptionsWithMessage() {
+        final List<Failure> failures =
+                runAndGetAssumptionFailures(HasFailingAssumptionWithMessage.class);
+
+        assertEquals(1, failures.size());
+        assertTrue(failures.get(0).getMessage().contains(message));
+    }
+
+    public static class HasFailingAssumption {
+        @Test
+        public void assumptionsFail() {
+            assumeThat(3, is(4));
+            fail();
+        }
+    }
+
+    public static class HasPassingAssumption {
+        @Test
+        public void assumptionsFail() {
+            assumeThat(3, is(3));
+            fail();
+        }
+    }
+
     public static class HasFailingAssumeInBefore {
         @Before
         public void checkForSomethingThatIsntThere() {
@@ -183,11 +248,6 @@ public class AssumptionTest {
         public void failing() {
             fail();
         }
-    }
-
-    @Test
-    public void failingAssumptionInBeforePreventsTestRun() {
-        assertThat(testResult(HasFailingAssumeInBefore.class), isSuccessful());
     }
 
     public static class HasFailingAssumeInBeforeClass {
@@ -202,11 +262,6 @@ public class AssumptionTest {
         }
     }
 
-    @Test
-    public void failingAssumptionInBeforeClassIgnoresClass() {
-        assertThat(testResult(HasFailingAssumeInBeforeClass.class), isSuccessful());
-    }
-
     public static class AssumptionFailureInConstructor {
         public AssumptionFailureInConstructor() {
             assumeTrue(false);
@@ -218,11 +273,6 @@ public class AssumptionTest {
         }
     }
 
-    @Test
-    public void failingAssumptionInConstructorIgnoresClass() {
-        assertThat(testResult(AssumptionFailureInConstructor.class), isSuccessful());
-    }
-
     public static class TestClassWithAssumptionFailure {
 
         @Test(expected = IllegalArgumentException.class)
@@ -230,15 +280,6 @@ public class AssumptionTest {
             assumeTrue(false);
         }
     }
-
-    @Test
-    public void assumeWithExpectedExceptionShouldThrowAssumptionViolatedException() {
-        Result result = JUnitCore.runClasses(TestClassWithAssumptionFailure.class);
-        assertThat(result.getAssumptionFailureCount(), is(1));
-    }
-
-    static final String message = "Some random message string.";
-    static final Throwable e = new Throwable();
 
     /**
      * @see AssumptionTest#assumptionsWithMessage()
@@ -248,14 +289,6 @@ public class AssumptionTest {
         public void testMethod() {
             assumeTrue(message, false);
         }
-    }
-
-    @Test
-    public void assumptionsWithMessage() {
-        final List<Failure> failures =
-                runAndGetAssumptionFailures(HasAssumeWithMessage.class);
-
-        assertTrue(failures.get(0).getMessage().contains(message));
     }
 
     /**
@@ -268,45 +301,11 @@ public class AssumptionTest {
         }
     }
 
-    @Test
-    public void assumptionsWithMessageAndCause() {
-        final List<Failure> failures =
-                runAndGetAssumptionFailures(HasAssumeWithMessageAndCause.class);
-        assertTrue(failures.get(0).getMessage().contains(message));
-        assertSame(failures.get(0).getException().getCause(), e);
-    }
-
     public static class HasFailingAssumptionWithMessage {
         @Test
         public void assumptionsFail() {
             assumeThat(message, 3, is(4));
             fail();
         }
-    }
-
-    @Test
-    public void failedAssumptionsWithMessage() {
-        final List<Failure> failures =
-                runAndGetAssumptionFailures(HasFailingAssumptionWithMessage.class);
-
-        assertEquals(1, failures.size());
-        assertTrue(failures.get(0).getMessage().contains(message));
-    }
-
-    /**
-     * Helper method that runs tests on <code>clazz</code> and returns any
-     * {@link Failure} objects that were {@link AssumptionViolatedException}s.
-     */
-    private static List<Failure> runAndGetAssumptionFailures(Class<?> clazz) {
-        final List<Failure> failures = new ArrayList<Failure>();
-        final JUnitCore core = new JUnitCore();
-        core.addListener(new RunListener() {
-            @Override
-            public void testAssumptionFailure(Failure failure) {
-                failures.add(failure);
-            }
-        });
-        core.run(clazz);
-        return failures;
     }
 }

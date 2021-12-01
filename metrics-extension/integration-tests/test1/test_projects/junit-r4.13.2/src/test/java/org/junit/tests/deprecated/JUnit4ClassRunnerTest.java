@@ -12,10 +12,24 @@ import org.junit.runner.RunWith;
 
 /**
  * @deprecated This is a simple smoke test to make sure the old JUnit4ClassRunner basically works.
- *             Delete this test when JUnit4ClassRunner goes to the Great Heap In The Sky.
+ * Delete this test when JUnit4ClassRunner goes to the Great Heap In The Sky.
  */
 @Deprecated
 public class JUnit4ClassRunnerTest {
+
+    @Test
+    public void runWithOldJUnit4ClassRunner() {
+        Result result = JUnitCore.runClasses(Example.class);
+        assertThat(result.getRunCount(), is(2));
+        assertThat(result.getFailureCount(), is(1));
+    }
+
+    @Test
+    public void runWithOldJUnit4ClassRunnerAndBadConstructor() {
+        Result result = JUnitCore.runClasses(UnconstructableExample.class);
+        assertThat(result.getRunCount(), is(2));
+        assertThat(result.getFailureCount(), is(2));
+    }
 
     @SuppressWarnings("deprecation")
     @RunWith(JUnit4ClassRunner.class)
@@ -28,13 +42,6 @@ public class JUnit4ClassRunnerTest {
         public void failure() {
             fail();
         }
-    }
-
-    @Test
-    public void runWithOldJUnit4ClassRunner() {
-        Result result = JUnitCore.runClasses(Example.class);
-        assertThat(result.getRunCount(), is(2));
-        assertThat(result.getFailureCount(), is(1));
     }
 
     @SuppressWarnings("deprecation")
@@ -52,13 +59,5 @@ public class JUnit4ClassRunnerTest {
         public void failure() {
             fail();
         }
-    }
-
-
-    @Test
-    public void runWithOldJUnit4ClassRunnerAndBadConstructor() {
-        Result result = JUnitCore.runClasses(UnconstructableExample.class);
-        assertThat(result.getRunCount(), is(2));
-        assertThat(result.getFailureCount(), is(2));
     }
 }

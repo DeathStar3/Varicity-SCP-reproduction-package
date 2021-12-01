@@ -8,19 +8,9 @@ public class ParameterizedAssertionError extends AssertionError {
     private static final long serialVersionUID = 1L;
 
     public ParameterizedAssertionError(Throwable targetException,
-            String methodName, Object... params) {
+                                       String methodName, Object... params) {
         super(String.format("%s(%s)", methodName, join(", ", params)));
         this.initCause(targetException);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof ParameterizedAssertionError && toString().equals(obj.toString());
-    }
-
-    @Override
-    public int hashCode() {
-        return toString().hashCode();
     }
 
     public static String join(String delimiter, Object... params) {
@@ -46,5 +36,15 @@ public class ParameterizedAssertionError extends AssertionError {
         } catch (Throwable e) {
             return "[toString failed]";
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ParameterizedAssertionError && toString().equals(obj.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

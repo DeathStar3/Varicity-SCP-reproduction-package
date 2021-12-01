@@ -13,18 +13,6 @@ import org.junit.runner.Description;
 import org.junit.runner.Request;
 
 public class AnnotatedDescriptionTest {
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface MyOwnAnnotation {
-
-    }
-
-    @MyOwnAnnotation
-    public static class AnnotatedClass {
-        @Test
-        public void a() {
-        }
-    }
-
     @Test
     public void annotationsExistOnDescriptionsOfClasses() {
         assertTrue((describe(AnnotatedClass.class).getAnnotation(
@@ -37,28 +25,9 @@ public class AnnotatedDescriptionTest {
                 .size());
     }
 
-    @Ignore
-    public static class IgnoredClass {
-        @Test
-        public void a() {
-        }
-    }
-
     @Test
     public void annotationsExistOnDescriptionsOfIgnoredClass() {
         assertTrue((describe(IgnoredClass.class).getAnnotation(Ignore.class) != null));
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    public @interface ValuedAnnotation {
-        String value();
-    }
-
-    @ValuedAnnotation("hello")
-    public static class ValueAnnotatedClass {
-        @Test
-        public void a() {
-        }
     }
 
     @Test
@@ -92,5 +61,36 @@ public class AnnotatedDescriptionTest {
 
     private Description describe(Class<?> testClass) {
         return Request.aClass(testClass).getRunner().getDescription();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface MyOwnAnnotation {
+
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface ValuedAnnotation {
+        String value();
+    }
+
+    @MyOwnAnnotation
+    public static class AnnotatedClass {
+        @Test
+        public void a() {
+        }
+    }
+
+    @Ignore
+    public static class IgnoredClass {
+        @Test
+        public void a() {
+        }
+    }
+
+    @ValuedAnnotation("hello")
+    public static class ValueAnnotatedClass {
+        @Test
+        public void a() {
+        }
     }
 }

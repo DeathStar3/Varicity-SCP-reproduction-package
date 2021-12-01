@@ -29,22 +29,18 @@ import org.junit.runner.RunWith;
 
 @RunWith(Theories.class)
 public class AssumptionViolatedExceptionTest {
-    @DataPoint
-    public static Integer TWO = 2;
-
-    @DataPoint
-    public static Matcher<Integer> IS_THREE = is(3);
-
-    @DataPoint
-    public static Matcher<Integer> NULL = null;
-
-    @Rule
-    public TestName name = new TestName();
-
     private static final String MESSAGE = "Assumption message";
-    private static Matcher<Integer> SERIALIZABLE_IS_THREE = new SerializableIsThreeMatcher<Integer>();
     private static final UnserializableClass UNSERIALIZABLE_VALUE = new UnserializableClass();
     private static final Matcher<UnserializableClass> UNSERIALIZABLE_MATCHER = not(is(UNSERIALIZABLE_VALUE));
+    @DataPoint
+    public static Integer TWO = 2;
+    @DataPoint
+    public static Matcher<Integer> IS_THREE = is(3);
+    @DataPoint
+    public static Matcher<Integer> NULL = null;
+    private static Matcher<Integer> SERIALIZABLE_IS_THREE = new SerializableIsThreeMatcher<Integer>();
+    @Rule
+    public TestName name = new TestName();
 
     @Theory
     public void toStringReportsMatcher(Integer actual, Matcher<Integer> matcher) {
@@ -73,47 +69,47 @@ public class AssumptionViolatedExceptionTest {
 
     @Test
     public void canInitCauseWithInstanceCreatedWithString() {
-      AssumptionViolatedException e = new AssumptionViolatedException("invalid number");
-      Throwable cause = new RuntimeException("cause");
-      e.initCause(cause);
-      assertThat(e.getCause(), is(cause));
+        AssumptionViolatedException e = new AssumptionViolatedException("invalid number");
+        Throwable cause = new RuntimeException("cause");
+        e.initCause(cause);
+        assertThat(e.getCause(), is(cause));
     }
 
     @Test
     @SuppressWarnings("deprecation")
     public void canSetCauseWithInstanceCreatedWithObjectAndMatcher() {
-      Throwable testObject = new Exception();
-      org.junit.internal.AssumptionViolatedException e
-              = new org.junit.internal.AssumptionViolatedException(
-                      testObject, containsString("test matcher"));
-      assertThat(e.getCause(), is(testObject));
+        Throwable testObject = new Exception();
+        org.junit.internal.AssumptionViolatedException e
+                = new org.junit.internal.AssumptionViolatedException(
+                testObject, containsString("test matcher"));
+        assertThat(e.getCause(), is(testObject));
     }
 
     @Test
     @SuppressWarnings("deprecation")
     public void canSetCauseWithInstanceCreatedWithAssumptionObjectAndMatcher() {
-      Throwable testObject = new Exception();
-      org.junit.internal.AssumptionViolatedException e
-              = new org.junit.internal.AssumptionViolatedException(
-                      "sample assumption", testObject, containsString("test matcher"));
-      assertThat(e.getCause(), is(testObject));
+        Throwable testObject = new Exception();
+        org.junit.internal.AssumptionViolatedException e
+                = new org.junit.internal.AssumptionViolatedException(
+                "sample assumption", testObject, containsString("test matcher"));
+        assertThat(e.getCause(), is(testObject));
     }
 
     @Test
     @SuppressWarnings("deprecation")
     public void canSetCauseWithInstanceCreatedWithMainConstructor() {
-      Throwable testObject = new Exception();
-      org.junit.internal.AssumptionViolatedException e
-              = new org.junit.internal.AssumptionViolatedException(
-                      "sample assumption", false, testObject, containsString("test matcher"));
-      assertThat(e.getCause(), is(testObject));
+        Throwable testObject = new Exception();
+        org.junit.internal.AssumptionViolatedException e
+                = new org.junit.internal.AssumptionViolatedException(
+                "sample assumption", false, testObject, containsString("test matcher"));
+        assertThat(e.getCause(), is(testObject));
     }
 
     @Test
     public void canSetCauseWithInstanceCreatedWithExplicitThrowableConstructor() {
-      Throwable cause = new Exception();
-      AssumptionViolatedException e = new AssumptionViolatedException("invalid number", cause);
-      assertThat(e.getCause(), is(cause));
+        Throwable cause = new Exception();
+        AssumptionViolatedException e = new AssumptionViolatedException("invalid number", cause);
+        assertThat(e.getCause(), is(cause));
     }
 
     @Test

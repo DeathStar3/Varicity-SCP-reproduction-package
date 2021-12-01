@@ -8,6 +8,18 @@ import org.junit.FixMethodOrder;
 
 public class MethodSorter {
     /**
+     * Method name ascending lexicographic sort order, with {@link Method#toString()} as a tiebreaker
+     */
+    public static final Comparator<Method> NAME_ASCENDING = new Comparator<Method>() {
+        public int compare(Method m1, Method m2) {
+            final int comparison = m1.getName().compareTo(m2.getName());
+            if (comparison != 0) {
+                return comparison;
+            }
+            return m1.toString().compareTo(m2.toString());
+        }
+    };
+    /**
      * DEFAULT sort order
      */
     public static final Comparator<Method> DEFAULT = new Comparator<Method>() {
@@ -21,22 +33,12 @@ public class MethodSorter {
         }
     };
 
-    /**
-     * Method name ascending lexicographic sort order, with {@link Method#toString()} as a tiebreaker
-     */
-    public static final Comparator<Method> NAME_ASCENDING = new Comparator<Method>() {
-        public int compare(Method m1, Method m2) {
-            final int comparison = m1.getName().compareTo(m2.getName());
-            if (comparison != 0) {
-                return comparison;
-            }
-            return m1.toString().compareTo(m2.toString());
-        }
-    };
+    private MethodSorter() {
+    }
 
     /**
      * Gets declared methods of a class in a predictable order, unless @FixMethodOrder(MethodSorters.JVM) is specified.
-     *
+     * <p>
      * Using the JVM order is unwise since the Java platform does not
      * specify any particular order, and in fact JDK 7 returns a more or less
      * random order; well-written test code would not assume any order, but some
@@ -46,7 +48,7 @@ public class MethodSorter {
      * @param clazz a class
      * @return same as {@link Class#getDeclaredMethods} but sorted
      * @see <a href="http://bugs.sun.com/view_bug.do?bug_id=7023180">JDK
-     *      (non-)bug #7023180</a>
+     * (non-)bug #7023180</a>
      */
     public static Method[] getDeclaredMethods(Class<?> clazz) {
         Comparator<Method> comparator = getSorter(clazz.getAnnotation(FixMethodOrder.class));
@@ -57,9 +59,6 @@ public class MethodSorter {
         }
 
         return methods;
-    }
-
-    private MethodSorter() {
     }
 
     private static Comparator<Method> getSorter(FixMethodOrder fixMethodOrder) {

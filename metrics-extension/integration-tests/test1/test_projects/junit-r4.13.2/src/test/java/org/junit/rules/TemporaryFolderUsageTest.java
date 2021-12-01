@@ -21,10 +21,9 @@ import org.junit.Test;
  */
 public class TemporaryFolderUsageTest {
 
-    private TemporaryFolder tempFolder;
-
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
+    private TemporaryFolder tempFolder;
 
     @Before
     public void setUp() {
@@ -105,7 +104,7 @@ public class TemporaryFolderUsageTest {
         thrown.expectMessage("could not create a folder with the path 'level1'");
         tempFolder.newFolder("level1");
     }
-    
+
     @Test
     public void newFolderWithPathStartingWithFileSeparatorThrowsIOException()
             throws IOException {
@@ -121,7 +120,7 @@ public class TemporaryFolderUsageTest {
         thrown.expectMessage("folder path '" + fileAtRoot + "' is not a relative path");
         tempFolder.newFolder(fileAtRoot);
     }
-    
+
     @Test
     public void newFolderWithPathContainingFileSeparatorCreatesDirectories()
             throws IOException {
@@ -131,7 +130,7 @@ public class TemporaryFolderUsageTest {
         assertFileIsDirectory(temp1);
         assertFileIsDirectory(new File(temp1, "temp2"));
     }
- 
+
     @Test
     public void newFolderWithPathContainingForwardSlashCreatesDirectories()
             throws IOException {
@@ -141,7 +140,7 @@ public class TemporaryFolderUsageTest {
         assertFileIsDirectory(temp1);
         assertFileIsDirectory(new File(temp1, "temp2"));
     }
-    
+
     @Test
     public void newFolderWithGivenPathThrowsIOExceptionIfFolderExists() throws IOException {
         tempFolder.create();
@@ -185,7 +184,7 @@ public class TemporaryFolderUsageTest {
         directory = new File(directory, "temp2/temp3/temp4");
         assertFileIsDirectory(directory);
     }
-    
+
     @Test
     public void createInitializesRootFolder() throws IOException {
         tempFolder.create();

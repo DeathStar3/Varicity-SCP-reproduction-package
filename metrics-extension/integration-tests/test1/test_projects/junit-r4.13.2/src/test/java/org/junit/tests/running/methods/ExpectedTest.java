@@ -12,25 +12,11 @@ import org.junit.runner.notification.Failure;
 
 public class ExpectedTest {
 
-    public static class Expected {
-        @Test(expected = Exception.class)
-        public void expected() throws Exception {
-            throw new Exception();
-        }
-    }
-
     @Test
     public void expected() {
         JUnitCore core = new JUnitCore();
         Result result = core.run(Expected.class);
         assertTrue(result.wasSuccessful());
-    }
-
-    public static class Unexpected {
-        @Test(expected = Exception.class)
-        public void expected() throws Exception {
-            throw new Error();
-        }
     }
 
     @Test
@@ -42,12 +28,6 @@ public class ExpectedTest {
         assertEquals(Error.class, failure.getException().getCause().getClass());
     }
 
-    public static class NoneThrown {
-        @Test(expected = Exception.class)
-        public void nothing() {
-        }
-    }
-
     @Test
     public void noneThrown() {
         JUnitCore core = new JUnitCore();
@@ -57,6 +37,36 @@ public class ExpectedTest {
         assertTrue(message.contains("Expected exception: java.lang.Exception"));
     }
 
+    @Test
+    public void expectsSuperclass() {
+        assertTrue(new JUnitCore().run(ExpectSuperclass.class).wasSuccessful());
+    }
+
+    @Test
+    public void expectsAssumptionViolatedException() {
+        assertTrue(new JUnitCore().run(ExpectAssumptionViolatedException.class).wasSuccessful());
+    }
+
+    public static class Expected {
+        @Test(expected = Exception.class)
+        public void expected() throws Exception {
+            throw new Exception();
+        }
+    }
+
+    public static class Unexpected {
+        @Test(expected = Exception.class)
+        public void expected() throws Exception {
+            throw new Error();
+        }
+    }
+
+    public static class NoneThrown {
+        @Test(expected = Exception.class)
+        public void nothing() {
+        }
+    }
+
     public static class ExpectSuperclass {
         @Test(expected = RuntimeException.class)
         public void throwsSubclass() {
@@ -64,20 +74,10 @@ public class ExpectedTest {
         }
     }
 
-    @Test
-    public void expectsSuperclass() {
-        assertTrue(new JUnitCore().run(ExpectSuperclass.class).wasSuccessful());
-    }
-
     public static class ExpectAssumptionViolatedException {
         @Test(expected = AssumptionViolatedException.class)
         public void throwsAssumptionViolatedException() {
             throw new AssumptionViolatedException("expected");
         }
-    }
-
-    @Test
-    public void expectsAssumptionViolatedException() {
-        assertTrue(new JUnitCore().run(ExpectAssumptionViolatedException.class).wasSuccessful());
     }
 }

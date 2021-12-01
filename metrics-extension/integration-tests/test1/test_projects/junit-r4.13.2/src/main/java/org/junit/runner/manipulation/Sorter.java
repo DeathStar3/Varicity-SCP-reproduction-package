@@ -59,7 +59,7 @@ public class Sorter extends Ordering implements Comparator<Description> {
     public int compare(Description o1, Description o2) {
         return comparator.compare(o1, o2);
     }
- 
+
     /**
      * {@inheritDoc}
      *

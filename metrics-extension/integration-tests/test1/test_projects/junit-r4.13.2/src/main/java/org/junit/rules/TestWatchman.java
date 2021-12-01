@@ -44,7 +44,7 @@ import org.junit.runners.model.Statement;
 @Deprecated
 public class TestWatchman implements MethodRule {
     public Statement apply(final Statement base, final FrameworkMethod method,
-            Object target) {
+                           Object target) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {

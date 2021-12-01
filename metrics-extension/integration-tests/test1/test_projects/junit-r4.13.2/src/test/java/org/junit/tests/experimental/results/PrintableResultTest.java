@@ -17,9 +17,12 @@ import org.junit.runner.notification.Failure;
 
 @RunWith(Theories.class)
 public class PrintableResultTest {
+    @DataPoint
+    public static String SHELL_POINT = "Shell Point";
+
     @Theory(nullsAccepted = false)
     public void backTraceHasGoodToString(String descriptionName,
-            final String stackTraceClassName) {
+                                         final String stackTraceClassName) {
         Failure failure = new Failure(Description
                 .createSuiteDescription(descriptionName), new Throwable() {
             private static final long serialVersionUID = 1L;
@@ -35,16 +38,13 @@ public class PrintableResultTest {
                 containsString(descriptionName), containsString(stackTraceClassName)));
     }
 
-    @DataPoint
-    public static String SHELL_POINT = "Shell Point";
-
     @Theory
     public void includeMultipleFailures(String secondExceptionName) {
         PrintableResult backtrace = new PrintableResult(Arrays.asList(
                 new Failure(Description.createSuiteDescription("firstName"),
                         new RuntimeException("firstException")), new Failure(
-                Description.createSuiteDescription("secondName"),
-                new RuntimeException(secondExceptionName))));
+                        Description.createSuiteDescription("secondName"),
+                        new RuntimeException(secondExceptionName))));
         assertThat(backtrace.toString(), containsString(secondExceptionName));
     }
 }

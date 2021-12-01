@@ -51,36 +51,6 @@ public class RunNotifier {
                 listener : new SynchronizedRunListener(listener, this);
     }
 
-
-    private abstract class SafeNotifier {
-        private final List<RunListener> currentListeners;
-
-        SafeNotifier() {
-            this(listeners);
-        }
-
-        SafeNotifier(List<RunListener> currentListeners) {
-            this.currentListeners = currentListeners;
-        }
-
-        void run() {
-            int capacity = currentListeners.size();
-            List<RunListener> safeListeners = new ArrayList<RunListener>(capacity);
-            List<Failure> failures = new ArrayList<Failure>(capacity);
-            for (RunListener listener : currentListeners) {
-                try {
-                    notifyListener(listener);
-                    safeListeners.add(listener);
-                } catch (Exception e) {
-                    failures.add(new Failure(Description.TEST_MECHANISM, e));
-                }
-            }
-            fireTestFailures(safeListeners, failures);
-        }
-
-        protected abstract void notifyListener(RunListener each) throws Exception;
-    }
-
     /**
      * Do not invoke.
      */
@@ -168,7 +138,7 @@ public class RunNotifier {
     }
 
     private void fireTestFailures(List<RunListener> listeners,
-            final List<Failure> failures) {
+                                  final List<Failure> failures) {
         if (!failures.isEmpty()) {
             new SafeNotifier(listeners) {
                 @Override
@@ -186,7 +156,7 @@ public class RunNotifier {
      * something false.
      *
      * @param failure the description of the test that failed and the
-     * {@link org.junit.AssumptionViolatedException} thrown
+     *                {@link org.junit.AssumptionViolatedException} thrown
      */
     public void fireTestAssumptionFailed(final Failure failure) {
         new SafeNotifier() {
@@ -245,5 +215,34 @@ public class RunNotifier {
             throw new NullPointerException("Cannot add a null listener");
         }
         listeners.add(0, wrapIfNotThreadSafe(listener));
+    }
+
+    private abstract class SafeNotifier {
+        private final List<RunListener> currentListeners;
+
+        SafeNotifier() {
+            this(listeners);
+        }
+
+        SafeNotifier(List<RunListener> currentListeners) {
+            this.currentListeners = currentListeners;
+        }
+
+        void run() {
+            int capacity = currentListeners.size();
+            List<RunListener> safeListeners = new ArrayList<RunListener>(capacity);
+            List<Failure> failures = new ArrayList<Failure>(capacity);
+            for (RunListener listener : currentListeners) {
+                try {
+                    notifyListener(listener);
+                    safeListeners.add(listener);
+                } catch (Exception e) {
+                    failures.add(new Failure(Description.TEST_MECHANISM, e));
+                }
+            }
+            fireTestFailures(safeListeners, failures);
+        }
+
+        protected abstract void notifyListener(RunListener each) throws Exception;
     }
 }

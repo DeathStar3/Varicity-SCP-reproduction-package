@@ -14,6 +14,32 @@ public class RunWithTest {
 
     private static String log;
 
+    @Test
+    public void run() {
+        log = "";
+
+        JUnitCore.runClasses(ExampleTest.class);
+        assertTrue(log.contains("plan"));
+        assertTrue(log.contains("initialize"));
+        assertTrue(log.contains("run"));
+    }
+
+    @Test
+    public void runWithExtendsToSubclasses() {
+        log = "";
+
+        JUnitCore.runClasses(SubExampleTest.class);
+        assertTrue(log.contains("run"));
+    }
+
+    @Test
+    public void characterizeErrorMessageFromBadRunner() {
+        assertEquals(
+                "Custom runner class BadRunner should have a public constructor with signature BadRunner(Class testClass)",
+                JUnitCore.runClasses(Empty.class).getFailures().get(0)
+                        .getMessage());
+    }
+
     public static class ExampleRunner extends Runner {
         public ExampleRunner(Class<?> klass) {
             log += "initialize";
@@ -41,25 +67,7 @@ public class RunWithTest {
     public static class ExampleTest {
     }
 
-    @Test
-    public void run() {
-        log = "";
-
-        JUnitCore.runClasses(ExampleTest.class);
-        assertTrue(log.contains("plan"));
-        assertTrue(log.contains("initialize"));
-        assertTrue(log.contains("run"));
-    }
-
     public static class SubExampleTest extends ExampleTest {
-    }
-
-    @Test
-    public void runWithExtendsToSubclasses() {
-        log = "";
-
-        JUnitCore.runClasses(SubExampleTest.class);
-        assertTrue(log.contains("run"));
     }
 
     public static class BadRunner extends Runner {
@@ -76,13 +84,5 @@ public class RunWithTest {
 
     @RunWith(BadRunner.class)
     public static class Empty {
-    }
-
-    @Test
-    public void characterizeErrorMessageFromBadRunner() {
-        assertEquals(
-                "Custom runner class BadRunner should have a public constructor with signature BadRunner(Class testClass)",
-                JUnitCore.runClasses(Empty.class).getFailures().get(0)
-                        .getMessage());
     }
 }

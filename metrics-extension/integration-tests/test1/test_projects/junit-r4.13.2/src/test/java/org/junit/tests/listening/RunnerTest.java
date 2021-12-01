@@ -13,22 +13,6 @@ public class RunnerTest {
 
     private boolean wasRun;
 
-    public class MyListener extends RunListener {
-
-        int testCount;
-
-        @Override
-        public void testRunStarted(Description description) {
-            this.testCount = description.testCount();
-        }
-    }
-
-    public static class Example {
-        @Test
-        public void empty() {
-        }
-    }
-
     @Test
     public void newTestCount() {
         JUnitCore runner = new JUnitCore();
@@ -38,11 +22,6 @@ public class RunnerTest {
         assertEquals(1, listener.testCount);
     }
 
-    public static class ExampleTest extends TestCase {
-        public void testEmpty() {
-        }
-    }
-
     @Test
     public void oldTestCount() {
         JUnitCore runner = new JUnitCore();
@@ -50,12 +29,6 @@ public class RunnerTest {
         runner.addListener(listener);
         runner.run(ExampleTest.class);
         assertEquals(1, listener.testCount);
-    }
-
-    public static class NewExample {
-        @Test
-        public void empty() {
-        }
     }
 
     @Test
@@ -71,5 +44,32 @@ public class RunnerTest {
         runner.addListener(listener);
         runner.run(NewExample.class);
         assertTrue(wasRun);
+    }
+
+    public static class Example {
+        @Test
+        public void empty() {
+        }
+    }
+
+    public static class ExampleTest extends TestCase {
+        public void testEmpty() {
+        }
+    }
+
+    public static class NewExample {
+        @Test
+        public void empty() {
+        }
+    }
+
+    public class MyListener extends RunListener {
+
+        int testCount;
+
+        @Override
+        public void testRunStarted(Description description) {
+            this.testCount = description.testCount();
+        }
     }
 }

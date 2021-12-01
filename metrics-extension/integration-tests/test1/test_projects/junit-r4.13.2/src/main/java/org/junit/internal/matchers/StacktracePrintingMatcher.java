@@ -19,6 +19,18 @@ public class StacktracePrintingMatcher<T extends Throwable> extends
         this.throwableMatcher = throwableMatcher;
     }
 
+    @Factory
+    public static <T extends Throwable> Matcher<T> isThrowable(
+            Matcher<T> throwableMatcher) {
+        return new StacktracePrintingMatcher<T>(throwableMatcher);
+    }
+
+    @Factory
+    public static <T extends Exception> Matcher<T> isException(
+            Matcher<T> exceptionMatcher) {
+        return new StacktracePrintingMatcher<T>(exceptionMatcher);
+    }
+
     public void describeTo(Description description) {
         throwableMatcher.describeTo(description);
     }
@@ -37,17 +49,5 @@ public class StacktracePrintingMatcher<T extends Throwable> extends
 
     private String readStacktrace(Throwable throwable) {
         return Throwables.getStacktrace(throwable);
-    }
-
-    @Factory
-    public static <T extends Throwable> Matcher<T> isThrowable(
-            Matcher<T> throwableMatcher) {
-        return new StacktracePrintingMatcher<T>(throwableMatcher);
-    }
-
-    @Factory
-    public static <T extends Exception> Matcher<T> isException(
-            Matcher<T> exceptionMatcher) {
-        return new StacktracePrintingMatcher<T>(exceptionMatcher);
     }
 }
