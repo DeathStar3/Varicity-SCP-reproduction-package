@@ -8,7 +8,7 @@ async function startServer() {
     app.use(bodyParser.json({ limit: '50mb' }));
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     app.enableCors();
-    await app.listen(3000);
+    await app.listen(process.env.PORT || 3000);
 }
 
 const run = async () => {
