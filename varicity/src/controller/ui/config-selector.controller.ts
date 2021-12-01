@@ -48,6 +48,7 @@ export class ConfigSelectorController {
                 let node = document.createElement("option") as HTMLOptionElement;
                 node.textContent = config.name;
                 node.value = config.filename;
+                node.selected = (UIController.config.name == config.name) // TODO problem in case multiple same config names
                 parent.appendChild(node);
         }
 

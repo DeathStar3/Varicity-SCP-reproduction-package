@@ -25,7 +25,7 @@ export class SaveController {
             UIController.config.projectId = Cookies.get('varicity-current-project');
             console.log('Project Id of the Config is now', UIController.config.projectId);
 
-            (document.querySelector('#text-field') as HTMLInputElement).value = UIController.config.name;
+            (document.querySelector('#text-field') as HTMLInputElement).value = UIController.config.name || "";
         });
 
         document.querySelector('#save-config-confirm-btn').addEventListener('click', _clickev => {
