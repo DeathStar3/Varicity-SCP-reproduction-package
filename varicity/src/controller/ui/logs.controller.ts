@@ -1,4 +1,4 @@
-import {EntitiesList} from "../../model/entitiesList";
+import { EntitiesList } from "../../model/entitiesList";
 
 export class LogsController {
 
@@ -10,6 +10,7 @@ export class LogsController {
     }
 
     static updateLogs(entitiesList: EntitiesList) {
+        console.log('EntitiesList', entitiesList)
         this.logs.set("Number of buildings", entitiesList.getNumberOfBuildings() - this.logs.get("Number of buildings"));
         this.logs.set("Number of districts", entitiesList.getNumberOfDistricts() - this.logs.get("Number of districts"));
     }

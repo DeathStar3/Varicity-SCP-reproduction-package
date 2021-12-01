@@ -210,9 +210,8 @@ In the `api_classes` section of VariCity's configuration file, you may add a new
 
 ```yaml
 api_classes:
-  myproject-customtag:
-    - "my.first.EntryPointClass"
-    - "my.second.EntryPointClass"
+  - "my.first.EntryPointClass"
+  - "my.second.EntryPointClass"
 ```
 
 This allows you to create different pre-configurations for every commit / tag of a same project.
@@ -236,13 +235,9 @@ In the `api_classes` section of VariCity's configuration file, you can define en
 
 ```yaml
 api_classes:
-  myproject-customtag1:
-    - "my.first.EntryPointClass"
-    - "my.second.EntryPointClass"
-  myproject-customtag2:
-    - "my.first.EntryPointClass"
-  myproject-customcommit:
-    - "my.third.EntryPointClass"
+  - "my.first.EntryPointClass"
+  - "my.second.EntryPointClass"
+ 
 ```
 
 # symfinder

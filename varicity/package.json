@@ -41,6 +41,7 @@
   "dependencies": {
     "@material/mwc-button": "^0.25.3",
     "@material/mwc-dialog": "^0.25.3",
+    "@material/mwc-fab": "^0.25.3",
     "@material/mwc-formfield": "^0.25.3",
     "@material/mwc-radio": "^0.25.3",
     "@material/mwc-textfield": "^0.25.3",

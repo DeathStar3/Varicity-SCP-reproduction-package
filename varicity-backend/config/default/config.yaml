@@ -72,39 +72,11 @@ blacklist: #all classes that must not appear
   - "org.jfree.data.general"
 
 api_classes: # configuration given in the paper
-  argoUML-bcae373: # 2, IN/OUT
-    - "org.argouml.cognitive.Designer"
-    - "org.argouml.uml.ui.UMLModelElementListModel2"
-    - "org.argouml.uml.diagram.ui.FigNodeModelElement"
-  awt-jb8u202-b1532: #3, IN/OUT
-    - "java.awt.Shape"
-  cucumber-v6.8.0: # 11, IN/OUT
-    - "io.cucumber.plugin.event.Event"
-    - "io.cucumber.java.StepDefinitionAnnotation"
-  cxf-cxf-3.2.7: # 6, OUT
-    - "org.apache.cxf.endpoint.Endpoint"
-  jfreechart-v1.5.0: # 2, OUT
-    - "org.jfree.chart.JFreeChart"
-    - "org.jfree.chart.plot.Plot"
-  junit-r4.12: # 3 IN/OUT
-    - "org.junit.Assert"
-    - "org.junit.rules.TestRule"
-  logbook-2.2.1: # 4, OUT
-    - "org.zalando.logbook.Logbook"
-    - "org.zalando.logbook.Sink"
-  maven-maven-3.6.0: # 7, OUT
-    - "org.apache.maven.Maven"
-    - "org.apache.maven.execution.MavenSession"
-  netbeans-12.2: # 5, IN/OUT
-    - "org.netbeans.api.java.platform.JavaPlatform"
-  riptide-2.11.0: # 6, IN/OUT
-    - "org.zalando.riptide.Http"
-  jmeter-v5.4.1-rc2: # 6, IN/OUT
-    - "org.apache.jmeter.JMeter"
-  regatta:
-    - "fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal"
-    - "fr.unice.polytech.si3.qgl.stormbreakers.math.Surface"
+  - "org.argouml.cognitive.Designer"
+  - "org.argouml.uml.ui.UMLModelElementListModel2"
+  - "org.argouml.uml.diagram.ui.FigNodeModelElement"
 
+  
 variables: #variables to be used for width and height of a building
   width: "nbConstructorVariants"
   height: "nbMethodVariants"

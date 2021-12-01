@@ -45,10 +45,13 @@ export class ConfigController {
         return input;
     }
 
+
+
+
     private static createSelect(defaultValue: string, parent: HTMLElement): HTMLSelectElement {
         let input = document.createElement("select");
         let options = ["IN", "OUT", "IN_OUT"];
-        options.forEach( function(opt) {
+        options.forEach(function (opt) {
             let optionElement = document.createElement("option");
             optionElement.value = opt;
             optionElement.label = opt;
@@ -69,6 +72,26 @@ export class ConfigController {
             arr.push(p.getAttribute("value"));
         }
         return arr.reverse();
+    }
+
+    private static createApiClassElement(apiClass: string, parent: HTMLElement) {
+        let divWrapper = document.createElement('div');
+
+        let label = document.createElement('label');
+        let closeIcon = document.createElement('span');
+        closeIcon.classList.add('material-icons-outlined');
+        closeIcon.textContent = 'close';
+
+        closeIcon.addEventListener('click', (ev) => {
+            parent.removeChild(divWrapper);
+        })
+
+        label.textContent = apiClass;
+
+        divWrapper.appendChild(label)
+        divWrapper.appendChild(closeIcon);
+
+        parent.appendChild(divWrapper);
     }
 
     private static stringArrayListener(ke: KeyboardEvent, input: HTMLInputElement, parent: HTMLElement) {
@@ -123,6 +146,8 @@ export class ConfigController {
 
                 let prev = input.value;
                 input.setAttribute("previous", prev);
+
+                this.createApiClassElement(prev, parent);
                 input.className = "child";
 
                 let attr = parent.getAttribute("value"); // get parent of the parent
@@ -131,14 +156,16 @@ export class ConfigController {
                     input.setAttribute("list", "datalist");
                 }
                 input.addEventListener("keyup", (ke) => this.stringArrayListener(ke, input, parent));
+
+
             }
             else {
-                if(config instanceof Map && parent.getAttribute("value") === "metrics"){
+                if (config instanceof Map && parent.getAttribute("value") === "metrics") {
                     console.log(config);
                     config.forEach((value: any, key: any) => {
-                        this.populateChildren({[key]: value}, parent);
+                        this.populateChildren({ [key]: value }, parent);
                     });
-                }else{
+                } else {
                     for (let key in config) {
                         if (key !== "default_level") {
                             let node = this.createKey(key, parent);
@@ -169,7 +196,7 @@ export class ConfigController {
                                     input = this.createInput(config[key], node);
                                 }
                                 node.className = "child";
-                                if(parent.getAttribute("value") === "variables") {
+                                if (parent.getAttribute("value") === "variables") {
                                     input.setAttribute("list", "attributelist");
                                 }
                                 if (key == "orientation") {

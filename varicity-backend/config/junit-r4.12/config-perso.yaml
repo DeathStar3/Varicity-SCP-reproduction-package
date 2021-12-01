@@ -65,9 +65,8 @@ hierarchy_links:
 blacklist: []
 
 api_classes:
-  junit-r4.12: # 3 IN/OUT
-    - "org.junit.Assert"
-    - "org.junit.rules.TestRule"
+  - "org.junit.Assert"
+  - "org.junit.rules.TestRule"
 
 variables: #variables to be used for width and height of a building
   width: "nbMethodVariants"
