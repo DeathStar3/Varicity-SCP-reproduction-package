@@ -1,0 +1,17 @@
+junit-r4.13.2:
+  buildEnv: "maven"
+  buildEnvTag: "3.8.3-openjdk-17"
+  sourcePackage: src
+  sonarqubeNeeded: true
+  skipClone: true
+  path: "test_projects/junit-r4.13.2"
+  outputPath: "./test_actual_result"
+  buildCmdIncludeSonar: true
+  buildCmd: "mvn clean package -Pcoverage sonar:sonar -f /project/pom.xml -Dsonar.scm.disabled=true"
+  sources:
+    - name: "sonarqube"
+      enabled: true
+      rootUrl: "http://localhost:9000"
+      componentName: "junit-r4.13.2"
+      metrics:
+        - "coverage"

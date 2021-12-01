@@ -16,11 +16,11 @@ echo " ### [1;32m Step: 1/3 - Build metrics-extension [0m"
 cd ../../
 chmod +x ./build.sh
 ./build.sh
-cd ./integration-tests/test1
+cd ./integration-tests/test-symfinder-cli
 
 echo " ### [1;32m Step: 2/3 - Run metrics-extension [0m"
 
-java -jar ../../target/metrics-extension-1.0-SNAPSHOT.jar ./test_config_file/junit-r4.13.2-config-linux.yaml debug
+java -jar ../../target/metrics-extension-1.0-SNAPSHOT.jar ./test_config_file/junit-r4.13.2-config-linux.yaml symfinder.yaml debug
 
 echo " ### [1;32m Step: 3/3 - Assert result [0m"
 
