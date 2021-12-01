@@ -74,25 +74,7 @@ export class ConfigController {
         return arr.reverse();
     }
 
-    private static createApiClassElement(apiClass: string, parent: HTMLElement) {
-        let divWrapper = document.createElement('div');
-
-        let label = document.createElement('label');
-        let closeIcon = document.createElement('span');
-        closeIcon.classList.add('material-icons-outlined');
-        closeIcon.textContent = 'close';
-
-        closeIcon.addEventListener('click', (ev) => {
-            parent.removeChild(divWrapper);
-        })
-
-        label.textContent = apiClass;
-
-        divWrapper.appendChild(label)
-        divWrapper.appendChild(closeIcon);
-
-        parent.appendChild(divWrapper);
-    }
+ 
 
     private static stringArrayListener(ke: KeyboardEvent, input: HTMLInputElement, parent: HTMLElement) {
         let prev = input.getAttribute("previous");
@@ -143,13 +125,9 @@ export class ConfigController {
         else {
             if (!(config instanceof Object)) { // not [] nor object
                 let input = this.createInput(config, parent);
-
                 let prev = input.value;
                 input.setAttribute("previous", prev);
-
-                this.createApiClassElement(prev, parent);
                 input.className = "child";
-
                 let attr = parent.getAttribute("value"); // get parent of the parent
                 let values = ["api_classes", "blacklist", "hierarchy_links"];
                 if (values.includes(attr) || values.includes(parent.parentElement.getAttribute("value"))) {

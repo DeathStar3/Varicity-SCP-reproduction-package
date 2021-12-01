@@ -1,0 +1,5 @@
+config
+!config/default
+dist
+node_modules
+index-db.json
