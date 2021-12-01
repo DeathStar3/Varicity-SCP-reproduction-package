@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { backendUrl } from '../../constants';
-import { Config } from '../../model/entitiesImplems/config.model';
+import {Config, MetricSpec} from '../../model/entitiesImplems/config.model';
 
 export class ConfigLoader {
 
@@ -23,4 +23,21 @@ export class ConfigLoader {
     static async loadConfigFromName(projectName: string, configName: string): Promise<AxiosResponse<Config,any>> {
         return axios.get<Config>(`${backendUrl}/projects/${projectName}/configs?configName=${configName}`);
     }
+
+    static async loadConfig(promise: Promise<AxiosResponse<Config,any>>): Promise<Config> {
+        return new Promise<Config>((resolve, reject) => {
+            promise.then((res) => {
+                let config = res.data;
+                console.log("LOADING CONFIG", config);
+                if(config.metrics === undefined){
+                    config.metrics = new Map<string, MetricSpec>();
+                }else if(!(config.metrics instanceof Map)){
+                    config.metrics =  new Map(Object.entries(config.metrics));
+                }
+
+                resolve(config);
+            });
+        });
+    }
+
 }

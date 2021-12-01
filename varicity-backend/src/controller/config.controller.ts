@@ -24,13 +24,17 @@ export class ConfigController {
     @Get('/projects/:projectName/configs')
     getConfigByNameFromProject(@Param('projectName') projectName: string, @Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/{" + projectName + "}/configs/{" + query["configName"] + "} - getConfigByNameFromProject");
-        return this.configService.getConfigByNameFromProject(projectName, query["configName"]);
+        const config = this.configService.getConfigByNameFromProject(projectName, query["configName"]);
+        console.log(config);
+        return config;
     }
 
     @Get('/projects/configs/path')
     getConfigByPath(@Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/configs/paths/{" + query["configPath"] + "} - getConfigsFromPath");
-        return this.configService.getConfigsFromPath(query["configPath"]);
+        let config = this.configService.getConfigsFromPath(query["configPath"]);
+        console.log(config);
+        return config;
     }
 
     @Get('/projects/configs')
@@ -42,6 +46,8 @@ export class ConfigController {
     @Get('/projects/configs/firstOrDefault')
     getFirstOrDefaultConfigProject(@Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/configs/firstOrDefault - getFirstOrDefaultConfigProject", query)
-        return this.configService.getFirstProjectConfigOrDefaultOne(query['name']);
+        let config = this.configService.getFirstProjectConfigOrDefaultOne(query['name']);
+        console.log(config);
+        return config;
     }
 }

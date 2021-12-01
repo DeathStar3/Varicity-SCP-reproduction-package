@@ -19,6 +19,17 @@ export class ProjectController {
         return this.projectService.loadProject(params.name);
     }
 
+    @Get('/projects/:name/metrics/external')
+    getProjectMetricsExternal(@Param('name') params): string[] {
+        return this.projectService.getProjectMetricsExternal(params);
+    }
+
+    @Get('/projects/:name/metrics/variability')
+    getProjectMetricsVariability(@Param('name') params): string[] {
+        return this.projectService.getProjectMetricsVariability(params);
+    }
+
+
     @Get('/projects/:name/metrics')
     getProjectMetrics(@Param('name') params): string[] {
         return this.projectService.getProjectMetrics(params);

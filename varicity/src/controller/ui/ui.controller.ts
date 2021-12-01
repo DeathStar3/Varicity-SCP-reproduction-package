@@ -1,7 +1,7 @@
 import {SearchbarController} from './searchbar.controller';
 import {Building3D} from './../../view/common/3Delements/building3D';
 import {Color} from '../../model/entities/config.interface';
-import {Config, CriticalLevel} from '../../model/entitiesImplems/config.model';
+import {Config, CriticalLevel, MetricSpec} from '../../model/entitiesImplems/config.model';
 import {SceneRenderer} from '../../view/sceneRenderer';
 import {ConfigController} from './config.controller';
 import {DetailsController} from './details.controller';
@@ -11,6 +11,7 @@ import {DocController} from "./doc.controller";
 import {ConfigSelectorController} from "./config-selector.controller";
 import {ConfigLoader} from "../parser/configLoader";
 import {SaveController} from "./save.controller";
+import {ProjectService} from "../../services/project.service";
 
 export class UIController {
 
@@ -71,9 +72,14 @@ export class UIController {
 
 
     public static async reloadConfigAndConfigSelector(filename: string) {
+        console.log("filename", filename)
         this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
+        // this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
         this.configName = this.configsName[0];
-        const config = (await ConfigLoader.loadConfigFromName(filename, this.configName)).data;
+        // const config = (await ConfigLoader.loadConfigFromName(filename, this.configName)).data;
+        let config: Config;
+        await ConfigLoader.loadConfig(ConfigLoader.loadConfigFromName(filename, this.configName)).then((res) =>  config = res);
+        await UIController.initDefaultConfigValues(filename, config);
         this.createConfig(config);
         this.createConfigSelector(this.configsName, filename);
     }
@@ -101,5 +107,18 @@ export class UIController {
         } else {
             console.log("not initialized");
         }
+    }
+
+    public static async initDefaultConfigValues(projectName: string, config: Config) {
+        // set default values for metrics spec if doesn't exist
+        const metricsNames = (await ProjectService.getProjectMetrics(projectName)).data;
+        console.log("metric names", metricsNames)
+        metricsNames.forEach(metric => {
+            if(!config.metrics.has(metric)){
+                config.metrics.set(metric, new MetricSpec())
+            }
+        })
+
+        // TODO set default values for the rest
     }
 }
