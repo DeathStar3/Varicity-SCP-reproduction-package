@@ -5,6 +5,8 @@ import { ConfigLoader } from "../parser/configLoader";
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
 import { UIController } from "./ui.controller";
+import {ProjectController} from "./project-selector.controller";
+import {ConfigName} from "../../model/entitiesImplems/config.model";
 
 export class ConfigSelectorController {
 
@@ -12,9 +14,9 @@ export class ConfigSelectorController {
     private static previousParser: ParsingStrategy;
     private static filename: string;
 
-    static createConfigSelector(configs: string[], filename: string) {
+    static createConfigSelector(configs: ConfigName[], filename: string) {
         let parent = document.getElementById("config_selector");
-
+        parent.innerHTML = '';
         this.filename = filename;
 
         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
@@ -25,10 +27,10 @@ export class ConfigSelectorController {
             this.reParse();
         }
 
-        parent.addEventListener('change', function(event) {
+        parent.addEventListener('change', async function(event) {
             const configName = (event.target as HTMLInputElement).value;
             if(configName !== undefined){
-                ConfigSelectorController.defineConfig(configName);
+                await ConfigSelectorController.defineConfig(configName);
 
                 parent.childNodes[0].nodeValue = "Config selection: " + configName;
                 inputElement.value = UIController.config.default_level.toString();
@@ -37,19 +39,17 @@ export class ConfigSelectorController {
             }
         });
 
-        const configIndex = new Set<string>();
-        for (let i = 0; i < parent.children.length; i++) {
-            const child = parent.children[i];
-            configIndex.add(child.innerHTML);
-        }
+        let node = document.createElement("option") as HTMLOptionElement;
+        node.textContent = " ---Select a Config --- ";
+        node.value = "";
+        parent.appendChild(node);
 
         for (let config of configs) {
-            if(!configIndex.has(config)){
                 let node = document.createElement("option") as HTMLOptionElement;
-                node.textContent = config;
-                node.value = config;
+                node.textContent = config.name;
+                node.value = config.filename;
+                node.selected = (UIController.config.name == config.name) // TODO problem in case multiple same config names
                 parent.appendChild(node);
-            }
         }
 
     }
@@ -64,7 +64,7 @@ export class ConfigSelectorController {
         UIController.clearMap();
         UIController.createConfig(UIController.config);
 
-        ProjectService.fetchVisualizationData(this.filename).then(response => {
+        ProjectService.fetchVisualizationData(this.filename).then((response) => {
             this.el = this.previousParser.parse(response.data, UIController.config, this.filename);
             let inputElement = document.getElementById("comp-level") as HTMLInputElement;
             inputElement.min = "1";
@@ -82,7 +82,11 @@ export class ConfigSelectorController {
     }
 
     private static async defineConfig(configName: string) {
-        UIController.config = (await ConfigLoader.loadConfigFromName(this.filename, configName)).data
+        // UIController.config = (await ConfigLoader.loadConfigFromName(this.filename, configName)).data
+        await ConfigLoader.loadConfig(ConfigLoader.loadConfigFromName(this.filename, configName)).then((res) =>  {UIController.config = res});
+
         UIController.configName = configName;
+        await UIController.initDefaultConfigValues(this.filename, UIController.config);
     }
+
 }

@@ -6,6 +6,7 @@ import { ConfigLoader } from "../parser/configLoader";
 import { ParsingStrategy } from '../parser/strategies/parsing.strategy.interface';
 import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
 import { UIController } from "./ui.controller";
+import {Config} from "../../model/entitiesImplems/config.model";
 
 export class ProjectController {
 
@@ -45,8 +46,10 @@ export class ProjectController {
                     await UIController.reloadConfigAndConfigSelector(this.filename);
 
                     // TODO find alternative
-                    ProjectService.fetchVisualizationData(this.filename).then(async response=>{
-                        const config = (await ConfigLoader.loadDataFile(this.filename)).data
+                    await ProjectService.fetchVisualizationData(this.filename).then(async (response) => {
+                        // const config = (await ConfigLoader.loadDataFile(this.filename)).data
+                        let config: Config;
+                        await ConfigLoader.loadConfig(ConfigLoader.loadDataFile(this.filename)).then((res) => config = res);
                         console.log("config", config)
                         this.el = this.previousParser.parse(response.data, config, this.filename);
                         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
@@ -74,11 +77,16 @@ export class ProjectController {
             await UIController.reloadConfigAndConfigSelector(this.filename);
 
             // TODO find alternative
-            ProjectService.fetchVisualizationData(this.filename).then(async response=>{
-                const config = (await ConfigLoader.loadDataFile(this.filename)).data
-                console.log("config", config)
+            await ProjectService.fetchVisualizationData(this.filename).then(async (response) => {
+                // const config = (await ConfigLoader.loadDataFile(this.filename)).data
+                let config: Config;
+                await ConfigLoader.loadConfig(ConfigLoader.loadDataFile(this.filename)).then((res) => {config = res});
                 this.el = this.previousParser.parse(response.data, config, this.filename);
                 let inputElement = document.getElementById("comp-level") as HTMLInputElement;
+
+                // TODO display the correct config option on project startup
+                // let parent = document.getElementById("config_selector");
+
                 UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(+inputElement.value));
                 UIController.scene.buildScene();
             })

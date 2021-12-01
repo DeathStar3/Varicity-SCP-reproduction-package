@@ -1,5 +1,5 @@
 import { UIController } from './ui.controller';
-import { Config } from './../../model/entitiesImplems/config.model';
+import { Config, MetricSpec } from './../../model/entitiesImplems/config.model';
 
 export class ConfigController {
     public static createConfigFolder(config: Config): void {
@@ -45,12 +45,13 @@ export class ConfigController {
         return input;
     }
 
-
-
-
-    private static createSelect(defaultValue: string, parent: HTMLElement): HTMLSelectElement {
+    private static createSelect(defaultValue: string, parent: HTMLElement, options: string[]): HTMLSelectElement {
         let input = document.createElement("select");
-        let options = ["IN", "OUT", "IN_OUT"];
+        input.classList.add("mt-2")
+        input.classList.add("mb-2")
+        input.classList.add("parent")
+        input.classList.add("form-select")
+
         options.forEach(function (opt) {
             let optionElement = document.createElement("option");
             optionElement.value = opt;
@@ -74,7 +75,7 @@ export class ConfigController {
         return arr.reverse();
     }
 
- 
+
 
     private static stringArrayListener(ke: KeyboardEvent, input: HTMLInputElement, parent: HTMLElement) {
         let prev = input.getAttribute("previous");
@@ -143,6 +144,22 @@ export class ConfigController {
                     config.forEach((value: any, key: any) => {
                         this.populateChildren({ [key]: value }, parent);
                     });
+                } else if (parent.getAttribute("value") === "variables") {
+                    const noneVal = " -- None -- ";
+                    const metricNames = [noneVal, ...UIController.config.metrics.keys()];
+
+                    for (let key in config) {
+                        const valSelected = UIController.config.metrics.has(config[key]) ? config[key] : noneVal;
+                        let node = this.createKey(key, parent);
+                        let select = this.createSelect(valSelected, node, metricNames);
+                        select.addEventListener("change", (event) => {
+                            let attributesListToCurrentElement = this.findValidParents(select);
+                            const configSelected = select.value === noneVal ? "" : select.value;
+
+                            UIController.changeConfig(attributesListToCurrentElement, ["", configSelected]);
+                        })
+                    }
+
                 } else {
                     for (let key in config) {
                         if (key !== "default_level") {
@@ -169,7 +186,8 @@ export class ConfigController {
                             else {
                                 let input;
                                 if (key == "orientation") {
-                                    input = this.createSelect(config[key], node);
+                                    let options = ["IN", "OUT", "IN_OUT"];
+                                    input = this.createSelect(config[key], node, options);
                                 } else {
                                     input = this.createInput(config[key], node);
                                 }

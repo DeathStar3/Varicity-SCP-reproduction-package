@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import {CameraData, VaricityConfig} from "../model/config.model";
+import {CameraData, ConfigName, VaricityConfig} from "../model/config.model";
 import {Vector3} from "../model/user.model";
 import {AppModule} from "../app.module";
 
@@ -145,11 +145,36 @@ export class ConfigService {
      * @param projectName
      * @private
      */
-    public getConfigsNames(projectName: string): string[] {
+    public getConfigsFilesNames(projectName: string): string[] {
         const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
         let configsNames = []
         configsPaths.forEach(configPath => {
             configsNames.push(ConfigService.getFileNameOnly(configPath));
+        })
+        return configsNames;
+    }
+
+    /**
+     * Gives the name of the configuration set by the user
+     * @param projectName ex: junit-r4.12
+     * @param configName ex config-junit-r4.12-14 (without extension)
+     */
+    public getConfigNameFromFileName(projectName: string, configName: string): string {
+        const config = this.getConfigByNameFromProject(projectName, configName);
+        return config.name || "-blank-";
+    }
+
+    /**
+     * Gives for all the configs of a project the config name and its filename
+     * @param projectName
+     */
+    public getConfigsNamesAndFileNames(projectName: string): ConfigName[] {
+        const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
+        let configsNames = []
+        configsPaths.forEach(configPath => {
+            const fileName = ConfigService.getFileNameOnly(configPath);
+            const name = this.getConfigNameFromFileName(projectName, fileName);
+            configsNames.push(new ConfigName(name, fileName));
         })
         return configsNames;
     }
