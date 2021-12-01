@@ -3,6 +3,7 @@
 # pick your color at https://htmlcolorcodes.com/
 
 description: "basic config with default colors and building representation"
+name: "default config"
 
 building:
   padding: 0.2

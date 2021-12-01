@@ -188,8 +188,10 @@ export class Building3D extends Element3D {
             }
         }
 
+        // console.log("BUILDING CITY METRICS SPEC", UIController.config.metrics)
+
         // New way to display a metric: city fade
-        if (this.config.variables.fade) {
+        if (this.config.variables.fade && this.config.variables.fade != "") {
             if (this.elementModel.metrics.metrics.has(this.config.variables.fade)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.fade).value;
 
@@ -213,7 +215,7 @@ export class Building3D extends Element3D {
         }
 
         // New way to display a metric: building opacity
-        if (this.config.variables.intensity) {
+        if (this.config.variables.intensity && this.config.variables.intensity != "") {
             if (this.elementModel.metrics.metrics.has(this.config.variables.intensity)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.intensity).value;
 
@@ -233,7 +235,7 @@ export class Building3D extends Element3D {
         }
 
         // New way to display a metric: building cracks
-        if (this.config.variables.crack) {
+        if (this.config.variables.crack && this.config.variables.crack != "") {
             if (this.elementModel.metrics.metrics.has(this.config.variables.crack)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.crack).value;
 
