@@ -10,7 +10,8 @@ import {
     Mesh,
     MeshBuilder,
     Scene,
-    StandardMaterial, Texture,
+    StandardMaterial,
+    Texture,
     Vector3
 } from '@babylonjs/core';
 import {Building} from '../../../model/entities/building.interface';
@@ -197,8 +198,8 @@ export class Building3D extends Element3D {
 
                 const configSpec = UIController.config.metrics.get(this.config.variables.fade) || new MetricSpec();
                 let fade = this.normalize(metricValue, configSpec.max, configSpec.min, 0, 1);
-                if(configSpec.higherIsBetter){
-                    fade =  1 - fade;
+                if (configSpec.higherIsBetter) {
+                    fade = 1 - fade;
                 }
 
                 var hue = ((1 - fade) * 120);
@@ -221,8 +222,8 @@ export class Building3D extends Element3D {
 
                 const configSpec = UIController.config.metrics.get(this.config.variables.intensity) || new MetricSpec();
                 let intensity = 1 - this.normalize(metricValue, configSpec.max, configSpec.min, 0, 0.93);
-                if(configSpec.higherIsBetter){
-                    intensity =  1 - intensity;
+                if (configSpec.higherIsBetter) {
+                    intensity = 1 - intensity;
                 }
 
                 let hsv = this.rgb2Hsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
@@ -236,23 +237,33 @@ export class Building3D extends Element3D {
 
         // New way to display a metric: building cracks
         if (this.config.variables.crack && this.config.variables.crack != "") {
+
+            let color = "" //(rgbToYIQ(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b) >= 128) ? "" : "w_" //TODO White color is absorbed find how to fix it
+
             if (this.elementModel.metrics.metrics.has(this.config.variables.crack)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.crack).value;
 
                 const configSpec = UIController.config.metrics.get(this.config.variables.crack) || new MetricSpec();
                 let crack = this.normalize(metricValue, configSpec.max, configSpec.min, 0, 1);
-                if(configSpec.higherIsBetter){
-                    crack =  1 - crack;
+                if (configSpec.higherIsBetter) {
+                    crack = 1 - crack;
                 }
 
                 const numberOfLevels = 8;
                 const level = Math.floor(crack * numberOfLevels);
                 if (level > 0 && level < 8) {
-                    mat.diffuseTexture = new Texture("./images/crack/level" + level + ".png", this.scene);
-                } else if (level >= 8){
-                    mat.diffuseTexture = new Texture("./images/crack/level" + 7 + ".png", this.scene);
+                    mat.diffuseTexture = new Texture("./images/crack/" + color + "level" + level + ".png", this.scene);
+                } else if (level >= 8) {
+                    mat.diffuseTexture = new Texture("./images/crack/" + color + "level" + 7 + ".png", this.scene);
                 }
+            } else {
+                mat.diffuseTexture = new Texture("./images/crack/" + color + "cross.png", this.scene);
             }
+        }
+
+        //source: https://betterprogramming.pub/generate-contrasting-text-for-your-random-background-color-ac302dc87b4
+        function rgbToYIQ(r, g, b): number {
+            return ((r * 299) + (g * 587) + (b * 114)) / 1000;
         }
 
         this.d3Model.material = mat;
