@@ -1,11 +1,8 @@
 import {UIController} from './ui.controller';
 import {ConfigName, Vector3_Local} from './../../model/entitiesImplems/config.model';
 import Cookies from "js-cookie";
-import axios from "axios";
-import {backendUrl} from "../../constants";
 import {Closeable} from "../../model/entities/closeable.interface";
-import {ConfigService} from "../../../../varicity-backend/dist/service/config.service";
-import {ConfigLoader} from "../parser/configLoader";
+import {ConfigService} from "../../services/config.service";
 
 export class SaveController {
 
@@ -38,11 +35,10 @@ export class SaveController {
             console.log("Saving config modified", {...UIController.config, metrics: Object.fromEntries(UIController.config.metrics)});
 
             //Fetch input text and set it as Config's name
-            ConfigLoader.saveConfig(UIController.config).then((saveResponseConfig) => {
+            ConfigService.saveConfig(UIController.config).then((saveResponseConfig) => {
                 console.log('Config saved successfully', saveResponseConfig);
                 UIController.config = saveResponseConfig.config;
-                UIController.configName = saveResponseConfig.filename;
-                UIController.configsName.push(new ConfigName(UIController.config.name, UIController.configName));
+                UIController.configsName.push(new ConfigName(UIController.config.name, saveResponseConfig.filename));
                 UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
             }).catch(err => {
                 console.log('Cannot save config to database');

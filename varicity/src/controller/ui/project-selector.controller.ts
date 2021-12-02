@@ -1,23 +1,28 @@
-import { CurrentProjectListener } from "../../configsaver/listener/current-project-listener";
-import { EntitiesList } from "../../model/entitiesList";
-import { ProjectService } from "../../services/project.service";
-import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
-import { ConfigLoader } from "../parser/configLoader";
-import { ParsingStrategy } from '../parser/strategies/parsing.strategy.interface';
-import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
-import { UIController } from "./ui.controller";
-import {Config} from "../../model/entitiesImplems/config.model";
+import {CurrentProjectListener} from "../../configsaver/listener/current-project-listener";
+import {EntitiesList} from "../../model/entitiesList";
+import {ProjectService} from "../../services/project.service";
+import {EvostreetImplem} from "../../view/evostreet/evostreetImplem";
+import {ConfigService} from "../../services/config.service";
+import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
+import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
+import {UIController} from "./ui.controller";
 
 export class ProjectController {
 
     static el: EntitiesList;
     private static previousParser: ParsingStrategy;
-    private static filename: string;
+    private static projectListener:CurrentProjectListener = new CurrentProjectListener();
 
-    private static projectListener:CurrentProjectListener=new CurrentProjectListener();
-
-    static createProjectSelector(keys: string[]) {
+    static createProjectSelector(projectsName: string[]) {
         let parent = document.getElementById("project_selector");
+
+        for (let projectName of projectsName) {
+            let node = document.createElement("option") as HTMLOptionElement;
+            node.value=projectName;
+            node.text= projectName;
+            
+            parent.appendChild(node);
+        }
 
         parent.addEventListener('change', function(event) {
             const projectName = (event.target as HTMLInputElement).value;
@@ -26,58 +31,24 @@ export class ProjectController {
                 parent.childNodes[0].nodeValue = "Project selection: " + projectName;
             }
         });
-
-        for (let key of keys) {
-            let node = document.createElement("option") as HTMLOptionElement;
-            node.value=key
-            node.text= key;
-            
-            parent.appendChild(node);
-
-            // projets en vision evostreet
-            node.addEventListener("click", () => {
-                console.log("teeest")
-                this.previousParser = new VPVariantsStrategy();
-                this.filename = key;
-                this.reParse();
-
-                const run = async () => {
-
-                    await UIController.reloadConfigAndConfigSelector(this.filename);
-
-                    // TODO find alternative
-                    await ProjectService.fetchVisualizationData(this.filename).then(async (response) => {
-                        const config = await ConfigLoader.loadDataFile(this.filename);
-                        console.log("config", config)
-                        this.el = this.previousParser.parse(response.data, config, this.filename);
-                        let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-                        UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(+inputElement.value));
-                        UIController.scene.buildScene();
-                    })
-
-                    this.projectListener.projectChange(key);
-                }
-                run().then();
-
-                parent.childNodes[0].nodeValue = "Project selection: " + key;
-            });
-        }
-
     }
 
     public static loadProject(projectName: string){
         this.previousParser = new VPVariantsStrategy();
-        this.filename = projectName;
-        this.reParse();
+
+        // clear the current view
+        if (UIController.scene) {
+            UIController.scene.dispose();
+        }
+        UIController.clearMap();
 
         const run = async () => {
-
-            await UIController.reloadConfigAndConfigSelector(this.filename);
+            await UIController.reloadConfigAndConfigSelector(projectName);
 
             // TODO find alternative
-            await ProjectService.fetchVisualizationData(this.filename).then(async (response) => {
-                const config = await ConfigLoader.loadDataFile(this.filename);
-                this.el = this.previousParser.parse(response.data, config, this.filename);
+            await ProjectService.fetchVisualizationData(projectName).then(async (response) => {
+                const config = await ConfigService.loadDataFile(projectName);
+                this.el = this.previousParser.parse(response.data, config, projectName);
                 let inputElement = document.getElementById("comp-level") as HTMLInputElement;
 
                 UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(+inputElement.value));
@@ -87,13 +58,5 @@ export class ProjectController {
             this.projectListener.projectChange(projectName);
         }
         run().then();
-    }
-
-    public static reParse() {
-        if (UIController.scene) {
-            UIController.scene.dispose();
-        }
-
-        UIController.clearMap();
     }
 }

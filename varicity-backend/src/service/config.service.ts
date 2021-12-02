@@ -31,7 +31,7 @@ export class ConfigService {
      */
     public getFirstProjectConfigOrDefaultOne(projectName: string): VaricityConfig {
         const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
-        return this.getConfigsFromPath(configsPaths[0]);
+        return this.getConfigsFromPath(configsPaths[configsPaths.length - 1]);
     }
 
     /**

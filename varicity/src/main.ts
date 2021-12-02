@@ -9,14 +9,15 @@ class Main {
 
     constructor() {
         document.addEventListener('DOMContentLoaded', async (_ev) => {
+            UIController.initSearchbar();
+            UIController.createSaveSection();
+            UIController.createLogs();
+
             let projects = (await ProjectService.findAllProjectsName()).data;
             console.log("projects", projects);
 
-            UIController.initSearchbar();
-            UIController.createSaveSection();
-            UIController.createMenu();
             UIController.createProjectSelector(projects);
-            UIController.createLogs();
+            UIController.createMenu();
         })
     }
 }
