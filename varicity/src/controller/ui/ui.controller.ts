@@ -9,7 +9,7 @@ import {ProjectController} from './project-selector.controller';
 import {LogsController} from "./logs.controller";
 import {DocController} from "./doc.controller";
 import {ConfigSelectorController} from "./config-selector.controller";
-import {ConfigLoader} from "../parser/configLoader";
+import {ConfigService} from "../../services/config.service";
 import {SaveController} from "./save.controller";
 import {ProjectService} from "../../services/project.service";
 
@@ -18,7 +18,6 @@ export class UIController {
     public static scene: SceneRenderer;
     public static configsName: ConfigName[];
     public static config: Config;
-    public static configName: string;
 
     public static createHeader(): void {
 
@@ -40,8 +39,8 @@ export class UIController {
         SearchbarController.emptyMap();
     }
 
-    public static createProjectSelector(keys: string[]): void {
-        ProjectController.createProjectSelector(keys);
+    public static createProjectSelector(projectsName: string[]): void {
+        ProjectController.createProjectSelector(projectsName);
     }
 
     public static createConfigSelector(configs: ConfigName[], filename: string): void {
@@ -72,13 +71,9 @@ export class UIController {
 
 
     public static async reloadConfigAndConfigSelector(filename: string) {
-        console.log("filename", filename)
-        this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
-        // this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
-        this.configName = this.configsName[0].filename;
-        // const config = (await ConfigLoader.loadConfigFromName(filename, this.configName)).data;
-        let config: Config;
-        await ConfigLoader.loadConfig(ConfigLoader.loadConfigFromName(filename, this.configName)).then((res) =>  config = res);
+        this.configsName = (await ConfigService.loadConfigNames(filename)).data;
+        const config = await ConfigService.loadDataFile(filename);
+
         await UIController.initDefaultConfigValues(filename, config);
         this.createConfig(config);
         this.createConfigSelector(this.configsName, filename);
@@ -98,7 +93,6 @@ export class UIController {
                     break;
                 case CriticalLevel.REPARSE_DATA: // Changed variables that modify the parsing method, need to reparse the entire file and rebuild
                     // TODO fix issue when adding a new Entrypoint, the scene is only loading the new entry point class and not all the others, but it works after clicking on the config again
-                    // ProjectController.reParse();
                     ConfigSelectorController.reParse();
                     break;
                 default:

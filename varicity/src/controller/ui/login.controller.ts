@@ -1,6 +1,5 @@
-import axios from 'axios';
-import { User, UserType } from '../../configsaver/model/city-view-config';
-import Cookies from 'js-cookie';
+import {User, UserType} from '../../configsaver/model/city-view-config';
+
 class LoginController {
 
     constructor(){
@@ -22,40 +21,14 @@ class LoginController {
                 let usr = new User(username, userType as UserType);
                 console.log(usr);
 
-
-                // Cookies.set('varicity-connected-user', response.data, { path: '', sameSite: 'strict' });
-                // console.log(response.data);
-
                 if (document.URL.endsWith('/')) {
                     document.location.href = document.URL + 'ui.html'
                 }
                 else {
                     document.location.href = document.URL + '/ui.html'
                 }
-
-                // axios.post('http://localhost:8080/users', usr).then(response => {
-                //
-                //     console.log("Trying to log in");
-                //
-                //     Cookies.set('varicity-connected-user', response.data, { path: '', sameSite: 'strict' });
-                //     console.log(response.data);
-                //
-                //     if (document.URL.endsWith('/')) {
-                //         document.location.href = document.URL + 'ui.html'
-                //     }
-                //     else {
-                //         document.location.href = document.URL + '/ui.html'
-                //     }
-                //
-                //
-                // }).catch(err => {
-                //     console.log(err);
-                // });
-
             });
         });
-
-
     }
 }
 

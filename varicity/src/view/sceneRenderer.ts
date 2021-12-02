@@ -36,7 +36,7 @@ export abstract class SceneRenderer {
         this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
         this.entitiesList = entitiesList;
 
-        // this.config = ConfigLoader.loadDataFile("config");
+        // this.config = ConfigService.loadDataFile("config");
 
         // document.getElementById("reset_camera").addEventListener("click", () => {
         //     this.camera.position = Vector3.Zero();
