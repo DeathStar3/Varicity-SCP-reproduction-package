@@ -41,11 +41,7 @@ public class SonarQubeStarter {
     private final DockerClient dockerClient;
     private final RestTemplate restTemplate = new RestTemplate();
 
-
-
     public SonarQubeStarter() {
-
-
         DockerClientConfig standard = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
         ApacheDockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
                 .dockerHost(standard.getDockerHost())

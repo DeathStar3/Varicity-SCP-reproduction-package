@@ -17,7 +17,7 @@ public class SonarQubeStarterTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
     private final RestTemplate restTemplate = new RestTemplate();
-    private SonarQubeStarter sonarqubeStarter = new SonarQubeStarter(null);
+    private SonarQubeStarter sonarqubeStarter = new SonarQubeStarter();
 
     @BeforeEach
     public void setUp() {

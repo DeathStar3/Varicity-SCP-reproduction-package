@@ -3,14 +3,21 @@ import { AppModule } from "../app.module";
 import { ExperimentResult } from "src/model/experiment.model";
 import { JsonDB } from "node-json-db";
 import { Config } from "node-json-db/dist/lib/JsonDBConfig";
+import { PersistenceService } from "./persistence.service";
+import { Inject } from "@nestjs/common";
 
 var fs = require('fs');
 
 export class ProjectService {
 
-    db = new JsonDB(new Config("varicitydb", true, true, '/'));
+    db = new JsonDB(new Config(process.env.PERSISTENT_DIR+'varicitydb', true, true, '/'));
 
     private static pathToJsons = "./data/symfinder_files/";
+
+
+    constructor(@Inject(PersistenceService) private readonly persistenceService: PersistenceService){
+
+    }
 
     /******************
      * LOAD A PROJECT *
@@ -83,14 +90,14 @@ export class ProjectService {
      * Return a list with all the project names
      */
     public getAllProjectsName(): string[] {
-        return Object.keys(AppModule.DB.getData("/data"));
+        return Object.keys(this.persistenceService.getDB().getData("/data"));
     }
 
     /**
      * Return an object that contain the SymFinder and external jsons locations
      */
     private getProjectPaths(projectName: string): DisksProjectPaths {
-        const allFilePaths = AppModule.DB.getData("/data/" + projectName);
+        const allFilePaths =this.persistenceService.getDB().getData("/data/" + projectName);
 
         let symFinderFilesPath: string;
         let externalFilesPaths = [];

@@ -1,9 +1,16 @@
 import {AppModule} from "../app.module";
+import { PersistenceService } from "./persistence.service";
 
 export class FsWatcherService {
 
-    private CONFIG_DIRECTORY = 'dist/../config';
-    private DATA_DIRECTORY = 'dist/../data/symfinder_files';
+    private CONFIG_DIRECTORY = 'dist/../persistent/config';
+    private DATA_DIRECTORY = 'dist/../persistent/data/symfinder_files';
+
+    private persistenceService:PersistenceService;
+    
+    constructor(){
+        this.persistenceService=new PersistenceService();
+    }
 
     /**
      * Instantiate watchers for config files and data files
@@ -12,8 +19,8 @@ export class FsWatcherService {
     public async instantiateWatcher() {
 
         //Clean local database
-        AppModule.DB.delete("/");
-
+        this.persistenceService.getDB().delete('/');
+       
         const chokidar = require('chokidar');
 
         chokidar.watch(this.CONFIG_DIRECTORY).on('all', (event, path) => {
@@ -49,11 +56,11 @@ export class FsWatcherService {
      */
     public indexConfigFile(configFilePath: string) {
         const paths: string[] = []
-        if (AppModule.DB.exists('/config/' + this.getConfigProjectName(configFilePath))) {
-            paths.push(...AppModule.DB.getData('/config/' + this.getConfigProjectName(configFilePath)))
+        if (this.persistenceService.getDB().exists('/config/' + this.getConfigProjectName(configFilePath))) {
+            paths.push(...this.persistenceService.getDB().getData('/config/' + this.getConfigProjectName(configFilePath)))
         }
         paths.push(this.normalizeConfigFileName(configFilePath))
-        AppModule.DB.push('/config/' + this.getConfigProjectName(configFilePath), paths);
+        this.persistenceService.getDB().push('/config/' + this.getConfigProjectName(configFilePath), paths);
     }
 
     /**
@@ -61,9 +68,9 @@ export class FsWatcherService {
      */
     public deIndexConfigFile(configFilePath: string) {
         const paths: string[] = []
-        if (AppModule.DB.exists('/config/' + this.getConfigProjectName(configFilePath))) {
+        if (this.persistenceService.getDB().exists('/config/' + this.getConfigProjectName(configFilePath))) {
 
-            paths.push(...AppModule.DB.getData('/config/' + this.getConfigProjectName(configFilePath)))
+            paths.push(...this.persistenceService.getDB().getData('/config/' + this.getConfigProjectName(configFilePath)))
 
             const index = paths.indexOf(this.normalizeConfigFileName(configFilePath));
             if (index > -1) {
@@ -71,9 +78,9 @@ export class FsWatcherService {
             }
         }
         if (paths.length === 0){
-            AppModule.DB.delete('/config/' + this.getConfigProjectName(configFilePath));
+            this.persistenceService.getDB().delete('/config/' + this.getConfigProjectName(configFilePath));
         } else {
-            AppModule.DB.push('/config/' + this.getConfigProjectName(configFilePath), paths);
+            this.persistenceService.getDB().push('/config/' + this.getConfigProjectName(configFilePath), paths);
         }
     }
 
@@ -82,11 +89,11 @@ export class FsWatcherService {
      */
     public indexDataFile(dataFilePath: string) {
         const paths: string[] = []
-        if (AppModule.DB.exists('/data/' + this.getDataProjectName(dataFilePath))) {
-            paths.push(...AppModule.DB.getData('/data/' + this.getDataProjectName(dataFilePath)))
+        if (this.persistenceService.getDB().exists('/data/' + this.getDataProjectName(dataFilePath))) {
+            paths.push(...this.persistenceService.getDB().getData('/data/' + this.getDataProjectName(dataFilePath)))
         }
         paths.push(this.normalizeDataFileName(dataFilePath))
-        AppModule.DB.push('/data/' + this.getDataProjectName(dataFilePath), paths);
+        this.persistenceService.getDB().push('/data/' + this.getDataProjectName(dataFilePath), paths);
     }
 
     /**
@@ -94,9 +101,9 @@ export class FsWatcherService {
      */
     public deIndexDataFile(dataFilePath: string) {
         const paths: string[] = []
-        if (AppModule.DB.exists('/data/' + this.getDataProjectName(dataFilePath))) {
+        if (this.persistenceService.getDB().exists('/data/' + this.getDataProjectName(dataFilePath))) {
 
-            paths.push(...AppModule.DB.getData('/data/' + this.getDataProjectName(dataFilePath)))
+            paths.push(...this.persistenceService.getDB().getData('/data/' + this.getDataProjectName(dataFilePath)))
 
             const index = paths.indexOf(this.normalizeDataFileName(dataFilePath));
             if (index > -1) {
@@ -104,9 +111,9 @@ export class FsWatcherService {
             }
         }
         if (paths.length === 0){
-            AppModule.DB.delete('/data/' + this.getDataProjectName(dataFilePath));
+            this.persistenceService.getDB().delete('/data/' + this.getDataProjectName(dataFilePath));
         } else {
-            AppModule.DB.push('/data/' + this.getDataProjectName(dataFilePath), paths);
+            this.persistenceService.getDB().push('/data/' + this.getDataProjectName(dataFilePath), paths);
         }
 
     }
@@ -156,4 +163,4 @@ export class FsWatcherService {
 
 }
 
-export const fsWatcherService = new FsWatcherService();
+

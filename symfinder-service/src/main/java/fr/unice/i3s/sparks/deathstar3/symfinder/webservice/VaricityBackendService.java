@@ -7,8 +7,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-@RegisterRestClient(baseUri = "http://localhost:3000")
-public interface VaricityBackendService {
+@RegisterRestClient
+public interface VaricityBackendService  {
     @POST
     @Path("/projects")
     Response createNewProject(ExperimentResult experimentResult);

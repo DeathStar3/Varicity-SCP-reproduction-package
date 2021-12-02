@@ -31,7 +31,7 @@ public class CompilerTest {
     private final ExperimentConfig argoUml = new ExperimentConfig("argouml", "", "argouml-ant", "jdk8",
             "bash /project/build.sh",
             false);
-    private SonarQubeStarter sonarqubeStarter = new SonarQubeStarter(null);
+    private SonarQubeStarter sonarqubeStarter = new SonarQubeStarter();
     private Compiler compiler = new Compiler();
 
     @Test

@@ -1,5 +1,7 @@
-config
-!config/default
+persistent
+!persistent/config/default
 dist
 node_modules
-index-db.json
+Dockerfile
+build.sh
+Readme.md

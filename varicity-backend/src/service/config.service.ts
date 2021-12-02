@@ -2,15 +2,21 @@ import * as fs from 'fs';
 import {CameraData, ConfigName, VaricityConfig} from "../model/config.model";
 import {Vector3} from "../model/user.model";
 import {AppModule} from "../app.module";
+import { PersistenceService } from './persistence.service';
+import { Inject } from '@nestjs/common';
 
 const path = require('path');
 const yaml = require('js-yaml');
 const YAML = require('yaml');
 
 export class ConfigService {
-
     private static defaultConfigsPath = "./config/";
     private static defaultConfigsDirectory = "default";
+
+    constructor(@Inject(PersistenceService) private readonly persistenceService: PersistenceService){
+
+    }
+
 
     /**
      * Load the first default config that it finds on disk
@@ -41,7 +47,7 @@ export class ConfigService {
      */
     private static getYamlFromDisk(pathToYamlOnDisk: string): any{
         console.log("pathToYamlOnDisk", pathToYamlOnDisk)
-        return yaml.load(fs.readFileSync(path.join(process.cwd(), ConfigService.defaultConfigsPath, pathToYamlOnDisk), 'utf8'));
+        return yaml.load(fs.readFileSync(path.join(process.cwd(), process.env.PERSISTENT_DIR ,ConfigService.defaultConfigsPath, pathToYamlOnDisk), 'utf8'));
     }
 
     /**
@@ -85,7 +91,7 @@ export class ConfigService {
         const doc = new YAML.Document();
         doc.contents = config;
 
-        let pathDirToConfig = path.join(ConfigService.defaultConfigsPath, config.projectId);
+        let pathDirToConfig = path.join(process.env.PERSISTENT_DIR, ConfigService.defaultConfigsPath, config.projectId);
 
         if (!fs.existsSync(pathDirToConfig)){
             fs.mkdirSync(pathDirToConfig);
@@ -109,8 +115,8 @@ export class ConfigService {
      * @private
      */
     private getDefaultConfigPaths(): string[] {
-        if(AppModule.DB.exists('/config/' + ConfigService.defaultConfigsDirectory)){
-            return AppModule.DB.getData('/config/' + ConfigService.defaultConfigsDirectory);
+        if(this.persistenceService.getDB().exists('/config/' + ConfigService.defaultConfigsDirectory)){
+            return this.persistenceService.getDB().getData('/config/' + ConfigService.defaultConfigsDirectory);
         }
         return [];
     }
@@ -121,8 +127,8 @@ export class ConfigService {
      * @private
      */
     private getConfigsPaths(projectName: string): string[] {
-        if(AppModule.DB.exists('/config/' + projectName)){
-            return AppModule.DB.getData('/config/' + projectName);
+        if(this.persistenceService.getDB().exists('/config/' + projectName)){
+            return this.persistenceService.getDB().getData('/config/' + projectName);
         }
         return []
     }
@@ -133,8 +139,8 @@ export class ConfigService {
      * @private
      */
     private getConfigsPathsWithDefaultConfigsFallback(projectName: string): string[] {
-        if(AppModule.DB.exists('/config/' + projectName)){
-            return AppModule.DB.getData('/config/' + projectName);
+        if(this.persistenceService.getDB().exists('/config/' + projectName)){
+            return this.persistenceService.getDB().getData('/config/' + projectName);
         }else{
             return this.getDefaultConfigPaths();
         }
