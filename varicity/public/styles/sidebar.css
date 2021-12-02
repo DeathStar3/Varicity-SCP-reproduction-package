@@ -12,8 +12,14 @@
 
 .navbar {
     height: 100vh;
-    position: absolute !important;
-    right: 0;
+}
+
+#sectionTitle {
+    padding-left: 30px ;
+}
+
+#submenu{
+    display: none;
 }
 
 .btn-toggle {
