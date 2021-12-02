@@ -39,6 +39,6 @@ jobs:
       - name: Test Possibility to Skip Symfinder #58
         working-directory: ./metrics-extension/integration-tests/test-skip-symfinder-engine
         run: bash runtest.sh
-      - name: Test metricExtension works on command line mode  #58
+      - name: Test metricExtension works in command line mode  #58
         working-directory: ./metrics-extension/integration-tests/test-symfinder-cli
         run: bash runtest.sh

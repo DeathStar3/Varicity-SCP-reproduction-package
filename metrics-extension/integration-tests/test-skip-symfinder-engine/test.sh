@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd ../../metrics-extension
+cd ../../
 
 #58
 mvn clean verify -Dtest=MetricExtensionEntrypointTest#whenSkipSymfinderIsTrueAndMetricSourceIsInriaSonarQube -DfailIfNoTests=false
