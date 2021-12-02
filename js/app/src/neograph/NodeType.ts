@@ -13,9 +13,10 @@ export enum EntityType {
     METHOD = "METHOD",
     CONSTRUCTOR = "CONSTRUCTOR",
     INTERFACE = "INTERFACE",
-    MODULE = "MODULE",
     FUNCTION = "FUNCTION",
-    VARIABLE = "VARIABLE"
+    VARIABLE = "VARIABLE",
+    FILE = "FILE",
+    DIRECTORY = "DIRECTORY"
 }
 
 export enum EntityVisibility {
@@ -36,7 +37,8 @@ export enum RelationType {
     EXPORT = "EXPORT",
     INTERNAL = "INTERNAL",
     IMPORT = "IMPORT",
-    LOAD = "LOAD"
+    LOAD = "LOAD",
+    CHILD = "CHILD"
 }
 
 export enum DesignPatternType {

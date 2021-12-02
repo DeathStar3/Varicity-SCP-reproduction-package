@@ -1,10 +1,10 @@
-import { ClassOne } from './moduleA';
-import { ClassOne as ClassOneBis } from './moduleAbis';
+import { ClassOne as ClassOneOne } from './moduleA';
+import ClassOne from './moduleAbis';
 
 class ClassTwo{
 
     one: ClassOne;
-    oneBis: ClassOneBis;
+    oneBis: ClassOneOne;
 
     constructor(){
 

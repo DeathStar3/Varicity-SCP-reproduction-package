@@ -3,6 +3,7 @@ import { EntityType, EntityAttribut, RelationType } from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
 import { ExportDeclaration, ExportSpecifier, HeritageClause, ImportClause, ImportDeclaration, ImportSpecifier, isExportDeclaration, isExportSpecifier, isHeritageClause, isImportClause, isImportDeclaration, isImportSpecifier, Node, SyntaxKind } from "typescript";
 import { join } from 'path'
+import { filname_from_filepath } from '../utils/path' 
 export default class GraphBuilderVisitor extends SymfinderVisitor{
 
     constructor(neoGraph: NeoGraph){
@@ -34,7 +35,7 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         var superClassesName: string[] = node.types.map((type) => type.expression.getText());
         var superClasseType: EntityType;
         var relationType: RelationType;
-        var moduleName = node.getSourceFile().fileName.replace(/\.[^/.]+$/, "");
+        var fileName = node.getSourceFile().fileName;
 
         if(node.parent.kind == SyntaxKind.InterfaceDeclaration)
             classType = EntityType.INTERFACE;
@@ -61,7 +62,7 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         for(let scn of superClassesName){
                 var superClassNode = await this.neoGraph.getOrCreateNode(scn, superClasseType, [EntityAttribut.OUT_OF_SCOPE], []);
                 if(superClassNode !== undefined){
-                    var classNode = await this.neoGraph.getNodeWithModule(className, moduleName)
+                    var classNode = await this.neoGraph.getNodeWithFile(className, fileName)
                     if(classNode !== undefined)
                         await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
                     else 
@@ -76,71 +77,70 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
 
     async visitImportDeclaration(node: ImportDeclaration): Promise<void>{
         
-        var moduleName = node.getSourceFile().fileName.replace(/\.[^/.]+$/, "");
-        var importedModuleName: string = (<any>node.moduleSpecifier).text
-        var path = moduleName.split('/').slice(0, -1).join('/');
-
-        //detect out_of_scope modules
-        if(importedModuleName.startsWith('.') || importedModuleName.startsWith('..'))
-            importedModuleName = join(path, importedModuleName)
-
-        var importedModuleNode = await this.neoGraph.getOrCreateNode(importedModuleName, EntityType.MODULE, [EntityAttribut.OUT_OF_SCOPE], []);
-        if(importedModuleNode !== undefined){
-            var moduleNode = await this.neoGraph.getNodeWithType(moduleName, EntityType.MODULE)
-            if(moduleNode !== undefined)
-                await this.neoGraph.linkTwoNodes(moduleNode, importedModuleNode, RelationType.LOAD);
-            else 
-                console.log("Error to link nodes "+moduleName+" and "+importedModuleName+"...");
+        var filePath = node.getSourceFile().fileName;
+        var fileName = filname_from_filepath(filePath);
+        var importedFileName: string;
+        var importedFilePath: string;
+        var importedModule = (<any>node.moduleSpecifier).text;
+        var fileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
+        if(fileNode === undefined){
+            console.log("Cannot find file : '" + filePath + "' in graph...");
+            return;
         }
-        else
-            console.log("Error to link nodes "+moduleName+" and "+importedModuleName+"...");
 
-        var importSpecifiers = node.importClause?.namedBindings?.getChildren();
+        if(importedModule.startsWith('.') || importedModule.startsWith('..')){
+            importedFileName = importedModule.split('/').slice(-1)[0] + '.ts';
+            importedFilePath = join(filePath.split('/').slice(0, -1).join('/'),importedModule + '.ts');
+        }
+        else{
+            importedFileName = importedModule;
+            importedFilePath = "";
+        }
+
+        
+
+        var importedFileNode = await this.neoGraph.getOrCreateNodeWithPath(importedFileName, importedFilePath, EntityType.FILE, [EntityAttribut.OUT_OF_SCOPE], []);
+        if(importedFileNode !== undefined)
+            await this.neoGraph.linkTwoNodes(fileNode, importedFileNode, RelationType.LOAD);
+        else
+            console.log("Error to link nodes "+filePath+" and "+importedFilePath+" cannot get imported file path node...");
+
+        var importSpecifiers = (<any>node.importClause?.namedBindings)?.elements
         if(importSpecifiers !== undefined){
             for(let child of importSpecifiers){
-                
                 if(isImportSpecifier(child)){
                     var importedElementName: string = child.propertyName !== undefined ? child.propertyName.getText() : child.name.getText();
-                    var importedElementNode = await this.neoGraph.getNodeWithModule(importedElementName, importedModuleName);
-                    if(importedElementNode !== undefined){
-                        var moduleNode = await this.neoGraph.getNode(moduleName);
-                        if(moduleNode !== undefined){
-                            await this.neoGraph.linkTwoNodes(moduleNode, importedElementNode, RelationType.IMPORT);
-                        }
-                        else
-                            console.log("Error to find nodes "+moduleName+" to link with "+importedElementName+"...");
-                    }
+                    var importedElementNode = await this.neoGraph.getNodeWithFile(importedElementName, importedFilePath);
+                    
+                    if(importedElementNode !== undefined)
+                        await this.neoGraph.linkTwoNodes(fileNode, importedElementNode, RelationType.IMPORT);
                 }
                 
             }
         }
         else if(node.importClause?.name !== undefined){
             var importedElementName = node.importClause.getText();
-                var importedElementNode = await this.neoGraph.getNodeWithModule(importedElementName, importedModuleName);
-                if(importedElementNode !== undefined){
-                    var moduleNode = await this.neoGraph.getNode(moduleName);
-                    if(moduleNode !== undefined){
-                        await this.neoGraph.linkTwoNodes(moduleNode, importedElementNode, RelationType.IMPORT);
-                    }
-                    else
-                        console.log("Error to find nodes "+moduleName+" to link with "+importedElementName+"...");
-                }
+            var importedElementNode = await this.neoGraph.getNodeWithFile(importedElementName, importedFilePath);
+            if(importedElementNode !== undefined){
+                await this.neoGraph.linkTwoNodes(fileNode, importedElementNode, RelationType.IMPORT);
+            }
         }
     }
 
     async visitExportSpecifier(node: ExportSpecifier): Promise<void>{
         
-        var moduleName = node.getSourceFile().fileName.replace(/\.[^/.]+$/, "");
+        var filePath = node.getSourceFile().fileName;
+        var fileName = filname_from_filepath(filePath);
         var exportedElementName = node.getText();
 
-        var exportedElementNode = await this.neoGraph.getNodeWithModule(exportedElementName, moduleName);
+        var exportedElementNode = await this.neoGraph.getNodeWithFile(exportedElementName, fileName);
         if(exportedElementNode !== undefined){
-            var moduleNode = await this.neoGraph.getNode(moduleName);
-            if(moduleNode !== undefined){
-                await this.neoGraph.updateLinkTwoNode(moduleNode, exportedElementNode, RelationType.INTERNAL, RelationType.EXPORT);
+            var fileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
+            if(fileNode !== undefined){
+                await this.neoGraph.updateLinkTwoNode(fileNode, exportedElementNode, RelationType.INTERNAL, RelationType.EXPORT);
             }
             else
-                console.log("Error to find nodes "+moduleName+" to link with "+exportedElementName+"...");
+                console.log("Error to find nodes "+fileName+" to link with "+exportedElementName+"...");
         }
     }
 }

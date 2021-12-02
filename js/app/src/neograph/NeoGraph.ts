@@ -20,12 +20,30 @@ export default class NeoGraph{
         });
     }
 
+    async createNodeWithPath(name: string, path:string, type: NodeType, types: NodeType[]): Promise<Node> {
+        types.push(type);
+        const request = "CREATE (n:"+types.join(':')+" { name:$name, path:$path }) RETURN (n)";
+        return this.submitRequest(request, {name: name, path:path}).then((result: Record[]) =>{
+            return <Node>(result[0].get(0));
+        });
+    }
+
     async getOrCreateNode(name: string, type: EntityType, createAttributes: EntityAttribut[], matchAttributes: EntityAttribut[]): Promise<Node>{
         const onCreateAttributes = createAttributes.length == 0 ? "" : "ON CREATE SET n:" + createAttributes.join(':');
         const onMatchAttributes = matchAttributes.length == 0 ? "" : "ON MATCH SET n:" + matchAttributes.join(":");
         const request = "MERGE (n:"+type+" {name: $name}) "+onCreateAttributes+" "+onMatchAttributes+" RETURN (n)";
 
         return this.submitRequest(request, {name:name}).then((result: Record[]) =>{
+            return <Node>(result[0].get(0));
+        });
+    }
+
+    async getOrCreateNodeWithPath(name: string, path: string, type: EntityType, createAttributes: EntityAttribut[], matchAttributes: EntityAttribut[]): Promise<Node>{
+        const onCreateAttributes = createAttributes.length == 0 ? "" : "ON CREATE SET n:" + createAttributes.join(':');
+        const onMatchAttributes = matchAttributes.length == 0 ? "" : "ON MATCH SET n:" + matchAttributes.join(":");
+        const request = "MERGE (n:"+type+" {name: $name, path: $path}) "+onCreateAttributes+" "+onMatchAttributes+" RETURN (n)";
+
+        return this.submitRequest(request, {name:name, path:path}).then((result: Record[]) =>{
             return <Node>(result[0].get(0));
         });
     }
@@ -38,10 +56,18 @@ export default class NeoGraph{
         });
     }
 
-    async getNodeWithModule(name: string, moduleName: string): Promise<Node | undefined>{
-        const request = "MATCH (n {name: $name})<--(m {name: $moduleName}) RETURN (n)";
+    async getNodeWithFile(name: string, path: string): Promise<Node | undefined>{
+        const request = "MATCH (n {name: $name})<--(m {path: $path}) RETURN (n)";
 
-        return this.submitRequest(request, {name:name, moduleName:moduleName}).then((result: Record[]) =>{
+        return this.submitRequest(request, {name:name, path:path}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getNodeWithPath(name: string, path: string): Promise<Node | undefined>{
+        const request = "MATCH (n {name:$name, path:$path}) RETURN (n)";
+
+        return this.submitRequest(request, {name:name, path:path}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
         });
     }
@@ -313,14 +339,14 @@ export default class NeoGraph{
                 var transaction: Transaction = session.beginTransaction();
                 var result: QueryResult = await transaction.run(request, parameter);
                 await transaction.commit();
-                if(nbTry > 0) process.stdout.write("Database ready.                                               \n");
+                if(nbTry > 0) process.stdout.write("\rDatabase ready.                                               \n");
                 return result.records;
             } catch (error) {
-                process.stdout.write("Data base not ready... Retrying in "+waitingTime+" sec (" + nbTry + "/" + maxTry + ")" + "\r");
+                process.stdout.write("\rData base not ready... Retrying in "+waitingTime+" sec (" + nbTry + "/" + maxTry + ")");
                 await new Promise<void>((res) => setTimeout(()=>res(), waitingTime * 1000));
             }
         }
-        process.stdout.write("Data base not ready... Retrying in "+waitingTime+" sec (" + maxTry + "/" + maxTry + ")" + "\n");
+        process.stdout.write("\rData base not ready... Retrying in "+waitingTime+" sec (" + maxTry + "/" + maxTry + ")" + "\n");
         console.log("Cannot connect to the database...");
         exit(1);
     }

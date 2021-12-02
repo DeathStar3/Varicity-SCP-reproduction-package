@@ -1,4 +1,4 @@
-export class ClassOne{
+export default class ClassOne{
 
     constructor(){
 

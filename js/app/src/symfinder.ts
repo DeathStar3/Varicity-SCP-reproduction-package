@@ -5,7 +5,10 @@ import StrategyTemplateDecoratorVisitor from "./visitors/StrategyTemplateDecorat
 import Parser from "./parser/Parser";
 import NeoGraph from "./neograph/NeoGraph";
 import { config } from "./configuration/Configuration";
-import { glob } from "glob";
+import { join } from "path";
+import { readdirSync, statSync } from "fs";
+import { EntityType, RelationType } from "./neograph/NodeType";
+import { Node } from "neo4j-driver-core";
 
 export class Symfinder{
 
@@ -18,8 +21,10 @@ export class Symfinder{
     async run(src: string){
         await this.neoGraph.clearNodes();
 
-        console.log("Detect variability in : '" + src + "'")
-        var files: string[] = glob.sync(src + "/**/*.ts", {"ignore": [src +"/**/*.spec.ts", src +"/**/*.test.ts", src +"/**/*Test.ts"]});
+        console.log("Analyse variability in : '" + src + "'")
+
+        var files: string[] = await this.visitAllFiles(src);
+        process.stdout.write("\rDetecting files ("+files.length+"): done.\x1b[K\n");
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes");
         await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations");
         await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies");
@@ -51,8 +56,42 @@ export class Symfinder{
             let parser = new Parser(file);
             await parser.accept(visitor);
             currentFile++;
-            process.stdout.write("Resolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")" + "\r");
+            process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
         }
-        process.stdout.write("Resolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")" + ", done.\n");
-    } 
+        process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")" + ", done.");
+    }
+
+    async visitAllFiles(path: string): Promise<string[]>{
+        var folderName = path.split('/').pop();
+        if(folderName === undefined) return [];
+        await this.neoGraph.createNodeWithPath(folderName, path, EntityType.DIRECTORY, []);
+        return await this.visitFiles(path, []);
+    }
+
+    async visitFiles(path: string, files: string[]): Promise<string[]>{
+
+        var parentFolderName = path.split('/').slice(-1)[0];
+        if(parentFolderName === undefined) return files;
+        var parentNode = await this.neoGraph.getNodeWithPath(parentFolderName, path);
+        if(parentNode === undefined) return files;
+
+        for(let fileName of readdirSync(path)){
+            const absolute_path = join(path, fileName);
+            if (statSync(absolute_path).isDirectory()){
+                var folderNode: Node = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.DIRECTORY, []);
+                await this.neoGraph.linkTwoNodes(<Node>parentNode, folderNode, RelationType.CHILD);
+                var newFiles = await this.visitFiles(absolute_path, files);
+                files.concat(newFiles);
+            }
+            else{
+                if(fileName.endsWith(".ts") && !fileName.endsWith(".test.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
+                    process.stdout.write("\rDetecting files ("+files.length+"): '"+fileName + "'\x1b[K");
+                    files.push(absolute_path);
+                    var fileNode = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.FILE, []);
+                    await this.neoGraph.linkTwoNodes(<Node>parentNode, fileNode, RelationType.CHILD)  
+                }
+            }
+        }
+        return files;
+    }
 }
