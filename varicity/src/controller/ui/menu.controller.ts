@@ -1,15 +1,15 @@
-import {NodeElement} from "../parser/symfinder_elements/nodes/node.element";
+import {DocController} from "./doc.controller";
 
 export class MenuController {
 
     static selectedTab;
 
     public static createMenu() {
-        this.addListeners("main-menu");
-        this.addListeners("tool-menu");
+        this.addMainMenuListeners("main-menu");
+        this.addToolMenuListeners("tool-menu");
     }
 
-    public static addListeners(listId: string) {
+    public static addMainMenuListeners(listId: string) {
 
         // @ts-ignore
         for (let child of document.getElementById(listId).children) {
@@ -25,7 +25,57 @@ export class MenuController {
                 } else {
                     this.selectedTab = child;
                 }
+                this.createSubMenu(this.selectedTab)
             }
+        }
+    }
+
+    public static addToolMenuListeners(listId: string) {
+
+        // @ts-ignore
+        for (let child of document.getElementById(listId).children) {
+            child.onclick = (me) => {
+                this.createSubMenu(child)
+            }
+        }
+    }
+
+    private static createSubMenu(selectedTab: Element){
+        if (selectedTab){
+            switch (selectedTab.getAttribute("id")){
+                case "project-config":
+
+                    break;
+                case "information":
+
+                    break;
+                case "building":
+
+                    break;
+                case "districts":
+
+                    break;
+                case "links":
+
+                    break;
+                case "blacklist":
+
+                    break;
+                case "metric-entrypoints":
+
+                    break;
+                case "save":
+
+                    break;
+                case "documentation":
+                    DocController.displayDocumentation();
+                    break;
+                case "settings":
+
+                    break;
+            }
+        }else{ // All tabs are closed
+
         }
     }
 

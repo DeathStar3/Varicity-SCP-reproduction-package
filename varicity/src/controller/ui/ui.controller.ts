@@ -25,10 +25,6 @@ export class UIController {
 
     }
 
-    public static createDoc(): void {
-        DocController.buildDoc();
-    }
-
     public static createMenu() {
         MenuController.createMenu();
     }
