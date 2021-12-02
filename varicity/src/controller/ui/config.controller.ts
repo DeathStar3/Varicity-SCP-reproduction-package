@@ -1,5 +1,5 @@
 import { UIController } from './ui.controller';
-import {Config, MetricSpec} from './../../model/entitiesImplems/config.model';
+import { Config, MetricSpec } from './../../model/entitiesImplems/config.model';
 
 export class ConfigController {
     public static createConfigFolder(config: Config): void {
@@ -52,7 +52,7 @@ export class ConfigController {
         input.classList.add("parent")
         input.classList.add("form-select")
 
-        options.forEach( function(opt) {
+        options.forEach(function (opt) {
             let optionElement = document.createElement("option");
             optionElement.value = opt;
             optionElement.label = opt;
@@ -74,6 +74,8 @@ export class ConfigController {
         }
         return arr.reverse();
     }
+
+
 
     private static stringArrayListener(ke: KeyboardEvent, input: HTMLInputElement, parent: HTMLElement) {
         let prev = input.getAttribute("previous");
@@ -124,32 +126,32 @@ export class ConfigController {
         else {
             if (!(config instanceof Object)) { // not [] nor object
                 let input = this.createInput(config, parent);
-
                 let prev = input.value;
                 input.setAttribute("previous", prev);
                 input.className = "child";
-
                 let attr = parent.getAttribute("value"); // get parent of the parent
                 let values = ["api_classes", "blacklist", "hierarchy_links"];
                 if (values.includes(attr) || values.includes(parent.parentElement.getAttribute("value"))) {
                     input.setAttribute("list", "datalist");
                 }
                 input.addEventListener("keyup", (ke) => this.stringArrayListener(ke, input, parent));
+
+
             }
             else {
-                if(config instanceof Map && parent.getAttribute("value") === "metrics"){
+                if (config instanceof Map && parent.getAttribute("value") === "metrics") {
                     console.log(config);
                     config.forEach((value: any, key: any) => {
-                        this.populateChildren({[key]: value}, parent);
+                        this.populateChildren({ [key]: value }, parent);
                     });
-                }else if(parent.getAttribute("value") === "variables") {
+                } else if (parent.getAttribute("value") === "variables") {
                     const noneVal = " -- None -- ";
                     const metricNames = [noneVal, ...UIController.config.metrics.keys()];
 
-                    for(let key in config){
+                    for (let key in config) {
                         const valSelected = UIController.config.metrics.has(config[key]) ? config[key] : noneVal;
                         let node = this.createKey(key, parent);
-                        let select = this.createSelect(valSelected ,node, metricNames);
+                        let select = this.createSelect(valSelected, node, metricNames);
                         select.addEventListener("change", (event) => {
                             let attributesListToCurrentElement = this.findValidParents(select);
                             const configSelected = select.value === noneVal ? "" : select.value;
@@ -158,7 +160,7 @@ export class ConfigController {
                         })
                     }
 
-                }else{
+                } else {
                     for (let key in config) {
                         if (key !== "default_level") {
                             let node = this.createKey(key, parent);
@@ -190,7 +192,7 @@ export class ConfigController {
                                     input = this.createInput(config[key], node);
                                 }
                                 node.className = "child";
-                                if(parent.getAttribute("value") === "variables") {
+                                if (parent.getAttribute("value") === "variables") {
                                     input.setAttribute("list", "attributelist");
                                 }
                                 if (key == "orientation") {

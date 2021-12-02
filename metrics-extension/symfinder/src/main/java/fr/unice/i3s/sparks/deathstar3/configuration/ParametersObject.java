@@ -21,8 +21,6 @@
 
 package fr.unice.i3s.sparks.deathstar3.configuration;
 
-import java.util.Objects;
-
 public record ParametersObject(Neo4jParameters neo4j,
                                HotspotsParameters hotspots,
                                String experimentsFile) {

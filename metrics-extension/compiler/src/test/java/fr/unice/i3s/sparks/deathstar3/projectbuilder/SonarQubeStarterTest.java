@@ -14,10 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 public class SonarQubeStarterTest {
 
-    private SonarQubeStarter sonarqubeStarter = new SonarQubeStarter();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DockerClient dockerClient = DockerClientBuilder.getInstance().build();
     private final RestTemplate restTemplate = new RestTemplate();
+    private SonarQubeStarter sonarqubeStarter = new SonarQubeStarter();
 
     @BeforeEach
     public void setUp() {

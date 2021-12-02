@@ -17,6 +17,22 @@ public class SonarMetricAvailable {
 
     private List<Metric> metrics;
 
+    @Override
+    public String toString() {
+        return "SonarMetricAvailable{" +
+                "metrics=" + metrics +
+                '}';
+    }
+
+    public void formatPrint() {
+        System.err.printf(" %45s | %80s | %20s | %6s \n", "name", "description", "type", "hidden");
+        System.err.print(" --------------------------------------------- | -------------------------------------------------------------------------------- | -------------------- | ------ \n");
+        for (Metric metric : metrics) {
+            metric.formatPrint();
+        }
+        System.err.println("");
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -49,21 +65,5 @@ public class SonarMetricAvailable {
             }
             System.err.printf(" %45s | %80s | %20s | %6s \n", key, desc, type, hidden);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "SonarMetricAvailable{" +
-                "metrics=" + metrics +
-                '}';
-    }
-
-    public void formatPrint() {
-        System.err.printf(" %45s | %80s | %20s | %6s \n", "name", "description", "type", "hidden");
-        System.err.print(" --------------------------------------------- | -------------------------------------------------------------------------------- | -------------------- | ------ \n");
-        for (Metric metric : metrics) {
-            metric.formatPrint();
-        }
-        System.err.println("");
     }
 }

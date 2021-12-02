@@ -1,12 +1,5 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
@@ -22,7 +15,10 @@ import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
-
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
+import fr.unice.i3s.sparks.deathstar3.utils.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpEntity;
@@ -30,18 +26,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
-import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
-import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
-import fr.unice.i3s.sparks.deathstar3.utils.Utils;
-import lombok.extern.slf4j.Slf4j;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class Compiler {
 
-    private final DockerClient dockerClient;
-
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
     public static final String NETWORK_NAME = "varicity-config";
     public static final String COMPILER_SCANNER_NAME = "varicity-compiler-scanner-container";
     public static final String COMPILER_NAME = "varicity-compiler-container";
@@ -51,6 +45,9 @@ public class Compiler {
     private static final String SONARQUBE_DOCKER_URL = "http://sonarqubehost:9000";
     private static final String SONAR_SCANNER_IMAGE = "sonarsource/sonar-scanner-cli";
     private static final String SONAR_SCANNER_IMAGE_TAG = "4";
+    private final DockerClient dockerClient;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public Compiler() {
 
@@ -96,7 +93,6 @@ public class Compiler {
     private void waitForContainerCorrectExit(String containerId) {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
 
-       
 
         while (!container.getState().getStatus().strip().equals("exited")) {
             log.info(container.getState().toString());
@@ -139,7 +135,7 @@ public class Compiler {
         String tokenName = RandomStringUtils.randomAlphabetic(8, 10).toUpperCase(Locale.ENGLISH);
         SonarQubeToken result = this.getToken(tokenName, SONARQUBE_LOCAL_URL);
         Volume volume = new Volume("/project");
-        
+
         var command = dockerClient
                 .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())//.withUser(utils.getUserIdentity())
                 .withName(COMPILER_SCANNER_NAME);
@@ -147,7 +143,7 @@ public class Compiler {
             // equals to 11
 
             //List.of() result is not mutable so we transform it in mutable through new ArrayList<>()
-            List<String> mvnCommmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip() .split("\\s+")));
+            List<String> mvnCommmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip().split("\\s+")));
             mvnCommmands.add("-Dsonar.login=" + result.token());
             mvnCommmands.add("-Dsonar.host.url=" + SONARQUBE_DOCKER_URL);
             mvnCommmands.add("-Dsonar.projectKey=" + projectConfig.getProjectName());
@@ -177,7 +173,7 @@ public class Compiler {
         }
 
         Volume volume = new Volume("/project");
-        List<String> commmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip() .split("\\s+")));
+        List<String> commmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip().split("\\s+")));
         CreateContainerResponse container = dockerClient
                 .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())//.withUser(utils.getUserIdentity())
                 .withName(COMPILER_NAME)

@@ -28,6 +28,10 @@ public class GraphBuilderVisitor extends ImportsVisitor {
         super(neoGraph);
     }
 
+    public static int getNbCorrectedInheritanceLinks() {
+        return nbCorrectedInheritanceLinks;
+    }
+
     @Override
     public boolean visit(TypeDeclaration type) {
         if (super.visit(type)) {
@@ -67,10 +71,5 @@ public class GraphBuilderVisitor extends ImportsVisitor {
         // Therefore, it is considered as out of scope.
         Node superclassNode = neoGraph.getOrCreateNode(myImportedClass.orElse(qualifiedName), entityType, new EntityAttribute[]{EntityAttribute.OUT_OF_SCOPE}, new EntityAttribute[]{});
         neoGraph.linkTwoNodes(superclassNode, thisNode, relationType);
-    }
-
-
-    public static int getNbCorrectedInheritanceLinks() {
-        return nbCorrectedInheritanceLinks;
     }
 }

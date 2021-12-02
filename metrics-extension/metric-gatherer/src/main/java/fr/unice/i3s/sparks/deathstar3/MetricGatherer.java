@@ -24,11 +24,10 @@ public class MetricGatherer {
         if (strategy != null) {
             String outPath = outputPath + "/" + projectName + "/" + projectName + "-" + source.getName();
 
-            List<Node> nodes=strategy.gatherAndSaveMetrics(source.getRootUrl(), source.getComponentName(), source.getMetrics(), outPath);
+            List<Node> nodes = strategy.gatherAndSaveMetrics(source.getRootUrl(), source.getComponentName(), source.getMetrics(), outPath);
             log.info("The metrics from " + projectName + ":" + source.getName() + " were collected and saved (json)");
-           return nodes;
-        }
-        else{
+            return nodes;
+        } else {
             log.warn("Returning empty list");
             return List.of();
         }

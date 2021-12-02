@@ -23,10 +23,8 @@ package fr.unice.i3s.sparks.deathstar3.neograph;
 
 import fr.unice.i3s.sparks.deathstar3.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.neo4j_types.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.neo4j.driver.*;
-
 import org.neo4j.driver.exceptions.ServiceUnavailableException;
 import org.neo4j.driver.types.MapAccessor;
 import org.neo4j.driver.types.Node;
@@ -50,12 +48,12 @@ public class NeoGraph {
 
     public NeoGraph(Configuration configuration) {
         driver = GraphDatabase.driver(configuration.getNeo4JBoltAddress(), AuthTokens.basic(configuration.getNeo4JUser(), configuration.getNeo4JPassword()));
-        this.configuration=configuration;
+        this.configuration = configuration;
     }
 
-    public NeoGraph(Driver driver,Configuration configuration) {
+    public NeoGraph(Driver driver, Configuration configuration) {
         this.driver = driver;
-        this.configuration=configuration;
+        this.configuration = configuration;
     }
 
     public static String getClauseForNodesMatchingLabels(String nodeName, NodeType... types) {
@@ -69,16 +67,16 @@ public class NeoGraph {
      * @param types Node types
      */
     public Node createNode(String name, NodeType type, NodeType... types) {
-        List <NodeType> nodeTypes = new ArrayList <>(Arrays.asList(types));
+        List<NodeType> nodeTypes = new ArrayList<>(Arrays.asList(types));
         nodeTypes.add(type);
         return submitRequest(String.format("CREATE (n:%s { name: $name}) RETURN (n)",
-                nodeTypes.stream().map(NodeType::getString).collect(Collectors.joining(":"))),
+                        nodeTypes.stream().map(NodeType::getString).collect(Collectors.joining(":"))),
                 "name", name)
                 .get(0).get(0).asNode();
     }
 
-    public Optional <Node> getNode(String name) {
-        List <org.neo4j.driver.Record> recordList = submitRequest("MATCH (n {name: $name}) RETURN (n)", "name", name);
+    public Optional<Node> getNode(String name) {
+        List<org.neo4j.driver.Record> recordList = submitRequest("MATCH (n {name: $name}) RETURN (n)", "name", name);
         return recordList.size() == 0 ? Optional.empty() : Optional.of(recordList.get(0).get(0).asNode());
     }
 
@@ -89,8 +87,8 @@ public class NeoGraph {
      * @param name node name
      * @return the node if it exists, Optional.empty otherwise
      */
-    public Optional <Node> getClassNode(String name) {
-        List <org.neo4j.driver.Record> recordList = submitRequest("MATCH (n:CLASS {name: $name}) RETURN (n)", "name", name);
+    public Optional<Node> getClassNode(String name) {
+        List<org.neo4j.driver.Record> recordList = submitRequest("MATCH (n:CLASS {name: $name}) RETURN (n)", "name", name);
         return recordList.size() == 0 ? Optional.empty() : Optional.of(recordList.get(0).get(0).asNode());
     }
 
@@ -101,8 +99,8 @@ public class NeoGraph {
      * @param name node name
      * @return the node if it exists, Optional.empty otherwise
      */
-    public Optional <Node> getInterfaceNode(String name) {
-        List <org.neo4j.driver.Record> recordList = submitRequest("MATCH (n:INTERFACE {name: $name}) RETURN (n)", "name", name);
+    public Optional<Node> getInterfaceNode(String name) {
+        List<org.neo4j.driver.Record> recordList = submitRequest("MATCH (n:INTERFACE {name: $name}) RETURN (n)", "name", name);
         return recordList.size() == 0 ? Optional.empty() : Optional.of(recordList.get(0).get(0).asNode());
     }
 
@@ -112,8 +110,8 @@ public class NeoGraph {
      * @param name node name
      * @return the node if it exists, Optional.empty otherwise
      */
-    public Optional <Node> getSuperclassNode(String name) {
-        List <org.neo4j.driver.Record> recordList = submitRequest("MATCH (s:CLASS)-[:EXTENDS]->(n {name: $name}) RETURN (s)", "name", name);
+    public Optional<Node> getSuperclassNode(String name) {
+        List<org.neo4j.driver.Record> recordList = submitRequest("MATCH (s:CLASS)-[:EXTENDS]->(n {name: $name}) RETURN (s)", "name", name);
         return recordList.size() == 0 ? Optional.empty() : Optional.of(recordList.get(0).get(0).asNode());
     }
 
@@ -123,13 +121,13 @@ public class NeoGraph {
      * @param name node name
      * @return the node if it exists, Optional.empty otherwise
      */
-    public List <Node> getImplementedInterfacesNodes(String name) {
-        List <org.neo4j.driver.Record> recordList = submitRequest("MATCH (s:INTERFACE)-[:IMPLEMENTS]->(n {name: $name}) RETURN (s)", "name", name);
+    public List<Node> getImplementedInterfacesNodes(String name) {
+        List<org.neo4j.driver.Record> recordList = submitRequest("MATCH (s:INTERFACE)-[:IMPLEMENTS]->(n {name: $name}) RETURN (s)", "name", name);
         return recordList.size() == 0 ? Collections.emptyList() : recordList.stream().map(record -> record.get(0).asNode()).collect(Collectors.toList());
     }
 
-    public Optional <Node> getNodeWithNameInPackage(String name, String packageName) {
-        List <org.neo4j.driver.Record> recordList = submitRequest("MATCH (n) WHERE (n:CLASS OR n:INTERFACE) AND n.name STARTS WITH $package AND n.name ENDS WITH $inheritedClassName RETURN (n)", "package", packageName + ".", "inheritedClassName", "." + name);
+    public Optional<Node> getNodeWithNameInPackage(String name, String packageName) {
+        List<org.neo4j.driver.Record> recordList = submitRequest("MATCH (n) WHERE (n:CLASS OR n:INTERFACE) AND n.name STARTS WITH $package AND n.name ENDS WITH $inheritedClassName RETURN (n)", "package", packageName + ".", "inheritedClassName", "." + name);
         return recordList.size() == 0 ? Optional.empty() : Optional.of(recordList.get(0).get(0).asNode());
     }
 
@@ -741,8 +739,6 @@ public class NeoGraph {
     }
 
 
-
-
     /**
      * Deletes all nodes and relationships in the graph.
      */
@@ -752,7 +748,7 @@ public class NeoGraph {
         submitRequest("DROP INDEX ON :INTERFACE(name)");
     }
 
-    private List <org.neo4j.driver.Record> submitRequest(String request, Object... parameters) {
+    private List<org.neo4j.driver.Record> submitRequest(String request, Object... parameters) {
         int count = 0;
         int maxTries = 20;
         while (true) {
@@ -761,13 +757,13 @@ public class NeoGraph {
 
 
                 try (Transaction tx = session.beginTransaction()) {
-                    List <org.neo4j.driver.Record> result = tx.run(request, parameters(parameters)).list();
+                    List<org.neo4j.driver.Record> result = tx.run(request, parameters(parameters)).list();
                     tx.commit();
                     return result;
                 }
             } catch (ServiceUnavailableException e) { // The database is not ready, retry to connect
                 System.out.println("Waiting for Neo4j database to be ready...");
-                if (++ count == maxTries) {
+                if (++count == maxTries) {
                     throw e;
                 }
                 try {

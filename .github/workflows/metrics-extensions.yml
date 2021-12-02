@@ -37,5 +37,5 @@ jobs:
         working-directory: ./metrics-extension-integration-tests/test-non-regression-cf
         run: bash runtest.sh
       - name: Test Possibility to Skip Symfinder #58
-        working-directory: ./metrics-extension/integration-tests/test-non-regression-cf
+        working-directory: ./metrics-extension-integration-tests/test-skip-symfinder-engine
         run: bash runtest.sh

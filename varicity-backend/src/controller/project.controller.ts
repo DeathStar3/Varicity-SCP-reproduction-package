@@ -1,4 +1,5 @@
-import {Controller, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import { ExperimentResult } from 'src/model/experiment.model';
 import {JsonInputInterface} from '../model/jsonInput.interface';
 import {ProjectService} from "../service/project.service";
 
@@ -33,5 +34,12 @@ export class ProjectController {
     @Get('/projects/:name/metrics')
     getProjectMetrics(@Param('name') params): string[] {
         return this.projectService.getProjectMetrics(params);
+    }
+
+    @Post('/projects')
+    newProject(@Body() experimentResult: ExperimentResult): string {
+         this.projectService.addProject(experimentResult);
+         return "OK";
+
     }
 }

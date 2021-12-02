@@ -40,9 +40,9 @@ public class StrategyTemplateDecoratorVisitor extends ImportsVisitor {
         ITypeBinding fieldTypeBinding = field.getType().resolveBinding();
         if (field.getParent() instanceof TypeDeclaration && fieldTypeBinding != null) { // prevents the case where the field is an enum, which does not bring variability
             fieldDeclaringClassBinding = ((TypeDeclaration) field.getParent()).resolveBinding();
-            Optional <String> classFullName = getClassFullName(fieldTypeBinding);
+            Optional<String> classFullName = getClassFullName(fieldTypeBinding);
             if (classFullName.isPresent()) {
-                Optional <Node> typeNode = neoGraph.getNode(classFullName.get());
+                Optional<Node> typeNode = neoGraph.getNode(classFullName.get());
                 typeNode.ifPresent(node -> {
                     if (fieldTypeBinding.getName().contains("Strategy") || neoGraph.getNbVariants(node) >= 2) {
                         neoGraph.addLabelToNode(node, DesignPatternType.STRATEGY.toString());
@@ -58,8 +58,8 @@ public class StrategyTemplateDecoratorVisitor extends ImportsVisitor {
     }
 
     private void checkAbstractDecorator(ITypeBinding currentClassBinding, ITypeBinding fieldClassBinding) {
-        Optional <String> currentClassFullName = getClassFullName(currentClassBinding);
-        Optional <String> fieldClassFullName = getClassFullName(fieldClassBinding);
+        Optional<String> currentClassFullName = getClassFullName(currentClassBinding);
+        Optional<String> fieldClassFullName = getClassFullName(fieldClassBinding);
         if (currentClassFullName.isPresent() && fieldClassFullName.isPresent()) {
             Node currentClassNode = neoGraph.getNode(currentClassFullName.get()).get();
             Node fieldClassNode = neoGraph.getNode(fieldClassFullName.get()).get();

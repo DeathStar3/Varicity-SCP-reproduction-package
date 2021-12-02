@@ -1,7 +1,7 @@
 package fr.unice.i3s.sparks.deathstar3.utils;
 
 /**
- * @author  Varicity IDE Plugin Team
+ * @author Varicity IDE Plugin Team
  */
 public class OSUtils {
     /**
@@ -11,6 +11,7 @@ public class OSUtils {
 
     /**
      * Indicates whether the computer is running Windows.
+     *
      * @return <code>true</code> if the computer is running Windows; <code>false</code> otherwise.
      */
     public static boolean isWindows() {
@@ -19,6 +20,7 @@ public class OSUtils {
 
     /**
      * Indicates whether the computer is running macOS.
+     *
      * @return <code>true</code> if the computer is running macOS; <code>false</code> otherwise.
      */
     public static boolean isMac() {
@@ -27,6 +29,7 @@ public class OSUtils {
 
     /**
      * Indicates whether the computer is running a Unix-like operating system.
+     *
      * @return <code>true</code> if the computer is running a Unix-like operating system; <code>false</code> otherwise.
      */
     public static boolean isUnix() {
