@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SourceFetcherTest {
 
-    private SourceFetcher sourceFetcher = new SourceFetcher(null);
+    private SourceFetcher sourceFetcher = new SourceFetcher();
 
     @Test
     public void cloneRepositoryTest() throws GitAPIException, IOException {
