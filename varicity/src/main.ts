@@ -17,15 +17,7 @@ class Main {
             UIController.createDoc();
             UIController.createProjectSelector(projects);
             UIController.createLogs();
-
-
-            document.querySelector('#manage-api-classes').addEventListener('click', (eve)=>{
-                UIController.config.api_classes
-            })
         })
-
-
-        
     }
 }
 
