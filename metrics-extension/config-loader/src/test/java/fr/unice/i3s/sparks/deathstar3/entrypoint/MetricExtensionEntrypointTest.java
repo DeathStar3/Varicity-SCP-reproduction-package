@@ -50,12 +50,10 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-
         ExperimentConfig cfclient = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("experiment-cookie-factory-config.yaml").readAllBytes())).get(0);
 
         System.out.println(cfclient);
-
 
         Assertions.assertDoesNotThrow(() -> {
             ExperimentResult experimentResult = this.entrypoint.runExperiment(cfclient, parametersObject);
@@ -75,12 +73,10 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-
         ExperimentConfig iutas201 = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("iutas201_vehicule.yaml").readAllBytes())).get(0);
 
         System.out.println(iutas201);
-
 
         Assertions.assertDoesNotThrow(() -> {
             ExperimentResult experimentResult = this.entrypoint.runExperiment(iutas201, parametersObject);
@@ -88,9 +84,8 @@ public class MetricExtensionEntrypointTest {
             System.out.println(experimentResult);
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
-            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(), "Symfinder n'est pas executé donc son résultat devrait être vide ");
-            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(), "Symfinder n'est pas executé donc son résultat devrait être vide ");
-
+            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(), "Symfinder is not executed so its result should be empty.");
+            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(), "Symfinder is not executed so its result should be empty.");
 
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
 
@@ -108,7 +103,6 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-
         ExperimentConfig regatta = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("regatta.yaml").readAllBytes())).get(0);
 
@@ -121,9 +115,8 @@ public class MetricExtensionEntrypointTest {
 
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
-            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(), "Symfinder n'est pas executé donc son résultat devrait être vide ");
-            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(), "Symfinder n'est pas executé donc son résultat devrait être vide ");
-
+            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(), "Symfinder is not executed so its result should be empty.");
+            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(), "Symfinder is not executed so its result should be empty.");
 
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
             Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));

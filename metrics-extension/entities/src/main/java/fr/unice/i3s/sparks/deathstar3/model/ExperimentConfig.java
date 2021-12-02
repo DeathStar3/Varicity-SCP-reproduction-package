@@ -12,7 +12,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ExperimentConfig {
 
     @NotBlank()
