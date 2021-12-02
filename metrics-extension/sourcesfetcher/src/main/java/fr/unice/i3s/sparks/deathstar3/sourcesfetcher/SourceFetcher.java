@@ -1,5 +1,7 @@
 package fr.unice.i3s.sparks.deathstar3.sourcesfetcher;
 
+import fr.unice.i3s.sparks.deathstar3.logging.DefaultSymfinderLogger;
+import fr.unice.i3s.sparks.deathstar3.logging.ISymfinderLogger;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -14,7 +16,16 @@ import java.util.logging.Logger;
 
 public class SourceFetcher {
 
-    private Logger logger = Logger.getLogger(SourceFetcher.class.getName());
+    private ISymfinderLogger logger;
+    public SourceFetcher(ISymfinderLogger logger){
+        if(logger==null){
+            this.logger=new DefaultSymfinderLogger();
+        }
+        else{
+            this.logger = logger;
+        }
+
+    }
 
     public String normalizeRepositoryUrl(String repositoryUrl) {
         repositoryUrl = repositoryUrl.strip();

@@ -5,6 +5,8 @@ import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
 import fr.unice.i3s.sparks.deathstar3.engine.entrypoint.Symfinder;
 import fr.unice.i3s.sparks.deathstar3.engine.result.SymfinderResult;
+import fr.unice.i3s.sparks.deathstar3.logging.DefaultSymfinderLogger;
+import fr.unice.i3s.sparks.deathstar3.logging.ISymfinderLogger;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.model.MetricSource;
@@ -17,6 +19,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,21 +28,43 @@ import java.util.concurrent.*;
 public class MetricExtensionEntrypoint {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
-    private final SourceFetcher sourceFetcher = new SourceFetcher();
-    private final SonarQubeStarter sonarQubeStarter = new SonarQubeStarter();
+    private final SourceFetcher sourceFetcher;
+    private final SonarQubeStarter sonarQubeStarter;
     private final Compiler compiler = new Compiler();
     private final MetricGatherer metricGatherer = new MetricGatherer();
+    private final ISymfinderLogger logger;
+
+    public MetricExtensionEntrypoint(){
+        this.logger = new DefaultSymfinderLogger();
+        this.sourceFetcher = new SourceFetcher(this.logger);
+        sonarQubeStarter = new SonarQubeStarter(this.logger);
+    }
+
+
+    public MetricExtensionEntrypoint(ISymfinderLogger logger){
+        if(logger == null){
+            this.logger= new DefaultSymfinderLogger();
+        }
+        else{
+            this.logger=logger;
+        }
+
+        this.sourceFetcher = new SourceFetcher(this.logger);
+        sonarQubeStarter = new SonarQubeStarter(this.logger);
+    }
+
+
 
     public ExperimentResult runExperiment(ExperimentConfig config, ParametersObject symfinderConfig) {
         try {
+            makePathAbsoluteIfNotAlready(config);
             return this.runExperimentInternal(config, symfinderConfig);
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
-
     }
 
-    public ExperimentResult runExperimentInternal(ExperimentConfig config, ParametersObject symfinderConfig)
+    private ExperimentResult runExperimentInternal(ExperimentConfig config, ParametersObject symfinderConfig)
             throws GitAPIException, IOException, InterruptedException, ExecutionException {
 
         Map<String, List<Node>> metricsResult = new HashMap<>();
@@ -114,5 +139,17 @@ public class MetricExtensionEntrypoint {
         }
 
         return new ExperimentResult(config.getProjectName(), futureSymfinderResult.get(), metricsResult);
+    }
+
+
+    private void makePathAbsoluteIfNotAlready(ExperimentConfig experimentConfig){
+        Path pathProvided= Paths.get(experimentConfig.getPath());
+
+        if(pathProvided.isAbsolute()){
+            return;
+        }
+        else{
+           experimentConfig.setPath( Path.of(System.getProperty("user.dir"), experimentConfig.getPath()).toAbsolutePath().toString());
+        }
     }
 }
