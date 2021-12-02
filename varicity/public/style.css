@@ -38,15 +38,17 @@
 
 #gameCanvas {
     float: left;
-    width: 70%;
+    width: 100%;
     height: 100%;
 }
 
 #console {
-    float: right;
+    right: 0px;
+    position: absolute;
     width: 30%;
     height: 100%;
     border: 5px black;
+    background-color: #FFFFFF;
 }
 
 div:not(#main) {
