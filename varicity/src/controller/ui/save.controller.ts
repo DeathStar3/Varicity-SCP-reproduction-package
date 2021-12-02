@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import {backendUrl} from "../../constants";
 import {Closeable} from "../../model/entities/closeable.interface";
+import {ConfigService} from "../../../../varicity-backend/dist/service/config.service";
+import {ConfigLoader} from "../parser/configLoader";
 
 export class SaveController {
 
@@ -36,10 +38,10 @@ export class SaveController {
             console.log("Saving config modified", {...UIController.config, metrics: Object.fromEntries(UIController.config.metrics)});
 
             //Fetch input text and set it as Config's name
-            axios.post(`${backendUrl}/projects/configs`, {...UIController.config, metrics: Object.fromEntries(UIController.config.metrics)}).then((response) => {
-                console.log('Config saved successfully', response.data);
-                UIController.config = response.data.config;
-                UIController.configName = response.data.filename;
+            ConfigLoader.saveConfig(UIController.config).then((saveResponseConfig) => {
+                console.log('Config saved successfully', saveResponseConfig);
+                UIController.config = saveResponseConfig.config;
+                UIController.configName = saveResponseConfig.filename;
                 UIController.configsName.push(new ConfigName(UIController.config.name, UIController.configName));
                 UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
             }).catch(err => {

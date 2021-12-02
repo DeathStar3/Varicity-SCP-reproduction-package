@@ -1,5 +1,6 @@
 import { Building3D } from '../../view/common/3Delements/building3D';
 import { Orientation } from "../entitiesImplems/orientation.enum";
+import {Config} from "../entitiesImplems/config.model";
 
 export interface Color {
     name: string;
@@ -63,3 +64,4 @@ export interface ConfigInterface {
 
     default_level: number;
 }
+

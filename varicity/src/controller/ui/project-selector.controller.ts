@@ -47,9 +47,7 @@ export class ProjectController {
 
                     // TODO find alternative
                     await ProjectService.fetchVisualizationData(this.filename).then(async (response) => {
-                        // const config = (await ConfigLoader.loadDataFile(this.filename)).data
-                        let config: Config;
-                        await ConfigLoader.loadConfig(ConfigLoader.loadDataFile(this.filename)).then((res) => config = res);
+                        const config = await ConfigLoader.loadDataFile(this.filename);
                         console.log("config", config)
                         this.el = this.previousParser.parse(response.data, config, this.filename);
                         let inputElement = document.getElementById("comp-level") as HTMLInputElement;
@@ -78,14 +76,9 @@ export class ProjectController {
 
             // TODO find alternative
             await ProjectService.fetchVisualizationData(this.filename).then(async (response) => {
-                // const config = (await ConfigLoader.loadDataFile(this.filename)).data
-                let config: Config;
-                await ConfigLoader.loadConfig(ConfigLoader.loadDataFile(this.filename)).then((res) => {config = res});
+                const config = await ConfigLoader.loadDataFile(this.filename);
                 this.el = this.previousParser.parse(response.data, config, this.filename);
                 let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-
-                // TODO display the correct config option on project startup
-                // let parent = document.getElementById("config_selector");
 
                 UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(+inputElement.value));
                 UIController.scene.buildScene();

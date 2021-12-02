@@ -25,7 +25,7 @@ function countDistricts(districts: District[]) : number{
 }
 describe('parsing without filtering by composition level', function() {
   it('parse', async function() {
-    let config = (await ConfigLoader.loadDataFile("config")).data;
+    let config = (await ConfigLoader.loadDataFile("config"));
     config.hierarchy_links = ["EXTENDS", "IMPLEMENTS"];
     let entities = new VPVariantsStrategy().parse((await ProjectService.fetchVisualizationData('test3ForVPParser')).data, config, "");
     let dis = entities.district.districts
@@ -38,7 +38,7 @@ describe('parsing without filtering by composition level', function() {
 
 describe('parsing with filtering by composition level', function() {
   it('parse', async function() {
-    let config = (await ConfigLoader.loadDataFile("config")).data;
+    let config = (await ConfigLoader.loadDataFile("config"));
     config.hierarchy_links = ["EXTENDS", "IMPLEMENTS"];
     config.orientation = Orientation.IN_OUT;
 
