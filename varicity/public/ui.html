@@ -53,32 +53,32 @@
                         <img src="images/menu-icons/section-icons/project-config.svg" class="bi" width="24" height="24" role="img" aria-label="Project and Config">
                     </a>
                 </li>
-                <li id="information">
+                <li id="information" class="collapsible-button">
                     <a href="#" class="nav-link py-3 border-bottom" title="Information" data-bs-toggle="tooltip" data-bs-placement="left">
                         <img src="images/menu-icons/section-icons/information.svg" class="bi" width="24" height="24" role="img" aria-label="Information">
                     </a>
                 </li>
-                <li id="building">
+                <li id="building" class="collapsible-button">
                     <a href="#" class="nav-link py-3" title="Building" data-bs-toggle="tooltip" data-bs-placement="left">
                         <img src="images/menu-icons/section-icons/building.svg" class="bi" width="24" height="24" role="img" aria-label="Building">
                     </a>
                 </li>
-                <li id="districts">
+                <li id="districts" class="collapsible-button">
                     <a href="#" class="nav-link py-3" title="District" data-bs-toggle="tooltip" data-bs-placement="left">
                         <img src="images/menu-icons/section-icons/district.svg" class="bi" width="24" height="24" role="img" aria-label="District">
                     </a>
                 </li>
-                <li id="links">
+                <li id="links" class="collapsible-button">
                     <a href="#" class="nav-link py-3" title="Links" data-bs-toggle="tooltip" data-bs-placement="left">
                         <img src="images/menu-icons/section-icons/links.svg" class="bi" width="24" height="24" role="img" aria-label="Links">
                     </a>
                 </li>
-                <li id="blacklist">
+                <li id="blacklist" class="collapsible-button">
                     <a href="#" class="nav-link py-3" title="Blacklist" data-bs-toggle="tooltip" data-bs-placement="left">
                         <img src="images/menu-icons/section-icons/blacklist.svg" class="bi" width="24" height="24" role="img" aria-label="Blacklist">
                     </a>
                 </li>
-                <li id="metric-entrypoints">
+                <li id="metric-entrypoints" class="collapsible-button">
                     <a href="#" class="nav-link py-3 border-bottom" title="Metric and entrypoints" data-bs-toggle="tooltip" data-bs-placement="left">
                         <img src="images/menu-icons/section-icons/metric-entrypoints.svg" class="bi" width="24" height="24" role="img" aria-label="Metric and entrypoints">
                     </a>
@@ -107,7 +107,7 @@
 
 
         <div id="submenu" class="flex-shrink-0 p-3 bg-white" style="width: 400px;">
-            <span id="sectionTitle" class="fs-5 fw-semibold border-bottom align-items-center pb-3 mb-3 d-flex ">Collapsible</span>
+            <span id="submenu-title" class="fs-5 fw-semibold border-bottom align-items-center pb-3 mb-3 d-flex ">Collapsible</span>
 
             <ul id="submenu-content" class="list-unstyled ps-0">
 <!--                <li class="mb-1">-->
@@ -132,13 +132,21 @@
 
         <input class="form-control mt-2" placeholder="Your search here" id="searchbar" style="display: none;">
 
-        <select id="project_selector" class="mt-2 mb-2 parent form-select">
-            <option value=""> ---Select a project---</option>
-        </select>
+        <!-- -------------------------------------------------------------------- --->
+        <!--                        PROJECT-CONFIG DIALOG                         --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="project-config_content" heading="Select your project and configuration" class="styled">
+            <select id="project_selector" class="mt-2 mb-2 parent form-select">
+                <option value=""> ---Select a project---</option>
+            </select>
 
 
-        <select id="config_selector" class="mt-2 mb-2 parent form-select">
-        </select>
+            <select id="config_selector" class="mt-2 mb-2 parent form-select">
+            </select>
+            <mwc-button slot="primaryAction" dialogAction="close">
+                Close
+            </mwc-button>
+        </mwc-dialog>
 
         <!-- -------------------------------------------------------------------- --->
         <!--                         DOCUMENTATION DIALOG                         --->

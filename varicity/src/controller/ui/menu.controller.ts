@@ -5,37 +5,33 @@ export class MenuController {
     static selectedTab;
 
     public static createMenu() {
-        this.addMainMenuListeners("main-menu");
-        this.addToolMenuListeners("tool-menu");
+        this.addListeners("main-menu");
+        this.addListeners("tool-menu");
     }
 
-    public static addMainMenuListeners(listId: string) {
+    public static addListeners(listId: string) {
 
         // @ts-ignore
         for (let child of document.getElementById(listId).children) {
             child.onclick = (me) => {
-                var img = this.changeImage(child);
 
-                if (this.selectedTab && this.selectedTab !== child) {
-                    img = this.changeImage(this.selectedTab);
-                    this.selectedTab.getElementsByTagName('img').item(0).setAttribute("src", img.getAttribute("src").replace("_selected.svg", ".svg"));
+                if (child.className === "collapsible-button") { // If open the collapsible submenu
+
+                    var img = this.changeImage(child);
+
+                    if (this.selectedTab && this.selectedTab !== child) {
+                        img = this.changeImage(this.selectedTab);
+                        this.selectedTab.getElementsByTagName('img').item(0).setAttribute("src", img.getAttribute("src").replace("_selected.svg", ".svg"));
+                    }
+                    if (this.selectedTab == child) {
+                        this.selectedTab = undefined;
+                    } else {
+                        this.selectedTab = child;
+                    }
+                    this.createSubMenu(this.selectedTab)
+                } else { // If open a dialog box
+                    this.displayEmbeddedMenu(child)
                 }
-                if (this.selectedTab == child) {
-                    this.selectedTab = undefined;
-                } else {
-                    this.selectedTab = child;
-                }
-                this.createSubMenu(this.selectedTab)
-            }
-        }
-    }
-
-    public static addToolMenuListeners(listId: string) {
-
-        // @ts-ignore
-        for (let child of document.getElementById(listId).children) {
-            child.onclick = (me) => {
-                this.displayEmbeddedMenu(child)
             }
         }
     }
@@ -44,9 +40,6 @@ export class MenuController {
         if (selectedTab) {
 
             switch (selectedTab.getAttribute("id")) {
-                case "project-config":
-
-                    break;
                 case "information":
 
                     break;
@@ -78,6 +71,9 @@ export class MenuController {
 
     private static displayEmbeddedMenu(selectedTab: Element) {
         switch (selectedTab.getAttribute("id")) {
+            case "project-config":
+                document.getElementById("project-config_content").setAttribute('open', 'true');
+                break;
             case "save":
                 document.getElementById("save_content").setAttribute('open', 'true');
                 break;
