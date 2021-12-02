@@ -252,12 +252,12 @@ export class Building3D extends Element3D {
                 const numberOfLevels = 8;
                 const level = Math.floor(crack * numberOfLevels);
                 if (level > 0 && level < 8) {
-                    mat.diffuseTexture = new Texture("./images/crack/" + color + "level" + level + ".png", this.scene);
+                    mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "level" + level + ".png", this.scene);
                 } else if (level >= 8) {
-                    mat.diffuseTexture = new Texture("./images/crack/" + color + "level" + 7 + ".png", this.scene);
+                    mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "level" + 7 + ".png", this.scene);
                 }
             } else {
-                mat.diffuseTexture = new Texture("./images/crack/" + color + "cross.png", this.scene);
+                mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "cross.png", this.scene);
             }
         }
 

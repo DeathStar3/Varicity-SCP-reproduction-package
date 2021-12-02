@@ -1,11 +1,11 @@
 // @ts-ignore
-import Factory from "../../../public/images/Factory.png"
+import Factory from "../../../public/images/documentation/Factory.png"
 // @ts-ignore
-import Strategy from "../../../public/images/Strategy.png"
+import Strategy from "../../../public/images/documentation/Strategy.png"
 // @ts-ignore
-import Template from "../../../public/images/Template.png"
+import Template from "../../../public/images/documentation/Template.png"
 // @ts-ignore
-import Decorator from "../../../public/images/Decorator.png"
+import Decorator from "../../../public/images/documentation/Decorator.png"
 
 export class DocController {
     public static buildDoc() {

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="clip-DECORATOR">
+      <rect width="64" height="64"/>
+    </clipPath>
+  </defs>
+  <g id="DECORATOR" clip-path="url(#clip-DECORATOR)">
+    <g id="Groupe_133" data-name="Groupe 133" transform="translate(-12217 3436)">
+      <circle id="Ellipse_1" data-name="Ellipse 1" cx="32" cy="32" r="32" transform="translate(12217 -3436)" fill="#ae54ce"/>
+      <text id="D" transform="translate(12249 -3393)" fill="#fff" font-size="25" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-9.216" y="0">D</tspan></text>
+    </g>
+  </g>
+</svg>
