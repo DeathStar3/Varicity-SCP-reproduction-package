@@ -35,14 +35,14 @@ class NoGenericTypeParametersValidator {
     }
 
     private void validateNoTypeParameterOnParameterizedType(ParameterizedType parameterized,
-            List<Throwable> errors) {
+                                                            List<Throwable> errors) {
         for (Type each : parameterized.getActualTypeArguments()) {
             validateNoTypeParameterOnType(each, errors);
         }
     }
 
     private void validateNoTypeParameterOnWildcardType(WildcardType wildcard,
-            List<Throwable> errors) {
+                                                       List<Throwable> errors) {
         for (Type each : wildcard.getUpperBounds()) {
             validateNoTypeParameterOnType(each, errors);
         }

@@ -36,8 +36,8 @@ import java.util.function.Consumer;
 
 public class Neo4jTest {
 
-    private static Neo4j embeddedDatabaseServer;
     protected static GraphDatabaseService graphDatabaseService;
+    private static Neo4j embeddedDatabaseServer;
 
     @BeforeAll
     static void setUp() {
@@ -45,14 +45,14 @@ public class Neo4jTest {
         graphDatabaseService = embeddedDatabaseServer.defaultDatabaseService();
     }
 
-    @AfterEach
-    public void tearDown() {
-        graphDatabaseService.executeTransactionally("MATCH (n) DETACH DELETE (n)");
-    }
-
     @AfterAll
     static void tearAll() {
         embeddedDatabaseServer.close();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        graphDatabaseService.executeTransactionally("MATCH (n) DETACH DELETE (n)");
     }
 
     protected void runTest(Consumer<NeoGraph> consumer) {

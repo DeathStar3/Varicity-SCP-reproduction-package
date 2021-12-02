@@ -32,6 +32,7 @@ export class SaveController {
             console.log('Add config ', new Date().toISOString())
             UIController.config.name = (document.querySelector('#text-field') as HTMLInputElement).value;
 
+            console.log("Metrics: ", UIController.config.metrics);
             console.log("Saving config modified", {...UIController.config, metrics: Object.fromEntries(UIController.config.metrics)});
 
             //Fetch input text and set it as Config's name

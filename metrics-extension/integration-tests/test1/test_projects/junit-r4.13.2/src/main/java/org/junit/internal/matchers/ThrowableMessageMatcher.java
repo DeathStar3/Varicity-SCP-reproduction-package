@@ -14,6 +14,11 @@ public class ThrowableMessageMatcher<T extends Throwable> extends
         this.matcher = matcher;
     }
 
+    @Factory
+    public static <T extends Throwable> Matcher<T> hasMessage(final Matcher<String> matcher) {
+        return new ThrowableMessageMatcher<T>(matcher);
+    }
+
     public void describeTo(Description description) {
         description.appendText("exception with message ");
         description.appendDescriptionOf(matcher);
@@ -28,10 +33,5 @@ public class ThrowableMessageMatcher<T extends Throwable> extends
     protected void describeMismatchSafely(T item, Description description) {
         description.appendText("message ");
         matcher.describeMismatch(item.getMessage(), description);
-    }
-
-    @Factory
-    public static <T extends Throwable> Matcher<T> hasMessage(final Matcher<String> matcher) {
-        return new ThrowableMessageMatcher<T>(matcher);
     }
 }

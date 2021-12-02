@@ -12,7 +12,9 @@ package org.junit;
 public class TestCouldNotBeSkippedException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    /** Creates an instance using the given assumption failure. */
+    /**
+     * Creates an instance using the given assumption failure.
+     */
     public TestCouldNotBeSkippedException(org.junit.internal.AssumptionViolatedException cause) {
         super("Test could not be skipped due to other failures", cause);
     }

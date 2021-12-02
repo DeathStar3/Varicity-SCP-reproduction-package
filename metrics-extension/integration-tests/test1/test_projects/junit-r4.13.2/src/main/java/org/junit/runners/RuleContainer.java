@@ -19,6 +19,16 @@ import org.junit.runners.model.Statement;
  * @since 4.13
  */
 class RuleContainer {
+    static final Comparator<RuleEntry> ENTRY_COMPARATOR = new Comparator<RuleEntry>() {
+        public int compare(RuleEntry o1, RuleEntry o2) {
+            int result = compareInt(o1.order, o2.order);
+            return result != 0 ? result : o1.type - o2.type;
+        }
+
+        private int compareInt(int a, int b) {
+            return (a < b) ? 1 : (a == b ? 0 : -1);
+        }
+    };
     private final IdentityHashMap<Object, Integer> orderValues = new IdentityHashMap<Object, Integer>();
     private final List<TestRule> testRules = new ArrayList<TestRule>();
     private final List<MethodRule> methodRules = new ArrayList<MethodRule>();
@@ -37,17 +47,6 @@ class RuleContainer {
     public void add(TestRule testRule) {
         testRules.add(testRule);
     }
-
-    static final Comparator<RuleEntry> ENTRY_COMPARATOR = new Comparator<RuleEntry>() {
-        public int compare(RuleEntry o1, RuleEntry o2) {
-            int result = compareInt(o1.order, o2.order);
-            return result != 0 ? result : o1.type - o2.type;
-        }
-
-        private int compareInt(int a, int b) {
-            return (a < b) ? 1 : (a == b ? 0 : -1);
-        }
-    };
 
     /**
      * Returns entries in the order how they should be applied, i.e. inner-to-outer.
@@ -69,7 +68,7 @@ class RuleContainer {
      * Applies all the rules ordered accordingly to the specified {@code statement}.
      */
     public Statement apply(FrameworkMethod method, Description description, Object target,
-            Statement statement) {
+                           Statement statement) {
         if (methodRules.isEmpty() && testRules.isEmpty()) {
             return statement;
         }

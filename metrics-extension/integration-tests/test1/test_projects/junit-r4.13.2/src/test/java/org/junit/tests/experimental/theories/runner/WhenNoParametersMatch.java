@@ -22,6 +22,19 @@ public class WhenNoParametersMatch {
     @DataPoints
     public static Matcher<?>[] matchers = {not(0), is(1)};
 
+    @Theory
+    public void showFailedAssumptionsWhenNoParametersFound(int data,
+                                                           Matcher<Integer> matcher) throws Exception {
+        assumeThat(data, not(matcher));
+        AssumptionsFail.DATA = data;
+        AssumptionsFail.MATCHER = matcher;
+
+        String result = testResult(AssumptionsFail.class).toString();
+
+        assertThat(result, containsString(matcher.toString()));
+        assertThat(result, containsString("" + data));
+    }
+
     @RunWith(Theories.class)
     public static class AssumptionsFail {
         @DataPoint
@@ -34,18 +47,5 @@ public class WhenNoParametersMatch {
         public void nonZeroIntsAreFun(int x) {
             assumeThat(x, MATCHER);
         }
-    }
-
-    @Theory
-    public void showFailedAssumptionsWhenNoParametersFound(int data,
-            Matcher<Integer> matcher) throws Exception {
-        assumeThat(data, not(matcher));
-        AssumptionsFail.DATA = data;
-        AssumptionsFail.MATCHER = matcher;
-
-        String result = testResult(AssumptionsFail.class).toString();
-
-        assertThat(result, containsString(matcher.toString()));
-        assertThat(result, containsString("" + data));
     }
 }

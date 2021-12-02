@@ -12,6 +12,13 @@ public class VerifierRuleTest {
 
     private static String sequence;
 
+    @Test
+    public void verifierRunsAfterTest() {
+        sequence = "";
+        assertThat(testResult(UsesVerifier.class), isSuccessful());
+        assertEquals("test verify ", sequence);
+    }
+
     public static class UsesVerifier {
         @Rule
         public Verifier collector = new Verifier() {
@@ -25,12 +32,5 @@ public class VerifierRuleTest {
         public void example() {
             sequence += "test ";
         }
-    }
-
-    @Test
-    public void verifierRunsAfterTest() {
-        sequence = "";
-        assertThat(testResult(UsesVerifier.class), isSuccessful());
-        assertEquals("test verify ", sequence);
     }
 }

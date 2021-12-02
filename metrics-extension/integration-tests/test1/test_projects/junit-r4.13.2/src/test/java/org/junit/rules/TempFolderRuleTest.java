@@ -27,85 +27,15 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public class TempFolderRuleTest {
+    private static final String GET_ROOT_DUMMY = "dummy-getRoot";
+    private static final String NEW_FILE_DUMMY = "dummy-newFile";
+    private static final String NEW_FOLDER_DUMMY = "dummy-newFolder";
     private static File[] createdFiles = new File[20];
-
-    public static class HasTempFolder {
-        @Rule
-        public TemporaryFolder folder = new TemporaryFolder();
-
-        @Test
-        public void testUsingTempFolder() throws IOException {
-            createdFiles[0] = folder.newFile("myfile.txt");
-            assertTrue(createdFiles[0].exists());
-        }
-
-        @Test
-        public void testTempFolderLocation() throws IOException {
-            File folderRoot = folder.getRoot();
-            String tmpRoot = System.getProperty("java.io.tmpdir");
-            assertTrue(folderRoot.toString().startsWith(tmpRoot));
-        }
-    }
 
     @Test
     public void tempFolderIsDeleted() {
         assertThat(testResult(HasTempFolder.class), isSuccessful());
         assertFalse(createdFiles[0].exists());
-    }
-
-    public static class CreatesSubFolder {
-        @Rule
-        public TemporaryFolder folder = new TemporaryFolder();
-
-        @Test
-        public void testUsingTempFolderStringReflection() throws Exception {
-            String subfolder = "subfolder";
-            String filename = "a.txt";
-            // force usage of folder.newFolder(String),
-            // check is available and works, to avoid a potential NoSuchMethodError with non-recompiled code.
-            Method method = folder.getClass().getMethod("newFolder", new Class<?>[]{String.class});
-            createdFiles[0] = (File) method.invoke(folder, subfolder);
-            new File(createdFiles[0], filename).createNewFile();
-
-            File expectedFile = new File(folder.getRoot(), join(subfolder, filename));
-
-            assertTrue(expectedFile.exists());
-        }
-
-        @Test
-        public void testUsingTempFolderString() throws IOException {
-            String subfolder = "subfolder";
-            String filename = "a.txt";
-            // this uses newFolder(String), ensure that a single String works
-            createdFiles[0] = folder.newFolder(subfolder);
-            new File(createdFiles[0], filename).createNewFile();
-
-            File expectedFile = new File(folder.getRoot(), join(subfolder, filename));
-
-            assertTrue(expectedFile.exists());
-        }
-
-        @Test
-        public void testUsingTempTreeFolders() throws IOException {
-            String subfolder = "subfolder";
-            String anotherfolder = "anotherfolder";
-            String filename = "a.txt";
-
-            createdFiles[0] = folder.newFolder(subfolder, anotherfolder);
-            new File(createdFiles[0], filename).createNewFile();
-
-            File expectedFile = new File(folder.getRoot(), join(subfolder, anotherfolder, filename));
-
-            assertTrue(expectedFile.exists());
-        }
-
-        private String join(String... folderNames) {
-            StringBuilder path = new StringBuilder();
-            for (String folderName : folderNames) {
-                path.append(File.separator).append(folderName);
-            }
-            return path.toString();
-        }
     }
 
     @Test
@@ -114,42 +44,11 @@ public class TempFolderRuleTest {
         assertFalse(createdFiles[0].exists());
     }
 
-    public static class CreatesRandomSubFolders {
-        @Rule
-        public TemporaryFolder folder = new TemporaryFolder();
-
-        @Test
-        public void testUsingRandomTempFolders() throws IOException {
-            for (int i = 0; i < 20; i++) {
-                File newFolder = folder.newFolder();
-                assertThat(Arrays.asList(createdFiles), not(hasItem(newFolder)));
-                createdFiles[i] = newFolder;
-                new File(newFolder, "a.txt").createNewFile();
-                assertTrue(newFolder.exists());
-            }
-        }
-    }
-
     @Test
     public void randomSubFoldersAreDeleted() {
         assertThat(testResult(CreatesRandomSubFolders.class), isSuccessful());
         for (File f : createdFiles) {
             assertFalse(f.exists());
-        }
-    }
-
-    public static class CreatesRandomFiles {
-        @Rule
-        public TemporaryFolder folder = new TemporaryFolder();
-
-        @Test
-        public void testUsingRandomTempFiles() throws IOException {
-            for (int i = 0; i < 20; i++) {
-                File newFile = folder.newFile();
-                assertThat(Arrays.asList(createdFiles), not(hasItem(newFile)));
-                createdFiles[i] = newFile;
-                assertTrue(newFile.exists());
-            }
         }
     }
 
@@ -217,6 +116,130 @@ public class TempFolderRuleTest {
         }
     }
 
+    @Test
+    public void nameClashesResultInTestFailures() {
+        assertThat(testResult(NameClashes.class), failureCountIs(2));
+    }
+
+    @Test
+    public void incorrectUsageWithoutApplyingTheRuleShouldNotPolluteTheCurrentWorkingDirectory() {
+        assertThat(testResult(IncorrectUsage.class), failureCountIs(3));
+        assertFalse("getRoot should have failed early", new File(GET_ROOT_DUMMY).exists());
+        assertFalse("newFile should have failed early", new File(NEW_FILE_DUMMY).exists());
+        assertFalse("newFolder should have failed early", new File(NEW_FOLDER_DUMMY).exists());
+    }
+
+    @After
+    public void cleanCurrentWorkingDirectory() {
+        new File(GET_ROOT_DUMMY).delete();
+        new File(NEW_FILE_DUMMY).delete();
+        new File(NEW_FOLDER_DUMMY).delete();
+    }
+
+    public static class HasTempFolder {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
+        @Test
+        public void testUsingTempFolder() throws IOException {
+            createdFiles[0] = folder.newFile("myfile.txt");
+            assertTrue(createdFiles[0].exists());
+        }
+
+        @Test
+        public void testTempFolderLocation() throws IOException {
+            File folderRoot = folder.getRoot();
+            String tmpRoot = System.getProperty("java.io.tmpdir");
+            assertTrue(folderRoot.toString().startsWith(tmpRoot));
+        }
+    }
+
+    public static class CreatesSubFolder {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
+        @Test
+        public void testUsingTempFolderStringReflection() throws Exception {
+            String subfolder = "subfolder";
+            String filename = "a.txt";
+            // force usage of folder.newFolder(String),
+            // check is available and works, to avoid a potential NoSuchMethodError with non-recompiled code.
+            Method method = folder.getClass().getMethod("newFolder", new Class<?>[]{String.class});
+            createdFiles[0] = (File) method.invoke(folder, subfolder);
+            new File(createdFiles[0], filename).createNewFile();
+
+            File expectedFile = new File(folder.getRoot(), join(subfolder, filename));
+
+            assertTrue(expectedFile.exists());
+        }
+
+        @Test
+        public void testUsingTempFolderString() throws IOException {
+            String subfolder = "subfolder";
+            String filename = "a.txt";
+            // this uses newFolder(String), ensure that a single String works
+            createdFiles[0] = folder.newFolder(subfolder);
+            new File(createdFiles[0], filename).createNewFile();
+
+            File expectedFile = new File(folder.getRoot(), join(subfolder, filename));
+
+            assertTrue(expectedFile.exists());
+        }
+
+        @Test
+        public void testUsingTempTreeFolders() throws IOException {
+            String subfolder = "subfolder";
+            String anotherfolder = "anotherfolder";
+            String filename = "a.txt";
+
+            createdFiles[0] = folder.newFolder(subfolder, anotherfolder);
+            new File(createdFiles[0], filename).createNewFile();
+
+            File expectedFile = new File(folder.getRoot(), join(subfolder, anotherfolder, filename));
+
+            assertTrue(expectedFile.exists());
+        }
+
+        private String join(String... folderNames) {
+            StringBuilder path = new StringBuilder();
+            for (String folderName : folderNames) {
+                path.append(File.separator).append(folderName);
+            }
+            return path.toString();
+        }
+    }
+
+    public static class CreatesRandomSubFolders {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
+        @Test
+        public void testUsingRandomTempFolders() throws IOException {
+            for (int i = 0; i < 20; i++) {
+                File newFolder = folder.newFolder();
+                assertThat(Arrays.asList(createdFiles), not(hasItem(newFolder)));
+                createdFiles[i] = newFolder;
+                new File(newFolder, "a.txt").createNewFile();
+                assertTrue(newFolder.exists());
+            }
+        }
+    }
+
+    public static class CreatesRandomFiles {
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
+        @Test
+        public void testUsingRandomTempFiles() throws IOException {
+            for (int i = 0; i < 20; i++) {
+                File newFile = folder.newFile();
+                assertThat(Arrays.asList(createdFiles), not(hasItem(newFile)));
+                createdFiles[i] = newFile;
+                assertTrue(newFile.exists());
+            }
+        }
+    }
+
     public static class NameClashes {
         @Rule
         public TemporaryFolder folder = new TemporaryFolder();
@@ -233,17 +256,6 @@ public class TempFolderRuleTest {
             folder.newFile("dummy");
         }
     }
-
-    @Test
-    public void nameClashesResultInTestFailures() {
-        assertThat(testResult(NameClashes.class), failureCountIs(2));
-    }
-
-    private static final String GET_ROOT_DUMMY = "dummy-getRoot";
-
-    private static final String NEW_FILE_DUMMY = "dummy-newFile";
-
-    private static final String NEW_FOLDER_DUMMY = "dummy-newFolder";
 
     public static class IncorrectUsage {
         public TemporaryFolder folder = new TemporaryFolder();
@@ -262,20 +274,5 @@ public class TempFolderRuleTest {
         public void testNewFolder() throws IOException {
             folder.newFolder(NEW_FOLDER_DUMMY);
         }
-    }
-
-    @Test
-    public void incorrectUsageWithoutApplyingTheRuleShouldNotPolluteTheCurrentWorkingDirectory() {
-        assertThat(testResult(IncorrectUsage.class), failureCountIs(3));
-        assertFalse("getRoot should have failed early", new File(GET_ROOT_DUMMY).exists());
-        assertFalse("newFile should have failed early", new File(NEW_FILE_DUMMY).exists());
-        assertFalse("newFolder should have failed early", new File(NEW_FOLDER_DUMMY).exists());
-    }
-
-    @After
-    public void cleanCurrentWorkingDirectory() {
-        new File(GET_ROOT_DUMMY).delete();
-        new File(NEW_FILE_DUMMY).delete();
-        new File(NEW_FOLDER_DUMMY).delete();
     }
 }

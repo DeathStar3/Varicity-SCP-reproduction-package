@@ -1,9 +1,14 @@
-import {DisksProjectPaths, JsonInputInterface, MetricClassInterface} from "../model/jsonInput.interface";
-import {AppModule} from "../app.module";
+import { DisksProjectPaths, JsonInputInterface, MetricClassInterface } from "../model/jsonInput.interface";
+import { AppModule } from "../app.module";
+import { ExperimentResult } from "src/model/experiment.model";
+import { JsonDB } from "node-json-db";
+import { Config } from "node-json-db/dist/lib/JsonDBConfig";
 
 var fs = require('fs');
 
 export class ProjectService {
+
+    db = new JsonDB(new Config("varicitydb", true, true, '/'));
 
     private static pathToJsons = "./data/symfinder_files/";
 
@@ -91,9 +96,9 @@ export class ProjectService {
         let externalFilesPaths = [];
 
         allFilePaths.forEach((filePath) => {
-            if (filePath.split('\/')[0] === 'externals'){ // If is an external file
+            if (filePath.split('\/')[0] === 'externals') { // If is an external file
                 externalFilesPaths.push(filePath);
-            }else{ // If is the SymFinder file
+            } else { // If is the SymFinder file
                 symFinderFilesPath = filePath;
             }
         });
@@ -126,7 +131,7 @@ export class ProjectService {
 
         // TODO save in DB after first time
         project.nodes.forEach(node => {
-            if(node.additionalMetrics !== undefined){
+            if (node.additionalMetrics !== undefined) {
                 node.additionalMetrics.forEach(metric => {
                     metrics.add(metric.name);
                 })
@@ -134,5 +139,45 @@ export class ProjectService {
         })
 
         return [...metrics.keys()];
+    }
+
+    addProject(project: ExperimentResult) {
+        let index = 0;
+        if (this.db.exists('/projects')) {
+            index = this.db.getIndex('/projects', project.projectName, 'projectName')
+
+            if (index > -1) {
+                this.db.push(`/projects[${index}]`, { 'projectName': project.projectName });//ne changerait rien vu qu'il n'y a qu'une seule propriété
+                //mais peut être utile si on ajoute des propriétés
+                
+            }
+            else{
+                this.db.push(`/projects[]`, { 'projectName': project.projectName });
+            }
+        }else{
+            this.db.push(`/projects[]`, { 'projectName': project.projectName });
+        }
+        
+        console.log(project.externalMetric)
+        if (project.externalMetric !== undefined && project.externalMetric !== null && project.externalMetric.size > 0) {
+            project.externalMetric.forEach((metric, name) => {
+                let externalMetricDB = new JsonDB(new Config(ProjectService.pathToJsons + `externals/${project.projectName}/${project.projectName}-${name}`,));
+
+                externalMetricDB.push(`/`, metric);
+
+            })
+        }
+
+        if (project.symfinderResult != null && project.symfinderResult != undefined) {
+            if (project.symfinderResult.vpJsonGraph !== undefined && project.symfinderResult.vpJsonGraph !== null
+                && project.symfinderResult.vpJsonGraph.trim().length > 0) {
+                let symfinderResultDB = new JsonDB(new Config(ProjectService.pathToJsons + `${project.projectName}`, true, true, '/'));
+
+                symfinderResultDB.push(`/`, JSON.parse(project.symfinderResult.vpJsonGraph));
+            }
+
+        }
+
+       
     }
 }

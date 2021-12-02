@@ -43,46 +43,6 @@ public class ParentRunnerFilteringTest {
         };
     }
 
-    private static class CountingFilter extends Filter {
-        private final Map<Description, Integer> countMap = new HashMap<Description, Integer>();
-
-        @Override
-        public boolean shouldRun(Description description) {
-            Integer count = countMap.get(description);
-            if (count == null) {
-                countMap.put(description, 1);
-            } else {
-                countMap.put(description, count + 1);
-            }
-            return true;
-        }
-
-        @Override
-        public String describe() {
-            return "filter counter";
-        }
-
-        public int getCount(final Description desc) {
-            if (!countMap.containsKey(desc)) {
-                throw new IllegalArgumentException("Looking for " + desc
-                        + ", but only contains: " + countMap.keySet());
-            }
-            return countMap.get(desc);
-        }
-    }
-
-    public static class ExampleTest {
-        @Test
-        public void test1() throws Exception {
-            // passes
-        }
-    }
-
-    @RunWith(Suite.class)
-    @SuiteClasses({ExampleTest.class})
-    public static class ExampleSuite {
-    }
-
     @Test
     public void testSuiteFiltering() throws Exception {
         Runner runner = Request.aClass(ExampleSuite.class).getRunner();
@@ -93,25 +53,6 @@ public class ParentRunnerFilteringTest {
             return;
         }
         fail("Expected 'NoTestsRemainException' due to complete filtering");
-    }
-
-    public static class SuiteWithUnmodifiableChildList extends Suite {
-
-        public SuiteWithUnmodifiableChildList(
-                Class<?> klass, RunnerBuilder builder)
-                throws InitializationError {
-            super(klass, builder);
-        }
-
-        @Override
-        protected List<Runner> getChildren() {
-            return Collections.unmodifiableList(super.getChildren());
-        }
-    }
-
-    @RunWith(SuiteWithUnmodifiableChildList.class)
-    @SuiteClasses({ExampleTest.class})
-    public static class ExampleSuiteWithUnmodifiableChildList {
     }
 
     @Test
@@ -167,5 +108,64 @@ public class ParentRunnerFilteringTest {
 
         Description desc = createTestDescription(ExampleTest.class, "test1");
         assertEquals(1, countingFilter.getCount(desc));
+    }
+
+    private static class CountingFilter extends Filter {
+        private final Map<Description, Integer> countMap = new HashMap<Description, Integer>();
+
+        @Override
+        public boolean shouldRun(Description description) {
+            Integer count = countMap.get(description);
+            if (count == null) {
+                countMap.put(description, 1);
+            } else {
+                countMap.put(description, count + 1);
+            }
+            return true;
+        }
+
+        @Override
+        public String describe() {
+            return "filter counter";
+        }
+
+        public int getCount(final Description desc) {
+            if (!countMap.containsKey(desc)) {
+                throw new IllegalArgumentException("Looking for " + desc
+                        + ", but only contains: " + countMap.keySet());
+            }
+            return countMap.get(desc);
+        }
+    }
+
+    public static class ExampleTest {
+        @Test
+        public void test1() throws Exception {
+            // passes
+        }
+    }
+
+    @RunWith(Suite.class)
+    @SuiteClasses({ExampleTest.class})
+    public static class ExampleSuite {
+    }
+
+    public static class SuiteWithUnmodifiableChildList extends Suite {
+
+        public SuiteWithUnmodifiableChildList(
+                Class<?> klass, RunnerBuilder builder)
+                throws InitializationError {
+            super(klass, builder);
+        }
+
+        @Override
+        protected List<Runner> getChildren() {
+            return Collections.unmodifiableList(super.getChildren());
+        }
+    }
+
+    @RunWith(SuiteWithUnmodifiableChildList.class)
+    @SuiteClasses({ExampleTest.class})
+    public static class ExampleSuiteWithUnmodifiableChildList {
     }
 }

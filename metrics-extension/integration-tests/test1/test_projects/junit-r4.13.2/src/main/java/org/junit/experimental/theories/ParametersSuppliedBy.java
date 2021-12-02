@@ -14,24 +14,24 @@ import java.lang.annotation.Target;
  * {@link org.junit.experimental.theories.ParameterSupplier ParameterSupplier}
  * when run as a theory by the {@link org.junit.experimental.theories.Theories
  * Theories} runner.
- * 
+ * <p>
  * In addition, annotations themselves can be annotated with
  * &#064;ParametersSuppliedBy, and then used similarly. ParameterSuppliedBy
  * annotations on parameters are detected by searching up this hierarchy such
  * that these act as syntactic sugar, making:
- * 
+ *
  * <pre>
  * &#064;ParametersSuppliedBy(Supplier.class)
  * public &#064;interface SpecialParameter { }
- * 
+ *
  * &#064;Theory
  * public void theoryMethod(&#064;SpecialParameter String param) {
  *   ...
  * }
  * </pre>
- * 
+ * <p>
  * equivalent to:
- * 
+ *
  * <pre>
  * &#064;Theory
  * public void theoryMethod(&#064;ParametersSuppliedBy(Supplier.class) String param) {
@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ANNOTATION_TYPE, PARAMETER })
+@Target({ANNOTATION_TYPE, PARAMETER})
 public @interface ParametersSuppliedBy {
 
     Class<? extends ParameterSupplier> value();

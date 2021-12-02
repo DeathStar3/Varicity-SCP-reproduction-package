@@ -16,13 +16,11 @@ import org.junit.runner.FilterFactoryParams;
 import org.junit.runner.manipulation.Filter;
 
 public class CategoryFilterFactoryTest {
+    private final CategoryFilterFactory categoryFilterFactory = new CategoryFilterFactoryStub();
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-
     @Rule
     public TestName testName = new TestName();
-
-    private final CategoryFilterFactory categoryFilterFactory = new CategoryFilterFactoryStub();
 
     @Test
     public void shouldCreateFilter() throws Exception {

@@ -29,16 +29,16 @@ public class MatcherTest {
     public static PrintableResult TWO_FAILURES_ONE_CHEESE = new PrintableResult(
             Arrays.asList(failure("cheese"), failure("mustard")));
 
+    private static Failure failure(String string) {
+        return new Failure(Description.EMPTY, new Error(string));
+    }
+
     @Theory
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void differentMatchersHaveDifferentDescriptions(
             Matcher matcher1, Matcher matcher2, Object value) {
         assumeThat(value, matcher1);
         assumeThat(value, not(matcher2));
         assertThat(matcher1.toString(), not(matcher2.toString()));
-    }
-
-    private static Failure failure(String string) {
-        return new Failure(Description.EMPTY, new Error(string));
     }
 }

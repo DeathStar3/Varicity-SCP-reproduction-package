@@ -25,6 +25,10 @@ public class SymfinderVisitor extends ASTVisitor {
         this.neoGraph = neoGraph;
     }
 
+    protected static String getClassBaseName(String className) {
+        return className.split("<")[0];
+    }
+
     @Override
     public boolean visit(TypeDeclaration type) {
         ITypeBinding classBinding = type.resolveBinding();
@@ -40,9 +44,5 @@ public class SymfinderVisitor extends ASTVisitor {
 
     protected boolean isTestClass(ITypeBinding classBinding) {
         return Arrays.asList(classBinding.getPackage().getNameComponents()).contains("test");
-    }
-
-    protected static String getClassBaseName(String className) {
-        return className.split("<")[0];
     }
 }

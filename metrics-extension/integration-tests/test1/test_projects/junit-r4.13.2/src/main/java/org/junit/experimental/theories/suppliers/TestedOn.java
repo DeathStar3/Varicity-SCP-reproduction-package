@@ -15,7 +15,7 @@ import org.junit.experimental.theories.ParametersSuppliedBy;
  * {@link org.junit.experimental.theories.Theories Theories} runner. For
  * example, the below method would be called three times by the Theories runner,
  * once with each of the int parameters specified.
- * 
+ *
  * <pre>
  * &#064;Theory
  * public void shouldPassForSomeInts(&#064;TestedOn(ints={1, 2, 3}) int param) {

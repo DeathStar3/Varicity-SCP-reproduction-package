@@ -15,8 +15,8 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
  * @deprecated Included for backwards compatibility with JUnit 4.4. Will be
- *             removed in the next major release. Please use
- *             {@link BlockJUnit4ClassRunner} in place of {@link JUnit4ClassRunner}.
+ * removed in the next major release. Please use
+ * {@link BlockJUnit4ClassRunner} in place of {@link JUnit4ClassRunner}.
  */
 @Deprecated
 public class MethodValidator {
@@ -67,30 +67,30 @@ public class MethodValidator {
     }
 
     private void validateTestMethods(Class<? extends Annotation> annotation,
-            boolean isStatic) {
+                                     boolean isStatic) {
         List<Method> methods = testClass.getAnnotatedMethods(annotation);
 
         for (Method each : methods) {
             if (Modifier.isStatic(each.getModifiers()) != isStatic) {
                 String state = isStatic ? "should" : "should not";
                 errors.add(new Exception("Method " + each.getName() + "() "
-						+ state + " be static"));
+                        + state + " be static"));
             }
             if (!Modifier.isPublic(each.getDeclaringClass().getModifiers())) {
                 errors.add(new Exception("Class " + each.getDeclaringClass().getName()
-						+ " should be public"));
+                        + " should be public"));
             }
             if (!Modifier.isPublic(each.getModifiers())) {
                 errors.add(new Exception("Method " + each.getName()
-						+ " should be public"));
+                        + " should be public"));
             }
             if (each.getReturnType() != Void.TYPE) {
                 errors.add(new Exception("Method " + each.getName()
-						+ "should have a return type of void"));
+                        + "should have a return type of void"));
             }
             if (each.getParameterTypes().length != 0) {
                 errors.add(new Exception("Method " + each.getName()
-						+ " should have no parameters"));
+                        + " should have no parameters"));
             }
         }
     }

@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public class ImportsVisitor extends SymfinderVisitor {
 
-    List <ImportDeclaration> imports = new ArrayList <>();
     protected ITypeBinding thisClassBinding = null;
+    List<ImportDeclaration> imports = new ArrayList<>();
 
 
     public ImportsVisitor(NeoGraph neoGraph) {
@@ -22,7 +22,7 @@ public class ImportsVisitor extends SymfinderVisitor {
 
     @Override
     public boolean visit(ImportDeclaration node) {
-        if (! node.isStatic()) {
+        if (!node.isStatic()) {
             imports.add(node);
         }
         return true;
@@ -61,7 +61,7 @@ public class ImportsVisitor extends SymfinderVisitor {
      * @param typeBinding binding found by JDT for the type to check
      * @return String containing the real full class name
      */
-    protected Optional <String> getClassFullName(ITypeBinding typeBinding) {
+    protected Optional<String> getClassFullName(ITypeBinding typeBinding) {
         // If there is a type bound, it means that there is a capture binding, e.g. capture-of ? extends Object[]
         // Therefore, we do not use the binding of the field type but the binding of the superclass
         ITypeBinding binding = typeBinding;
@@ -74,13 +74,13 @@ public class ImportsVisitor extends SymfinderVisitor {
             return Optional.of(jdtClassName);
         }
         String className = getClassBaseName(binding.getName());
-        Optional <ImportDeclaration> first = imports.stream()
+        Optional<ImportDeclaration> first = imports.stream()
                 .filter(importDeclaration -> importDeclaration.getName().getFullyQualifiedName().endsWith("." + className))
                 .findFirst();
         if (first.isPresent()) {
             return Optional.of(first.get().getName().getFullyQualifiedName());
         }
-        Optional <Optional <Node>> first1 = imports.stream()
+        Optional<Optional<Node>> first1 = imports.stream()
                 .filter(ImportDeclaration::isOnDemand)
                 .map(importDeclaration -> neoGraph.getNodeWithNameInPackage(className, importDeclaration.getName().getFullyQualifiedName()))
                 .filter(Optional::isPresent)

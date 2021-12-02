@@ -28,6 +28,97 @@ import org.junit.runners.model.Statement;
  * Tests to exercise class-level rules.
  */
 public class ClassRulesTest {
+    private static final List<String> orderList = new LinkedList<String>();
+    private static final StringBuilder log = new StringBuilder();
+
+    @Test
+    public void ruleIsAppliedOnce() {
+        ExampleTestWithClassRule.counter.count = 0;
+        JUnitCore.runClasses(ExampleTestWithClassRule.class);
+        assertEquals(1, ExampleTestWithClassRule.counter.count);
+    }
+
+    @Test
+    public void ruleIsIntroducedAndEvaluatedOnSubclass() {
+        ExampleTestWithClassRule.counter.count = 0;
+        JUnitCore.runClasses(SubclassOfTestWithClassRule.class);
+        assertEquals(1, ExampleTestWithClassRule.counter.count);
+    }
+
+    @Test
+    public void customRuleIsAppliedOnce() {
+        ExampleTestWithCustomClassRule.counter.count = 0;
+        Result result = JUnitCore.runClasses(ExampleTestWithCustomClassRule.class);
+        assertTrue(result.wasSuccessful());
+        assertEquals(1, ExampleTestWithCustomClassRule.counter.count);
+    }
+
+    @Test
+    public void usesFieldAndMethodRule() {
+        orderList.clear();
+        assertThat(testResult(UsesFieldAndMethodRule.class), isSuccessful());
+    }
+
+    @Test
+    public void methodRuleIsAppliedOnce() {
+        MethodExampleTestWithClassRule.counter.count = 0;
+        JUnitCore.runClasses(MethodExampleTestWithClassRule.class);
+        assertEquals(1, MethodExampleTestWithClassRule.counter.count);
+    }
+
+    @Test
+    public void methodRuleIsIntroducedAndEvaluatedOnSubclass() {
+        MethodExampleTestWithClassRule.counter.count = 0;
+        JUnitCore.runClasses(MethodSubclassOfTestWithClassRule.class);
+        assertEquals(1, MethodExampleTestWithClassRule.counter.count);
+    }
+
+    @Test
+    public void methodCustomRuleIsAppliedOnce() {
+        MethodExampleTestWithCustomClassRule.counter.count = 0;
+        Result result = JUnitCore.runClasses(MethodExampleTestWithCustomClassRule.class);
+        assertTrue(result.wasSuccessful());
+        assertEquals(1, MethodExampleTestWithCustomClassRule.counter.count);
+    }
+
+    @Test
+    public void testCallMethodOnlyOnceRule() {
+        CallMethodOnlyOnceRule.countOfMethodCalls = 0;
+        assertTrue(JUnitCore.runClasses(CallMethodOnlyOnceRule.class).wasSuccessful());
+    }
+
+    @Test
+    public void classRuleOrdering() {
+        log.setLength(0);
+        Result result = JUnitCore.runClasses(ClassRuleOrdering.class);
+        assertTrue(result.wasSuccessful());
+        assertEquals(" outer.begin inner.begin bar foo inner.end outer.end", log.toString());
+    }
+
+    @Test
+    public void classRuleOrderingDefault() {
+        log.setLength(0);
+        Result result = JUnitCore.runClasses(ClassRuleOrderingDefault.class);
+        assertTrue(result.wasSuccessful());
+        assertEquals(" inner.begin outer.begin bar foo outer.end inner.end", log.toString());
+    }
+
+    @Test
+    public void classRulesModifiableListEmpty() {
+        log.setLength(0);
+        Result result = JUnitCore.runClasses(ClassRulesModifiableListEmpty.class);
+        assertTrue(result.wasSuccessful());
+        assertEquals(" fromCode.begin test fromCode.end", log.toString());
+    }
+
+    @Test
+    public void classRulesModifiableList() {
+        log.setLength(0);
+        Result result = JUnitCore.runClasses(ClassRulesModifiableList.class);
+        assertTrue(result.wasSuccessful());
+        assertEquals(" fromCode.begin classRule.begin test classRule.end fromCode.end", log.toString());
+    }
+
     public static class Counter extends ExternalResource {
         public int count = 0;
 
@@ -52,23 +143,9 @@ public class ClassRulesTest {
         }
     }
 
-    @Test
-    public void ruleIsAppliedOnce() {
-        ExampleTestWithClassRule.counter.count = 0;
-        JUnitCore.runClasses(ExampleTestWithClassRule.class);
-        assertEquals(1, ExampleTestWithClassRule.counter.count);
-    }
-
     public static class SubclassOfTestWithClassRule extends
             ExampleTestWithClassRule {
 
-    }
-
-    @Test
-    public void ruleIsIntroducedAndEvaluatedOnSubclass() {
-        ExampleTestWithClassRule.counter.count = 0;
-        JUnitCore.runClasses(SubclassOfTestWithClassRule.class);
-        assertEquals(1, ExampleTestWithClassRule.counter.count);
     }
 
     public static class CustomCounter implements TestRule {
@@ -100,17 +177,6 @@ public class ClassRulesTest {
         }
     }
 
-
-    @Test
-    public void customRuleIsAppliedOnce() {
-        ExampleTestWithCustomClassRule.counter.count = 0;
-        Result result = JUnitCore.runClasses(ExampleTestWithCustomClassRule.class);
-        assertTrue(result.wasSuccessful());
-        assertEquals(1, ExampleTestWithCustomClassRule.counter.count);
-    }
-
-    private static final List<String> orderList = new LinkedList<String>();
-
     private static class OrderTestRule implements TestRule {
         private String name;
 
@@ -131,12 +197,12 @@ public class ClassRulesTest {
 
     public static class UsesFieldAndMethodRule {
         @ClassRule
+        public static OrderTestRule orderField = new OrderTestRule("orderField");
+
+        @ClassRule
         public static OrderTestRule orderMethod() {
             return new OrderTestRule("orderMethod");
         }
-
-        @ClassRule
-        public static OrderTestRule orderField = new OrderTestRule("orderField");
 
         @Test
         public void foo() {
@@ -144,13 +210,6 @@ public class ClassRulesTest {
             assertEquals("orderMethod", orderList.get(1));
         }
     }
-
-    @Test
-    public void usesFieldAndMethodRule() {
-        orderList.clear();
-        assertThat(testResult(UsesFieldAndMethodRule.class), isSuccessful());
-    }
-
 
     public static class MethodExampleTestWithClassRule {
         private static Counter counter = new Counter();
@@ -171,23 +230,9 @@ public class ClassRulesTest {
         }
     }
 
-    @Test
-    public void methodRuleIsAppliedOnce() {
-        MethodExampleTestWithClassRule.counter.count = 0;
-        JUnitCore.runClasses(MethodExampleTestWithClassRule.class);
-        assertEquals(1, MethodExampleTestWithClassRule.counter.count);
-    }
-
     public static class MethodSubclassOfTestWithClassRule extends
             MethodExampleTestWithClassRule {
 
-    }
-
-    @Test
-    public void methodRuleIsIntroducedAndEvaluatedOnSubclass() {
-        MethodExampleTestWithClassRule.counter.count = 0;
-        JUnitCore.runClasses(MethodSubclassOfTestWithClassRule.class);
-        assertEquals(1, MethodExampleTestWithClassRule.counter.count);
     }
 
     public static class MethodExampleTestWithCustomClassRule {
@@ -209,28 +254,8 @@ public class ClassRulesTest {
         }
     }
 
-
-    @Test
-    public void methodCustomRuleIsAppliedOnce() {
-        MethodExampleTestWithCustomClassRule.counter.count = 0;
-        Result result = JUnitCore.runClasses(MethodExampleTestWithCustomClassRule.class);
-        assertTrue(result.wasSuccessful());
-        assertEquals(1, MethodExampleTestWithCustomClassRule.counter.count);
-    }
-
     public static class CallMethodOnlyOnceRule {
         static int countOfMethodCalls = 0;
-
-        private static class Dummy implements TestRule {
-            public Statement apply(final Statement base, Description description) {
-                return new Statement() {
-                    @Override
-                    public void evaluate() throws Throwable {
-                        base.evaluate();
-                    }
-                };
-            }
-        }
 
         @ClassRule
         public static Dummy both() {
@@ -242,15 +267,18 @@ public class ClassRulesTest {
         public void onlyOnce() {
             assertEquals(1, countOfMethodCalls);
         }
-    }
 
-    @Test
-    public void testCallMethodOnlyOnceRule() {
-        CallMethodOnlyOnceRule.countOfMethodCalls = 0;
-        assertTrue(JUnitCore.runClasses(CallMethodOnlyOnceRule.class).wasSuccessful());
+        private static class Dummy implements TestRule {
+            public Statement apply(final Statement base, Description description) {
+                return new Statement() {
+                    @Override
+                    public void evaluate() throws Throwable {
+                        base.evaluate();
+                    }
+                };
+            }
+        }
     }
-
-    private static final StringBuilder log = new StringBuilder();
 
     @FixMethodOrder(MethodSorters.NAME_ASCENDING)
     public static class ClassRuleOrdering {
@@ -273,14 +301,6 @@ public class ClassRulesTest {
         public void bar() {
             log.append(" bar");
         }
-    }
-
-    @Test
-    public void classRuleOrdering() {
-        log.setLength(0);
-        Result result = JUnitCore.runClasses(ClassRuleOrdering.class);
-        assertTrue(result.wasSuccessful());
-        assertEquals(" outer.begin inner.begin bar foo inner.end outer.end", log.toString());
     }
 
     @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -306,14 +326,6 @@ public class ClassRulesTest {
         }
     }
 
-    @Test
-    public void classRuleOrderingDefault() {
-        log.setLength(0);
-        Result result = JUnitCore.runClasses(ClassRuleOrderingDefault.class);
-        assertTrue(result.wasSuccessful());
-        assertEquals(" inner.begin outer.begin bar foo outer.end inner.end", log.toString());
-    }
-
     public static class RunnerWithClassRuleAddedProgrammatically extends BlockJUnit4ClassRunner {
         public RunnerWithClassRuleAddedProgrammatically(Class testClass) throws InitializationError {
             super(testClass);
@@ -335,14 +347,6 @@ public class ClassRulesTest {
         }
     }
 
-    @Test
-    public void classRulesModifiableListEmpty() {
-        log.setLength(0);
-        Result result = JUnitCore.runClasses(ClassRulesModifiableListEmpty.class);
-        assertTrue(result.wasSuccessful());
-        assertEquals(" fromCode.begin test fromCode.end", log.toString());
-    }
-
     @RunWith(RunnerWithClassRuleAddedProgrammatically.class)
     public static class ClassRulesModifiableList {
         @ClassRule
@@ -354,13 +358,5 @@ public class ClassRulesTest {
         public void test() {
             log.append(" test");
         }
-    }
-
-    @Test
-    public void classRulesModifiableList() {
-        log.setLength(0);
-        Result result = JUnitCore.runClasses(ClassRulesModifiableList.class);
-        assertTrue(result.wasSuccessful());
-        assertEquals(" fromCode.begin classRule.begin test classRule.end fromCode.end", log.toString());
     }
 }

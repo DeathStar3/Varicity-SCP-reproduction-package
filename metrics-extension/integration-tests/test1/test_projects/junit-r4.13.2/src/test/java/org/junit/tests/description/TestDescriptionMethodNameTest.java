@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
- *         Date: 03.05.14
+ * Date: 03.05.14
  */
 @RunWith(Parameterized.class)
 public class TestDescriptionMethodNameTest {

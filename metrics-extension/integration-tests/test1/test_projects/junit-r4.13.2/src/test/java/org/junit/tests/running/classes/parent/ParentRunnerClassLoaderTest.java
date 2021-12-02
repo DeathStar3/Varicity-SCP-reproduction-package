@@ -38,8 +38,8 @@ public class ParentRunnerClassLoaderTest {
 
         Description description = runner.getDescription();
         assertEquals("ParentRunner accept already instantiate Class<?> with tests, if we lost it instance, and will " +
-                "use Class.forName we can not find test class again, because tests can be " +
-                "located in different ClassLoader",
+                        "use Class.forName we can not find test class again, because tests can be " +
+                        "located in different ClassLoader",
                 description.getTestClass(), testClassWithOwnClassLoader
         );
     }
@@ -60,7 +60,7 @@ public class ParentRunnerClassLoaderTest {
         Class<?> result = description.getTestClass();
 
         assertEquals("Subclass of ParentRunner can override getName method and specify another test class for run, " +
-                "we should  maintain backwards compatibility with JUnit 4.12",
+                        "we should  maintain backwards compatibility with JUnit 4.12",
                 waitClass, result
         );
     }

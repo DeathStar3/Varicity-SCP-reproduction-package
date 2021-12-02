@@ -9,9 +9,9 @@ import org.junit.validator.ValidateWith;
 /**
  * Marks a test class or test method as belonging to one or more categories of tests.
  * The value is an array of arbitrary classes.
- *
+ * <p>
  * This annotation is only interpreted by the Categories runner (at present).
- *
+ * <p>
  * For example:
  * <pre>
  * public interface FastTests {}
@@ -37,7 +37,7 @@ import org.junit.validator.ValidateWith;
  * }
  * }
  * </pre>
- *
+ * <p>
  * For more usage, see code example on {@link Categories}.
  */
 @Retention(RetentionPolicy.RUNTIME)

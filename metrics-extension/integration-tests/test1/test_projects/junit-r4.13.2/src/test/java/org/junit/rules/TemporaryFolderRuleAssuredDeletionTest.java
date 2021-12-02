@@ -12,20 +12,6 @@ import org.junit.experimental.results.PrintableResult;
 
 public class TemporaryFolderRuleAssuredDeletionTest {
 
-    public static class TestClass {
-        static TemporaryFolder injectedRule;
-
-        @Rule
-        public TemporaryFolder folder = injectedRule;
-
-        @Test
-        public void alwaysPassesButDeletesRootFolder() {
-            //we delete the folder in the test so that it cannot be deleted by
-            //the rule
-            folder.getRoot().delete();
-        }
-    }
-
     @Test
     public void testFailsWhenCreatedFolderCannotBeDeletedButDeletionIsAssured() {
         TestClass.injectedRule = TemporaryFolder.builder()
@@ -41,5 +27,19 @@ public class TemporaryFolderRuleAssuredDeletionTest {
         TestClass.injectedRule = new TemporaryFolder();
         PrintableResult result = testResult(TestClass.class);
         assertThat(result, isSuccessful());
+    }
+
+    public static class TestClass {
+        static TemporaryFolder injectedRule;
+
+        @Rule
+        public TemporaryFolder folder = injectedRule;
+
+        @Test
+        public void alwaysPassesButDeletesRootFolder() {
+            //we delete the folder in the test so that it cannot be deleted by
+            //the rule
+            folder.getRoot().delete();
+        }
     }
 }

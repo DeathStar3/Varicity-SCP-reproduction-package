@@ -31,28 +31,7 @@ public class TestWatcherTest {
     @RunWith(Parameterized.class)
     public static class Callbacks {
 
-        @Parameters(name = "{0}")
-        public static Object[][] parameters() {
-            return new Object[][] {
-                    {
-                        FailingTest.class,
-                        "starting failed finished ",
-                        asList("starting failed", "test failed", "failed failed", "finished failed") },
-                    {
-                        InternalViolatedAssumptionTest.class,
-                        "starting deprecated skipped finished ",
-                        asList("starting failed", "don't run", "deprecated skipped failed", "finished failed") },
-                    {
-                        SuccessfulTest.class,
-                        "starting succeeded finished ",
-                        asList("starting failed", "succeeded failed", "finished failed") },
-                    {
-                        ViolatedAssumptionTest.class,
-                        "starting skipped finished ",
-                        asList("starting failed", "Test could not be skipped due to other failures", "skipped failed", "finished failed") }
-            };
-        }
-
+        private static TestRule selectedRule; //for injecting rule into test classes
         @Parameter(0)
         public Class<?> testClass;
 
@@ -62,7 +41,27 @@ public class TestWatcherTest {
         @Parameter(2)
         public List<String> expectedFailures;
 
-        private static TestRule selectedRule; //for injecting rule into test classes
+        @Parameters(name = "{0}")
+        public static Object[][] parameters() {
+            return new Object[][]{
+                    {
+                            FailingTest.class,
+                            "starting failed finished ",
+                            asList("starting failed", "test failed", "failed failed", "finished failed")},
+                    {
+                            InternalViolatedAssumptionTest.class,
+                            "starting deprecated skipped finished ",
+                            asList("starting failed", "don't run", "deprecated skipped failed", "finished failed")},
+                    {
+                            SuccessfulTest.class,
+                            "starting succeeded finished ",
+                            asList("starting failed", "succeeded failed", "finished failed")},
+                    {
+                            ViolatedAssumptionTest.class,
+                            "starting skipped finished ",
+                            asList("starting failed", "Test could not be skipped due to other failures", "skipped failed", "finished failed")}
+            };
+        }
 
         @Test
         public void correctCallbacksCalled() {
@@ -77,7 +76,7 @@ public class TestWatcherTest {
             selectedRule = new ErroneousTestWatcher();
             PrintableResult result = testResult(testClass);
             assertThat(result, failureCountIs(expectedFailures.size()));
-            for (String expectedFailure: expectedFailures) {
+            for (String expectedFailure : expectedFailures) {
                 assertThat(result, hasFailureContaining(expectedFailure));
             }
         }
@@ -188,6 +187,54 @@ public class TestWatcherTest {
 
     public static class CallbackArguments {
 
+        @Test
+        public void succeeded() {
+            JUnitCore.runClasses(Succeeded.class);
+            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Succeeded)",
+                    Succeeded.catchedDescription.getDisplayName());
+        }
+
+        @Test
+        public void failed() {
+            JUnitCore.runClasses(Failed.class);
+            assertEquals("test failed", Failed.catchedThrowable.getMessage());
+            assertEquals(AssertionError.class, Failed.catchedThrowable.getClass());
+            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Failed)",
+                    Failed.catchedDescription.getDisplayName());
+        }
+
+        @Test
+        public void skipped() {
+            JUnitCore.runClasses(Skipped.class);
+            assertEquals("test skipped", Skipped.catchedException.getMessage());
+            assertEquals(org.junit.AssumptionViolatedException.class, Skipped.catchedException.getClass());
+            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Skipped)",
+                    Skipped.catchedDescription.getDisplayName());
+        }
+
+        @Test
+        public void deprecatedSkipped() {
+            JUnitCore.runClasses(DeprecatedSkipped.class);
+            assertEquals("test skipped", DeprecatedSkipped.catchedException.getMessage());
+            assertEquals(AssumptionViolatedException.class, DeprecatedSkipped.catchedException.getClass());
+            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$DeprecatedSkipped)",
+                    DeprecatedSkipped.catchedDescription.getDisplayName());
+        }
+
+        @Test
+        public void starting() {
+            JUnitCore.runClasses(Starting.class);
+            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Starting)",
+                    Starting.catchedDescription.getDisplayName());
+        }
+
+        @Test
+        public void finished() {
+            JUnitCore.runClasses(Finished.class);
+            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Finished)",
+                    Finished.catchedDescription.getDisplayName());
+        }
+
         public static class Succeeded {
             private static Description catchedDescription;
 
@@ -202,13 +249,6 @@ public class TestWatcherTest {
             @Test
             public void test() {
             }
-        }
-
-        @Test
-        public void succeeded() {
-            JUnitCore.runClasses(Succeeded.class);
-            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Succeeded)",
-                    Succeeded.catchedDescription.getDisplayName());
         }
 
         public static class Failed {
@@ -230,15 +270,6 @@ public class TestWatcherTest {
             }
         }
 
-        @Test
-        public void failed() {
-            JUnitCore.runClasses(Failed.class);
-            assertEquals("test failed", Failed.catchedThrowable.getMessage());
-            assertEquals(AssertionError.class, Failed.catchedThrowable.getClass());
-            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Failed)",
-                    Failed.catchedDescription.getDisplayName());
-        }
-
         public static class Skipped {
             private static Description catchedDescription;
             private static org.junit.AssumptionViolatedException catchedException;
@@ -256,15 +287,6 @@ public class TestWatcherTest {
             public void test() {
                 assumeTrue("test skipped", false);
             }
-        }
-
-        @Test
-        public void skipped() {
-            JUnitCore.runClasses(Skipped.class);
-            assertEquals("test skipped", Skipped.catchedException.getMessage());
-            assertEquals(org.junit.AssumptionViolatedException.class, Skipped.catchedException.getClass());
-            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Skipped)",
-                    Skipped.catchedDescription.getDisplayName());
         }
 
         public static class DeprecatedSkipped {
@@ -288,15 +310,6 @@ public class TestWatcherTest {
             }
         }
 
-        @Test
-        public void deprecatedSkipped() {
-            JUnitCore.runClasses(DeprecatedSkipped.class);
-            assertEquals("test skipped", DeprecatedSkipped.catchedException.getMessage());
-            assertEquals(AssumptionViolatedException.class, DeprecatedSkipped.catchedException.getClass());
-            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$DeprecatedSkipped)",
-                    DeprecatedSkipped.catchedDescription.getDisplayName());
-        }
-
         public static class Starting {
             private static Description catchedDescription;
 
@@ -311,13 +324,6 @@ public class TestWatcherTest {
             @Test
             public void test() {
             }
-        }
-
-        @Test
-        public void starting() {
-            JUnitCore.runClasses(Starting.class);
-            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Starting)",
-                    Starting.catchedDescription.getDisplayName());
         }
 
         public static class Finished {
@@ -335,19 +341,26 @@ public class TestWatcherTest {
             public void test() {
             }
         }
-
-        @Test
-        public void finished() {
-            JUnitCore.runClasses(Finished.class);
-            assertEquals("test(org.junit.rules.TestWatcherTest$CallbackArguments$Finished)",
-                    Finished.catchedDescription.getDisplayName());
-        }
     }
 
     //The following tests check the information in TestWatcher's Javadoc
     //regarding interplay with other rules.
     public static class InterplayWithOtherRules {
         private static StringBuilder log;
+
+        @Test
+        public void expectedExceptionIsSeenAsSuccessfulTest() {
+            log = new StringBuilder();
+            JUnitCore.runClasses(ExpectedExceptionTest.class);
+            assertEquals("starting succeeded finished ", log.toString());
+        }
+
+        @Test
+        public void testIsSeenAsFailedBecauseOfCollectedError() {
+            log = new StringBuilder();
+            JUnitCore.runClasses(ErrorCollectorTest.class);
+            assertEquals("starting failed finished ", log.toString());
+        }
 
         public static class ExpectedExceptionTest {
             @Rule(order = Integer.MIN_VALUE)
@@ -365,13 +378,6 @@ public class TestWatcherTest {
             }
         }
 
-        @Test
-        public void expectedExceptionIsSeenAsSuccessfulTest() {
-            log = new StringBuilder();
-            JUnitCore.runClasses(ExpectedExceptionTest.class);
-            assertEquals("starting succeeded finished ", log.toString());
-        }
-
         public static class ErrorCollectorTest {
             @Rule(order = Integer.MIN_VALUE)
             //the field name must be alphabetically lower than "collector" in
@@ -385,13 +391,6 @@ public class TestWatcherTest {
             public void test() {
                 collector.addError(new RuntimeException("expected exception"));
             }
-        }
-
-        @Test
-        public void testIsSeenAsFailedBecauseOfCollectedError() {
-            log = new StringBuilder();
-            JUnitCore.runClasses(ErrorCollectorTest.class);
-            assertEquals("starting failed finished ", log.toString());
         }
     }
 }

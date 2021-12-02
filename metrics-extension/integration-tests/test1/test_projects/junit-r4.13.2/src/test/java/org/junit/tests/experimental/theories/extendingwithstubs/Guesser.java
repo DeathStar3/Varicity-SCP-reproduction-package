@@ -14,6 +14,69 @@ import org.hamcrest.Description;
 import org.junit.internal.AssumptionViolatedException;
 
 public class Guesser<T> extends ReguessableValue {
+    private final GuessMap guesses;
+    private final Class<? extends T> type;
+
+    public Guesser(Class<? extends T> type) {
+        this(type, new GuessMap());
+    }
+
+    public Guesser(Class<? extends T> type2, GuessMap guesses) {
+        this.type = type2;
+        this.guesses = guesses;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T getProxy() {
+        return (T) Proxy.newProxyInstance(getClass().getClassLoader(),
+                new Class[]{getType()}, guesses);
+    }
+
+    @Override
+    public List<ReguessableValue> reguesses(AssumptionViolatedException e) {
+        final ArrayList<ReguessableValue> returnThis = new ArrayList<ReguessableValue>();
+        e.describeTo(new BaseDescription() {
+            boolean expectedSeen = false;
+            Object expected = null;
+
+            @Override
+            protected void append(char arg0) {
+            }
+
+            @Override
+            public Description appendValue(Object value) {
+                noteValue(value);
+                return super.appendValue(value);
+            }
+
+            private void noteValue(Object value) {
+                if (!expectedSeen) {
+                    expected = value;
+                    expectedSeen = true;
+                    return;
+                }
+
+                GuessMap newGuesses = guesses.replaceGuess(expected, value);
+                returnThis.add(new Guesser<T>(getType(), newGuesses));
+            }
+        });
+        return returnThis;
+    }
+
+    @Override
+    public Object getValue() throws CouldNotGenerateValueException {
+        return getProxy();
+    }
+
+    public Class<? extends T> getType() {
+        return type;
+    }
+
+    @Override
+    public String getDescription() throws CouldNotGenerateValueException {
+        return "guesser[" + type + "]";
+    }
+
     static class GuessMap extends HashMap<MethodCall, Object> implements
             InvocationHandler {
         private static final long serialVersionUID = 1L;
@@ -57,70 +120,6 @@ public class Guesser<T> extends ReguessableValue {
                 throws Throwable {
             return getGuess(new MethodCall(method, args));
         }
-    }
-
-    private final GuessMap guesses;
-
-    private final Class<? extends T> type;
-
-    public Guesser(Class<? extends T> type) {
-        this(type, new GuessMap());
-    }
-
-    public Guesser(Class<? extends T> type2, GuessMap guesses) {
-        this.type = type2;
-        this.guesses = guesses;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T getProxy() {
-        return (T) Proxy.newProxyInstance(getClass().getClassLoader(),
-                new Class[]{getType()}, guesses);
-    }
-
-    @Override
-    public List<ReguessableValue> reguesses(AssumptionViolatedException e) {
-        final ArrayList<ReguessableValue> returnThis = new ArrayList<ReguessableValue>();
-        e.describeTo(new BaseDescription() {
-            @Override
-            protected void append(char arg0) {
-            }
-
-            boolean expectedSeen = false;
-            Object expected = null;
-
-            @Override
-            public Description appendValue(Object value) {
-                noteValue(value);
-                return super.appendValue(value);
-            }
-
-            private void noteValue(Object value) {
-                if (!expectedSeen) {
-                    expected = value;
-                    expectedSeen = true;
-                    return;
-                }
-
-                GuessMap newGuesses = guesses.replaceGuess(expected, value);
-                returnThis.add(new Guesser<T>(getType(), newGuesses));
-            }
-        });
-        return returnThis;
-    }
-
-    @Override
-    public Object getValue() throws CouldNotGenerateValueException {
-        return getProxy();
-    }
-
-    public Class<? extends T> getType() {
-        return type;
-    }
-
-    @Override
-    public String getDescription() throws CouldNotGenerateValueException {
-        return "guesser[" + type + "]";
     }
 
 }

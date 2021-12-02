@@ -14,7 +14,7 @@ import org.junit.runner.manipulation.Ordering;
 
 /**
  * A RunnerBuilder is a strategy for constructing runners for classes.
- *
+ * <p>
  * Only writers of custom runners should use <code>RunnerBuilder</code>s.  A custom runner class with a constructor taking
  * a <code>RunnerBuilder</code> parameter will be passed the instance of <code>RunnerBuilder</code> used to build that runner itself.
  * For example,
@@ -25,7 +25,7 @@ import org.junit.runner.manipulation.Ordering;
  * \@SuiteSpecFile("mysuite.txt")
  * class MySuite {}
  * </pre>
- *
+ * <p>
  * The implementation of TextFileSuite might include:
  *
  * <pre>

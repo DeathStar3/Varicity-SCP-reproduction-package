@@ -14,36 +14,6 @@ import org.junit.runner.notification.Failure;
 
 @SuppressWarnings("deprecation")
 public class BadlyFormedClassesTest {
-    public static class FaultyConstructor {
-        public FaultyConstructor() throws Exception {
-            throw new Exception("Thrown during construction");
-        }
-
-        @Test
-        public void someTest() {
-            /*
-                * Empty test just to fool JUnit and IDEs into running this class as
-                * a JUnit test
-                */
-        }
-    }
-
-    @RunWith(JUnit4ClassRunner.class)
-    public static class BadBeforeMethodWithLegacyRunner {
-        @Before
-        void before() {
-
-        }
-
-        @Test
-        public void someTest() {
-        }
-    }
-
-    public static class NoTests {
-        // class without tests
-    }
-
     @Test
     public void constructorException() {
         String message = exceptionMessageFrom(FaultyConstructor.class);
@@ -67,5 +37,35 @@ public class BadlyFormedClassesTest {
         Failure failure = result.getFailures().get(0);
         String message = failure.getException().getMessage();
         return message;
+    }
+
+    public static class FaultyConstructor {
+        public FaultyConstructor() throws Exception {
+            throw new Exception("Thrown during construction");
+        }
+
+        @Test
+        public void someTest() {
+            /*
+             * Empty test just to fool JUnit and IDEs into running this class as
+             * a JUnit test
+             */
+        }
+    }
+
+    @RunWith(JUnit4ClassRunner.class)
+    public static class BadBeforeMethodWithLegacyRunner {
+        @Before
+        void before() {
+
+        }
+
+        @Test
+        public void someTest() {
+        }
+    }
+
+    public static class NoTests {
+        // class without tests
     }
 }

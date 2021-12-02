@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 public class SampleJUnit4Tests {
 
     public static class TestWithOneThrowingTestMethod {
-        
+
         @Test
         public void alwaysThrows() {
             new FakeClassUnderTest().throwsExceptionWithoutCause();
@@ -25,7 +25,7 @@ public class SampleJUnit4Tests {
     }
 
     public static class TestWithOneThrowingTestMethodWithCause {
-        
+
         @Test
         public void alwaysThrows() {
             new FakeClassUnderTest().throwsExceptionWithCause();
@@ -112,7 +112,7 @@ public class SampleJUnit4Tests {
     }
 
     private static class FakeClassUnderTest {
-        
+
         public void throwsExceptionWithCause() {
             doThrowExceptionWithCause();
         }

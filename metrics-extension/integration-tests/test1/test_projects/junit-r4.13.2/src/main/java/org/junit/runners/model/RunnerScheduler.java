@@ -3,7 +3,7 @@ package org.junit.runners.model;
 /**
  * Represents a strategy for scheduling when individual test methods
  * should be run (in serial or parallel)
- *
+ * <p>
  * WARNING: still experimental, may go away.
  *
  * @since 4.7

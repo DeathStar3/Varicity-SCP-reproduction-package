@@ -30,75 +30,6 @@ public class DisableOnDebugTest {
     private static final List<String> POST_JAVA5_DEBUG_ARGUMENTS = Arrays
             .asList("-agentlib:jdwp=transport=dt_socket,server=y,address=8000");
 
-    /**
-     * Nasty rule that always fails
-     */
-    private static class FailOnExecution implements TestRule {
-
-        public Statement apply(Statement base,
-                Description description) {
-            return new Statement() {
-
-                @Override
-                public void evaluate() throws Throwable {
-                    throw new AssertionError();
-                }
-            };
-        }
-
-    }
-
-    public abstract static class AbstractDisableOnDebugTest {
-
-        @Rule
-        public TestRule failOnExecution;
-
-        public AbstractDisableOnDebugTest(List<String> arguments) {
-            this.failOnExecution = new DisableOnDebug(new FailOnExecution(),
-                    arguments);
-        }
-
-        @Test
-        public void test() {
-        }
-    }
-
-    public static class PreJava5DebugArgumentsTest extends
-            AbstractDisableOnDebugTest {
-
-        public PreJava5DebugArgumentsTest() {
-            super(PRE_JAVA5_DEBUG_ARGUMENTS);
-        }
-
-    }
-
-    public static class PreJava5DebugArgumentsReversedTest extends
-            AbstractDisableOnDebugTest {
-
-        public PreJava5DebugArgumentsReversedTest() {
-            super(PRE_JAVA5_DEBUG_ARGUMENTS_IN_REVERSE_ORDER);
-        }
-
-    }
-
-    public static class PostJava5DebugArgumentsTest extends
-            AbstractDisableOnDebugTest {
-
-        public PostJava5DebugArgumentsTest() {
-            super(POST_JAVA5_DEBUG_ARGUMENTS);
-        }
-
-    }
-
-    public static class WithoutDebugArgumentsTest extends
-            AbstractDisableOnDebugTest {
-
-        public WithoutDebugArgumentsTest() {
-            super(WITHOUT_DEBUG_ARGUMENTS);
-        }
-
-    }
-
     @Test
     public void givenPreJava5DebugArgumentsIsDebuggingShouldReturnTrue() {
         DisableOnDebug subject = new DisableOnDebug(
@@ -159,6 +90,75 @@ public class DisableOnDebugTest {
         Result result = core.run(WithoutDebugArgumentsTest.class);
         assertEquals("Should run the test", 1, result.getRunCount());
         assertEquals("Test should have failed", 1, result.getFailureCount());
+    }
+
+    /**
+     * Nasty rule that always fails
+     */
+    private static class FailOnExecution implements TestRule {
+
+        public Statement apply(Statement base,
+                               Description description) {
+            return new Statement() {
+
+                @Override
+                public void evaluate() throws Throwable {
+                    throw new AssertionError();
+                }
+            };
+        }
+
+    }
+
+    public abstract static class AbstractDisableOnDebugTest {
+
+        @Rule
+        public TestRule failOnExecution;
+
+        public AbstractDisableOnDebugTest(List<String> arguments) {
+            this.failOnExecution = new DisableOnDebug(new FailOnExecution(),
+                    arguments);
+        }
+
+        @Test
+        public void test() {
+        }
+    }
+
+    public static class PreJava5DebugArgumentsTest extends
+            AbstractDisableOnDebugTest {
+
+        public PreJava5DebugArgumentsTest() {
+            super(PRE_JAVA5_DEBUG_ARGUMENTS);
+        }
+
+    }
+
+    public static class PreJava5DebugArgumentsReversedTest extends
+            AbstractDisableOnDebugTest {
+
+        public PreJava5DebugArgumentsReversedTest() {
+            super(PRE_JAVA5_DEBUG_ARGUMENTS_IN_REVERSE_ORDER);
+        }
+
+    }
+
+    public static class PostJava5DebugArgumentsTest extends
+            AbstractDisableOnDebugTest {
+
+        public PostJava5DebugArgumentsTest() {
+            super(POST_JAVA5_DEBUG_ARGUMENTS);
+        }
+
+    }
+
+    public static class WithoutDebugArgumentsTest extends
+            AbstractDisableOnDebugTest {
+
+        public WithoutDebugArgumentsTest() {
+            super(WITHOUT_DEBUG_ARGUMENTS);
+        }
+
     }
 
 }

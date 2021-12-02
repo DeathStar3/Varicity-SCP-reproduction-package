@@ -22,17 +22,16 @@ import org.junit.runner.RunWith;
 @RunWith(Theories.class)
 public class ParameterSignatureTest {
     @DataPoint
+    public static int ZERO = 0;
+    @DataPoint
+    public static int ONE = 1;
+
+    @DataPoint
     public static Method getType() throws SecurityException,
             NoSuchMethodException {
         return ParameterSignatureTest.class.getMethod("getType", Method.class,
                 int.class);
     }
-
-    @DataPoint
-    public static int ZERO = 0;
-
-    @DataPoint
-    public static int ONE = 1;
 
     @Theory
     public void getType(Method method, int index) {
@@ -53,13 +52,13 @@ public class ParameterSignatureTest {
         assertThat(annotations,
                 CoreMatchers.<TestedOn>hasItem(isA(TestedOn.class)));
     }
-    
+
     public void intMethod(int param) {
     }
-    
+
     public void integerMethod(Integer param) {
     }
-    
+
     public void numberMethod(Number param) {
     }
 
@@ -71,7 +70,7 @@ public class ParameterSignatureTest {
 
         assertTrue(integerSignature.canAcceptType(int.class));
     }
-    
+
     @Test
     public void primitiveTypesShouldBeAcceptedAsWrapperTypeAssignables() throws Exception {
         List<ParameterSignature> signatures = ParameterSignature
@@ -80,7 +79,7 @@ public class ParameterSignatureTest {
 
         assertTrue(numberSignature.canAcceptType(int.class));
     }
-    
+
     @Test
     public void wrapperTypesShouldBeAcceptedAsPrimitiveTypes() throws Exception {
         List<ParameterSignature> signatures = ParameterSignature

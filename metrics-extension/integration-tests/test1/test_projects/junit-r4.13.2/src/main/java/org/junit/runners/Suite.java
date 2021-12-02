@@ -25,45 +25,12 @@ import org.junit.runners.model.RunnerBuilder;
  * @since 4.0
  */
 public class Suite extends ParentRunner<Runner> {
-    /**
-     * Returns an empty suite.
-     */
-    public static Runner emptySuite() {
-        try {
-            return new Suite((Class<?>) null, new Class<?>[0]);
-        } catch (InitializationError e) {
-            throw new RuntimeException("This shouldn't be possible");
-        }
-    }
-
-    /**
-     * The <code>SuiteClasses</code> annotation specifies the classes to be run when a class
-     * annotated with <code>@RunWith(Suite.class)</code> is run.
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    @Inherited
-    public @interface SuiteClasses {
-        /**
-         * @return the classes to be run
-         */
-        Class<?>[] value();
-    }
-
-    private static Class<?>[] getAnnotatedClasses(Class<?> klass) throws InitializationError {
-        SuiteClasses annotation = klass.getAnnotation(SuiteClasses.class);
-        if (annotation == null) {
-            throw new InitializationError(String.format("class '%s' must have a SuiteClasses annotation", klass.getName()));
-        }
-        return annotation.value();
-    }
-
     private final List<Runner> runners;
 
     /**
      * Called reflectively on classes annotated with <code>@RunWith(Suite.class)</code>
      *
-     * @param klass the root class
+     * @param klass   the root class
      * @param builder builds runners for classes in the suite
      */
     public Suite(Class<?> klass, RunnerBuilder builder) throws InitializationError {
@@ -84,7 +51,7 @@ public class Suite extends ParentRunner<Runner> {
     /**
      * Call this when the default builder is good enough. Left in for compatibility with JUnit 4.4.
      *
-     * @param klass the root of the suite
+     * @param klass        the root of the suite
      * @param suiteClasses the classes in the suite
      */
     protected Suite(Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
@@ -94,8 +61,8 @@ public class Suite extends ParentRunner<Runner> {
     /**
      * Called by this class and subclasses once the classes making up the suite have been determined
      *
-     * @param builder builds runners for classes in the suite
-     * @param klass the root of the suite
+     * @param builder      builds runners for classes in the suite
+     * @param klass        the root of the suite
      * @param suiteClasses the classes in the suite
      */
     protected Suite(RunnerBuilder builder, Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
@@ -105,12 +72,31 @@ public class Suite extends ParentRunner<Runner> {
     /**
      * Called by this class and subclasses once the runners making up the suite have been determined
      *
-     * @param klass root of the suite
+     * @param klass   root of the suite
      * @param runners for each class in the suite, a {@link Runner}
      */
     protected Suite(Class<?> klass, List<Runner> runners) throws InitializationError {
         super(klass);
         this.runners = Collections.unmodifiableList(runners);
+    }
+
+    /**
+     * Returns an empty suite.
+     */
+    public static Runner emptySuite() {
+        try {
+            return new Suite((Class<?>) null, new Class<?>[0]);
+        } catch (InitializationError e) {
+            throw new RuntimeException("This shouldn't be possible");
+        }
+    }
+
+    private static Class<?>[] getAnnotatedClasses(Class<?> klass) throws InitializationError {
+        SuiteClasses annotation = klass.getAnnotation(SuiteClasses.class);
+        if (annotation == null) {
+            throw new InitializationError(String.format("class '%s' must have a SuiteClasses annotation", klass.getName()));
+        }
+        return annotation.value();
     }
 
     @Override
@@ -126,5 +112,19 @@ public class Suite extends ParentRunner<Runner> {
     @Override
     protected void runChild(Runner runner, final RunNotifier notifier) {
         runner.run(notifier);
+    }
+
+    /**
+     * The <code>SuiteClasses</code> annotation specifies the classes to be run when a class
+     * annotated with <code>@RunWith(Suite.class)</code> is run.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    @Inherited
+    public @interface SuiteClasses {
+        /**
+         * @return the classes to be run
+         */
+        Class<?>[] value();
     }
 }

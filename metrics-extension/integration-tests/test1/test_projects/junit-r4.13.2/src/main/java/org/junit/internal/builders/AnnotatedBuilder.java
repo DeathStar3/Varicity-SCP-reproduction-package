@@ -99,7 +99,7 @@ public class AnnotatedBuilder extends RunnerBuilder {
     }
 
     public Runner buildRunner(Class<? extends Runner> runnerClass,
-            Class<?> testClass) throws Exception {
+                              Class<?> testClass) throws Exception {
         try {
             return runnerClass.getConstructor(Class.class).newInstance(testClass);
         } catch (NoSuchMethodException e) {

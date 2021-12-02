@@ -44,7 +44,7 @@ export class Config implements ConfigInterface {
     blacklist: string[];
     clones: ConfigClones;
     force_color: string; // HEX color string
-    api_classes: Map<string, string[]>;
+    api_classes: string[];
     variables: {
         width: string;
         height: string;

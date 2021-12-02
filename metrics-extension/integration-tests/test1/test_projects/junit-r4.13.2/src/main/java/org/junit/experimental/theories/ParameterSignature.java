@@ -11,9 +11,16 @@ import java.util.List;
 import java.util.Map;
 
 public class ParameterSignature {
-    
+
     private static final Map<Class<?>, Class<?>> CONVERTABLE_TYPES_MAP = buildConvertableTypesMap();
-    
+    private final Class<?> type;
+    private final Annotation[] annotations;
+
+    private ParameterSignature(Class<?> type, Annotation[] annotations) {
+        this.type = type;
+        this.annotations = annotations;
+    }
+
     private static Map<Class<?>, Class<?>> buildConvertableTypesMap() {
         Map<Class<?>, Class<?>> map = new HashMap<Class<?>, Class<?>>();
 
@@ -28,12 +35,12 @@ public class ParameterSignature {
 
         return Collections.unmodifiableMap(map);
     }
-    
+
     private static <T> void putSymmetrically(Map<T, T> map, T a, T b) {
         map.put(a, b);
         map.put(b, a);
     }
-    
+
     public static ArrayList<ParameterSignature> signatures(Method method) {
         return signatures(method.getParameterTypes(), method
                 .getParameterAnnotations());
@@ -54,15 +61,6 @@ public class ParameterSignature {
         return sigs;
     }
 
-    private final Class<?> type;
-
-    private final Annotation[] annotations;
-
-    private ParameterSignature(Class<?> type, Annotation[] annotations) {
-        this.type = type;
-        this.annotations = annotations;
-    }
-
     public boolean canAcceptValue(Object candidate) {
         return (candidate == null) ? !type.isPrimitive() : canAcceptType(candidate.getClass());
     }
@@ -71,7 +69,7 @@ public class ParameterSignature {
         return type.isAssignableFrom(candidate) ||
                 isAssignableViaTypeConversion(type, candidate);
     }
-    
+
     public boolean canPotentiallyAcceptType(Class<?> candidate) {
         return candidate.isAssignableFrom(type) ||
                 isAssignableViaTypeConversion(candidate, type) ||

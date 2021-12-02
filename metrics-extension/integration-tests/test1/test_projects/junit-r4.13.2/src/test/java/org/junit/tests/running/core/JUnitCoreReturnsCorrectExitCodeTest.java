@@ -8,13 +8,6 @@ import org.junit.runner.JUnitCore;
 
 public class JUnitCoreReturnsCorrectExitCodeTest {
 
-    public static class Fail {
-        @Test
-        public void kaboom() {
-            fail();
-        }
-    }
-
     @Test
     public void failureCausesExitCodeOf1() throws Exception {
         runClass(getClass().getName() + "$Fail", 1);
@@ -23,12 +16,6 @@ public class JUnitCoreReturnsCorrectExitCodeTest {
     @Test
     public void missingClassCausesExitCodeOf1() throws Exception {
         runClass("Foo", 1);
-    }
-
-    public static class Succeed {
-        @Test
-        public void peacefulSilence() {
-        }
     }
 
     @Test
@@ -43,5 +30,18 @@ public class JUnitCoreReturnsCorrectExitCodeTest {
             }
         });
         assertEquals(Integer.valueOf(returnCode), exitValue);
+    }
+
+    public static class Fail {
+        @Test
+        public void kaboom() {
+            fail();
+        }
+    }
+
+    public static class Succeed {
+        @Test
+        public void peacefulSilence() {
+        }
     }
 }

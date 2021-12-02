@@ -15,19 +15,6 @@ public class TextFeedbackTest extends TestCase {
     OutputStream output;
     TestRunner runner;
 
-    static class TestResultPrinter extends ResultPrinter {
-        TestResultPrinter(PrintStream writer) {
-            super(writer);
-        }
-
-        /* Spoof printing time so the tests are deterministic
-           */
-        @Override
-        protected String elapsedTimeAsString(long runTime) {
-            return "0";
-        }
-    }
-
     public static void main(String[] args) {
         TestRunner.run(TextFeedbackTest.class);
     }
@@ -43,7 +30,6 @@ public class TextFeedbackTest extends TestCase {
         runner.doRun(new TestSuite());
         assertEquals(expected, output.toString());
     }
-
 
     public void testOneTest() {
         String expected = expected(new String[]{".", "Time: 0", "", "OK (1 test)", ""});
@@ -121,6 +107,19 @@ public class TextFeedbackTest extends TestCase {
             expectedWriter.println(lines[i]);
         }
         return expected.toString();
+    }
+
+    static class TestResultPrinter extends ResultPrinter {
+        TestResultPrinter(PrintStream writer) {
+            super(writer);
+        }
+
+        /* Spoof printing time so the tests are deterministic
+         */
+        @Override
+        protected String elapsedTimeAsString(long runTime) {
+            return "0";
+        }
     }
 
 }

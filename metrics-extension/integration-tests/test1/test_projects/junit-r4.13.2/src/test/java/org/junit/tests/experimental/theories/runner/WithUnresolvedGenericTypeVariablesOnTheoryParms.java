@@ -27,6 +27,61 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         assertThat(result, isSuccessful());
     }
 
+    @Test
+    public void whereTypeVariableIsOnTheoryParm() {
+        PrintableResult result = testResult(TypeVariableOnTheoryParm.class);
+        assertThat(result, hasSingleFailureContaining("unresolved type variable T"));
+    }
+
+    @Test
+    public void whereTypeVariableIsOnParameterizedTheoryParm() {
+        PrintableResult result = testResult(TypeVariableOnParameterizedTheoryParm.class);
+        assertThat(result, hasSingleFailureContaining("unresolved type variable T"));
+    }
+
+    @Test
+    public void whereTypeVariableIsOnWildcardUpperBoundOnTheoryParm() {
+        PrintableResult result = testResult(TypeVariableOnWildcardUpperBoundOnTheoryParm.class);
+        assertThat(result, hasSingleFailureContaining("unresolved type variable U"));
+    }
+
+    @Test
+    public void whereTypeVariableIsOnWildcardLowerBoundOnTheoryParm() {
+        PrintableResult result = testResult(TypeVariableOnWildcardLowerBoundOnTheoryParm.class);
+        assertThat(result, hasSingleFailureContaining("unresolved type variable V"));
+    }
+
+    @Test
+    public void whereTypeVariableIsOnArrayTypeOnTheoryParm() {
+        PrintableResult result = testResult(TypeVariableOnArrayTypeOnTheoryParm.class);
+        assertThat(result, hasSingleFailureContaining("unresolved type variable T"));
+    }
+
+    @Test
+    public void whereTypeVariableIsOnComponentOfArrayTypeOnTheoryParm() {
+        PrintableResult result = testResult(TypeVariableOnComponentOfArrayTypeOnTheoryParm.class);
+        assertThat(result, hasSingleFailureContaining("unresolved type variable U"));
+    }
+
+    @Test
+    public void whereTypeVariableIsOnTheoryClass() {
+        PrintableResult result = testResult(TypeVariableOnTheoryClass.class);
+        assertThat(result, hasSingleFailureContaining("unresolved type variable T"));
+    }
+
+    @Test
+    public void whereTypeVariablesAbound() {
+        PrintableResult result = testResult(TypeVariablesAbound.class);
+        assertThat(result, failureCountIs(1));
+        assertThat(result, hasFailureContaining("unresolved type variable A"));
+        assertThat(result, hasFailureContaining("unresolved type variable B"));
+        assertThat(result, hasFailureContaining("unresolved type variable C"));
+        assertThat(result, hasFailureContaining("unresolved type variable D"));
+        assertThat(result, hasFailureContaining("unresolved type variable E"));
+        assertThat(result, hasFailureContaining("unresolved type variable F"));
+        assertThat(result, hasFailureContaining("unresolved type variable G"));
+    }
+
     @RunWith(Theories.class)
     public static class TypeVariableOnTheoryOnly {
         @DataPoint
@@ -35,12 +90,6 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         @Theory
         public <T> void forItems(Collection<?> items) {
         }
-    }
-
-    @Test
-    public void whereTypeVariableIsOnTheoryParm() {
-        PrintableResult result = testResult(TypeVariableOnTheoryParm.class);
-        assertThat(result, hasSingleFailureContaining("unresolved type variable T"));
     }
 
     @RunWith(Theories.class)
@@ -53,12 +102,6 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         }
     }
 
-    @Test
-    public void whereTypeVariableIsOnParameterizedTheoryParm() {
-        PrintableResult result = testResult(TypeVariableOnParameterizedTheoryParm.class);
-        assertThat(result, hasSingleFailureContaining("unresolved type variable T"));
-    }
-
     @RunWith(Theories.class)
     public static class TypeVariableOnParameterizedTheoryParm {
         @DataPoint
@@ -67,12 +110,6 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         @Theory
         public <T> void forItems(Collection<T> items) {
         }
-    }
-
-    @Test
-    public void whereTypeVariableIsOnWildcardUpperBoundOnTheoryParm() {
-        PrintableResult result = testResult(TypeVariableOnWildcardUpperBoundOnTheoryParm.class);
-        assertThat(result, hasSingleFailureContaining("unresolved type variable U"));
     }
 
     @RunWith(Theories.class)
@@ -85,12 +122,6 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         }
     }
 
-    @Test
-    public void whereTypeVariableIsOnWildcardLowerBoundOnTheoryParm() {
-        PrintableResult result = testResult(TypeVariableOnWildcardLowerBoundOnTheoryParm.class);
-        assertThat(result, hasSingleFailureContaining("unresolved type variable V"));
-    }
-
     @RunWith(Theories.class)
     public static class TypeVariableOnWildcardLowerBoundOnTheoryParm {
         @DataPoint
@@ -99,12 +130,6 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         @Theory
         public <V> void forItems(Collection<? super V> items) {
         }
-    }
-
-    @Test
-    public void whereTypeVariableIsOnArrayTypeOnTheoryParm() {
-        PrintableResult result = testResult(TypeVariableOnArrayTypeOnTheoryParm.class);
-        assertThat(result, hasSingleFailureContaining("unresolved type variable T"));
     }
 
     @RunWith(Theories.class)
@@ -117,12 +142,6 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         @Theory
         public <T> void forItems(T[] items) {
         }
-    }
-
-    @Test
-    public void whereTypeVariableIsOnComponentOfArrayTypeOnTheoryParm() {
-        PrintableResult result = testResult(TypeVariableOnComponentOfArrayTypeOnTheoryParm.class);
-        assertThat(result, hasSingleFailureContaining("unresolved type variable U"));
     }
 
     @RunWith(Theories.class)
@@ -140,12 +159,6 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         }
     }
 
-    @Test
-    public void whereTypeVariableIsOnTheoryClass() {
-        PrintableResult result = testResult(TypeVariableOnTheoryClass.class);
-        assertThat(result, hasSingleFailureContaining("unresolved type variable T"));
-    }
-
     @RunWith(Theories.class)
     public static class TypeVariableOnTheoryClass<T> {
         @DataPoint
@@ -156,25 +169,12 @@ public class WithUnresolvedGenericTypeVariablesOnTheoryParms {
         }
     }
 
-    @Test
-    public void whereTypeVariablesAbound() {
-        PrintableResult result = testResult(TypeVariablesAbound.class);
-        assertThat(result, failureCountIs(1));
-        assertThat(result, hasFailureContaining("unresolved type variable A"));
-        assertThat(result, hasFailureContaining("unresolved type variable B"));
-        assertThat(result, hasFailureContaining("unresolved type variable C"));
-        assertThat(result, hasFailureContaining("unresolved type variable D"));
-        assertThat(result, hasFailureContaining("unresolved type variable E"));
-        assertThat(result, hasFailureContaining("unresolved type variable F"));
-        assertThat(result, hasFailureContaining("unresolved type variable G"));
-    }
-
     @RunWith(Theories.class)
     public static class TypeVariablesAbound<A, B extends A, C extends Collection<B>> {
         @Theory
         public <D, E extends D, F, G> void forItem(A first, Collection<B> second,
-                Map<C, ? extends D> third, List<? super E> fourth, F[] fifth,
-                Collection<G>[] sixth) {
+                                                   Map<C, ? extends D> third, List<? super E> fourth, F[] fifth,
+                                                   Collection<G>[] sixth) {
         }
     }
 }

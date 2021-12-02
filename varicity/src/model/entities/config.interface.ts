@@ -48,7 +48,7 @@ export interface ConfigInterface {
     hierarchy_links: string[];
 
     blacklist: string[]; //all classes that must not appear
-    api_classes: Map<string, string[]>;
+    api_classes: string[];
 
     clones: ConfigClones;
 

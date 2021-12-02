@@ -26,7 +26,7 @@ public class Assignments {
     private final TestClass clazz;
 
     private Assignments(List<PotentialAssignment> assigned,
-            List<ParameterSignature> unassigned, TestClass clazz) {
+                        List<ParameterSignature> unassigned, TestClass clazz) {
         this.unassigned = unassigned;
         this.assigned = assigned;
         this.clazz = clazz;
@@ -37,7 +37,7 @@ public class Assignments {
      * assigned.
      */
     public static Assignments allUnassigned(Method testMethod,
-            TestClass testClass) {
+                                            TestClass testClass) {
         List<ParameterSignature> signatures;
         signatures = ParameterSignature.signatures(testClass
                 .getOnlyConstructor());
@@ -62,7 +62,7 @@ public class Assignments {
                 unassigned.size()), clazz);
     }
 
-    public Object[] getActualValues(int start, int stop) 
+    public Object[] getActualValues(int start, int stop)
             throws CouldNotGenerateValueException {
         Object[] values = new Object[stop - start];
         for (int i = start; i < stop; i++) {
@@ -75,19 +75,19 @@ public class Assignments {
             throws Throwable {
         ParameterSignature unassigned = nextUnassigned();
         List<PotentialAssignment> assignments = getSupplier(unassigned).getValueSources(unassigned);
-        
+
         if (assignments.isEmpty()) {
             assignments = generateAssignmentsFromTypeAlone(unassigned);
         }
-        
+
         return assignments;
     }
 
     private List<PotentialAssignment> generateAssignmentsFromTypeAlone(ParameterSignature unassigned) {
         Class<?> paramType = unassigned.getType();
-        
+
         if (paramType.isEnum()) {
-            return new EnumSupplier(paramType).getValueSources(unassigned);  
+            return new EnumSupplier(paramType).getValueSources(unassigned);
         } else if (paramType.equals(Boolean.class) || paramType.equals(boolean.class)) {
             return new BooleanSupplier().getValueSources(unassigned);
         } else {
@@ -99,7 +99,7 @@ public class Assignments {
             throws Exception {
         ParametersSuppliedBy annotation = unassigned
                 .findDeepAnnotation(ParametersSuppliedBy.class);
-        
+
         if (annotation != null) {
             return buildParameterSupplierFromClass(annotation.value());
         } else {

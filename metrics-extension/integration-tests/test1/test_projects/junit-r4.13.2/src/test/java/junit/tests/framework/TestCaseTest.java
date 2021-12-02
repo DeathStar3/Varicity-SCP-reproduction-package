@@ -12,20 +12,6 @@ import junit.tests.WasRun;
  */
 public class TestCaseTest extends TestCase {
 
-    static class TornDown extends TestCase {
-        boolean fTornDown = false;
-
-        @Override
-        protected void tearDown() {
-            fTornDown = true;
-        }
-
-        @Override
-        protected void runTest() {
-            throw new Error("running");
-        }
-    }
-
     public void testCaseToString() {
         // This test wins the award for twisted snake tail eating while
         // writing self tests. And you thought those weird anonymous
@@ -201,5 +187,19 @@ public class TestCaseTest extends TestCase {
         assertTrue(result.runCount() == 1);
         assertTrue(result.failureCount() == 0);
         assertTrue(result.errorCount() == 0);
+    }
+
+    static class TornDown extends TestCase {
+        boolean fTornDown = false;
+
+        @Override
+        protected void tearDown() {
+            fTornDown = true;
+        }
+
+        @Override
+        protected void runTest() {
+            throw new Error("running");
+        }
     }
 }

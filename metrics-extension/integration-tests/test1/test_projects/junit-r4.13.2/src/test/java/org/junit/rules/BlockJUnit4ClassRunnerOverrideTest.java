@@ -18,9 +18,29 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
 public class BlockJUnit4ClassRunnerOverrideTest {
+    @Test
+    public void overrideRulesMethod() {
+        assertThat(testResult(OverrideTestRulesTest.class), isSuccessful());
+    }
+
+    @Test
+    public void overrideTestRulesMethod() {
+        assertThat(testResult(OverrideRulesTest.class), isSuccessful());
+    }
+
+    @Test
+    public void overrideCreateTestMethod() {
+        assertThat(testResult(OverrideCreateTest.class), isSuccessful());
+    }
+
+    @Test
+    public void createTestDefersToNoArgCreateTest() {
+        assertThat(testResult(CreateTestDefersToNoArgCreateTestTest.class), isSuccessful());
+    }
+
     public static class FlipBitRule implements MethodRule {
         public Statement apply(final Statement base, FrameworkMethod method,
-                final Object target) {
+                               final Object target) {
             return new Statement() {
                 @Override
                 public void evaluate() throws Throwable {
@@ -56,11 +76,6 @@ public class BlockJUnit4ClassRunnerOverrideTest {
         }
     }
 
-    @Test
-    public void overrideRulesMethod() {
-        assertThat(testResult(OverrideTestRulesTest.class), isSuccessful());
-    }
-
     public static class OverrideTestRulesRunner extends BlockJUnit4ClassRunner {
         public OverrideTestRulesRunner(Class<?> klass)
                 throws InitializationError {
@@ -84,12 +99,6 @@ public class BlockJUnit4ClassRunnerOverrideTest {
     public static class OverrideTestRulesTest extends OverrideRulesTest {
     }
 
-    @Test
-    public void overrideTestRulesMethod() {
-        assertThat(testResult(OverrideRulesTest.class), isSuccessful());
-    }
-
-
     /**
      * Runner for testing override of {@link org.junit.runners.BlockJUnit4ClassRunner#createTest(org.junit.runners.model.FrameworkMethod)}
      * by setting the {@link org.junit.runners.model.FrameworkMethod} in a field
@@ -100,7 +109,7 @@ public class BlockJUnit4ClassRunnerOverrideTest {
         public OverrideCreateTestRunner(final Class<?> klass) throws InitializationError {
             super(klass);
 
-            assert(klass.equals(OverrideCreateTest.class));
+            assert (klass.equals(OverrideCreateTest.class));
         }
 
         @Override
@@ -128,12 +137,6 @@ public class BlockJUnit4ClassRunnerOverrideTest {
         }
     }
 
-    @Test
-    public void overrideCreateTestMethod() {
-        assertThat(testResult(OverrideCreateTest.class), isSuccessful());
-    }
-
-
     /**
      * Runner for testing override of {@link org.junit.runners.BlockJUnit4ClassRunner#createTest()}
      * is still called by default if no other {@code createTest} method override
@@ -145,7 +148,7 @@ public class BlockJUnit4ClassRunnerOverrideTest {
         public CreateTestDefersToNoArgCreateTestRunner(final Class<?> klass) throws InitializationError {
             super(klass);
 
-            assert(klass.equals(CreateTestDefersToNoArgCreateTestTest.class));
+            assert (klass.equals(CreateTestDefersToNoArgCreateTestTest.class));
         }
 
         @Override
@@ -166,10 +169,5 @@ public class BlockJUnit4ClassRunnerOverrideTest {
         public void testCreateTestCalled() {
             assertEquals(true, createTestCalled);
         }
-    }
-
-    @Test
-    public void createTestDefersToNoArgCreateTest() {
-        assertThat(testResult(CreateTestDefersToNoArgCreateTestTest.class), isSuccessful());
     }
 }

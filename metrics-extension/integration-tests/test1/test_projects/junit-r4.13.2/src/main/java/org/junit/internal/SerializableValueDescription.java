@@ -19,6 +19,7 @@ class SerializableValueDescription implements Serializable {
 
     /**
      * Factory method that checks to see if the value is already serializable.
+     *
      * @param value the value to make serializable
      * @return The provided value if it is null or already serializable,
      * the SerializableValueDescription representation of it if it is not.

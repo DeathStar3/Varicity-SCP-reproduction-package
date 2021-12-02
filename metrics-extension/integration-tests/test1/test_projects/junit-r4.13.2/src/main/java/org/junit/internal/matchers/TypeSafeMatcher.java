@@ -17,14 +17,12 @@ public abstract class TypeSafeMatcher<T> extends BaseMatcher<T> {
 
     private Class<?> expectedType;
 
-    /**
-     * Subclasses should implement this. The item will already have been checked for
-     * the specific type and will never be null.
-     */
-    public abstract boolean matchesSafely(T item);
-
     protected TypeSafeMatcher() {
         expectedType = findExpectedType(getClass());
+    }
+
+    protected TypeSafeMatcher(Class<T> expectedType) {
+        this.expectedType = expectedType;
     }
 
     private static Class<?> findExpectedType(Class<?> fromClass) {
@@ -45,9 +43,11 @@ public abstract class TypeSafeMatcher<T> extends BaseMatcher<T> {
                 && !method.isSynthetic();
     }
 
-    protected TypeSafeMatcher(Class<T> expectedType) {
-        this.expectedType = expectedType;
-    }
+    /**
+     * Subclasses should implement this. The item will already have been checked for
+     * the specific type and will never be null.
+     */
+    public abstract boolean matchesSafely(T item);
 
     /**
      * Method made final to prevent accidental override.

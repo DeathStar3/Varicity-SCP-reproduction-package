@@ -17,7 +17,6 @@ public class AnnotationValidatorFactory {
      * cached.
      *
      * @return An instance of the AnnotationValidator.
-     *
      * @since 4.12
      */
     public AnnotationValidator createAnnotationValidator(ValidateWith validateWithAnnotation) {

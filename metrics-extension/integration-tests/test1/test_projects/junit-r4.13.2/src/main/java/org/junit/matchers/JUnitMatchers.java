@@ -42,8 +42,8 @@ public class JUnitMatchers {
 
     /**
      * @return A matcher matching any collection containing at least one element that matches
-     *         each matcher in elementMatcher (this may be one element matching all matchers,
-     *         or different elements matching each matcher)
+     * each matcher in elementMatcher (this may be one element matching all matchers,
+     * or different elements matching each matcher)
      * @deprecated Please use {@link CoreMatchers#hasItems(Matcher...)} instead.
      */
     @Deprecated
@@ -97,7 +97,7 @@ public class JUnitMatchers {
 
     /**
      * @return A matcher that delegates to throwableMatcher and in addition
-     *         appends the stacktrace of the actual Throwable in case of a mismatch.
+     * appends the stacktrace of the actual Throwable in case of a mismatch.
      */
     public static <T extends Throwable> Matcher<T> isThrowable(Matcher<T> throwableMatcher) {
         return StacktracePrintingMatcher.isThrowable(throwableMatcher);
@@ -105,7 +105,7 @@ public class JUnitMatchers {
 
     /**
      * @return A matcher that delegates to exceptionMatcher and in addition
-     *         appends the stacktrace of the actual Exception in case of a mismatch.
+     * appends the stacktrace of the actual Exception in case of a mismatch.
      */
     public static <T extends Exception> Matcher<T> isException(Matcher<T> exceptionMatcher) {
         return StacktracePrintingMatcher.isException(exceptionMatcher);

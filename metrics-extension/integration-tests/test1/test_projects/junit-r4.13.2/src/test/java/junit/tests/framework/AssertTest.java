@@ -7,14 +7,14 @@ import junit.framework.TestCase;
 public class AssertTest extends TestCase {
 
     /* In the tests that follow, we can't use standard formatting
-      * for exception tests:
-      *     try {
-      *         somethingThatShouldThrow();
-      *         fail();
-      *     catch (AssertionFailedError e) {
-      *     }
-      * because fail() would never be reported.
-      */
+     * for exception tests:
+     *     try {
+     *         somethingThatShouldThrow();
+     *         fail();
+     *     catch (AssertionFailedError e) {
+     *     }
+     * because fail() would never be reported.
+     */
     public void testFail() {
         // Also, we are testing fail, so we can't rely on fail() working.
         // We have to throw the exception manually.

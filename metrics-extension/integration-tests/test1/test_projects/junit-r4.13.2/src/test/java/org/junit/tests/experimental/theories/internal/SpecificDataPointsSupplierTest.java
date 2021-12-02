@@ -20,41 +20,6 @@ import org.junit.runners.model.TestClass;
 
 public class SpecificDataPointsSupplierTest {
 
-    public static class TestClassWithNamedDataPoints {
-
-        @DataPoints({"field", "named"})
-        public static String[] values = new String[] { "named field" };
-
-        @DataPoints
-        public static String[] otherValues = new String[] { "other" };
-        
-        @DataPoints({"method", "named"})
-        public static String[] getValues() {
-            return new String[] { "named method" };
-        }
-        
-        @DataPoint({"single", "named"})
-        public static String singleValue = "named single value";
-        
-        @DataPoint
-        public static String otherSingleValue = "other value";
-        
-        @DataPoint({"singlemethod", "named"})
-        public static String getSingleValue() { 
-            return "named single method value";
-        }
-        
-        @DataPoint
-        public static String getSingleOtherValue() {
-            return "other single method value";
-        }
-         
-        @DataPoints
-        public static String[] getOtherValues() {
-            return new String[] { "other method" };
-        }
-    }
-
     @Test
     public void shouldReturnOnlyTheNamedDataPoints() throws Throwable {
         SpecificDataPointsSupplier supplier = new SpecificDataPointsSupplier(new TestClass(TestClassWithNamedDataPoints.class));
@@ -65,7 +30,7 @@ public class SpecificDataPointsSupplierTest {
         assertEquals(4, assignedStrings.size());
         assertThat(assignedStrings, hasItems("named field", "named method", "named single value", "named single method value"));
     }
-    
+
     @Test
     public void shouldReturnOnlyTheNamedFieldDataPoints() throws Throwable {
         SpecificDataPointsSupplier supplier = new SpecificDataPointsSupplier(new TestClass(TestClassWithNamedDataPoints.class));
@@ -87,7 +52,7 @@ public class SpecificDataPointsSupplierTest {
         assertEquals(1, assignedStrings.size());
         assertThat(assignedStrings, hasItem("named method"));
     }
-    
+
     @Test
     public void shouldReturnOnlyTheNamedSingleFieldDataPoints() throws Throwable {
         SpecificDataPointsSupplier supplier = new SpecificDataPointsSupplier(new TestClass(TestClassWithNamedDataPoints.class));
@@ -108,8 +73,8 @@ public class SpecificDataPointsSupplierTest {
 
         assertEquals(1, assignedStrings.size());
         assertThat(assignedStrings, hasItem("named single method value"));
-    }    
-    
+    }
+
     @Test
     public void shouldReturnNothingIfTheNamedDataPointsAreMissing() throws Throwable {
         SpecificDataPointsSupplier supplier = new SpecificDataPointsSupplier(new TestClass(TestClassWithNamedDataPoints.class));
@@ -137,20 +102,53 @@ public class SpecificDataPointsSupplierTest {
 
     public void methodWantingNamedFieldString(@FromDataPoints("field") String input) {
     }
-    
+
     public void methodWantingNamedMethodString(@FromDataPoints("method") String input) {
     }
-    
+
     public void methodWantingNamedSingleFieldString(@FromDataPoints("single") String input) {
     }
-    
+
     public void methodWantingNamedSingleMethodString(@FromDataPoints("singlemethod") String input) {
     }
-    
+
     public void methodWantingAllNamedStrings(@FromDataPoints("named") String input) {
     }
 
     public void methodWantingWrongNamedString(@FromDataPoints("invalid name") String input) {
+    }
+
+    public static class TestClassWithNamedDataPoints {
+
+        @DataPoints({"field", "named"})
+        public static String[] values = new String[]{"named field"};
+
+        @DataPoints
+        public static String[] otherValues = new String[]{"other"};
+        @DataPoint({"single", "named"})
+        public static String singleValue = "named single value";
+        @DataPoint
+        public static String otherSingleValue = "other value";
+
+        @DataPoints({"method", "named"})
+        public static String[] getValues() {
+            return new String[]{"named method"};
+        }
+
+        @DataPoint({"singlemethod", "named"})
+        public static String getSingleValue() {
+            return "named single method value";
+        }
+
+        @DataPoint
+        public static String getSingleOtherValue() {
+            return "other single method value";
+        }
+
+        @DataPoints
+        public static String[] getOtherValues() {
+            return new String[]{"other method"};
+        }
     }
 
 }

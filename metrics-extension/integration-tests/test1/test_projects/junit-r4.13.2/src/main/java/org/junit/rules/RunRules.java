@@ -15,16 +15,16 @@ public class RunRules extends Statement {
         statement = applyAll(base, rules, description);
     }
 
-    @Override
-    public void evaluate() throws Throwable {
-        statement.evaluate();
-    }
-
     private static Statement applyAll(Statement result, Iterable<TestRule> rules,
-            Description description) {
+                                      Description description) {
         for (TestRule each : rules) {
             result = each.apply(result, description);
         }
         return result;
+    }
+
+    @Override
+    public void evaluate() throws Throwable {
+        statement.evaluate();
     }
 }

@@ -20,6 +20,30 @@ import java.util.List;
  */
 public final class Throwables {
 
+    private static final Method getSuppressed = initGetSuppressed();
+    private static final String[] TEST_FRAMEWORK_METHOD_NAME_PREFIXES = {
+            "org.junit.runner.",
+            "org.junit.runners.",
+            "org.junit.experimental.runners.",
+            "org.junit.internal.",
+            "junit.extensions",
+            "junit.framework",
+            "junit.runner",
+            "junit.textui",
+    };
+    private static final String[] TEST_FRAMEWORK_TEST_METHOD_NAME_PREFIXES = {
+            "org.junit.internal.StackTracesTest",
+    };
+    private static final String[] REFLECTION_METHOD_NAME_PREFIXES = {
+            "sun.reflect.",
+            "java.lang.reflect.",
+            "jdk.internal.reflect.",
+            "org.junit.rules.RunRules.<init>(",
+            "org.junit.rules.RunRules.applyAll(", // calls TestRules
+            "org.junit.runners.RuleContainer.apply(", // calls MethodRules & TestRules
+            "junit.framework.TestCase.runBare(", // runBare() directly calls setUp() and tearDown()
+    };
+
     private Throwables() {
     }
 
@@ -105,8 +129,6 @@ public final class Throwables {
         return Collections.emptyList();
     }
 
-    private static final Method getSuppressed = initGetSuppressed();
-
     private static Method initGetSuppressed() {
         try {
             return Throwable.class.getMethod("getSuppressed");
@@ -133,7 +155,7 @@ public final class Throwables {
             BufferedReader reader = new BufferedReader(
                     new StringReader(fullTrace.substring(exception.toString().length())));
             List<String> causedByLines = new ArrayList<String>();
-    
+
             try {
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -182,81 +204,11 @@ public final class Throwables {
         };
     }
 
-    private enum State {
-        PROCESSING_OTHER_CODE {
-            @Override public State processLine(String methodName) {
-                if (isTestFrameworkMethod(methodName)) {
-                    return PROCESSING_TEST_FRAMEWORK_CODE;
-                }
-                return this;
-            }
-        },
-        PROCESSING_TEST_FRAMEWORK_CODE {
-            @Override public State processLine(String methodName) {
-                if (isReflectionMethod(methodName)) {
-                    return PROCESSING_REFLECTION_CODE;
-                } else if (isTestFrameworkMethod(methodName)) {
-                    return this;
-                }
-                return PROCESSING_OTHER_CODE;
-            } 
-        },
-        PROCESSING_REFLECTION_CODE {
-            @Override public State processLine(String methodName) {
-                if (isReflectionMethod(methodName)) {
-                    return this;
-                } else if (isTestFrameworkMethod(methodName)) {
-                    // This is here to handle TestCase.runBare() calling TestCase.runTest().
-                    return PROCESSING_TEST_FRAMEWORK_CODE;
-                }
-                return DONE;
-            } 
-        },
-        DONE {
-            @Override public State processLine(String methodName) {
-                return this;
-            } 
-        };
-
-        /** Processes a stack trace element method name, possibly moving to a new state. */
-        protected abstract State processLine(String methodName);
-        
-        /** Processes a stack trace element, possibly moving to a new state. */
-        public final State processStackTraceElement(StackTraceElement element) {
-            return processLine(element.getClassName() + "." + element.getMethodName() + "()");
-        }
-    }
-
-    private static final String[] TEST_FRAMEWORK_METHOD_NAME_PREFIXES = {
-        "org.junit.runner.",
-        "org.junit.runners.",
-        "org.junit.experimental.runners.",
-        "org.junit.internal.",
-        "junit.extensions",
-        "junit.framework",
-        "junit.runner",
-        "junit.textui",
-    };
-
-    private static final String[] TEST_FRAMEWORK_TEST_METHOD_NAME_PREFIXES = {
-        "org.junit.internal.StackTracesTest",
-    };
-
     private static boolean isTestFrameworkMethod(String methodName) {
         return isMatchingMethod(methodName, TEST_FRAMEWORK_METHOD_NAME_PREFIXES) &&
                 !isMatchingMethod(methodName, TEST_FRAMEWORK_TEST_METHOD_NAME_PREFIXES);
     }
-    
-    private static final String[] REFLECTION_METHOD_NAME_PREFIXES = {
-        "sun.reflect.",
-        "java.lang.reflect.",
-        "jdk.internal.reflect.",
-        "org.junit.rules.RunRules.<init>(",
-        "org.junit.rules.RunRules.applyAll(", // calls TestRules
-        "org.junit.runners.RuleContainer.apply(", // calls MethodRules & TestRules
-        "junit.framework.TestCase.runBare(", // runBare() directly calls setUp() and tearDown()
-   };
-    
+
     private static boolean isReflectionMethod(String methodName) {
         return isMatchingMethod(methodName, REFLECTION_METHOD_NAME_PREFIXES);
     }
@@ -267,7 +219,60 @@ public final class Throwables {
                 return true;
             }
         }
-        
+
         return false;
+    }
+
+    private enum State {
+        PROCESSING_OTHER_CODE {
+            @Override
+            public State processLine(String methodName) {
+                if (isTestFrameworkMethod(methodName)) {
+                    return PROCESSING_TEST_FRAMEWORK_CODE;
+                }
+                return this;
+            }
+        },
+        PROCESSING_TEST_FRAMEWORK_CODE {
+            @Override
+            public State processLine(String methodName) {
+                if (isReflectionMethod(methodName)) {
+                    return PROCESSING_REFLECTION_CODE;
+                } else if (isTestFrameworkMethod(methodName)) {
+                    return this;
+                }
+                return PROCESSING_OTHER_CODE;
+            }
+        },
+        PROCESSING_REFLECTION_CODE {
+            @Override
+            public State processLine(String methodName) {
+                if (isReflectionMethod(methodName)) {
+                    return this;
+                } else if (isTestFrameworkMethod(methodName)) {
+                    // This is here to handle TestCase.runBare() calling TestCase.runTest().
+                    return PROCESSING_TEST_FRAMEWORK_CODE;
+                }
+                return DONE;
+            }
+        },
+        DONE {
+            @Override
+            public State processLine(String methodName) {
+                return this;
+            }
+        };
+
+        /**
+         * Processes a stack trace element method name, possibly moving to a new state.
+         */
+        protected abstract State processLine(String methodName);
+
+        /**
+         * Processes a stack trace element, possibly moving to a new state.
+         */
+        public final State processStackTraceElement(StackTraceElement element) {
+            return processLine(element.getClassName() + "." + element.getMethodName() + "()");
+        }
     }
 }

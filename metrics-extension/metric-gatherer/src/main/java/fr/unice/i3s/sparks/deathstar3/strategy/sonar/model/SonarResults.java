@@ -18,6 +18,11 @@ public class SonarResults {
     private Paging paging;
     private List<Component> components;
 
+    @Override
+    public String toString() {
+        return "SonarResults{" + "paging=" + paging + ", components=" + components + '}';
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -65,10 +70,5 @@ public class SonarResults {
         public String toString() {
             return "Metric{" + "metric='" + metric + '\'' + ", value=" + value + '}';
         }
-    }
-
-    @Override
-    public String toString() {
-        return "SonarResults{" + "paging=" + paging + ", components=" + components + '}';
     }
 }

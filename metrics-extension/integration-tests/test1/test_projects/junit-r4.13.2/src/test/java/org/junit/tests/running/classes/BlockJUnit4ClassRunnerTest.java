@@ -12,13 +12,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 public class BlockJUnit4ClassRunnerTest {
-    public static class OuterClass {
-        public class Enclosed {
-            @Test
-            public void test() {
-            }
-        }
-    }
+    private static String log;
 
     @Test
     public void detectNonStaticEnclosedClass() throws Exception {
@@ -31,19 +25,6 @@ public class BlockJUnit4ClassRunnerTest {
                     "Wrong exception.",
                     "The inner class org.junit.tests.running.classes.BlockJUnit4ClassRunnerTest$OuterClass$Enclosed is not static.",
                     causes.get(0).getMessage());
-        }
-    }
-
-    private static String log;
-
-    public static class MethodBlockAfterFireTestStarted {
-        public MethodBlockAfterFireTestStarted() {
-            log += " init";
-        }
-
-        @Test
-        public void test() {
-            log += " test";
         }
     }
 
@@ -64,5 +45,24 @@ public class BlockJUnit4ClassRunnerTest {
         });
         junit.run(MethodBlockAfterFireTestStarted.class);
         assertEquals(" testStarted(test) init test testFinished(test)", log);
+    }
+
+    public static class OuterClass {
+        public class Enclosed {
+            @Test
+            public void test() {
+            }
+        }
+    }
+
+    public static class MethodBlockAfterFireTestStarted {
+        public MethodBlockAfterFireTestStarted() {
+            log += " init";
+        }
+
+        @Test
+        public void test() {
+            log += " test";
+        }
     }
 }

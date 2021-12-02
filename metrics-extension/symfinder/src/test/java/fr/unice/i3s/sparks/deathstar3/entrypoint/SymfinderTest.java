@@ -3,7 +3,7 @@ package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SymfinderTest {
 

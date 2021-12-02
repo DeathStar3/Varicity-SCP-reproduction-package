@@ -26,76 +26,75 @@ import static org.junit.rules.EventCollector.*;
 @RunWith(Parameterized.class)
 public class ErrorCollectorTest {
 
-    @Parameters(name= "{0}")
+    @Parameter(0)
+    public Class<?> classUnderTest;
+    @Parameter(1)
+    public Matcher<EventCollector> matcher;
+
+    @Parameters(name = "{0}")
     public static Object[][] testsWithEventMatcher() {
         return new Object[][]{
                 {
-                    AddSingleError.class,
+                        AddSingleError.class,
                         hasSingleFailureWithMessage("message")},
                 {
-                    AddTwoErrors.class,
+                        AddTwoErrors.class,
                         hasNumberOfFailures(2)},
                 {
-                    AddInternalAssumptionViolatedException.class,
+                        AddInternalAssumptionViolatedException.class,
                         allOf(hasSingleFailure(), hasNoAssumptionFailure())},
                 {
-                    CheckMatcherThatDoesNotFailWithoutProvidedReason.class,
+                        CheckMatcherThatDoesNotFailWithoutProvidedReason.class,
                         everyTestRunSuccessful()},
                 {
-                    CheckMatcherThatDoesNotFailWithProvidedReason.class,
+                        CheckMatcherThatDoesNotFailWithProvidedReason.class,
                         everyTestRunSuccessful()},
                 {
-                    CheckMatcherThatFailsWithoutProvidedReason.class,
+                        CheckMatcherThatFailsWithoutProvidedReason.class,
                         hasSingleFailureWithMessage(Matchers.<String>allOf(
-                            containsString("Expected: is <4>"),
-                            containsString("but: was <3>")))},
+                                containsString("Expected: is <4>"),
+                                containsString("but: was <3>")))},
                 {
-                    CheckMatcherThatFailsWithProvidedReason.class,
+                        CheckMatcherThatFailsWithProvidedReason.class,
                         hasSingleFailureWithMessage(Matchers.<String>allOf(
-                            containsString("reason"),
-                            containsString("Expected: is <4>"),
-                            containsString("but: was <3>")))},
+                                containsString("reason"),
+                                containsString("Expected: is <4>"),
+                                containsString("but: was <3>")))},
                 {
-                    CheckTwoMatchersThatFail.class,
+                        CheckTwoMatchersThatFail.class,
                         hasNumberOfFailures(2)},
                 {
-                    CheckCallableThatThrowsAnException.class,
+                        CheckCallableThatThrowsAnException.class,
                         hasSingleFailureWithMessage("first!")},
                 {
-                    CheckTwoCallablesThatThrowExceptions.class,
+                        CheckTwoCallablesThatThrowExceptions.class,
                         hasNumberOfFailures(2)},
                 {
-                    CheckCallableThatThrowsInternalAssumptionViolatedException.class,
+                        CheckCallableThatThrowsInternalAssumptionViolatedException.class,
                         allOf(hasSingleFailure(), hasNoAssumptionFailure())},
                 {
-                    CheckCallableWithFailingAssumption.class,
+                        CheckCallableWithFailingAssumption.class,
                         allOf(hasSingleFailure(), hasNoAssumptionFailure())},
                 {
-                    CheckCallableThatDoesNotThrowAnException.class,
+                        CheckCallableThatDoesNotThrowAnException.class,
                         everyTestRunSuccessful()},
                 {
-                    CheckRunnableThatThrowsExpectedTypeOfException.class,
+                        CheckRunnableThatThrowsExpectedTypeOfException.class,
                         everyTestRunSuccessful()},
                 {
-                    CheckRunnableThatThrowsUnexpectedTypeOfException.class,
+                        CheckRunnableThatThrowsUnexpectedTypeOfException.class,
                         hasSingleFailureWithMessage("unexpected exception type thrown; expected:<java.lang.IllegalArgumentException> but was:<java.lang.NullPointerException>")},
                 {
-                    CheckRunnableThatThrowsNoExceptionAlthoughOneIsExpected.class,
+                        CheckRunnableThatThrowsNoExceptionAlthoughOneIsExpected.class,
                         hasSingleFailureWithMessage("expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown")},
                 {
-                    ErrorCollectorNotCalledBySuccessfulTest.class,
+                        ErrorCollectorNotCalledBySuccessfulTest.class,
                         everyTestRunSuccessful()},
                 {
-                    ErrorCollectorNotCalledByFailingTest.class,
+                        ErrorCollectorNotCalledByFailingTest.class,
                         hasSingleFailure()},
         };
     }
-
-    @Parameter(0)
-    public Class<?> classUnderTest;
-
-    @Parameter(1)
-    public Matcher<EventCollector> matcher;
 
     @Test
     public void runTestClassAndVerifyEvents() {

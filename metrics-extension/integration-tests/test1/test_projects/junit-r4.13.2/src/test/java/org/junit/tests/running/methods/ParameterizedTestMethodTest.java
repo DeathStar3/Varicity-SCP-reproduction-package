@@ -22,13 +22,42 @@ import org.junit.runners.model.InitializationError;
 @RunWith(Parameterized.class)
 public class ParameterizedTestMethodTest {
 
+    private Class<?> fClass;
+    private int fErrorCount;
+    public ParameterizedTestMethodTest(Class<?> class1, int errorCount) {
+        fClass = class1;
+        fErrorCount = errorCount;
+    }
+
+    @Parameters
+    public static Collection<Object[]> params() {
+        return Arrays.asList(new Object[][]{
+                {EverythingWrong.class, 1 + 4 * 5}, {SubWrong.class, 1},
+                {SubShadows.class, 0}});
+    }
+
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ParameterizedTestMethodTest.class);
+    }
+
+    private List<Throwable> validateAllMethods(Class<?> clazz) {
+        try {
+            new BlockJUnit4ClassRunner(clazz);
+        } catch (InitializationError e) {
+            return e.getCauses();
+        }
+        return Collections.emptyList();
+    }
+
+    @Test
+    public void testFailures() throws Exception {
+        List<Throwable> problems = validateAllMethods(fClass);
+        assertEquals(fErrorCount, problems.size());
+    }
+
     @SuppressWarnings("all")
     public static class EverythingWrong {
         private EverythingWrong() {
-        }
-
-        @BeforeClass
-        public void notStaticBC() {
         }
 
         @BeforeClass
@@ -46,10 +75,6 @@ public class ParameterizedTestMethodTest {
 
         @BeforeClass
         public static void fineBC() {
-        }
-
-        @AfterClass
-        public void notStaticAC() {
         }
 
         @AfterClass
@@ -73,6 +98,22 @@ public class ParameterizedTestMethodTest {
         public static void staticA() {
         }
 
+        @Before
+        public static void staticB() {
+        }
+
+        @Test
+        public static void staticT() {
+        }
+
+        @BeforeClass
+        public void notStaticBC() {
+        }
+
+        @AfterClass
+        public void notStaticAC() {
+        }
+
         @After
         void notPublicA() {
         }
@@ -88,10 +129,6 @@ public class ParameterizedTestMethodTest {
 
         @After
         public void fineA() {
-        }
-
-        @Before
-        public static void staticB() {
         }
 
         @Before
@@ -112,10 +149,6 @@ public class ParameterizedTestMethodTest {
         }
 
         @Test
-        public static void staticT() {
-        }
-
-        @Test
         void notPublicT() {
         }
 
@@ -132,9 +165,6 @@ public class ParameterizedTestMethodTest {
         public void fineT() {
         }
     }
-
-    private Class<?> fClass;
-    private int fErrorCount;
 
     public static class SuperWrong {
         @Test
@@ -153,36 +183,5 @@ public class ParameterizedTestMethodTest {
         @Test
         public void notPublic() {
         }
-    }
-
-    public ParameterizedTestMethodTest(Class<?> class1, int errorCount) {
-        fClass = class1;
-        fErrorCount = errorCount;
-    }
-
-    @Parameters
-    public static Collection<Object[]> params() {
-        return Arrays.asList(new Object[][]{
-                {EverythingWrong.class, 1 + 4 * 5}, {SubWrong.class, 1},
-                {SubShadows.class, 0}});
-    }
-
-    private List<Throwable> validateAllMethods(Class<?> clazz) {
-        try {
-            new BlockJUnit4ClassRunner(clazz);
-        } catch (InitializationError e) {
-            return e.getCauses();
-        }
-        return Collections.emptyList();
-    }
-
-    @Test
-    public void testFailures() throws Exception {
-        List<Throwable> problems = validateAllMethods(fClass);
-        assertEquals(fErrorCount, problems.size());
-    }
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ParameterizedTestMethodTest.class);
     }
 }

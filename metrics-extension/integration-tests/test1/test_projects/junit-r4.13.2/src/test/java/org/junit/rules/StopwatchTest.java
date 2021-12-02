@@ -24,10 +24,73 @@ import org.junit.runner.Result;
  * @since 4.12
  */
 public class StopwatchTest {
-    private static enum TestStatus { SUCCEEDED, FAILED, SKIPPED }
     private static Record record;
     private static Record finishedRecord;
     private static long fakeTimeNanos = 1234;
+
+    private static Result runTest(Class<?> test) {
+        simulateTimePassing(1L);
+        JUnitCore junitCore = new JUnitCore();
+        return junitCore.run(Request.aClass(test).getRunner());
+    }
+
+    private static void simulateTimePassing(long millis) {
+        fakeTimeNanos += TimeUnit.MILLISECONDS.toNanos(millis);
+    }
+
+    @Before
+    public void init() {
+        record = new Record();
+        finishedRecord = new Record();
+        simulateTimePassing(1L);
+    }
+
+    @Test
+    public void succeeded() {
+        Result result = runTest(SuccessfulTest.class);
+        assertEquals(0, result.getFailureCount());
+        assertThat(record.name, is("successfulTest"));
+        assertThat(record.name, is(finishedRecord.name));
+        assertThat(record.status, is(TestStatus.SUCCEEDED));
+        assertTrue("timeSpent > 0", record.duration > 0);
+        assertThat(record.duration, is(finishedRecord.duration));
+    }
+
+    @Test
+    public void failed() {
+        Result result = runTest(FailedTest.class);
+        assertEquals(1, result.getFailureCount());
+        assertThat(record.name, is("failedTest"));
+        assertThat(record.name, is(finishedRecord.name));
+        assertThat(record.status, is(TestStatus.FAILED));
+        assertTrue("timeSpent > 0", record.duration > 0);
+        assertThat(record.duration, is(finishedRecord.duration));
+    }
+
+    @Test
+    public void skipped() {
+        Result result = runTest(SkippedTest.class);
+        assertEquals(0, result.getFailureCount());
+        assertThat(record.name, is("skippedTest"));
+        assertThat(record.name, is(finishedRecord.name));
+        assertThat(record.status, is(TestStatus.SKIPPED));
+        assertTrue("timeSpent > 0", record.duration > 0);
+        assertThat(record.duration, is(finishedRecord.duration));
+    }
+
+    @Test
+    public void runtimeDuringTestShouldReturnTimeSinceStart() {
+        Result result = runTest(DurationDuringTestTest.class);
+        assertTrue(result.wasSuccessful());
+    }
+
+    @Test
+    public void runtimeAfterTestShouldReturnRunDuration() {
+        Result result = runTest(DurationAfterTestTest.class);
+        assertTrue(result.wasSuccessful());
+    }
+
+    private static enum TestStatus {SUCCEEDED, FAILED, SKIPPED}
 
     private static class Record {
         final long duration;
@@ -96,8 +159,8 @@ public class StopwatchTest {
 
         @Rule
         public final RuleChain chain = RuleChain
-            .outerRule(watcher)
-            .around(stopwatch);
+                .outerRule(watcher)
+                .around(stopwatch);
 
         protected void afterStopwatchRule() {
         }
@@ -146,67 +209,5 @@ public class StopwatchTest {
             simulateTimePassing(500L);
             assertEquals(300L, stopwatch.runtime(MILLISECONDS));
         }
-    }
-
-    @Before
-    public void init() {
-        record = new Record();
-        finishedRecord = new Record();
-        simulateTimePassing(1L);
-    }
-
-    private static Result runTest(Class<?> test) {
-        simulateTimePassing(1L);
-        JUnitCore junitCore = new JUnitCore();
-        return junitCore.run(Request.aClass(test).getRunner());
-    }
-
-    private static void simulateTimePassing(long millis) {
-        fakeTimeNanos += TimeUnit.MILLISECONDS.toNanos(millis);
-    }
-
-    @Test
-    public void succeeded() {
-        Result result = runTest(SuccessfulTest.class);
-        assertEquals(0, result.getFailureCount());
-        assertThat(record.name, is("successfulTest"));
-        assertThat(record.name, is(finishedRecord.name));
-        assertThat(record.status, is(TestStatus.SUCCEEDED));
-        assertTrue("timeSpent > 0", record.duration > 0);
-        assertThat(record.duration, is(finishedRecord.duration));
-    }
-
-    @Test
-    public void failed() {
-        Result result = runTest(FailedTest.class);
-        assertEquals(1, result.getFailureCount());
-        assertThat(record.name, is("failedTest"));
-        assertThat(record.name, is(finishedRecord.name));
-        assertThat(record.status, is(TestStatus.FAILED));
-        assertTrue("timeSpent > 0", record.duration > 0);
-        assertThat(record.duration, is(finishedRecord.duration));
-    }
-
-    @Test
-    public void skipped() {
-        Result result = runTest(SkippedTest.class);
-        assertEquals(0, result.getFailureCount());
-        assertThat(record.name, is("skippedTest"));
-        assertThat(record.name, is(finishedRecord.name));
-        assertThat(record.status, is(TestStatus.SKIPPED));
-        assertTrue("timeSpent > 0", record.duration > 0);
-        assertThat(record.duration, is(finishedRecord.duration));
-    }
-
-    @Test
-    public void runtimeDuringTestShouldReturnTimeSinceStart() {
-        Result result = runTest(DurationDuringTestTest.class);
-        assertTrue(result.wasSuccessful());
-    }
-
-  @Test
-    public void runtimeAfterTestShouldReturnRunDuration() {
-        Result result = runTest(DurationAfterTestTest.class);
-        assertTrue(result.wasSuccessful());
     }
 }

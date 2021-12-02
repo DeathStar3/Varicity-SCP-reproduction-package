@@ -21,6 +21,8 @@ package fr.unice.i3s.sparks.deathstar3.entrypoint;/*
 
 import fr.unice.i3s.sparks.deathstar3.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.neograph.NeoGraph;
+import fr.unice.i3s.sparks.deathstar3.result.SymfinderResult;
+import fr.unice.i3s.sparks.deathstar3.visitors.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,8 +31,6 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import fr.unice.i3s.sparks.deathstar3.result.SymfinderResult;
-import fr.unice.i3s.sparks.deathstar3.visitors.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,17 +57,27 @@ public class Symfinder {
     private Configuration configuration;
 
     public Symfinder(String sourcePackage, String graphOutputPath) {
-        this.configuration=new Configuration();
+        this.configuration = new Configuration();
         this.sourcePackage = sourcePackage;
         this.graphOutputPath = graphOutputPath;
         this.neoGraph = new NeoGraph(this.configuration);
     }
 
-    public Symfinder(String sourcePackage, String graphOutputPath, Configuration configuration){
+    public Symfinder(String sourcePackage, String graphOutputPath, Configuration configuration) {
         this.sourcePackage = sourcePackage;
         this.graphOutputPath = graphOutputPath;
-        this.configuration=configuration;
+        this.configuration = configuration;
         this.neoGraph = new NeoGraph(this.configuration);
+    }
+
+    static String formatExecutionTime(long execTime) {
+        long ms = execTime % 1000;
+        long seconds = (execTime - ms) / 1000;
+        long s = seconds % 60;
+        long minutes = (seconds - s) / 60;
+        long m = minutes % 60;
+        long hours = (minutes - m) / 60;
+        return String.format("%02d:%02d:%02d.%03d", hours, m, s, ms);
     }
 
     public SymfinderResult run() throws IOException {
@@ -81,9 +91,9 @@ public class Symfinder {
             classpathPath = "/home/anagonou/jdk-17";
         }
 
-        List <File> files = Files.walk(Paths.get(sourcePackage))
+        List<File> files = Files.walk(Paths.get(sourcePackage))
                 .filter(Files::isRegularFile)
-                .filter(path -> ! isTestPath(path))
+                .filter(path -> !isTestPath(path))
                 .map(Path::toFile)
                 .filter(file -> file.getName().endsWith(".java"))
                 .collect(Collectors.toList());
@@ -122,12 +132,11 @@ public class Symfinder {
         try {
             neoGraph.writeVPGraphFile(graphOutputPath);
             neoGraph.writeStatisticsFile(graphOutputPath.replace(".json", "-stats.json"));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
-        SymfinderResult result= new SymfinderResult(neoGraph.generateVPJsonGraph(), neoGraph.generateStatisticsJson());
+        SymfinderResult result = new SymfinderResult(neoGraph.generateVPJsonGraph(), neoGraph.generateStatisticsJson());
         logger.debug(neoGraph.generateStatisticsJson());
 
         neoGraph.deleteGraph();
@@ -141,7 +150,7 @@ public class Symfinder {
 
     }
 
-    private void visitPackage(String classpathPath, List <File> files, ASTVisitor visitor) throws IOException {
+    private void visitPackage(String classpathPath, List<File> files, ASTVisitor visitor) throws IOException {
         long startTime = System.currentTimeMillis();
         for (File file : files) {
             String fileContent = getFileLines(file);
@@ -159,7 +168,7 @@ public class Symfinder {
             parser.setEnvironment(new String[]{classpathPath}, new String[]{""}, new String[]{"UTF-8"}, true);
             parser.setSource(fileContent.toCharArray());
 
-            Map <String, String> options = JavaCore.getOptions();
+            Map<String, String> options = JavaCore.getOptions();
             options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_16);
             parser.setCompilerOptions(options);
 
@@ -173,7 +182,7 @@ public class Symfinder {
     }
 
     private boolean isTestPath(Path path) {
-        for (int i = 0 ; i < path.getNameCount() ; i++) {
+        for (int i = 0; i < path.getNameCount(); i++) {
             int finalI = i;
             if (List.of("test", "tests").stream().anyMatch(s -> path.getName(finalI).toString().equals(s))) {
                 return true;
@@ -193,7 +202,7 @@ public class Symfinder {
     }
 
     private String getFileLinesWithEncoding(File file, Charset charset) {
-        try (Stream <String> lines = Files.lines(file.toPath(), charset)) {
+        try (Stream<String> lines = Files.lines(file.toPath(), charset)) {
             return lines.collect(Collectors.joining("\n"));
         } catch (UncheckedIOException e) {
             logger.debug(charset.displayName() + ": wrong encoding");
@@ -201,16 +210,6 @@ public class Symfinder {
             e.printStackTrace();
         }
         return null;
-    }
-
-    static String formatExecutionTime(long execTime) {
-        long ms = execTime % 1000;
-        long seconds = (execTime - ms) / 1000;
-        long s = seconds % 60;
-        long minutes = (seconds - s) / 60;
-        long m = minutes % 60;
-        long hours = (minutes - m) / 60;
-        return String.format("%02d:%02d:%02d.%03d", hours, m, s, ms);
     }
 
 }

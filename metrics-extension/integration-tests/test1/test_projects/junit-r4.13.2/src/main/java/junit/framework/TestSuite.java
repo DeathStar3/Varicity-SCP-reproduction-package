@@ -42,6 +42,63 @@ import org.junit.internal.Throwables;
  */
 public class TestSuite implements Test {
 
+    private String fName;
+    private Vector<Test> fTests = new Vector<Test>(10); // Cannot convert this to List because it is used directly by some test runners
+
+    /**
+     * Constructs an empty TestSuite.
+     */
+    public TestSuite() {
+    }
+
+    /**
+     * Constructs a TestSuite from the given class. Adds all the methods
+     * starting with "test" as test cases to the suite.
+     * Parts of this method were written at 2337 meters in the Hueffihuette,
+     * Kanton Uri
+     */
+    public TestSuite(final Class<?> theClass) {
+        addTestsFromTestCase(theClass);
+    }
+
+    /**
+     * Constructs a TestSuite from the given class with the given name.
+     *
+     * @see TestSuite#TestSuite(Class)
+     */
+    public TestSuite(Class<? extends TestCase> theClass, String name) {
+        this(theClass);
+        setName(name);
+    }
+
+    /**
+     * Constructs an empty TestSuite.
+     */
+    public TestSuite(String name) {
+        setName(name);
+    }
+
+    /**
+     * Constructs a TestSuite from the given array of classes.
+     *
+     * @param classes {@link TestCase}s
+     */
+    public TestSuite(Class<?>... classes) {
+        for (Class<?> each : classes) {
+            addTest(testCaseForClass(each));
+        }
+    }
+
+    /**
+     * Constructs a TestSuite from the given array of classes with the given name.
+     *
+     * @see TestSuite#TestSuite(Class[])
+     */
+    public TestSuite(Class<? extends TestCase>[] classes, String name) {
+        this(classes);
+        setName(name);
+    }
+
     /**
      * ...as the moon sets over the early morning Merlin, Oregon
      * mountains, our intrepid adventurers type...
@@ -98,26 +155,6 @@ public class TestSuite implements Test {
         };
     }
 
-    private String fName;
-
-    private Vector<Test> fTests = new Vector<Test>(10); // Cannot convert this to List because it is used directly by some test runners
-
-    /**
-     * Constructs an empty TestSuite.
-     */
-    public TestSuite() {
-    }
-
-    /**
-     * Constructs a TestSuite from the given class. Adds all the methods
-     * starting with "test" as test cases to the suite.
-     * Parts of this method were written at 2337 meters in the Hueffihuette,
-     * Kanton Uri
-     */
-    public TestSuite(final Class<?> theClass) {
-        addTestsFromTestCase(theClass);
-    }
-
     private void addTestsFromTestCase(final Class<?> theClass) {
         fName = theClass.getName();
         try {
@@ -145,50 +182,12 @@ public class TestSuite implements Test {
         }
     }
 
-    /**
-     * Constructs a TestSuite from the given class with the given name.
-     *
-     * @see TestSuite#TestSuite(Class)
-     */
-    public TestSuite(Class<? extends TestCase> theClass, String name) {
-        this(theClass);
-        setName(name);
-    }
-
-    /**
-     * Constructs an empty TestSuite.
-     */
-    public TestSuite(String name) {
-        setName(name);
-    }
-
-    /**
-     * Constructs a TestSuite from the given array of classes.
-     *
-     * @param classes {@link TestCase}s
-     */
-    public TestSuite(Class<?>... classes) {
-        for (Class<?> each : classes) {
-            addTest(testCaseForClass(each));
-        }
-    }
-
     private Test testCaseForClass(Class<?> each) {
         if (TestCase.class.isAssignableFrom(each)) {
             return new TestSuite(each.asSubclass(TestCase.class));
         } else {
             return warning(each.getCanonicalName() + " does not extend TestCase");
         }
-    }
-
-    /**
-     * Constructs a TestSuite from the given array of classes with the given name.
-     *
-     * @see TestSuite#TestSuite(Class[])
-     */
-    public TestSuite(Class<? extends TestCase>[] classes, String name) {
-        this(classes);
-        setName(name);
     }
 
     /**
@@ -226,6 +225,15 @@ public class TestSuite implements Test {
     }
 
     /**
+     * Sets the name of the suite.
+     *
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        fName = name;
+    }
+
+    /**
      * Runs the tests and collects their result in a TestResult.
      */
     public void run(TestResult result) {
@@ -239,15 +247,6 @@ public class TestSuite implements Test {
 
     public void runTest(Test test, TestResult result) {
         test.run(result);
-    }
-
-    /**
-     * Sets the name of the suite.
-     *
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        fName = name;
     }
 
     /**
@@ -272,6 +271,7 @@ public class TestSuite implements Test {
     }
 
     /**
+     *
      */
     @Override
     public String toString() {

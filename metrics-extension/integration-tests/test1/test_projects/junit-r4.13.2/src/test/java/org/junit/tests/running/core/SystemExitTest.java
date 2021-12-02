@@ -12,12 +12,6 @@ public class SystemExitTest {
 
     private static final int EXIT_CODE = 5;
 
-    static public class Exit {
-        public static void main(String[] args) {
-            System.exit(EXIT_CODE);
-        }
-    }
-
     @Test
     public void failureCausesExitCodeOf1() throws Exception {
         String java = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
@@ -27,5 +21,11 @@ public class SystemExitTest {
         InputStream input = process.getInputStream();
         while ((input.read()) != -1) ;
         assertEquals(EXIT_CODE, process.waitFor());
+    }
+
+    static public class Exit {
+        public static void main(String[] args) {
+            System.exit(EXIT_CODE);
+        }
     }
 }

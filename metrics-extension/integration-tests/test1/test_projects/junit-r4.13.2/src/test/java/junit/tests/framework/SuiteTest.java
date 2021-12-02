@@ -17,11 +17,6 @@ public class SuiteTest extends TestCase {
         super(name);
     }
 
-    @Override
-    protected void setUp() {
-        fResult = new TestResult();
-    }
-
     public static Test suite() {
         TestSuite suite = new TestSuite("Suite Tests");
         // build the suite manually, because some of the suites are testing
@@ -39,6 +34,11 @@ public class SuiteTest extends TestCase {
         suite.addTest(new SuiteTest("testCreateSuiteFromArray"));
 
         return suite;
+    }
+
+    @Override
+    protected void setUp() {
+        fResult = new TestResult();
     }
 
     public void testInheritedTests() {

@@ -35,24 +35,24 @@ public class Configuration {
         this("symfinder.yaml");
     }
 
-    public Configuration(ParametersObject properties){
-        this.properties=properties;
+    public Configuration(ParametersObject properties) {
+        this.properties = properties;
     }
 
     private Configuration(String propertiesFile) {
         try (FileInputStream fis = new FileInputStream(propertiesFile)) {
             ObjectMapper objectMapperYaml = new ObjectMapper(new YAMLFactory());
-            properties = objectMapperYaml.readValue(fis, ParametersObject.class );
+            properties = objectMapperYaml.readValue(fis, ParametersObject.class);
         } catch (IOException e) {
             e.printStackTrace(); // TODO: 11/28/18 create exception
         }
     }
 
-    public  String getNeo4JBoltAddress() {
+    public String getNeo4JBoltAddress() {
         return properties.neo4j().boltAddress();
     }
 
-    public  String getNeo4JUser() {
+    public String getNeo4JUser() {
         return properties.neo4j().user();
     }
 

@@ -19,7 +19,7 @@ import org.junit.runners.MethodSorters;
  * This class allows the user to specify the order of execution of test methods.
  *
  * <p>For possibilities, see {@link MethodSorters}
- *
+ * <p>
  * Here is an example:
  *
  * <pre>

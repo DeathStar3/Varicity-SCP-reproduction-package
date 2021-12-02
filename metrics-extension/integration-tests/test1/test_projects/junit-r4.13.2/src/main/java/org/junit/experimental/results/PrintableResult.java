@@ -23,6 +23,17 @@ public class PrintableResult {
     private Result result;
 
     /**
+     * A result that includes the given {@code failures}
+     */
+    public PrintableResult(List<Failure> failures) {
+        this(new FailureList(failures).result());
+    }
+
+    private PrintableResult(Result result) {
+        this.result = result;
+    }
+
+    /**
      * The result of running JUnit on {@code type}
      */
     public static PrintableResult testResult(Class<?> type) {
@@ -34,17 +45,6 @@ public class PrintableResult {
      */
     public static PrintableResult testResult(Request request) {
         return new PrintableResult(new JUnitCore().run(request));
-    }
-
-    /**
-     * A result that includes the given {@code failures}
-     */
-    public PrintableResult(List<Failure> failures) {
-        this(new FailureList(failures).result());
-    }
-
-    private PrintableResult(Result result) {
-        this.result = result;
     }
 
     /**

@@ -21,8 +21,8 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 /**
  * @deprecated Included for backwards compatibility with JUnit 4.4. Will be
- *             removed in the next major release. Please use
- *             {@link BlockJUnit4ClassRunner} in place of {@link JUnit4ClassRunner}.
+ * removed in the next major release. Please use
+ * {@link BlockJUnit4ClassRunner} in place of {@link JUnit4ClassRunner}.
  */
 @Deprecated
 public class JUnit4ClassRunner extends Runner implements Filterable, Sortable {
@@ -99,7 +99,7 @@ public class JUnit4ClassRunner extends Runner implements Filterable, Sortable {
     }
 
     private void testAborted(RunNotifier notifier, Description description,
-            Throwable e) {
+                             Throwable e) {
         notifier.fireTestStarted(description);
         notifier.fireTestFailure(new Failure(description, e));
         notifier.fireTestFinished(description);

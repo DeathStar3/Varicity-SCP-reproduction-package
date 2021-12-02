@@ -20,14 +20,14 @@ public class UserStopTest {
         fNotifier.fireTestStarted(null);
     }
 
+    @Test(expected = StoppedByUserException.class)
+    public void stopClassRunner() throws Exception {
+        Request.aClass(OneTest.class).getRunner().run(fNotifier);
+    }
+
     public static class OneTest {
         @Test
         public void foo() {
         }
-    }
-
-    @Test(expected = StoppedByUserException.class)
-    public void stopClassRunner() throws Exception {
-        Request.aClass(OneTest.class).getRunner().run(fNotifier);
     }
 }

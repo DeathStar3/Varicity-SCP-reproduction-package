@@ -24,38 +24,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 public class SuiteTest {
-    public static class TestA {
-        @Test
-        public void pass() {
-        }
-    }
-
-    public static class TestB {
-        @Test
-        public void fail() {
-            Assert.fail();
-        }
-    }
-
-    @RunWith(Suite.class)
-    @SuiteClasses({TestA.class, TestB.class})
-    public static class All {
-    }
-
-    @RunWith(Suite.class)
-    @SuiteClasses(TestA.class)
-    static class NonPublicSuite {
-    }
-
-    @RunWith(Suite.class)
-    @SuiteClasses(TestA.class)
-    static class NonPublicSuiteWithBeforeClass {
-        @BeforeClass
-        public static void doesNothing() {}
-    }
-
-    public static class InheritsAll extends All {
-    }
+    private static String log = "";
 
     @Test
     public void ensureTestIsRun() {
@@ -113,8 +82,85 @@ public class SuiteTest {
         assertEquals(2, adapter.countTestCases());
     }
 
+    @Test
+    public void beforeAndAfterClassRunOnSuite() {
+        log = "";
+        JUnitCore.runClasses(AllWithBeforeAndAfterClass.class);
+        assertEquals("before after ", log);
+    }
 
-    private static String log = "";
+    @Test
+    public void withoutSuiteClassAnnotationProducesFailure() {
+        Result result = JUnitCore.runClasses(AllWithOutAnnotation.class);
+        assertEquals(1, result.getFailureCount());
+        String expected = String.format(
+                "class '%s' must have a SuiteClasses annotation",
+                AllWithOutAnnotation.class.getName());
+        assertEquals(expected, result.getFailures().get(0).getMessage());
+    }
+
+    @Test
+    public void whatHappensWhenASuiteHasACycle() {
+        Result result = JUnitCore.runClasses(InfiniteLoop.class);
+        assertEquals(1, result.getFailureCount());
+    }
+
+    @Test
+    public void whatHappensWhenASuiteHasAForkingCycle() {
+        Result result = JUnitCore.runClasses(BiInfiniteLoop.class);
+        assertEquals(2, result.getFailureCount());
+    }
+
+    @Test
+    public void whatHappensWhenASuiteContainsItselfIndirectly() {
+        Result result = JUnitCore.runClasses(Hydra.class);
+        assertEquals(2, result.getFailureCount());
+    }
+
+    @Test
+    public void suiteShouldBeOKwithNonDefaultConstructor() throws Exception {
+        Result result = JUnitCore.runClasses(WithoutDefaultConstructor.class);
+        assertTrue(result.wasSuccessful());
+    }
+
+    @Test
+    public void suiteShouldComplainAboutNoSuiteClassesAnnotation() {
+        assertThat(testResult(NoSuiteClassesAnnotation.class), hasSingleFailureContaining("SuiteClasses"));
+    }
+
+    public static class TestA {
+        @Test
+        public void pass() {
+        }
+    }
+
+    public static class TestB {
+        @Test
+        public void fail() {
+            Assert.fail();
+        }
+    }
+
+    @RunWith(Suite.class)
+    @SuiteClasses({TestA.class, TestB.class})
+    public static class All {
+    }
+
+    @RunWith(Suite.class)
+    @SuiteClasses(TestA.class)
+    static class NonPublicSuite {
+    }
+
+    @RunWith(Suite.class)
+    @SuiteClasses(TestA.class)
+    static class NonPublicSuiteWithBeforeClass {
+        @BeforeClass
+        public static void doesNothing() {
+        }
+    }
+
+    public static class InheritsAll extends All {
+    }
 
     @RunWith(Suite.class)
     @SuiteClasses({TestA.class, TestB.class})
@@ -130,25 +176,12 @@ public class SuiteTest {
         }
     }
 
-    @Test
-    public void beforeAndAfterClassRunOnSuite() {
-        log = "";
-        JUnitCore.runClasses(AllWithBeforeAndAfterClass.class);
-        assertEquals("before after ", log);
-    }
+    // The interesting case here is that Hydra indirectly contains two copies of
+    // itself (if it only contains one, Java's StackOverflowError eventually
+    // bails us out)
 
     @RunWith(Suite.class)
     public static class AllWithOutAnnotation {
-    }
-
-    @Test
-    public void withoutSuiteClassAnnotationProducesFailure() {
-        Result result = JUnitCore.runClasses(AllWithOutAnnotation.class);
-        assertEquals(1, result.getFailureCount());
-        String expected = String.format(
-                "class '%s' must have a SuiteClasses annotation",
-                AllWithOutAnnotation.class.getName());
-        assertEquals(expected, result.getFailures().get(0).getMessage());
     }
 
     @RunWith(Suite.class)
@@ -156,26 +189,10 @@ public class SuiteTest {
     static public class InfiniteLoop {
     }
 
-    @Test
-    public void whatHappensWhenASuiteHasACycle() {
-        Result result = JUnitCore.runClasses(InfiniteLoop.class);
-        assertEquals(1, result.getFailureCount());
-    }
-
     @RunWith(Suite.class)
     @SuiteClasses({BiInfiniteLoop.class, BiInfiniteLoop.class})
     static public class BiInfiniteLoop {
     }
-
-    @Test
-    public void whatHappensWhenASuiteHasAForkingCycle() {
-        Result result = JUnitCore.runClasses(BiInfiniteLoop.class);
-        assertEquals(2, result.getFailureCount());
-    }
-
-    // The interesting case here is that Hydra indirectly contains two copies of
-    // itself (if it only contains one, Java's StackOverflowError eventually
-    // bails us out)
 
     @RunWith(Suite.class)
     @SuiteClasses({Hercules.class})
@@ -187,12 +204,6 @@ public class SuiteTest {
     static public class Hercules {
     }
 
-    @Test
-    public void whatHappensWhenASuiteContainsItselfIndirectly() {
-        Result result = JUnitCore.runClasses(Hydra.class);
-        assertEquals(2, result.getFailureCount());
-    }
-
     @RunWith(Suite.class)
     @SuiteClasses({})
     public class WithoutDefaultConstructor {
@@ -201,18 +212,7 @@ public class SuiteTest {
         }
     }
 
-    @Test
-    public void suiteShouldBeOKwithNonDefaultConstructor() throws Exception {
-        Result result = JUnitCore.runClasses(WithoutDefaultConstructor.class);
-        assertTrue(result.wasSuccessful());
-    }
-
     @RunWith(Suite.class)
     public class NoSuiteClassesAnnotation {
-    }
-
-    @Test
-    public void suiteShouldComplainAboutNoSuiteClassesAnnotation() {
-        assertThat(testResult(NoSuiteClassesAnnotation.class), hasSingleFailureContaining("SuiteClasses"));
     }
 }

@@ -6,7 +6,9 @@ import org.junit.runner.Runner;
 import org.junit.runner.manipulation.InvalidOrderingException;
 import org.junit.runner.manipulation.Ordering;
 
-/** @since 4.13 */
+/**
+ * @since 4.13
+ */
 public class OrderingRequest extends MemoizingRequest {
     private final Request request;
     private final Ordering ordering;

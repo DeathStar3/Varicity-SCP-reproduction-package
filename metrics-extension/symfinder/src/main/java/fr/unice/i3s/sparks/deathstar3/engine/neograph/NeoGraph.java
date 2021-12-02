@@ -23,7 +23,6 @@ package fr.unice.i3s.sparks.deathstar3.engine.neograph;
 
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.*;
-
 import org.json.JSONObject;
 import org.neo4j.driver.*;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;

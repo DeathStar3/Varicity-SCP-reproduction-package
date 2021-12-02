@@ -26,7 +26,7 @@ import java.lang.reflect.Modifier;
  *    }
  * }
  * </pre>
- *
+ * <p>
  * For each test implement a method which interacts
  * with the fixture. Verify the expected results with assertions specified
  * by calling {@link junit.framework.Assert#assertTrue(String, boolean)} with a boolean.
@@ -36,7 +36,7 @@ import java.lang.reflect.Modifier;
  *       assertTrue(result == 5.0);
  *    }
  * </pre>
- *
+ * <p>
  * Once the methods are defined you can run them. The framework supports
  * both a static type safe and more dynamic way to run a test.
  * In the static way you override the runTest method and define the method to
@@ -57,7 +57,7 @@ import java.lang.reflect.Modifier;
  * TestCase test= new MathTest("testAdd");
  * test.run();
  * </pre>
- *
+ * <p>
  * The tests to be run can be collected into a TestSuite. JUnit provides
  * different <i>test runners</i> which can run a test suite and collect the results.
  * A test runner either expects a static method <code>suite</code> as the entry
@@ -93,95 +93,6 @@ public abstract class TestCase extends Assert implements Test {
      */
     public TestCase(String name) {
         fName = name;
-    }
-
-    /**
-     * Counts the number of test cases executed by run(TestResult result).
-     */
-    public int countTestCases() {
-        return 1;
-    }
-
-    /**
-     * Creates a default TestResult object.
-     *
-     * @see TestResult
-     */
-    protected TestResult createResult() {
-        return new TestResult();
-    }
-
-    /**
-     * A convenience method to run this test, collecting the results with a
-     * default TestResult object.
-     *
-     * @see TestResult
-     */
-    public TestResult run() {
-        TestResult result = createResult();
-        run(result);
-        return result;
-    }
-
-    /**
-     * Runs the test case and collects the results in TestResult.
-     */
-    public void run(TestResult result) {
-        result.run(this);
-    }
-
-    /**
-     * Runs the bare test sequence.
-     *
-     * @throws Throwable if any exception is thrown
-     */
-    public void runBare() throws Throwable {
-        Throwable exception = null;
-        setUp();
-        try {
-            runTest();
-        } catch (Throwable running) {
-            exception = running;
-        } finally {
-            try {
-                tearDown();
-            } catch (Throwable tearingDown) {
-                if (exception == null) exception = tearingDown;
-            }
-        }
-        if (exception != null) throw exception;
-    }
-
-    /**
-     * Override to run the test and assert its state.
-     *
-     * @throws Throwable if any exception is thrown
-     */
-    protected void runTest() throws Throwable {
-        assertNotNull("TestCase.fName cannot be null", fName); // Some VMs crash when calling getMethod(null,null);
-        Method runMethod = null;
-        try {
-            // use getMethod to get all public inherited
-            // methods. getDeclaredMethods returns all
-            // methods of this class but excludes the
-            // inherited ones.
-            runMethod = getClass().getMethod(fName, (Class[]) null);
-        } catch (NoSuchMethodException e) {
-            fail("Method \"" + fName + "\" not found");
-        }
-        if (!Modifier.isPublic(runMethod.getModifiers())) {
-            fail("Method \"" + fName + "\" should be public");
-        }
-
-        try {
-            runMethod.invoke(this);
-        } catch (InvocationTargetException e) {
-            e.fillInStackTrace();
-            throw e.getTargetException();
-        } catch (IllegalAccessException e) {
-            e.fillInStackTrace();
-            throw e;
-        }
     }
 
     /**
@@ -465,6 +376,95 @@ public abstract class TestCase extends Assert implements Test {
 
     public static String format(String message, Object expected, Object actual) {
         return Assert.format(message, expected, actual);
+    }
+
+    /**
+     * Counts the number of test cases executed by run(TestResult result).
+     */
+    public int countTestCases() {
+        return 1;
+    }
+
+    /**
+     * Creates a default TestResult object.
+     *
+     * @see TestResult
+     */
+    protected TestResult createResult() {
+        return new TestResult();
+    }
+
+    /**
+     * A convenience method to run this test, collecting the results with a
+     * default TestResult object.
+     *
+     * @see TestResult
+     */
+    public TestResult run() {
+        TestResult result = createResult();
+        run(result);
+        return result;
+    }
+
+    /**
+     * Runs the test case and collects the results in TestResult.
+     */
+    public void run(TestResult result) {
+        result.run(this);
+    }
+
+    /**
+     * Runs the bare test sequence.
+     *
+     * @throws Throwable if any exception is thrown
+     */
+    public void runBare() throws Throwable {
+        Throwable exception = null;
+        setUp();
+        try {
+            runTest();
+        } catch (Throwable running) {
+            exception = running;
+        } finally {
+            try {
+                tearDown();
+            } catch (Throwable tearingDown) {
+                if (exception == null) exception = tearingDown;
+            }
+        }
+        if (exception != null) throw exception;
+    }
+
+    /**
+     * Override to run the test and assert its state.
+     *
+     * @throws Throwable if any exception is thrown
+     */
+    protected void runTest() throws Throwable {
+        assertNotNull("TestCase.fName cannot be null", fName); // Some VMs crash when calling getMethod(null,null);
+        Method runMethod = null;
+        try {
+            // use getMethod to get all public inherited
+            // methods. getDeclaredMethods returns all
+            // methods of this class but excludes the
+            // inherited ones.
+            runMethod = getClass().getMethod(fName, (Class[]) null);
+        } catch (NoSuchMethodException e) {
+            fail("Method \"" + fName + "\" not found");
+        }
+        if (!Modifier.isPublic(runMethod.getModifiers())) {
+            fail("Method \"" + fName + "\" should be public");
+        }
+
+        try {
+            runMethod.invoke(this);
+        } catch (InvocationTargetException e) {
+            e.fillInStackTrace();
+            throw e.getTargetException();
+        } catch (IllegalAccessException e) {
+            e.fillInStackTrace();
+            throw e;
+        }
     }
 
     /**

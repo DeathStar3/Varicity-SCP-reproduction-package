@@ -33,7 +33,7 @@ public class FrameworkMethod extends FrameworkMember<FrameworkMethod> {
             // This method could be a public method in a package-scope base class
             try {
                 method.setAccessible(true);
-            } catch (SecurityException  e) {
+            } catch (SecurityException e) {
                 // We may get an IllegalAccessException when we try to call the method
             }
         }
@@ -180,9 +180,9 @@ public class FrameworkMethod extends FrameworkMember<FrameworkMethod> {
      * to {@code type}
      *
      * @deprecated This is used only by the Theories runner, and does not
-     *             use all the generic type info that it ought to. It will be replaced
-     *             with a forthcoming ParameterSignature#canAcceptResultOf(FrameworkMethod)
-     *             once Theories moves to junit-contrib.
+     * use all the generic type info that it ought to. It will be replaced
+     * with a forthcoming ParameterSignature#canAcceptResultOf(FrameworkMethod)
+     * once Theories moves to junit-contrib.
      */
     @Deprecated
     public boolean producesType(Type type) {

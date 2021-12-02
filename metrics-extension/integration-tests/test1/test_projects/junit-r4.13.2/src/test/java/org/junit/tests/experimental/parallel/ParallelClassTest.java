@@ -23,6 +23,28 @@ public class ParallelClassTest {
     private static volatile Thread fExample2Two = null;
     private static volatile CountDownLatch fSynchronizer;
 
+    @Before
+    public void init() {
+        fExample1One = null;
+        fExample1Two = null;
+        fExample2One = null;
+        fExample2Two = null;
+        fSynchronizer = new CountDownLatch(2);
+    }
+
+    @Test
+    public void testsRunInParallel() {
+        Result result = JUnitCore.runClasses(ParallelComputer.classes(), Example1.class, Example2.class);
+        assertTrue(result.wasSuccessful());
+        assertNotNull(fExample1One);
+        assertNotNull(fExample1Two);
+        assertNotNull(fExample2One);
+        assertNotNull(fExample2Two);
+        assertThat(fExample1One, is(fExample1Two));
+        assertThat(fExample2One, is(fExample2Two));
+        assertThat(fExample1One, is(not(fExample2One)));
+    }
+
     public static class Example1 {
         @Test
         public void one() throws InterruptedException {
@@ -53,27 +75,5 @@ public class ParallelClassTest {
             assertTrue(fSynchronizer.await(TIMEOUT, TimeUnit.SECONDS));
             fExample2Two = Thread.currentThread();
         }
-    }
-
-    @Before
-    public void init() {
-        fExample1One = null;
-        fExample1Two = null;
-        fExample2One = null;
-        fExample2Two = null;
-        fSynchronizer = new CountDownLatch(2);
-    }
-
-    @Test
-    public void testsRunInParallel() {
-        Result result = JUnitCore.runClasses(ParallelComputer.classes(), Example1.class, Example2.class);
-        assertTrue(result.wasSuccessful());
-        assertNotNull(fExample1One);
-        assertNotNull(fExample1Two);
-        assertNotNull(fExample2One);
-        assertNotNull(fExample2Two);
-        assertThat(fExample1One, is(fExample1Two));
-        assertThat(fExample2One, is(fExample2Two));
-        assertThat(fExample1One, is(not(fExample2One)));
     }
 }

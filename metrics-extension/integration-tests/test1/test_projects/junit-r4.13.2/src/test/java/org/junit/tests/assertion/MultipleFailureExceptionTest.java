@@ -35,8 +35,8 @@ public class MultipleFailureExceptionTest {
 
     @Test
     public void assertEmptyRethrowsSingleRuntimeException() throws Exception {
-        Throwable exception= new ExpectedException("pesto");
-        List<Throwable> errors= Collections.singletonList(exception);
+        Throwable exception = new ExpectedException("pesto");
+        List<Throwable> errors = Collections.singletonList(exception);
         try {
             MultipleFailureException.assertEmpty(errors);
             fail();
@@ -47,8 +47,8 @@ public class MultipleFailureExceptionTest {
 
     @Test
     public void assertEmptyRethrowsSingleError() throws Exception {
-        Throwable exception= new AnnotationFormatError("changeo");
-        List<Throwable> errors= Collections.singletonList(exception);
+        Throwable exception = new AnnotationFormatError("changeo");
+        List<Throwable> errors = Collections.singletonList(exception);
         try {
             MultipleFailureException.assertEmpty(errors);
             fail();

@@ -1,25 +1,17 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ExperimentConfig {
 
     @NotBlank()
@@ -53,12 +45,12 @@ public class ExperimentConfig {
     private boolean buildCmdIncludeSonar;
     private boolean sonarqubeNeeded = false;
     private String outputPath = "generated_visualizations/data/externals"; // Optional
-    
+
     private String sourceCodePath = "sources"; // Optional
     private List<MetricSource> sources;
 
     public ExperimentConfig(String projectName, String path, String buildEnv, String buildEnvTag,
-            String buildCmd, boolean buildCmdIncludeSonar) {
+                            String buildCmd, boolean buildCmdIncludeSonar) {
         this.projectName = projectName;
         this.path = path;
         this.buildEnv = buildEnv;

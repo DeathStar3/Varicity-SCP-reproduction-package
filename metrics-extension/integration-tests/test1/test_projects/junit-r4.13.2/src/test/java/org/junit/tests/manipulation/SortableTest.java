@@ -35,6 +35,51 @@ public class SortableTest {
     public static class TestClassRunnerIsSortable {
         private static String log = "";
 
+        @Before
+        public void resetLog() {
+            log = "";
+        }
+
+        @Test
+        public void sortingForwardWorksOnTestClassRunner() {
+            Request forward = Request.aClass(SortMe.class).sortWith(forward());
+
+            new JUnitCore().run(forward);
+            assertEquals("abc", log);
+        }
+
+        @Test
+        public void sortingBackwardWorksOnTestClassRunner() {
+            Request backward = Request.aClass(SortMe.class).sortWith(backward());
+
+            new JUnitCore().run(backward);
+            assertEquals("cba", log);
+        }
+
+        @Test
+        public void sortingBackwardDoesNothingOnTestClassRunnerWithFixMethodOrder() {
+            Request backward = Request.aClass(DoNotSortMe.class).sortWith(backward());
+
+            new JUnitCore().run(backward);
+            assertEquals("abc", log);
+        }
+
+        @Test
+        public void sortingForwardWorksOnSuite() {
+            Request forward = Request.aClass(Enclosing.class).sortWith(forward());
+
+            new JUnitCore().run(forward);
+            assertEquals("AaAbAcBaBbBc", log);
+        }
+
+        @Test
+        public void sortingBackwardWorksOnSuite() {
+            Request backward = Request.aClass(Enclosing.class).sortWith(backward());
+
+            new JUnitCore().run(backward);
+            assertEquals("BcBbBaAcAbAa", log);
+        }
+
         public static class SortMe {
             @Test
             public void a() {
@@ -68,35 +113,6 @@ public class SortableTest {
             public void c() {
                 log += "c";
             }
-        }
-
-        @Before
-        public void resetLog() {
-            log = "";
-        }
-
-        @Test
-        public void sortingForwardWorksOnTestClassRunner() {
-            Request forward = Request.aClass(SortMe.class).sortWith(forward());
-
-            new JUnitCore().run(forward);
-            assertEquals("abc", log);
-        }
-
-        @Test
-        public void sortingBackwardWorksOnTestClassRunner() {
-            Request backward = Request.aClass(SortMe.class).sortWith(backward());
-
-            new JUnitCore().run(backward);
-            assertEquals("cba", log);
-        }
-
-        @Test
-        public void sortingBackwardDoesNothingOnTestClassRunnerWithFixMethodOrder() {
-            Request backward = Request.aClass(DoNotSortMe.class).sortWith(backward());
-
-            new JUnitCore().run(backward);
-            assertEquals("abc", log);
         }
 
         @RunWith(Enclosed.class)
@@ -135,47 +151,10 @@ public class SortableTest {
                 }
             }
         }
-
-        @Test
-        public void sortingForwardWorksOnSuite() {
-            Request forward = Request.aClass(Enclosing.class).sortWith(forward());
-
-            new JUnitCore().run(forward);
-            assertEquals("AaAbAcBaBbBc", log);
-        }
-
-        @Test
-        public void sortingBackwardWorksOnSuite() {
-            Request backward = Request.aClass(Enclosing.class).sortWith(backward());
-
-            new JUnitCore().run(backward);
-            assertEquals("BcBbBaAcAbAa", log);
-        }
     }
 
     public static class TestClassRunnerIsSortableWithSuiteMethod {
         private static String log = "";
-
-        public static class SortMe {
-            @Test
-            public void a() {
-                log += "a";
-            }
-
-            @Test
-            public void b() {
-                log += "b";
-            }
-
-            @Test
-            public void c() {
-                log += "c";
-            }
-
-            public static junit.framework.Test suite() {
-                return new JUnit4TestAdapter(SortMe.class);
-            }
-        }
 
         @Before
         public void resetLog() {
@@ -197,9 +176,36 @@ public class SortableTest {
             new JUnitCore().run(backward);
             assertEquals("cba", log);
         }
+
+        public static class SortMe {
+            public static junit.framework.Test suite() {
+                return new JUnit4TestAdapter(SortMe.class);
+            }
+
+            @Test
+            public void a() {
+                log += "a";
+            }
+
+            @Test
+            public void b() {
+                log += "b";
+            }
+
+            @Test
+            public void c() {
+                log += "c";
+            }
+        }
     }
 
     public static class UnsortableRunnersAreHandledWithoutCrashing {
+        @Test
+        public void unsortablesAreHandledWithoutCrashing() {
+            Request unsorted = Request.aClass(Unsortable.class).sortWith(forward());
+            new JUnitCore().run(unsorted);
+        }
+
         public static class UnsortableRunner extends Runner {
             public UnsortableRunner(Class<?> klass) {
             }
@@ -220,16 +226,31 @@ public class SortableTest {
             public void a() {
             }
         }
-
-        @Test
-        public void unsortablesAreHandledWithoutCrashing() {
-            Request unsorted = Request.aClass(Unsortable.class).sortWith(forward());
-            new JUnitCore().run(unsorted);
-        }
     }
 
     public static class TestOnlySortableClassRunnerIsSortable {
         private static String log = "";
+
+        @Before
+        public void resetLog() {
+            log = "";
+        }
+
+        @Test
+        public void sortingForwardWorksOnTestClassRunner() {
+            Request forward = Request.aClass(SortMe.class).sortWith(forward());
+
+            new JUnitCore().run(forward);
+            assertEquals("abc", log);
+        }
+
+        @Test
+        public void sortingBackwardWorksOnTestClassRunner() {
+            Request backward = Request.aClass(SortMe.class).sortWith(backward());
+
+            new JUnitCore().run(backward);
+            assertEquals("cba", log);
+        }
 
         /**
          * A Runner that implements {@link Sortable} but not {@link Orderable}.
@@ -258,6 +279,10 @@ public class SortableTest {
 
         @RunWith(SortableRunner.class)
         public static class SortMe {
+            public static junit.framework.Test suite() {
+                return new JUnit4TestAdapter(SortMe.class);
+            }
+
             @Test
             public void a() {
                 log += "a";
@@ -272,31 +297,6 @@ public class SortableTest {
             public void c() {
                 log += "c";
             }
-
-            public static junit.framework.Test suite() {
-                return new JUnit4TestAdapter(SortMe.class);
-            }
-        }
-
-        @Before
-        public void resetLog() {
-            log = "";
-        }
-
-        @Test
-        public void sortingForwardWorksOnTestClassRunner() {
-            Request forward = Request.aClass(SortMe.class).sortWith(forward());
-
-            new JUnitCore().run(forward);
-            assertEquals("abc", log);
-        }
-
-        @Test
-        public void sortingBackwardWorksOnTestClassRunner() {
-            Request backward = Request.aClass(SortMe.class).sortWith(backward());
-
-            new JUnitCore().run(backward);
-            assertEquals("cba", log);
         }
     }
 }

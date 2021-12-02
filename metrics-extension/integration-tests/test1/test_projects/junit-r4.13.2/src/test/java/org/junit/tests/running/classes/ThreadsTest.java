@@ -22,20 +22,6 @@ public class ThreadsTest {
     private List<Boolean> interruptedFlags = new ArrayList<Boolean>();
     private JUnitCore core = new JUnitCore();
 
-    public static class TestWithInterrupt {
-
-        @Test
-        public void interruptCurrentThread() {
-            Thread.currentThread().interrupt();
-        }
-
-        @Test
-        public void otherTestCaseInterruptingCurrentThread() {
-            Thread.currentThread().interrupt();
-        }
-
-    }
-
     @Test
     public void currentThreadInterruptedStatusIsClearedAfterEachTestExecution() {
         core.addListener(new RunListener() {
@@ -49,19 +35,6 @@ public class ThreadsTest {
 
         assertEquals(0, result.getFailureCount());
         assertEquals(asList(false, false), interruptedFlags);
-    }
-
-    @RunWith(BlockJUnit4ClassRunner.class)
-    public static class TestWithInterruptFromAfterClass {
-        @AfterClass
-        public static void interruptCurrentThread() {
-            Thread.currentThread().interrupt();
-        }
-
-        @Test
-        public void test() {
-            // no-op
-        }
     }
 
     @Test
@@ -79,5 +52,32 @@ public class ThreadsTest {
 
         assertEquals(0, result.getFailureCount());
         assertEquals(singletonList(false), interruptedFlags);
+    }
+
+    public static class TestWithInterrupt {
+
+        @Test
+        public void interruptCurrentThread() {
+            Thread.currentThread().interrupt();
+        }
+
+        @Test
+        public void otherTestCaseInterruptingCurrentThread() {
+            Thread.currentThread().interrupt();
+        }
+
+    }
+
+    @RunWith(BlockJUnit4ClassRunner.class)
+    public static class TestWithInterruptFromAfterClass {
+        @AfterClass
+        public static void interruptCurrentThread() {
+            Thread.currentThread().interrupt();
+        }
+
+        @Test
+        public void test() {
+            // no-op
+        }
     }
 }

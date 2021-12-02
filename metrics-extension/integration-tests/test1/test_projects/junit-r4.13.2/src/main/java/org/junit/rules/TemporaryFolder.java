@@ -43,15 +43,14 @@ import org.junit.Rule;
  * @since 4.7
  */
 public class TemporaryFolder extends ExternalResource {
+    private static final int TEMP_DIR_ATTEMPTS = 10000;
+    private static final String TMP_PREFIX = "junit";
     private final File parentFolder;
     private final boolean assureDeletion;
     private File folder;
 
-    private static final int TEMP_DIR_ATTEMPTS = 10000;
-    private static final String TMP_PREFIX = "junit";
-
     /**
-     * Create a temporary folder which uses system default temporary-file 
+     * Create a temporary folder which uses system default temporary-file
      * directory to create temporary resources.
      */
     public TemporaryFolder() {
@@ -63,7 +62,7 @@ public class TemporaryFolder extends ExternalResource {
      * temporary resources.
      *
      * @param parentFolder folder where temporary resources will be created.
-     * If {@code null} then system default temporary-file directory is used.
+     *                     If {@code null} then system default temporary-file directory is used.
      */
     public TemporaryFolder(File parentFolder) {
         this.parentFolder = parentFolder;
@@ -88,48 +87,66 @@ public class TemporaryFolder extends ExternalResource {
         return new Builder();
     }
 
-    /**
-     * Builds an instance of {@link TemporaryFolder}.
-     * 
-     * @since 4.13
-     */
-    public static class Builder {
-        private File parentFolder;
-        private boolean assureDeletion;
-
-        protected Builder() {}
-
-        /**
-         * Specifies which folder to use for creating temporary resources.
-         * If {@code null} then system default temporary-file directory is
-         * used.
-         *
-         * @return this
-         */
-        public Builder parentFolder(File parentFolder) {
-            this.parentFolder = parentFolder;
-            return this;
-        }
-
-        /**
-         * Setting this flag assures that no resources are left undeleted. Failure
-         * to fulfill the assurance results in failure of tests with an
-         * {@link AssertionError}.
-         *
-         * @return this
-         */
-        public Builder assureDeletion() {
-            this.assureDeletion = true;
-            return this;
-        }
-
-        /**
-         * Builds a {@link TemporaryFolder} instance using the values in this builder.
-         */
-        public TemporaryFolder build() {
-            return new TemporaryFolder(this);
+    private static File createTemporaryFolderIn(File parentFolder) throws IOException {
+        try {
+            return createTemporaryFolderWithNioApi(parentFolder);
+        } catch (ClassNotFoundException ignore) {
+            // Fallback for Java 5 and 6
+            return createTemporaryFolderWithFileApi(parentFolder);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException) {
+                throw (IOException) cause;
+            }
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            IOException exception = new IOException("Failed to create temporary folder in " + parentFolder);
+            exception.initCause(cause);
+            throw exception;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create temporary folder in " + parentFolder, e);
         }
     }
+
+    private static File createTemporaryFolderWithNioApi(File parentFolder) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Class<?> filesClass = Class.forName("java.nio.file.Files");
+        Object fileAttributeArray = Array.newInstance(Class.forName("java.nio.file.attribute.FileAttribute"), 0);
+        Class<?> pathClass = Class.forName("java.nio.file.Path");
+        Object tempDir;
+        if (parentFolder != null) {
+            Method createTempDirectoryMethod = filesClass.getDeclaredMethod("createTempDirectory", pathClass, String.class, fileAttributeArray.getClass());
+            Object parentPath = File.class.getDeclaredMethod("toPath").invoke(parentFolder);
+            tempDir = createTempDirectoryMethod.invoke(null, parentPath, TMP_PREFIX, fileAttributeArray);
+        } else {
+            Method createTempDirectoryMethod = filesClass.getDeclaredMethod("createTempDirectory", String.class, fileAttributeArray.getClass());
+            tempDir = createTempDirectoryMethod.invoke(null, TMP_PREFIX, fileAttributeArray);
+        }
+        return (File) pathClass.getDeclaredMethod("toFile").invoke(tempDir);
+    }
+
+    private static File createTemporaryFolderWithFileApi(File parentFolder) throws IOException {
+        File createdFolder = null;
+        for (int i = 0; i < TEMP_DIR_ATTEMPTS; ++i) {
+            // Use createTempFile to get a suitable folder name.
+            String suffix = ".tmp";
+            File tmpFile = File.createTempFile(TMP_PREFIX, suffix, parentFolder);
+            String tmpName = tmpFile.toString();
+            // Discard .tmp suffix of tmpName.
+            String folderName = tmpName.substring(0, tmpName.length() - suffix.length());
+            createdFolder = new File(folderName);
+            if (createdFolder.mkdir()) {
+                tmpFile.delete();
+                return createdFolder;
+            }
+            tmpFile.delete();
+        }
+        throw new IOException("Unable to create temporary directory in: "
+                + parentFolder.toString() + ". Tried " + TEMP_DIR_ATTEMPTS + " times. "
+                + "Last attempted to create: " + createdFolder.toString());
+    }
+
+    // testing purposes only
 
     @Override
     protected void before() throws Throwable {
@@ -140,8 +157,6 @@ public class TemporaryFolder extends ExternalResource {
     protected void after() {
         delete();
     }
-
-    // testing purposes only
 
     /**
      * for testing purposes only. Do not use.
@@ -232,65 +247,6 @@ public class TemporaryFolder extends ExternalResource {
         return createTemporaryFolderIn(getRoot());
     }
 
-    private static File createTemporaryFolderIn(File parentFolder) throws IOException {
-        try {
-            return createTemporaryFolderWithNioApi(parentFolder);
-        } catch (ClassNotFoundException ignore) {
-            // Fallback for Java 5 and 6
-            return createTemporaryFolderWithFileApi(parentFolder);
-        } catch (InvocationTargetException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof IOException) {
-                throw (IOException) cause;
-            }
-            if (cause instanceof RuntimeException) {
-                throw (RuntimeException) cause;
-            }
-            IOException exception = new IOException("Failed to create temporary folder in " + parentFolder);
-            exception.initCause(cause);
-            throw exception;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create temporary folder in " + parentFolder, e);
-        }
-    }
-
-    private static File createTemporaryFolderWithNioApi(File parentFolder) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class<?> filesClass = Class.forName("java.nio.file.Files");
-        Object fileAttributeArray = Array.newInstance(Class.forName("java.nio.file.attribute.FileAttribute"), 0);
-        Class<?> pathClass = Class.forName("java.nio.file.Path");
-        Object tempDir;
-        if (parentFolder != null) {
-            Method createTempDirectoryMethod = filesClass.getDeclaredMethod("createTempDirectory", pathClass, String.class, fileAttributeArray.getClass());
-            Object parentPath = File.class.getDeclaredMethod("toPath").invoke(parentFolder);
-            tempDir = createTempDirectoryMethod.invoke(null, parentPath, TMP_PREFIX, fileAttributeArray);
-        } else {
-            Method createTempDirectoryMethod = filesClass.getDeclaredMethod("createTempDirectory", String.class, fileAttributeArray.getClass());
-            tempDir = createTempDirectoryMethod.invoke(null, TMP_PREFIX, fileAttributeArray);
-        }
-        return (File) pathClass.getDeclaredMethod("toFile").invoke(tempDir);
-    }
-
-    private static File createTemporaryFolderWithFileApi(File parentFolder) throws IOException {
-        File createdFolder = null;
-        for (int i = 0; i < TEMP_DIR_ATTEMPTS; ++i) {
-            // Use createTempFile to get a suitable folder name.
-            String suffix = ".tmp";
-            File tmpFile = File.createTempFile(TMP_PREFIX, suffix, parentFolder);
-            String tmpName = tmpFile.toString();
-            // Discard .tmp suffix of tmpName.
-            String folderName = tmpName.substring(0, tmpName.length() - suffix.length());
-            createdFolder = new File(folderName);
-            if (createdFolder.mkdir()) {
-                tmpFile.delete();
-                return createdFolder;
-            }
-            tmpFile.delete();
-        }
-        throw new IOException("Unable to create temporary directory in: "
-            + parentFolder.toString() + ". Tried " + TEMP_DIR_ATTEMPTS + " times. "
-            + "Last attempted to create: " + createdFolder.toString());
-    }
-
     /**
      * @return the location of this temporary folder.
      */
@@ -307,7 +263,7 @@ public class TemporaryFolder extends ExternalResource {
      * called directly, since it is automatically applied by the {@link Rule}.
      *
      * @throws AssertionError if unable to clean up resources
-     * and deletion of resources is assured.
+     *                        and deletion of resources is assured.
      */
     public void delete() {
         if (!tryDelete()) {
@@ -322,13 +278,13 @@ public class TemporaryFolder extends ExternalResource {
      * returns whether deletion was successful or not.
      *
      * @return {@code true} if all resources are deleted successfully,
-     *         {@code false} otherwise.
+     * {@code false} otherwise.
      */
     private boolean tryDelete() {
         if (folder == null) {
             return true;
         }
-        
+
         return recursiveDelete(folder);
     }
 
@@ -347,5 +303,49 @@ public class TemporaryFolder extends ExternalResource {
             }
         }
         return file.delete();
+    }
+
+    /**
+     * Builds an instance of {@link TemporaryFolder}.
+     *
+     * @since 4.13
+     */
+    public static class Builder {
+        private File parentFolder;
+        private boolean assureDeletion;
+
+        protected Builder() {
+        }
+
+        /**
+         * Specifies which folder to use for creating temporary resources.
+         * If {@code null} then system default temporary-file directory is
+         * used.
+         *
+         * @return this
+         */
+        public Builder parentFolder(File parentFolder) {
+            this.parentFolder = parentFolder;
+            return this;
+        }
+
+        /**
+         * Setting this flag assures that no resources are left undeleted. Failure
+         * to fulfill the assurance results in failure of tests with an
+         * {@link AssertionError}.
+         *
+         * @return this
+         */
+        public Builder assureDeletion() {
+            this.assureDeletion = true;
+            return this;
+        }
+
+        /**
+         * Builds a {@link TemporaryFolder} instance using the values in this builder.
+         */
+        public TemporaryFolder build() {
+            return new TemporaryFolder(this);
+        }
     }
 }

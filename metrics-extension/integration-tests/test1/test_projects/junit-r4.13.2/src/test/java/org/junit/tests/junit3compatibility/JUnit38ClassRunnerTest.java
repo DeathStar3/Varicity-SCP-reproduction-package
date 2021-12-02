@@ -8,6 +8,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import junit.extensions.TestDecorator;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
@@ -24,23 +25,12 @@ import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.NoTestsRemainException;
 
 public class JUnit38ClassRunnerTest {
-    public static class MyTest extends TestCase {
-        public void testA() {
-
-        }
-    }
+    static int count;
 
     @Test
     public void plansDecoratorCorrectly() {
         JUnit38ClassRunner runner = new JUnit38ClassRunner(new TestDecorator(new TestSuite(MyTest.class)));
         assertEquals(1, runner.testCount());
-    }
-
-    public static class AnnotatedTest {
-        @Test
-        public void foo() {
-            Assert.fail();
-        }
     }
 
     @Test
@@ -49,13 +39,6 @@ public class JUnit38ClassRunnerTest {
         Result result = new JUnitCore().run(runner);
         Failure failure = result.getFailures().get(0);
         assertEquals(Description.createTestDescription(AnnotatedTest.class, "foo"), failure.getDescription());
-    }
-
-    static int count;
-
-    public static class OneTest extends TestCase {
-        public void testOne() {
-        }
     }
 
     @Test
@@ -77,12 +60,6 @@ public class JUnit38ClassRunnerTest {
         assertEquals(1, result.getRunCount());
     }
 
-    public static class ClassWithInvalidMethod extends TestCase {
-        @SuppressWarnings("unused")
-        private void testInvalid() {
-        }
-    }
-
     @Test
     public void invalidTestMethodReportedCorrectly() {
         Result result = JUnitCore.runClasses(ClassWithInvalidMethod.class);
@@ -91,29 +68,12 @@ public class JUnit38ClassRunnerTest {
         assertEquals("junit.framework.TestSuite$1", failure.getDescription().getClassName());
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
-    public static @interface MyAnnotation {
-    }
-
-    public static class JUnit3ClassWithAnnotatedMethod extends TestCase {
-        @MyAnnotation
-        public void testAnnotated() {
-        }
-
-        public void testNotAnnotated() {
-        }
-    }
-
-    public static class DerivedAnnotatedMethod extends JUnit3ClassWithAnnotatedMethod {
-    }
-
     @Test
     public void getDescriptionWithAnnotation() {
         JUnit38ClassRunner runner = new JUnit38ClassRunner(JUnit3ClassWithAnnotatedMethod.class);
         assertAnnotationFiltering(runner);
     }
-    
+
     @Test
     public void getDescriptionWithAnnotationInSuper() {
         JUnit38ClassRunner runner = new JUnit38ClassRunner(DerivedAnnotatedMethod.class);
@@ -132,6 +92,56 @@ public class JUnit38ClassRunnerTest {
         }
     }
 
+    /**
+     * Test that NoTestsRemainException is thrown when all methods have been filtered.
+     */
+    @Test(expected = NoTestsRemainException.class)
+    public void filterNoTestsRemain() throws NoTestsRemainException {
+        JUnit38ClassRunner runner = new JUnit38ClassRunner(OneTest.class);
+        runner.filter(new RejectAllTestsFilter());
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface MyAnnotation {
+    }
+
+    public static class MyTest extends TestCase {
+        public void testA() {
+
+        }
+    }
+
+    public static class AnnotatedTest {
+        @Test
+        public void foo() {
+            Assert.fail();
+        }
+    }
+
+    public static class OneTest extends TestCase {
+        public void testOne() {
+        }
+    }
+
+    public static class ClassWithInvalidMethod extends TestCase {
+        @SuppressWarnings("unused")
+        private void testInvalid() {
+        }
+    }
+
+    public static class JUnit3ClassWithAnnotatedMethod extends TestCase {
+        @MyAnnotation
+        public void testAnnotated() {
+        }
+
+        public void testNotAnnotated() {
+        }
+    }
+
+    public static class DerivedAnnotatedMethod extends JUnit3ClassWithAnnotatedMethod {
+    }
+
     public static class RejectAllTestsFilter extends Filter {
         @Override
         public boolean shouldRun(Description description) {
@@ -142,14 +152,5 @@ public class JUnit38ClassRunnerTest {
         public String describe() {
             return "filter all";
         }
-    }
-
-    /**
-     * Test that NoTestsRemainException is thrown when all methods have been filtered.
-     */
-    @Test(expected = NoTestsRemainException.class) 
-    public void filterNoTestsRemain() throws NoTestsRemainException {
-        JUnit38ClassRunner runner = new JUnit38ClassRunner(OneTest.class);
-        runner.filter(new RejectAllTestsFilter());  
     }
 }

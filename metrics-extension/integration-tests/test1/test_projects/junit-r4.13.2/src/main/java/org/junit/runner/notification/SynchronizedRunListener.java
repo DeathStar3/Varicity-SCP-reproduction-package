@@ -15,9 +15,8 @@ import org.junit.runner.Result;
  *
  * @author Tibor Digana (tibor17)
  * @author Kevin Cooney (kcooney)
- * @since 4.12
- *
  * @see RunNotifier
+ * @since 4.12
  */
 @RunListener.ThreadSafe
 final class SynchronizedRunListener extends RunListener {
@@ -47,6 +46,7 @@ final class SynchronizedRunListener extends RunListener {
      * {@inheritDoc}
      * <p/>
      * Synchronized decorator for {@link RunListener#testSuiteStarted(Description)}.
+     *
      * @param description the description of the test suite that is about to be run
      *                    (generally a class name).
      * @throws Exception if any occurs.
@@ -63,6 +63,7 @@ final class SynchronizedRunListener extends RunListener {
      * {@inheritDoc}
      * <p/>
      * Synchronized decorator for {@link RunListener#testSuiteFinished(Description)}.
+     *
      * @param description the description of the test suite that just ran.
      * @throws Exception
      * @since 4.13
@@ -123,7 +124,7 @@ final class SynchronizedRunListener extends RunListener {
             return false;
         }
         SynchronizedRunListener that = (SynchronizedRunListener) other;
-        
+
         return listener.equals(that.listener);
     }
 

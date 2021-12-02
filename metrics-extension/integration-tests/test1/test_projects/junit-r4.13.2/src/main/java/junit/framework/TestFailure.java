@@ -42,7 +42,7 @@ public class TestFailure {
     public String toString() {
         return fFailedTest + ": " + fThrownException.getMessage();
     }
-    
+
     /**
      * Returns a String containing the stack trace of the error
      * thrown by TestFailure.

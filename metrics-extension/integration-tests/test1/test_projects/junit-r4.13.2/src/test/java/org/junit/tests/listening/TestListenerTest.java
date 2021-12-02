@@ -14,32 +14,11 @@ public class TestListenerTest {
 
     int count;
 
-    class ErrorListener extends RunListener {
-        @Override
-        public void testRunStarted(Description description) throws Exception {
-            throw new Error();
-        }
-    }
-
-    public static class OneTest {
-        @Test
-        public void nothing() {
-        }
-    }
-
     @Test(expected = Error.class)
     public void failingListener() {
         JUnitCore runner = new JUnitCore();
         runner.addListener(new ErrorListener());
         runner.run(OneTest.class);
-    }
-
-    class ExceptionListener extends ErrorListener {
-        @Override
-        public void testRunStarted(Description description) throws Exception {
-            count++;
-            throw new Exception();
-        }
     }
 
     @Test
@@ -61,5 +40,26 @@ public class TestListenerTest {
         Result first = core.run(OneTest.class);
         Result second = core.run(OneTest.class);
         assertNotSame(first, second);
+    }
+
+    public static class OneTest {
+        @Test
+        public void nothing() {
+        }
+    }
+
+    class ErrorListener extends RunListener {
+        @Override
+        public void testRunStarted(Description description) throws Exception {
+            throw new Error();
+        }
+    }
+
+    class ExceptionListener extends ErrorListener {
+        @Override
+        public void testRunStarted(Description description) throws Exception {
+            count++;
+            throw new Exception();
+        }
     }
 }

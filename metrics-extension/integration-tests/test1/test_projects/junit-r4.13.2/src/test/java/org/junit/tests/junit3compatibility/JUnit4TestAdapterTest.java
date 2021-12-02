@@ -31,6 +31,21 @@ public class JUnit4TestAdapterTest {
         assertEquals(Collections.emptyList(), Collections.list(testResult.errors()));
     }
 
+    @Test
+    public void testJUnit4Suite() {
+        doTest(TestSuiteFor4.class);
+    }
+
+    @Test
+    public void testJUnit3Suite() {
+        doTest(TestSuiteFor3.class);
+    }
+
+    @Test
+    public void testJUnit4SuiteThatContainsJUnit3SuiteClass() {
+        doTest(TestSuite4ForTestSuite3.class);
+    }
+
     public static class Test4 {
         @Test
         public void pass() throws Exception {
@@ -41,11 +56,6 @@ public class JUnit4TestAdapterTest {
     @RunWith(Suite.class)
     @Suite.SuiteClasses(Test4.class)
     public static class TestSuiteFor4 {
-    }
-
-    @Test
-    public void testJUnit4Suite() {
-        doTest(TestSuiteFor4.class);
     }
 
     public static class Test3 extends TestCase {
@@ -59,11 +69,6 @@ public class JUnit4TestAdapterTest {
     public static class TestSuiteFor3 {
     }
 
-    @Test
-    public void testJUnit3Suite() {
-        doTest(TestSuiteFor3.class);
-    }
-
     public static class TestSuite3 {
         public static junit.framework.Test suite() {
             return new TestSuite(Test3.class);
@@ -73,10 +78,5 @@ public class JUnit4TestAdapterTest {
     @RunWith(Suite.class)
     @Suite.SuiteClasses(TestSuite3.class)
     public static class TestSuite4ForTestSuite3 {
-    }
-
-    @Test
-    public void testJUnit4SuiteThatContainsJUnit3SuiteClass() {
-        doTest(TestSuite4ForTestSuite3.class);
     }
 }

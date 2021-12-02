@@ -27,10 +27,9 @@ public class NameRulesTest {
     }
 
     public static class BeforeAndAfterTest {
+        private final String expectedName = "x";
         @Rule
         public TestName name = new TestName();
-
-        private final String expectedName = "x";
 
         @Before
         public void setUp() {

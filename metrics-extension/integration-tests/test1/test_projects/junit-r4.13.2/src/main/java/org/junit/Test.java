@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  *       new ArrayList&lt;Object&gt;().get(1);
  *    }
  * </pre>
- *
+ * <p>
  * Using the parameter <code>expected</code> for exception testing comes with
  * some limitations: only the exception's type can be checked and it is not
  * possible to precisely specify the code that throws the exception. Therefore
@@ -85,16 +85,6 @@ import java.lang.annotation.Target;
 public @interface Test {
 
     /**
-     * Default empty exception.
-     */
-    static class None extends Throwable {
-        private static final long serialVersionUID = 1L;
-
-        private None() {
-        }
-    }
-
-    /**
      * Optionally specify <code>expected</code>, a Throwable, to cause a test method to succeed if
      * and only if an exception of the specified class is thrown by the method. If the Throwable's
      * message or one of its properties should be verified, the
@@ -114,4 +104,14 @@ public @interface Test {
      * </p>
      */
     long timeout() default 0L;
+
+    /**
+     * Default empty exception.
+     */
+    static class None extends Throwable {
+        private static final long serialVersionUID = 1L;
+
+        private None() {
+        }
+    }
 }

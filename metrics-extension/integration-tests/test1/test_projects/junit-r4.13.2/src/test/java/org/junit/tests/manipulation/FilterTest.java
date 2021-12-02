@@ -8,24 +8,6 @@ import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
 public class FilterTest {
-    public static class NamedFilter extends Filter {
-        private final String fName;
-
-        public NamedFilter(String name) {
-            fName = name;
-        }
-
-        @Override
-        public boolean shouldRun(Description description) {
-            return false;
-        }
-
-        @Override
-        public String describe() {
-            return fName;
-        }
-    }
-
     @Test
     public void intersectionText() {
         NamedFilter a = new NamedFilter("a");
@@ -46,5 +28,23 @@ public class FilterTest {
         assertSame(a, a.intersect(Filter.ALL));
         assertSame(a, Filter.ALL.intersect(a));
         assertSame(Filter.ALL, Filter.ALL.intersect(Filter.ALL));
+    }
+
+    public static class NamedFilter extends Filter {
+        private final String fName;
+
+        public NamedFilter(String name) {
+            fName = name;
+        }
+
+        @Override
+        public boolean shouldRun(Description description) {
+            return false;
+        }
+
+        @Override
+        public String describe() {
+            return fName;
+        }
     }
 }

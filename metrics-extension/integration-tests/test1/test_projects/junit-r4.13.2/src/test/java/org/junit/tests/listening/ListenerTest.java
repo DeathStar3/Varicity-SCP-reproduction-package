@@ -10,12 +10,6 @@ import org.junit.runner.notification.RunListener;
 public class ListenerTest {
     private static String log;
 
-    public static class OneTest {
-        @Test
-        public void nothing() {
-        }
-    }
-
     @Test
     public void notifyListenersInTheOrderInWhichTheyAreAdded() {
         JUnitCore core = new JUnitCore();
@@ -34,5 +28,11 @@ public class ListenerTest {
         });
         core.run(OneTest.class);
         assertEquals("first second ", log);
+    }
+
+    public static class OneTest {
+        @Test
+        public void nothing() {
+        }
     }
 }

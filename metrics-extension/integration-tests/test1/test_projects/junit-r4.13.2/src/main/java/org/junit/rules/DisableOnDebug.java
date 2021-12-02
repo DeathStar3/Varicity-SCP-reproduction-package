@@ -26,13 +26,13 @@ import org.junit.runners.model.Statement;
  * debugging and may make this less useful in such circumstances.
  * <p>
  * Example usage:
- * 
+ *
  * <pre>
  * public static class DisableTimeoutOnDebugSampleTest {
- * 
+ *
  *     &#064;Rule
  *     public TestRule timeout = new DisableOnDebug(new Timeout(20));
- * 
+ *
  *     &#064;Test
  *     public void myTest() {
  *         int i = 0;
@@ -40,7 +40,7 @@ import org.junit.runners.model.Statement;
  *     }
  * }
  * </pre>
- * 
+ *
  * @since 4.12
  */
 public class DisableOnDebug implements TestRule {
@@ -50,7 +50,7 @@ public class DisableOnDebug implements TestRule {
     /**
      * Create a {@code DisableOnDebug} instance with the timeout specified in
      * milliseconds.
-     * 
+     *
      * @param rule to disable during debugging
      */
     public DisableOnDebug(TestRule rule) {
@@ -60,25 +60,13 @@ public class DisableOnDebug implements TestRule {
 
     /**
      * Visible for testing purposes only.
-     * 
-     * @param rule the rule to disable during debugging
-     * @param inputArguments
-     *            arguments provided to the Java runtime
+     *
+     * @param rule           the rule to disable during debugging
+     * @param inputArguments arguments provided to the Java runtime
      */
     DisableOnDebug(TestRule rule, List<String> inputArguments) {
         this.rule = rule;
         debugging = isDebugging(inputArguments);
-    }
-
-    /**
-     * @see TestRule#apply(Statement, Description)
-     */
-    public Statement apply(Statement base, Description description) {
-        if (debugging) {
-            return base;
-        } else {
-            return rule.apply(base, description);
-        }
     }
 
     /**
@@ -93,13 +81,11 @@ public class DisableOnDebug implements TestRule {
      * >javase-7</a></li>
      * <li><a href="http://docs.oracle.com/javase/8/docs/technotes/guides/jpda/conninv.html#Invocation"
      * >javase-8</a></li>
-     * 
-     * 
-     * @param arguments
-     *            the arguments passed to the runtime environment, usually this
-     *            will be {@link RuntimeMXBean#getInputArguments()}
+     *
+     * @param arguments the arguments passed to the runtime environment, usually this
+     *                  will be {@link RuntimeMXBean#getInputArguments()}
      * @return true if the current JVM was started in debug mode, false
-     *         otherwise.
+     * otherwise.
      */
     private static boolean isDebugging(List<String> arguments) {
         for (final String argument : arguments) {
@@ -111,12 +97,23 @@ public class DisableOnDebug implements TestRule {
     }
 
     /**
+     * @see TestRule#apply(Statement, Description)
+     */
+    public Statement apply(Statement base, Description description) {
+        if (debugging) {
+            return base;
+        } else {
+            return rule.apply(base, description);
+        }
+    }
+
+    /**
      * Returns {@code true} if the JVM is in debug mode. This method may be used
      * by test classes to take additional action to disable code paths that
      * interfere with debugging if required.
-     * 
+     *
      * @return {@code true} if the current JVM is in debug mode, {@code false}
-     *         otherwise
+     * otherwise
      */
     public boolean isDebugging() {
         return debugging;
