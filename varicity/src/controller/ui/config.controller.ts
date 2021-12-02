@@ -1,16 +1,23 @@
-import { UIController } from './ui.controller';
-import { Config, MetricSpec } from './../../model/entitiesImplems/config.model';
+import {UIController} from './ui.controller';
+import {Config} from '../../model/entitiesImplems/config.model';
+import {ConfigSelectorController} from "./config-selector.controller";
 
 export class ConfigController {
     public static createConfigFolder(config: Config): void {
-        // let node = document.getElementById("console");
-        // let configNode = document.createElement("div");
         let configNode = document.getElementById("config");
-        // configNode.id = "config";
         configNode.innerHTML = "Config parameters";
-        // node.appendChild(configNode);
 
         this.populateChildren(config, configNode);
+
+        // set the usage level
+        let inputElement = document.getElementById("comp-level") as HTMLInputElement;
+        inputElement.value = UIController.config.default_level.toString();
+
+        // set set filter button when changing the usage level
+        let filterButton = document.getElementById("filter-button") as HTMLButtonElement;
+        filterButton.onclick = () => {
+            ConfigSelectorController.reParse();
+        }
 
         /* @ts-ignore */
         for (let child of configNode.children) {

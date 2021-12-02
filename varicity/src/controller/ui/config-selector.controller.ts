@@ -1,11 +1,10 @@
-import { EntitiesList } from "../../model/entitiesList";
-import { ProjectService } from "../../services/project.service";
-import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
-import { ConfigLoader } from "../parser/configLoader";
-import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
-import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
-import { UIController } from "./ui.controller";
-import {ProjectController} from "./project-selector.controller";
+import {EntitiesList} from "../../model/entitiesList";
+import {ProjectService} from "../../services/project.service";
+import {EvostreetImplem} from "../../view/evostreet/evostreetImplem";
+import {ConfigService} from "../../services/config.service";
+import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
+import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
+import {UIController} from "./ui.controller";
 import {ConfigName} from "../../model/entitiesImplems/config.model";
 
 export class ConfigSelectorController {
@@ -16,56 +15,53 @@ export class ConfigSelectorController {
 
     static createConfigSelector(configs: ConfigName[], filename: string) {
         let parent = document.getElementById("config_selector");
-        parent.innerHTML = '';
         this.filename = filename;
 
-        let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-        inputElement.value = UIController.config.default_level.toString();
+        // clear all the options in the list
+        parent.innerHTML = '';
 
-        let filterButton = document.getElementById("filter-button") as HTMLButtonElement;
-        filterButton.onclick = () => {
-            this.reParse();
-        }
-
-        parent.addEventListener('change', async function(event) {
-            const configName = (event.target as HTMLInputElement).value;
-            if(configName !== undefined){
-                await ConfigSelectorController.defineConfig(configName);
-
-                parent.childNodes[0].nodeValue = "Config selection: " + configName;
-                inputElement.value = UIController.config.default_level.toString();
-
-                ConfigSelectorController.reParse();
-            }
-        });
-
+        // create the default option
         let node = document.createElement("option") as HTMLOptionElement;
         node.textContent = " ---Select a Config --- ";
         node.value = "";
         parent.appendChild(node);
 
+        // create all the options from the configs names
         for (let config of configs) {
-                let node = document.createElement("option") as HTMLOptionElement;
-                node.textContent = config.name;
-                node.value = config.filename;
-                node.selected = (UIController.config.name == config.name) // TODO problem in case multiple same config names
-                parent.appendChild(node);
+            let node = document.createElement("option") as HTMLOptionElement;
+            node.textContent = config.name;
+            node.value = config.filename;
+            node.selected = (UIController.config.name == config.name) // TODO problem in case multiple same config names
+            parent.appendChild(node);
         }
 
+        // update the view & config in case of a change
+        parent.addEventListener('change', async function(event) {
+            const configName = (event.target as HTMLInputElement).value;
+            if(configName !== undefined){
+                await ConfigSelectorController.defineConfig(configName);
+                ConfigSelectorController.reParse();
+            }
+        });
     }
 
     public static reParse() {
         this.previousParser = new VPVariantsStrategy();
 
+        // clear the current city
         if (UIController.scene) {
             UIController.scene.dispose();
         }
-
         UIController.clearMap();
+
+        // recreate the config menu
         UIController.createConfig(UIController.config);
 
+        // update the city
         ProjectService.fetchVisualizationData(this.filename).then((response) => {
             this.el = this.previousParser.parse(response.data, UIController.config, this.filename);
+
+            // set the min & max usage level
             let inputElement = document.getElementById("comp-level") as HTMLInputElement;
             inputElement.min = "1";
             const maxLvl = this.el.getMaxCompLevel();
@@ -81,9 +77,7 @@ export class ConfigSelectorController {
     }
 
     private static async defineConfig(configName: string) {
-        UIController.configName = configName;
-        UIController.config = await ConfigLoader.loadConfigFromName(this.filename, configName);
+        UIController.config = await ConfigService.loadConfigFromName(this.filename, configName);
         await UIController.initDefaultConfigValues(this.filename, UIController.config);
     }
-
 }

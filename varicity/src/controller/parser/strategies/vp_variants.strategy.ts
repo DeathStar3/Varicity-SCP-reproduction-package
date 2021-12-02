@@ -5,10 +5,9 @@ import {LinkElement} from "../symfinder_elements/links/link.element";
 import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
 import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.model";
 import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInput.interface";
-import {Config, MetricSpec} from "../../../model/entitiesImplems/config.model";
+import {Config} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
-import {UIController} from "../../ui/ui.controller";
 
 export class VPVariantsStrategy implements ParsingStrategy {
     public parse(data: JsonInputInterface, config: Config, project: string) : EntitiesList {
