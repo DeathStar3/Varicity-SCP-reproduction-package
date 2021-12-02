@@ -15,8 +15,6 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
-import fr.unice.i3s.sparks.deathstar3.logging.DefaultSymfinderLogger;
-import fr.unice.i3s.sparks.deathstar3.logging.ISymfinderLogger;
 import fr.unice.i3s.sparks.deathstar3.models.SonarQubeStatus;
 import fr.unice.i3s.sparks.deathstar3.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +32,7 @@ import java.util.Set;
 
 import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Compiler.NETWORK_NAME;
 
-
+@Slf4j
 public class SonarQubeStarter {
 
     public static final String SONARQUBE_CONTAINER_NAME = "sonarqubehost";
@@ -43,15 +41,10 @@ public class SonarQubeStarter {
     private final DockerClient dockerClient;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final ISymfinderLogger log;
 
-    public SonarQubeStarter(@NotNull ISymfinderLogger logger) {
-        if(logger==null){
-            this.log=new DefaultSymfinderLogger();
-        }
-        else{
-            this.log = logger;
-        }
+
+    public SonarQubeStarter() {
+
 
         DockerClientConfig standard = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
         ApacheDockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()

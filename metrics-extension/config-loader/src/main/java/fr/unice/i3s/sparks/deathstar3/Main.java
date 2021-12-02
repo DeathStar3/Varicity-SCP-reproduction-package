@@ -4,8 +4,10 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import fr.unice.i3s.sparks.deathstar3.deserializer.ConfigLoader;
 import fr.unice.i3s.sparks.deathstar3.deserializer.SymfinderConfigParser;
+import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson;
 import fr.unice.i3s.sparks.deathstar3.entrypoint.MetricExtensionEntrypoint;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,7 @@ public class Main {
             if (VALID_LEVELS.contains(args[1].toUpperCase())) {
                 Logger root = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
                 root.setLevel(Level.valueOf(args[1].toUpperCase()));
+
             }
         }
 
@@ -39,8 +42,20 @@ public class Main {
         List<ExperimentConfig> configs = configLoader.loadConfigFile(configFilePath);
         MetricExtensionEntrypoint metricExtension = new MetricExtensionEntrypoint();
 
-        metricExtension.runExperiment(configs.get(0), symfinderConfigParser.parseSymfinderConfigurationFromFile(args[1]));
+        ExperimentConfig firstConfig = configs.get(0);
+
+        ExperimentResult result = metricExtension.runExperiment(firstConfig, symfinderConfigParser.parseSymfinderConfigurationFromFile(args[1]));
+
+        ExperimentResultWriterJson experimentResultWriterJson = new ExperimentResultWriterJson(firstConfig);
+
+        try {
+            experimentResultWriterJson.writeResult(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // TODO Filter configFile to call project builder and test runner one one side and directly MetricGatherer for the rest
+
+        System.exit(0);
     }
 }

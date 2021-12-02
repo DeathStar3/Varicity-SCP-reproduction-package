@@ -1,9 +1,0 @@
-junit-r4.13.2:
-  outputPath: "./test_actual_result"
-  sources:
-    - name: "sonarqube"
-      enabled: true
-      rootUrl: "http://localhost:9000"
-      componentName: "junit-r4.13.2"
-      metrics:
-        - "coverage"

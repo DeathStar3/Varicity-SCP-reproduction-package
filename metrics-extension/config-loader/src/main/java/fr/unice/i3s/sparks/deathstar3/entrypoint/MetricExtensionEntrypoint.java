@@ -5,8 +5,6 @@ import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
 import fr.unice.i3s.sparks.deathstar3.engine.entrypoint.Symfinder;
 import fr.unice.i3s.sparks.deathstar3.engine.result.SymfinderResult;
-import fr.unice.i3s.sparks.deathstar3.logging.DefaultSymfinderLogger;
-import fr.unice.i3s.sparks.deathstar3.logging.ISymfinderLogger;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.model.MetricSource;
@@ -27,30 +25,16 @@ import java.util.concurrent.*;
 
 public class MetricExtensionEntrypoint {
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
     private final SourceFetcher sourceFetcher;
     private final SonarQubeStarter sonarQubeStarter;
     private final Compiler compiler = new Compiler();
     private final MetricGatherer metricGatherer = new MetricGatherer();
-    private final ISymfinderLogger logger;
 
     public MetricExtensionEntrypoint(){
-        this.logger = new DefaultSymfinderLogger();
-        this.sourceFetcher = new SourceFetcher(this.logger);
-        sonarQubeStarter = new SonarQubeStarter(this.logger);
-    }
 
-
-    public MetricExtensionEntrypoint(ISymfinderLogger logger){
-        if(logger == null){
-            this.logger= new DefaultSymfinderLogger();
-        }
-        else{
-            this.logger=logger;
-        }
-
-        this.sourceFetcher = new SourceFetcher(this.logger);
-        sonarQubeStarter = new SonarQubeStarter(this.logger);
+        this.sourceFetcher = new SourceFetcher();
+        sonarQubeStarter = new SonarQubeStarter();
     }
 
 
@@ -80,11 +64,18 @@ public class MetricExtensionEntrypoint {
             repositoryPath = repositories.get(0);// We assume one tagId or commitId per project
         }
 
-        Thread qualityMetrics = null;
+        Future<Boolean> compilationFuture = null;
         if (config.isSonarqubeNeeded()) {
-            qualityMetrics = new Thread(() -> {
-                sonarQubeStarter.startSonarqube();
-                compiler.executeProject(config);
+            compilationFuture = executor.submit(() -> {
+
+                if (!sonarQubeStarter.startSonarqube()) {
+
+                    return false;
+                }
+                if (!compiler.executeProject(config)) {
+
+                    return false;
+                }
                 //the update of sonarqube is not immediate, the sleep introduce a dealy so that the update of sonarqube is done before
                 //MetricGatherer is called
                 try {
@@ -92,23 +83,13 @@ public class MetricExtensionEntrypoint {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                return true;
             });
-            qualityMetrics.start();
-        }
-
-        Path workingDirectory;
-
-        // if the output path is not defined a temporary one is created
-        if (config.getOutputPath() == null || config.getOutputPath().isBlank()) {
-            workingDirectory = Files.createTempDirectory("varicity-work-dir");
-            config.setOutputPath(workingDirectory.toAbsolutePath().toString());
-        } else {
-            workingDirectory = Path.of(config.getOutputPath());
         }
 
         config.setPath(repositoryPath);
         String finalRepositoryPath = repositoryPath;
-        Path finalWorkingDirectory = workingDirectory;
+
         Future<SymfinderResult> futureSymfinderResult;
 
         //ignorer l'analyse avec Symfinder si demandé par l'utilisateur
@@ -117,27 +98,31 @@ public class MetricExtensionEntrypoint {
             futureSymfinderResult = CompletableFuture.completedFuture(new SymfinderResult("", ""));
         } else {
             futureSymfinderResult = executor.submit(() -> {
-                return new Symfinder(finalRepositoryPath, finalWorkingDirectory + "/symfinder/result.json",
-                        new Configuration(symfinderConfig)).run();
+                return new Symfinder(finalRepositoryPath, new Configuration(symfinderConfig)).run();
             });
         }
 
-        if (qualityMetrics != null) {
-            qualityMetrics.join();
+        boolean localSonarqubeIsReady = false;
+
+        if (compilationFuture != null) {
+            localSonarqubeIsReady = compilationFuture.get();
         }
 
         if (config.getSources() != null) {
 
             for (MetricSource source : config.getSources()) {
 
-                List<Node> nodes1 = metricGatherer.gatherMetrics(config.getProjectName(), workingDirectory.toString(),
-                        source);
+                if (source.getRootUrl().equals(Compiler.SONARQUBE_LOCAL_URL) && !localSonarqubeIsReady) {
+                    continue;
+                }
+                List<Node> nodes1 = metricGatherer.gatherMetrics(config.getProjectName(), source);
                 if (!nodes1.isEmpty()) {
                     metricsResult.put(source.getName(), nodes1);
                 }
-            }
-        }
 
+            }
+
+        }
         return new ExperimentResult(config.getProjectName(), futureSymfinderResult.get(), metricsResult);
     }
 

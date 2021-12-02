@@ -18,11 +18,11 @@ cd ./integration-tests/test1
 
 echo " ### [1;32m Step: 2/3 - Run metrics-extension [0m"
 
-java -jar ../../target/metrics-extension-1.0-SNAPSHOT.jar ./test_config_file/junit-r4.13.2-config-windows.yaml debug
+java -jar ../../target/metrics-extension-1.0-SNAPSHOT.jar ./test_config_file/junit-r4.13.2-config.yaml symfinder.yaml debug
 
 echo " ### [1;32m Step: 3/3 - Assert result [0m"
 
-RESULT_FILE_NAME=$(find ./test_actual_result -type f -printf "%f\n") # Find file name
+RESULT_FILE_NAME=$(find ./test_actual_result/symfinder_files/externals/junit-r4.13.2 -type f -printf "%f\n") # Find file name
 
 DIFF="FAIL"
 

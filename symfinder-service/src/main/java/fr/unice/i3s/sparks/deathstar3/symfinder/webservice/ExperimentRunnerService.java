@@ -1,5 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3.symfinder.webservice;
 
+import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
@@ -13,6 +14,7 @@ import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -136,6 +138,12 @@ public class ExperimentRunnerService {
                 .with((i) -> {
 
                             try {
+
+                                Logger root = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+                                //TO BE CONTINUED
+
+                                root.getAppender("STDOUT").stop();
+
                                 ExperimentResult experimentResult = metricExtensionEntrypoint.runExperiment(experimentConfig, parametersObject);
 
                                 this.sendExperimentSucceededToUI(session, experimentResult);

@@ -16,12 +16,4 @@ junit-r4.13.2:
         - "coverage"
         - "complexity"
         - "cognitive_complexity"
-  buildCmd:
-    - "mvn"
-    - "clean"
-    - "package"
-    - "-Pcoverage"
-    - "sonar:sonar"
-    - "-f"
-    - "/project/pom.xml"
-    - "-Dsonar.scm.disabled=true"
+  buildCmd: "mvn clean package -Pcoverage sonar:sonar -f /project/pom.xml -Dsonar.scm.disabled=true"

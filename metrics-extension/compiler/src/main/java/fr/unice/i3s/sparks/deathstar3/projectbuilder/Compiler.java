@@ -6,6 +6,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.AccessMode;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.HostConfig;
@@ -42,7 +43,7 @@ public class Compiler {
     public static final String COMPILER_NAME = "varicity-compiler-container";
     public static final String SCANNER_NAME = "varicity-scanner-container";
     private static final Utils utils = new Utils();
-    private static final String SONARQUBE_LOCAL_URL = "http://localhost:9000";
+    public static final String SONARQUBE_LOCAL_URL = "http://localhost:9000";
     private static final String SONARQUBE_DOCKER_URL = "http://sonarqubehost:9000";
     private static final String SONAR_SCANNER_IMAGE = "sonarsource/sonar-scanner-cli";
     private static final String SONAR_SCANNER_IMAGE_TAG = "4";
@@ -59,7 +60,7 @@ public class Compiler {
         this.dockerClient = DockerClientBuilder.getInstance().withDockerHttpClient(httpClient).build();
     }
 
-    public void executeProject(ExperimentConfig projectConfig) {
+    public boolean executeProject(ExperimentConfig projectConfig) {
 
         utils.removeOldExitedContainer(COMPILER_SCANNER_NAME);
         utils.removeOldExitedContainer(COMPILER_NAME);
@@ -69,29 +70,41 @@ public class Compiler {
         if (projectConfig.isBuildCmdIncludeSonar()) {
             try {
                 var compileAndScanProjectId = this.compileAndScanProject(projectConfig);
-                waitForContainerCorrectExit(compileAndScanProjectId);
+                InspectContainerResponse.ContainerState containerState= waitForContainerCorrectExit(compileAndScanProjectId);
+                if(containerState.getExitCodeLong()!=0){
+                    return false;
+                }
+
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         } else {
             var compileProjectId = compileProject(projectConfig);
 
-            waitForContainerCorrectExit(compileProjectId);
+            InspectContainerResponse.ContainerState containerState = waitForContainerCorrectExit(compileProjectId);
+            if(containerState.getExitCodeLong() != 0){
+                return false;
+            }
 
             try {
                 String tokenName = RandomStringUtils.randomAlphabetic(8, 10).toUpperCase(Locale.ENGLISH);
                 SonarQubeToken result = this.getToken(tokenName, SONARQUBE_LOCAL_URL);
                 String scannerContainerId = this.runSonarScannerCli(projectConfig, result);
-                waitForContainerCorrectExit(scannerContainerId);
+                InspectContainerResponse.ContainerState scannerContainerState = waitForContainerCorrectExit(scannerContainerId);
+                if(scannerContainerState.getExitCodeLong() != 0){
+                    return false;
+                }
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
 
         }
 
+        return true;
+
     }
 
-    private void waitForContainerCorrectExit(String containerId) {
+    private InspectContainerResponse.ContainerState waitForContainerCorrectExit(String containerId) {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
 
 
@@ -109,11 +122,11 @@ public class Compiler {
 
         if (container.getState().getExitCodeLong() != 0) {
             log.error("Container exited with non-zero code");
-            throw new RuntimeException(container.getState().toString());
-
+            return container.getState();
         }
 
-        log.info("End waiting for " + containerId + " " + container.getState());
+        log.info("Container exit with code zero " + containerId + " " + container.getState());
+        return container.getState();
     }
 
     /**

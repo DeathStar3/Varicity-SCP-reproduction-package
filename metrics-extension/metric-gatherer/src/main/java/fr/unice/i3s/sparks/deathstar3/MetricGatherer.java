@@ -17,14 +17,13 @@ public class MetricGatherer {
     /**
      * Gather for each source in Config the associate metrics
      */
-    public List<Node> gatherMetrics(String projectName, String outputPath, MetricSource source) {
+    public List<Node> gatherMetrics(String projectName, MetricSource source) {
 
         MetricGathering strategy = strategySelection(source.getName());
 
         if (strategy != null) {
-            String outPath = outputPath + "/" + projectName + "/" + projectName + "-" + source.getName();
 
-            List<Node> nodes = strategy.gatherAndSaveMetrics(source.getRootUrl(), source.getComponentName(), source.getMetrics(), outPath);
+            List<Node> nodes = strategy.gatherAndSaveMetrics(source.getRootUrl(), source.getComponentName(), source.getMetrics());
             log.info("The metrics from " + projectName + ":" + source.getName() + " were collected and saved (json)");
             return nodes;
         } else {
@@ -39,15 +38,10 @@ public class MetricGatherer {
      * Select the Strategy to run using the sourceName
      */
     public MetricGathering strategySelection(String sourceName) {
-        switch (sourceName.toLowerCase()) {
-            case "sonar-qube":
-            case "sonarqube":
-                return new MetricGathering(new SonarQubeStrategy());
-            case "sonar-cloud":
-            case "sonarcloud":
-                return new MetricGathering(new SonarCloudStrategy());
-            default:
-                return null;
-        }
+        return switch (sourceName.toLowerCase()) {
+            case "sonar-qube", "sonarqube" -> new MetricGathering(new SonarQubeStrategy());
+            case "sonar-cloud", "sonarcloud" -> new MetricGathering(new SonarCloudStrategy());
+            default -> null;
+        };
     }
 }

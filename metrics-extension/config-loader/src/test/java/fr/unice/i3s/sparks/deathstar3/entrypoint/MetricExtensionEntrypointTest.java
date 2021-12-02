@@ -19,11 +19,6 @@ public class MetricExtensionEntrypointTest {
 
     private ConfigLoader configLoader = new ConfigLoader();
 
-    @Test
-    public void loggTest(){
-    entrypoint.runExperiment(null, null);
-    }
-
     /**
      * This test will check if the extension still accepts the initial format of experiment
      */

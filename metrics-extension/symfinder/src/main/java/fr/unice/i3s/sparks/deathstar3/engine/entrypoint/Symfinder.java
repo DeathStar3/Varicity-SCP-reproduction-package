@@ -64,6 +64,13 @@ public class Symfinder {
 
     }
 
+
+    public Symfinder(String sourcePackage,  Configuration configuration) {
+        this.sourcePackage = sourcePackage;
+        this.configuration = configuration;
+        this.neoGraph = new NeoGraph(this.configuration);
+    }
+
     public Symfinder(String sourcePackage, String graphOutputPath, Configuration configuration) {
         this.sourcePackage = sourcePackage;
         this.graphOutputPath = graphOutputPath;
@@ -130,16 +137,14 @@ public class Symfinder {
         logger.log(Level.getLevel("MY_LEVEL"), "Number of nodes: " + neoGraph.getNbNodes());
         logger.log(Level.getLevel("MY_LEVEL"), "Number of relationships: " + neoGraph.getNbRelationships());
         logger.log(Level.getLevel("MY_LEVEL"), "Number of corrected inheritance relationships: " + GraphBuilderVisitor.getNbCorrectedInheritanceLinks() + "/" + neoGraph.getNbInheritanceRelationships());
-        try {
+        /*try {
             neoGraph.writeVPGraphFile(graphOutputPath);
             neoGraph.writeStatisticsFile(graphOutputPath.replace(".json", "-stats.json"));
         } catch (Exception e) {
             logger.error(e);
-        }
+        }*/
 
         SymfinderResult result = new SymfinderResult(neoGraph.generateVPJsonGraph(), neoGraph.generateStatisticsJson());
-        logger.debug(neoGraph.generateStatisticsJson());
-
         neoGraph.deleteGraph();
         neoGraph.closeDriver();
         long symfinderExecutionTime = System.currentTimeMillis() - symfinderStartTime;

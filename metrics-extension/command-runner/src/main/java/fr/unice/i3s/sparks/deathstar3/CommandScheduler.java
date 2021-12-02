@@ -25,7 +25,7 @@ public class CommandScheduler {
                         new CommandRunner(source.getWorkingDirectory(), source.getShellLocation(), source.getCommands()).execute();
                         log.info("All commands from " + config.getProjectName() + ":" + source.getName() + " were executed");
 
-                        metricGatherer.gatherMetrics(config.getProjectName(), config.getOutputPath(), source);
+                        metricGatherer.gatherMetrics(config.getProjectName(), source);
                     });
                     threads.add(t);
                 }

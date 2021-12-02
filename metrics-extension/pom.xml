@@ -26,8 +26,6 @@
     <module>symfinder</module>
             
     <module>compiler</module>
-          
-    <module>logging</module>
       
   </modules>
       
@@ -71,19 +69,6 @@
                   
       <scope>compile</scope>
               
-    </dependency>
-
-
-    <dependency>
-
-      <groupId>fr.unice.i3s.sparks.deathstar3</groupId>
-
-      <artifactId>logging</artifactId>
-
-      <version>1.0-SNAPSHOT</version>
-
-      <scope>compile</scope>
-
     </dependency>
     <!-- Codding tools -->
             
