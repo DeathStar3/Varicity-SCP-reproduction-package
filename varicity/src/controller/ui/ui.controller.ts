@@ -74,11 +74,10 @@ export class UIController {
     public static async reloadConfigAndConfigSelector(filename: string) {
         console.log("filename", filename)
         this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
-        // this.configsName = (await ConfigLoader.loadConfigNames(filename)).data;
         this.configName = this.configsName[0].filename;
-        // const config = (await ConfigLoader.loadConfigFromName(filename, this.configName)).data;
-        let config: Config;
-        await ConfigLoader.loadConfig(ConfigLoader.loadConfigFromName(filename, this.configName)).then((res) =>  config = res);
+
+        const config = await ConfigLoader.loadConfigFromName(filename, this.configName);
+
         await UIController.initDefaultConfigValues(filename, config);
         this.createConfig(config);
         this.createConfigSelector(this.configsName, filename);

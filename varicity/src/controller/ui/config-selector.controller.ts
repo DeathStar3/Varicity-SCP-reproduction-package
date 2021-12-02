@@ -78,14 +78,11 @@ export class ConfigSelectorController {
             UIController.scene.buildScene();
 
         })
-
     }
 
     private static async defineConfig(configName: string) {
-        // UIController.config = (await ConfigLoader.loadConfigFromName(this.filename, configName)).data
-        await ConfigLoader.loadConfig(ConfigLoader.loadConfigFromName(this.filename, configName)).then((res) =>  {UIController.config = res});
-
         UIController.configName = configName;
+        UIController.config = await ConfigLoader.loadConfigFromName(this.filename, configName);
         await UIController.initDefaultConfigValues(this.filename, UIController.config);
     }
 
