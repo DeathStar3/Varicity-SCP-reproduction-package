@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Symfinder Varicity</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
@@ -26,7 +27,149 @@
 </mwc-dialog>
 
 <div id="main">
+
+
+
+
+
+
+
+
+
+
+<!--    <script src="sidebars.js"></script>-->
+
+
     <div id="console" class="overflowable">
+
+        <div class="navbar d-flex flex-column flex-shrink-0 bg-light">
+            <a href="/" class="d-block p-3 link-dark text-decoration-none" title="Icon-only" data-bs-toggle="tooltip" data-bs-placement="left">
+                <img src="images/menu-icons/logo-varicity.svg" class="bi" width="50" height="50">
+                <span class="visually-hidden">Icon-only</span>
+            </a>
+            <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="main-menu">
+                <li id="project-config">
+                    <a href="#" class="nav-link py-3 border-bottom border-top" aria-current="page" title="Project and Config" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/project-config.svg" class="bi" width="24" height="24" role="img" aria-label="Project and Config">
+                    </a>
+                </li>
+                <li id="information">
+                    <a href="#" class="nav-link py-3 border-bottom" title="Information" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/information.svg" class="bi" width="24" height="24" role="img" aria-label="Information">
+                    </a>
+                </li>
+                <li id="building">
+                    <a href="#" class="nav-link py-3" title="Building" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/building.svg" class="bi" width="24" height="24" role="img" aria-label="Building">
+                    </a>
+                </li>
+                <li id="districts">
+                    <a href="#" class="nav-link py-3" title="District" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/district.svg" class="bi" width="24" height="24" role="img" aria-label="District">
+                    </a>
+                </li>
+                <li id="links">
+                    <a href="#" class="nav-link py-3" title="Links" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/links.svg" class="bi" width="24" height="24" role="img" aria-label="Links">
+                    </a>
+                </li>
+                <li id="blacklist">
+                    <a href="#" class="nav-link py-3" title="Blacklist" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/blacklist.svg" class="bi" width="24" height="24" role="img" aria-label="Blacklist">
+                    </a>
+                </li>
+                <li id="metric-entrypoints">
+                    <a href="#" class="nav-link py-3 border-bottom" title="Metric and entrypoints" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/metric-entrypoints.svg" class="bi" width="24" height="24" role="img" aria-label="Metric and entrypoints">
+                    </a>
+                </li>
+            </ul>
+            <div class="dropdown border-top">
+                <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="tool-menu">
+                    <li id="save">
+                        <a href="#" class="nav-link py-3 border-bottom" aria-current="page" title="Save" data-bs-toggle="tooltip" data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/save.svg" class="bi" width="24" height="24" role="img" aria-label="Save">
+                        </a>
+                    </li>
+                    <li id="documentation">
+                        <a href="#" class="nav-link py-3 border-bottom" title="Documentation" data-bs-toggle="tooltip" data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/documentation.svg" class="bi" width="24" height="24" role="img" aria-label="Documentation">
+                        </a>
+                    </li>
+                    <li id="settings">
+                        <a href="#" class="nav-link py-3" title="Settings" data-bs-toggle="tooltip" data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/settings.svg" class="bi" width="24" height="24" role="img" aria-label="Settings">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="flex-shrink-0 p-3 bg-white" style="width: 280px;">
+            <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+                <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
+                <span class="fs-5 fw-semibold">Collapsible</span>
+            </a>
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                        Home
+                    </button>
+                    <div class="collapse show" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#" class="link-dark rounded">Overview</a></li>
+                            <li><a href="#" class="link-dark rounded">Updates</a></li>
+                            <li><a href="#" class="link-dark rounded">Reports</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                        Dashboard
+                    </button>
+                    <div class="collapse" id="dashboard-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#" class="link-dark rounded">Overview</a></li>
+                            <li><a href="#" class="link-dark rounded">Weekly</a></li>
+                            <li><a href="#" class="link-dark rounded">Monthly</a></li>
+                            <li><a href="#" class="link-dark rounded">Annually</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                        Orders
+                    </button>
+                    <div class="collapse" id="orders-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#" class="link-dark rounded">New</a></li>
+                            <li><a href="#" class="link-dark rounded">Processed</a></li>
+                            <li><a href="#" class="link-dark rounded">Shipped</a></li>
+                            <li><a href="#" class="link-dark rounded">Returned</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="border-top my-3"></li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                        Account
+                    </button>
+                    <div class="collapse" id="account-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#" class="link-dark rounded">New...</a></li>
+                            <li><a href="#" class="link-dark rounded">Profile</a></li>
+                            <li><a href="#" class="link-dark rounded">Settings</a></li>
+                            <li><a href="#" class="link-dark rounded">Sign out</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+        <script src="scripts/bootstrap.bundle.min.js"></script>
+        <script src="scripts/sidebars.js"></script>
 
         <div class="btn-toolbar d-flex justify-content-around " role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group">
@@ -43,14 +186,14 @@
                     Save Config
                 </button>
             </div>
-            <div class="btn-group">
-                <button id="documentation" type="button" class="btn btn-primary">
-                        <span class="material-icons-outlined">
-                            info
-                        </span>
-                    Documentation
-                </button>
-            </div>
+<!--            <div class="btn-group">-->
+<!--&lt;!&ndash;                <button id="documentation" type="button" class="btn btn-primary">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span class="material-icons-outlined">&ndash;&gt;-->
+<!--&lt;!&ndash;                            info&ndash;&gt;-->
+<!--&lt;!&ndash;                        </span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    Documentation&ndash;&gt;-->
+<!--&lt;!&ndash;                </button>&ndash;&gt;-->
+<!--            </div>-->
         </div>
 
 

@@ -12,6 +12,7 @@ import {ConfigSelectorController} from "./config-selector.controller";
 import {ConfigLoader} from "../parser/configLoader";
 import {SaveController} from "./save.controller";
 import {ProjectService} from "../../services/project.service";
+import {MenuController} from "./menu.controller";
 
 export class UIController {
 
@@ -26,6 +27,10 @@ export class UIController {
 
     public static createDoc(): void {
         DocController.buildDoc();
+    }
+
+    public static createMenu() {
+        MenuController.createMenu();
     }
 
     public static initSearchbar(): void {

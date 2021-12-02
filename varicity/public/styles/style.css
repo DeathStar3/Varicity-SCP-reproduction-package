@@ -51,10 +51,6 @@
     background-color: #FFFFFF;
 }
 
-div:not(#main) {
-    padding-top: 10px;
-}
-
 input {
     padding-top: 5px;
     padding-bottom: 5px;

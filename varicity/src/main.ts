@@ -14,6 +14,7 @@ class Main {
 
             UIController.initSearchbar();
             UIController.createSaveSection();
+            UIController.createMenu();
             UIController.createDoc();
             UIController.createProjectSelector(projects);
             UIController.createLogs();
