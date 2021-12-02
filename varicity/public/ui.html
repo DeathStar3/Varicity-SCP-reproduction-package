@@ -29,17 +29,6 @@
 <div id="main">
 
 
-
-
-
-
-
-
-
-
-<!--    <script src="sidebars.js"></script>-->
-
-
     <div id="console" class="overflowable">
 
         <div class="navbar d-flex flex-column flex-shrink-0 bg-light">
@@ -110,24 +99,20 @@
             <span id="submenu-title" class="fs-5 fw-semibold border-bottom align-items-center pb-3 mb-3 d-flex ">Collapsible</span>
 
             <ul id="submenu-content" class="list-unstyled ps-0">
-<!--                <li class="mb-1">-->
-<!--                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">-->
-<!--                        Home-->
-<!--                    </button>-->
-<!--                    <div class="collapse" id="home-collapse">-->
-<!--                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">-->
-<!--                            <li><a href="#" class="link-dark rounded">Overview</a></li>-->
-<!--                            <li><a href="#" class="link-dark rounded">Updates</a></li>-->
-<!--                            <li><a href="#" class="link-dark rounded">Reports</a></li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                </li>-->
+                <!--                <li class="mb-1">-->
+                <!--                    <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">-->
+                <!--                        Home-->
+                <!--                    </button>-->
+                <!--                    <div class="collapse" id="home-collapse">-->
+                <!--                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">-->
+                <!--                            <li><a href="#" class="link-dark rounded">Overview</a></li>-->
+                <!--                            <li><a href="#" class="link-dark rounded">Updates</a></li>-->
+                <!--                            <li><a href="#" class="link-dark rounded">Reports</a></li>-->
+                <!--                        </ul>-->
+                <!--                    </div>-->
+                <!--                </li>-->
             </ul>
         </div>
-
-
-        <script src="scripts/bootstrap.bundle.min.js"></script>
-        <script src="scripts/sidebars.js"></script>
 
 
         <input class="form-control mt-2" placeholder="Your search here" id="searchbar" style="display: none;">
@@ -135,17 +120,20 @@
         <!-- -------------------------------------------------------------------- --->
         <!--                        PROJECT-CONFIG DIALOG                         --->
         <!-- -------------------------------------------------------------------- --->
-        <mwc-dialog id="project-config_content" heading="Select your project and configuration" class="styled">
-            <select id="project_selector" class="mt-2 mb-2 parent form-select">
-                <option value=""> ---Select a project---</option>
-            </select>
+        <mwc-dialog id="project-config_content" heading="Selection" class="styled">
+            <div class="form-group">
+                <label for="project_selector">Project</label>
+                <select id="project_selector" class="mt-2 mb-2 parent form-select">
+                    <option value=""> ---Select a project---</option>
+                </select>
+            </div>
 
+            <div class="form-group">
+                <label for="project_selector">Configuration</label>
+                <select id="config_selector" class="mt-2 mb-2 parent form-select"></select>
+            </div>
 
-            <select id="config_selector" class="mt-2 mb-2 parent form-select">
-            </select>
-            <mwc-button slot="primaryAction" dialogAction="close">
-                Close
-            </mwc-button>
+            <mwc-button slot="primaryAction" dialogAction="close">Close</mwc-button>
         </mwc-dialog>
 
         <!-- -------------------------------------------------------------------- --->
@@ -188,21 +176,15 @@
         <!--                             SAVE DIALOG                              --->
         <!-- -------------------------------------------------------------------- --->
         <mwc-dialog id="save_content" heading="Save configuration" class="styled">
-            <div class="btn-toolbar d-flex justify-content-around " role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group">
-                    <button class="btn btn-primary " id="save-btn">
+            <div class="vertical-container">
+                    <button class="btn btn-primary save-button" id="save-btn">
                         <span class="material-icons-outlined">camera</span>
                         Save camera position
                     </button>
-                </div>
-                <div class="btn-group">
-                    <button class=" btn parent" id="save-config">
-                        <span class="material-icons-outlined">
-                            save
-                        </span>
+                    <button class=" btn btn-success save-button" id="save-config">
+                        <span class="material-icons-outlined">save</span>
                         Save Config
                     </button>
-                </div>
             </div>
             <mwc-button slot="primaryAction" dialogAction="close">
                 Cancel
@@ -228,6 +210,8 @@
 <!--    <button id="reset_camera">Reset camera</button>-->
 <!--    &lt;!&ndash; <p id="nodes_details"></p> &ndash;&gt;-->
 <!--  </div>-->
+<script src="scripts/bootstrap.bundle.min.js"></script>
+<script src="scripts/sidebars.js"></script>
 </body>
 
 </html>

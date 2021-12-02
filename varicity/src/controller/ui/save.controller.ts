@@ -18,6 +18,10 @@ export class SaveController {
         });
 
         document.querySelector('#save-config').addEventListener('click', _clickev => {
+
+            // Close dialog
+            (document.querySelector('#save_content') as unknown as Closeable).close();
+
             document.querySelector('#dialog').setAttribute('open', 'true');
             console.log('Project Id of the Config is', UIController.config.projectId);
 
@@ -28,6 +32,8 @@ export class SaveController {
         });
 
         document.querySelector('#save-config-confirm-btn').addEventListener('click', _clickev => {
+
+
             console.log('Add config ', new Date().toISOString())
             UIController.config.name = (document.querySelector('#text-field') as HTMLInputElement).value;
 
