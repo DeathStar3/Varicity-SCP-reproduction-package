@@ -27,7 +27,7 @@ public class ExperimentConfig {
      */
     private boolean skipClone = false;
     private boolean skipSymfinder = false;
-    private String path = "resources";
+    private String path;
     /**
      * The directory containing the classes to be analyzed by Symfinder
      */
@@ -44,9 +44,9 @@ public class ExperimentConfig {
      */
     private boolean buildCmdIncludeSonar;
     private boolean sonarqubeNeeded = false;
-    private String outputPath = "generated_visualizations/data/externals"; // Optional
+    private String outputPath; // Optional
 
-    private String sourceCodePath = "sources"; // Optional
+
     private List<MetricSource> sources;
 
     public ExperimentConfig(String projectName, String path, String buildEnv, String buildEnvTag,

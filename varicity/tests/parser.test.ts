@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {ClassesPackagesStrategy} from "../src/controller/parser/strategies/classes_packages.strategy";
-import {JsonInputInterface} from "../../varicity-backend/dist/model/jsonInput.interface";
+import { JsonInputInterface } from '../src/model/entities/jsonInput.interface';
 import {Config} from "../src/model/entitiesImplems/config.model";
 
 describe('parsing without links', function () {

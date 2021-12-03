@@ -34,6 +34,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - VARICITY_BACKEND_URL=http://varicityback:3000
+      - RUNTIME_MODE=DOCKER
       - SYMFINDER_UID=${SYMFINDER_UID}
       - SYMFINDER_GID=${SYMFINDER_GID}
       - SYMFINDER_VERSION=${SYMFINDER_VERSION}
@@ -58,6 +59,8 @@ services:
   varicity:
     image: deathstar3/varicity:${TAG}
     container_name: varicity
+    ports:
+      - "3000:3000"
     networks:
       - varicity-config
 

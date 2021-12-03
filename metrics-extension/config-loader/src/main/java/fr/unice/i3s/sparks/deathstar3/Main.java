@@ -44,7 +44,7 @@ public class Main {
 
         ExperimentConfig firstConfig = configs.get(0);
 
-        ExperimentResult result = metricExtension.runExperiment(firstConfig, symfinderConfigParser.parseSymfinderConfigurationFromFile(args[1]));
+        ExperimentResult result = metricExtension.runExperiment(firstConfig, symfinderConfigParser.parseSymfinderConfigurationFromFile(args[1]).hotspots() );
 
         ExperimentResultWriterJson experimentResultWriterJson = new ExperimentResultWriterJson(firstConfig);
 

@@ -1,4 +1,5 @@
 description: basic config with default colors and building representation
+name: default config
 building:
   padding: 0.2
   colors:
@@ -55,6 +56,7 @@ blacklist:
   - org.jfree.data.general
 api_classes:
   - org.jfree.chart.JFreeChart
+  - org.jfree.chart.plot.Plot
 variables:
   width: nbConstructorVariants
   height: nbMethodVariants
@@ -64,26 +66,14 @@ variables:
 orientation: OUT
 default_level: 4
 camera_data:
-  alpha: 0.167451519847481
-  beta: 0.7842601589237435
-  radius: 29.559067943185145
+  alpha: 2.330259248666026
+  beta: 1.0519142108927133
+  radius: 33.7402750744389
   target:
-    x: 11.684349326346426
-    y: 8.721032203281815
-    z: 10.633651660390944
+    x: 13.6295212946051
+    y: 7.440399882565056
+    z: 13.05737020700024
 metrics:
-  nbMethodVariants:
-    min: 0
-    max: 100
-    higherIsBetter: false
-  nbAttributes:
-    min: 0
-    max: 100
-    higherIsBetter: false
-  nbConstructorVariants:
-    min: 0
-    max: 100
-    higherIsBetter: false
   complexity:
     min: 0
     max: 100
@@ -104,10 +94,20 @@ metrics:
     min: 0
     max: 100
     higherIsBetter: false
+  nbMethodVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbAttributes:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbConstructorVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
   nbVariants:
     min: 0
     max: 100
     higherIsBetter: false
-clones:
-  map: {}
 projectId: jfreechart-v1.5.0

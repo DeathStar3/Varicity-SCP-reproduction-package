@@ -1,4 +1,5 @@
 description: basic config with default colors and building representation
+name: default config
 building:
   padding: 0.2
   colors:
@@ -49,10 +50,7 @@ hierarchy_links:
   - INSTANTIATE
   - IMPLEMENTS
   - EXTENDS
-blacklist:
-  - org.jfree.chart.util.PublicCloneable
-  - org.jfree.chart.event
-  - org.jfree.data.general
+blacklist: []
 api_classes:
   - org.apache.cxf.endpoint.Endpoint
 variables:
@@ -62,15 +60,15 @@ variables:
   fade: ""
   crack: ""
 orientation: OUT
-default_level: 4
+default_level: 6
 camera_data:
-  alpha: 0.167451519847481
-  beta: 0.7842601589237435
-  radius: 29.559067943185145
+  alpha: -3.5622908675068343
+  beta: 0.8928783580675261
+  radius: 100.30321531648963
   target:
-    x: 11.684349326346426
-    y: 8.721032203281815
-    z: 10.633651660390944
+    x: 46.346370229149755
+    y: -15.975084736266771
+    z: 12.806251768522904
 metrics:
   nbMethodVariants:
     min: 0
@@ -88,6 +86,4 @@ metrics:
     min: 0
     max: 100
     higherIsBetter: false
-clones:
-  map: {}
 projectId: cxf-cxf-3.2.7

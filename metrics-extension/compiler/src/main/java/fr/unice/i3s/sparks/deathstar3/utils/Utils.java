@@ -2,6 +2,7 @@ package fr.unice.i3s.sparks.deathstar3.utils;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class Utils {
@@ -47,11 +49,17 @@ public class Utils {
                 .withShowAll(true)
                 .withStatusFilter(List.of("exited")).withNameFilter(List.of(containerName)).exec();
         for (var container : containers) {
-
             dockerClient.removeContainerCmd(container.getId())
                     .exec();
         }
     }
+
+    public void downloadImage(String image, String tag) throws InterruptedException {
+
+        dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(7,
+                TimeUnit.MINUTES);
+    }
+
 
     public String getUserIdentity() {
         String user = "1000";
@@ -76,6 +84,8 @@ public class Utils {
 
         return user + ":" + group;
     }
+
+
 
 
 }

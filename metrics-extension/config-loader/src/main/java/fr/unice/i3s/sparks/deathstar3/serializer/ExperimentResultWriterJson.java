@@ -20,6 +20,8 @@ public class ExperimentResultWriterJson implements ExperimentResultWriter {
     ObjectMapper objectMapperJson = new ObjectMapper();
     private ExperimentConfig experimentConfig;
 
+    //TODO use Constants class to get the prefix of where to write files
+
     public ExperimentResultWriterJson(ExperimentConfig experiment){
         this.experimentConfig = experiment;
 

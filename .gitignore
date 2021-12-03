@@ -34,6 +34,6 @@ testadd
 .settings/
 *.vscode
 sonarqube-analysis-tcf-j2e.json
-
+data
 *node_modules*
 

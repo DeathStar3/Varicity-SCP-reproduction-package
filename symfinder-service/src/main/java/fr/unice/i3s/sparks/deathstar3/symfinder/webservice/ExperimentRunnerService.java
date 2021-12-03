@@ -144,7 +144,7 @@ public class ExperimentRunnerService {
 
                                 root.getAppender("STDOUT").stop();
 
-                                ExperimentResult experimentResult = metricExtensionEntrypoint.runExperiment(experimentConfig, parametersObject);
+                                ExperimentResult experimentResult = metricExtensionEntrypoint.runExperiment(experimentConfig, parametersObject.hotspots());
 
                                 this.sendExperimentSucceededToUI(session, experimentResult);
                                 System.out.println("Done with the experiment");

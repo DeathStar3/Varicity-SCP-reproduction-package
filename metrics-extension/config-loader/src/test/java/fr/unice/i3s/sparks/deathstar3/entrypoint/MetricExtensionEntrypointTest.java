@@ -35,7 +35,7 @@ public class MetricExtensionEntrypointTest {
 
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(cfclient, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(cfclient, parametersObject.hotspots());
             System.out.println(experimentResult);
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
@@ -56,7 +56,7 @@ public class MetricExtensionEntrypointTest {
         System.out.println(cfclient);
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(cfclient, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(cfclient, parametersObject.hotspots());
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
             System.out.println(experimentResult);
@@ -79,7 +79,7 @@ public class MetricExtensionEntrypointTest {
         System.out.println(iutas201);
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(iutas201, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(iutas201, parametersObject.hotspots());
 
             System.out.println(experimentResult);
             Assertions.assertNotNull(experimentResult);
@@ -109,7 +109,7 @@ public class MetricExtensionEntrypointTest {
         System.out.println(regatta);
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject.hotspots());
 
             System.out.println(experimentResult);
 
@@ -131,26 +131,23 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-
         ExperimentConfig regatta = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("regatta-with-symfinder.yaml").readAllBytes())).get(0);
 
         System.out.println(regatta);
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject.hotspots());
 
             System.out.println(experimentResult);
 
-            /*Assertions.assertNotNull(experimentResult);
+            Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
-            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
-            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
-            
+
             
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
             Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
-            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());*/
+            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());
 
         });
     }

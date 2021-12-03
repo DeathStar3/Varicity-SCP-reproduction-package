@@ -16,7 +16,6 @@ create_directory(){
 
 export SYMFINDER_UID=$(id -u)
 export SYMFINDER_GID=$(id -g)
-export SYMFINDER_PROJECTS="$@"
 export SYMFINDER_VERSION=$(git rev-parse HEAD)
 export TAG=local
 export DIR_PATH=$(pwd)
