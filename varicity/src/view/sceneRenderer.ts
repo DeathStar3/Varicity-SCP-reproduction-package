@@ -1,6 +1,6 @@
 import {Config, Vector3_Local} from './../model/entitiesImplems/config.model';
-import { Scene, Engine, ArcRotateCamera, HemisphericLight, Vector3 } from "@babylonjs/core";
-import { EntitiesList } from "../model/entitiesList";
+import {ArcRotateCamera, Engine, HemisphericLight, Scene, Vector3} from "@babylonjs/core";
+import {EntitiesList} from "../model/entitiesList";
 
 export abstract class SceneRenderer {
 
@@ -28,10 +28,10 @@ export abstract class SceneRenderer {
 
         this.camera = new ArcRotateCamera("Camera", this.config.camera_data.alpha, this.config.camera_data.beta, this.config.camera_data.radius, Vector3_Local.toVector3(this.config.camera_data.target), this.scene);
         this.camera.attachControl(this.canvas, true);
-        
+
         this.camera.panningSensibility = 10;
-        
-        
+
+
         //console.log(" *** Camera position here"+ this.camera.position);
         this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
         this.entitiesList = entitiesList;
@@ -70,12 +70,12 @@ export abstract class SceneRenderer {
     }
 
     abstract rerender(config: Config): SceneRenderer; //{
-        // this.config = config;
-        // this.scene.dispose();
-        // this.engine.dispose();
-        // this.engine = new Engine(this.canvas, true);
-        // this.scene = new Scene(this.engine);
-        // this.buildScene();
+    // this.config = config;
+    // this.scene.dispose();
+    // this.engine.dispose();
+    // this.engine = new Engine(this.canvas, true);
+    // this.scene = new Scene(this.engine);
+    // this.buildScene();
     // }
 
     abstract buildScene(): void;

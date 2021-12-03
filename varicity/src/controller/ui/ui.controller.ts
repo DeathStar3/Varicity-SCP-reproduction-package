@@ -7,7 +7,6 @@ import {ConfigController} from './config.controller';
 import {DetailsController} from './menu/details.controller';
 import {ProjectController} from './project-selector.controller';
 import {LogsController} from "./logs.controller";
-import {DocController} from "./doc.controller";
 import {ConfigSelectorController} from "./config-selector.controller";
 import {ConfigService} from "../../services/config.service";
 import {SaveController} from "./save.controller";
@@ -104,7 +103,7 @@ export class UIController {
         }
     }
 
-    public static updateScene(criticalLevel: CriticalLevel){
+    public static updateScene(criticalLevel: CriticalLevel) {
         if (this.scene) {
             SearchbarController.emptyMap();
             switch (criticalLevel) {
@@ -131,7 +130,7 @@ export class UIController {
         const metricsNames = (await ProjectService.getProjectMetrics(projectName)).data;
         console.log("metric names", metricsNames)
         metricsNames.forEach(metric => {
-            if(!config.metrics.has(metric)){
+            if (!config.metrics.has(metric)) {
                 config.metrics.set(metric, new MetricSpec())
             }
         })

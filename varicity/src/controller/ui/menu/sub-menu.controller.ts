@@ -9,7 +9,7 @@ export class SubMenuController {
     }
 
     public static createShortReadonlyText(text: string, value: string, parent: HTMLElement): HTMLInputElement {
-        return SubMenuController.createCustomText(text, value, "",  parent, true, 4, 8)
+        return SubMenuController.createCustomText(text, value, "", parent, true, 4, 8)
     }
 
     public static createInput(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
@@ -32,7 +32,7 @@ export class SubMenuController {
         return SubMenuController.createCustomText("", text, "", parent, true, 0, 12)
     }
 
-    public static createSelect(text: string, defaultValue: string, parent: HTMLElement, options: string[],  firstOption?: string): HTMLSelectElement {
+    public static createSelect(text: string, defaultValue: string, parent: HTMLElement, options: string[], firstOption?: string): HTMLSelectElement {
         let divElement = document.createElement("div");
         divElement.classList.add("input-form", "vertical-container", "input-custom");
 
@@ -47,7 +47,7 @@ export class SubMenuController {
         selectElement.classList.add("custom-select", "form-select", "col-8");
         selectElement.innerHTML = text;
 
-        if(firstOption){
+        if (firstOption) {
             let defaultOptionElement = document.createElement("option");
             defaultOptionElement.value = firstOption;
             defaultOptionElement.label = firstOption;
@@ -74,8 +74,8 @@ export class SubMenuController {
     public static createMenu(title: string, isOpen: boolean, parent: HTMLElement): HTMLElement {
 
         const sectionText = document.getElementById("submenu-title").innerHTML;
-        const id = sectionText.replace(" ","") + "-" + title.replace(" ","");
-        if (this.trackMenuOpened.has(id)){
+        const id = sectionText.replace(" ", "") + "-" + title.replace(" ", "");
+        if (this.trackMenuOpened.has(id)) {
             isOpen = this.trackMenuOpened.get(id)
         }
 
@@ -91,7 +91,7 @@ export class SubMenuController {
         buttonElement.setAttribute("data-bs-toggle", "collapse");
         buttonElement.setAttribute("data-bs-target", "#" + collapseGen);
         buttonElement.setAttribute("aria-expanded", isExpandedText);
-        buttonElement.innerHTML=title;
+        buttonElement.innerHTML = title;
 
         buttonElement.addEventListener("click", () => {
             this.trackMenuOpened.set(id, JSON.parse(buttonElement.getAttribute("aria-expanded").toLowerCase()))
@@ -99,9 +99,9 @@ export class SubMenuController {
 
         let divElement = document.createElement("div");
         divElement.classList.add("menu-container");
-        if(isOpen){
+        if (isOpen) {
             divElement.classList.add("show");
-        }else{
+        } else {
             divElement.classList.add("collapse");
         }
         divElement.id = collapseGen;
@@ -157,8 +157,8 @@ export class SubMenuController {
 
         let inputElement = document.createElement("input");
         inputElement.classList.add("form-control", "form-control-color", "color-custom", "col-6");
-        inputElement.type="color";
-        inputElement.title="Choose your color";
+        inputElement.type = "color";
+        inputElement.title = "Choose your color";
         inputElement.value = initColor.toString();
 
         divElement.appendChild(spanElement);
@@ -168,19 +168,19 @@ export class SubMenuController {
         return inputElement;
     }
 
-    public static createCustomText(text: string, value: string, placeholderText: string, parent: HTMLElement, isReadonly:boolean, sizeFirstText: number, sizeValueText: number): HTMLInputElement {
+    public static createCustomText(text: string, value: string, placeholderText: string, parent: HTMLElement, isReadonly: boolean, sizeFirstText: number, sizeValueText: number): HTMLInputElement {
         let divElement = document.createElement("div");
         divElement.classList.add("input-group", "input-custom");
 
         let spanElement: HTMLSpanElement;
-        if(sizeFirstText != 0){
+        if (sizeFirstText != 0) {
             spanElement = document.createElement("span");
             spanElement.classList.add("input-group-text", "col-" + sizeFirstText);
             spanElement.innerHTML = text;
         }
 
         let inputElement: HTMLInputElement;
-        if(sizeValueText != 0) {
+        if (sizeValueText != 0) {
             inputElement = document.createElement("input");
             inputElement.classList.add("form-control", "col-" + sizeValueText);
             inputElement.type = "text";
@@ -188,8 +188,12 @@ export class SubMenuController {
             inputElement.placeholder = placeholderText;
             inputElement.value = value.toString();
         }
-        if(spanElement){ divElement.appendChild(spanElement); }
-        if(inputElement){ divElement.appendChild(inputElement); }
+        if (spanElement) {
+            divElement.appendChild(spanElement);
+        }
+        if (inputElement) {
+            divElement.appendChild(inputElement);
+        }
         parent.appendChild(divElement);
 
         return inputElement;

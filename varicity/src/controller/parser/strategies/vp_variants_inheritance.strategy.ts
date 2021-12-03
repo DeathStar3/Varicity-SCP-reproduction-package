@@ -7,11 +7,10 @@ import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.
 import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInput.interface";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Config} from "../../../model/entitiesImplems/config.model";
-import {MetricObject} from "../../../model/entitiesImplems/metricObject.model";
 
 // DEPRECATED
 export class VPVariantsInheritanceStrategy implements ParsingStrategy {
-    public parse(data: JsonInputInterface, config: Config, project: string) : EntitiesList {
+    public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
         // console.log('Analyzing with VP and variants strategy: ', data);
 
         let nodesList: NodeElement[] = [];
@@ -60,7 +59,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         let result = new EntitiesList();
         result.district = d;
 
-        if (config.api_classes !== undefined){
+        if (config.api_classes !== undefined) {
             data.allnodes.filter(
                 nod => config.api_classes.includes(nod.name)
                     && !nodesList.map(no => no.name).includes(nod.name)
@@ -93,7 +92,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         compositionLinks.forEach(le => {
             const source = result.getBuildingFromName(le.source);
             const target = result.getBuildingFromName(le.target);
-            if (source !== undefined && target !== undefined){
+            if (source !== undefined && target !== undefined) {
                 result.links.push(new LinkImplem(source, target, le.type));
             }
         });
@@ -106,8 +105,8 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         return result;
     }
 
-    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number) : void {
-        const newSrcNodes : NodeElement[] = [];
+    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number): void {
+        const newSrcNodes: NodeElement[] = [];
         const nodeNames = srcNodes.map(sn => sn.name);
         nodes.forEach(n => {
             if (nodeNames.includes(n.name)) {
@@ -134,24 +133,24 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
             }
         });
         if (newSrcNodes.length > 0) {
-            this.buildComposition(alllinks, nodes, newSrcNodes, level+1);
+            this.buildComposition(alllinks, nodes, newSrcNodes, level + 1);
         }
     }
 
-    private buildDistricts(nodes: NodeElement[], links: LinkElement[]) : VPVariantsImplem {
-        const trace : VPVariantsImplem[] = [];
-        const roots : VPVariantsImplem[] = [];
+    private buildDistricts(nodes: NodeElement[], links: LinkElement[]): VPVariantsImplem {
+        const trace: VPVariantsImplem[] = [];
+        const roots: VPVariantsImplem[] = [];
         nodes.forEach(n => {
             this.buildDistrict(n, trace, nodes, links, roots);
         });
-        const res : VPVariantsImplem = new VPVariantsImplem();
+        const res: VPVariantsImplem = new VPVariantsImplem();
         roots.forEach(r => {
             res.addDistrict(r);
         })
         return res;
     }
 
-    private buildDistrict(nodeElement: NodeElement, trace: VPVariantsImplem[], nodes: NodeElement[], links: LinkElement[], roots: VPVariantsImplem[]) : VPVariantsImplem {
+    private buildDistrict(nodeElement: NodeElement, trace: VPVariantsImplem[], nodes: NodeElement[], links: LinkElement[], roots: VPVariantsImplem[]): VPVariantsImplem {
         if (nodeElement.types.includes("VP")) { // if n is a vp
             if (!nodeElement.analyzed) { // if n has not been analyzed yet
                 // create a new district with n
@@ -216,7 +215,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
     //     }
     // }
 
-    private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]) : NodeElement[]{
+    private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
 
@@ -229,7 +228,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         return res;
     }
 
-    private getLinkedNodesToTarget(n: NodeElement, nodes: NodeElement[], links: LinkElement[]) : NodeElement[]{
+    private getLinkedNodesToTarget(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
 
@@ -242,7 +241,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         return res;
     }
 
-    private findNodeByName(name: string, nodes: NodeElement[]) : NodeElement {
+    private findNodeByName(name: string, nodes: NodeElement[]): NodeElement {
         for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].name === name) {
                 return nodes[i];

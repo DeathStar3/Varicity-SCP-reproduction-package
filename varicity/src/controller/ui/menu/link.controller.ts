@@ -14,7 +14,7 @@ export class LinkController {
         const displayMenu = SubMenuController.createMenu("Display", true, parent);
         const hierarchyMenu = SubMenuController.createMenu("Hierarchy links", true, parent);
 
-        if(UIController.config){
+        if (UIController.config) {
 
             // fetch the links
             const links = UIController.config.link; // TODO find a better way than getting a static value, pass it in arguments?

@@ -1,4 +1,4 @@
-import { Matrix, Mesh, Quaternion, Vector3 } from "@babylonjs/core";
+import {Matrix, Mesh, Quaternion, Vector3} from "@babylonjs/core";
 
 export abstract class D3Utils {
     static facePoint(rotatingObject: Mesh, pointToRotateTo: Vector3) {

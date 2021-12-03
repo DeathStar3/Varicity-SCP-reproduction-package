@@ -1,7 +1,7 @@
-import { Config } from './../../model/entitiesImplems/config.model';
-import { ArcRotateCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core";
-import { City3D } from "./3Delements/city3D";
-import { SceneRenderer } from "../sceneRenderer";
+import {Config} from './../../model/entitiesImplems/config.model';
+import {ArcRotateCamera, HemisphericLight, Scene, Vector3} from "@babylonjs/core";
+import {City3D} from "./3Delements/city3D";
+import {SceneRenderer} from "../sceneRenderer";
 
 export class MetricityImplem extends SceneRenderer {
 

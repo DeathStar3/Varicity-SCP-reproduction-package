@@ -12,7 +12,7 @@ export class BlacklistController {
 
         const menuBlacklist = SubMenuController.createMenu("Blacklist", true, parent);
 
-        if(UIController.config){
+        if (UIController.config) {
 
             // fetch the links
             const blacklist = UIController.config.blacklist; // TODO find a better way than getting a static value, pass it in arguments?

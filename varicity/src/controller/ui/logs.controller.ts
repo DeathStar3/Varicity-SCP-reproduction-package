@@ -1,4 +1,4 @@
-import { EntitiesList } from "../../model/entitiesList";
+import {EntitiesList} from "../../model/entitiesList";
 
 export class LogsController {
 

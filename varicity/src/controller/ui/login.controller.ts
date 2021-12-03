@@ -2,7 +2,7 @@ import {User, UserType} from '../../configsaver/model/city-view-config';
 
 class LoginController {
 
-    constructor(){
+    constructor() {
         this.addListenerToRegisterBtn();
     }
 
@@ -23,8 +23,7 @@ class LoginController {
 
                 if (document.URL.endsWith('/')) {
                     document.location.href = document.URL + 'ui.html'
-                }
-                else {
+                } else {
                     document.location.href = document.URL + '/ui.html'
                 }
             });

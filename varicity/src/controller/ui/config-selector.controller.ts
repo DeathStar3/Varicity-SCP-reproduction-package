@@ -36,9 +36,9 @@ export class ConfigSelectorController {
         }
 
         // update the view & config in case of a change
-        parent.addEventListener('change', async function(event) {
+        parent.addEventListener('change', async function (event) {
             const configName = (event.target as HTMLInputElement).value;
-            if(configName !== undefined){
+            if (configName !== undefined) {
                 await ConfigSelectorController.defineConfig(configName);
                 ConfigSelectorController.reParse();
             }

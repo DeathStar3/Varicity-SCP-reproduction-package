@@ -2,8 +2,8 @@ import '@material/mwc-button/mwc-button';
 import '@material/mwc-dialog';
 import '@material/mwc-formfield/mwc-formfield';
 import '@material/mwc-radio/mwc-radio';
-import { UIController } from './controller/ui/ui.controller';
-import { ProjectService } from './services/project.service';
+import {UIController} from './controller/ui/ui.controller';
+import {ProjectService} from './services/project.service';
 
 class Main {
 
@@ -18,6 +18,9 @@ class Main {
 
             UIController.createProjectSelector(projects);
             UIController.createMenu();
+
+            //Open project and config selection dialog box
+            document.getElementById("project-config_content").setAttribute('open', 'true');
         })
     }
 }

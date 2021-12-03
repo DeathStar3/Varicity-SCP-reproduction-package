@@ -1,6 +1,5 @@
 import {SubMenuController} from "./sub-menu.controller";
 import {UIController} from "../ui.controller";
-import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 
 export class DistrictController {
 
@@ -14,7 +13,7 @@ export class DistrictController {
         const menuPadding = SubMenuController.createMenu("Padding", true, parent);
         const menuFaceColors = SubMenuController.createMenu("Faces Color", true, parent);
 
-        if(UIController.config){
+        if (UIController.config) {
 
             // Fetch the attributes
             const padding = UIController.config.district.padding;

@@ -11,29 +11,29 @@ export class ProjectController {
 
     static el: EntitiesList;
     private static previousParser: ParsingStrategy;
-    private static projectListener:CurrentProjectListener = new CurrentProjectListener();
+    private static projectListener: CurrentProjectListener = new CurrentProjectListener();
 
     static createProjectSelector(projectsName: string[]) {
         let parent = document.getElementById("project_selector");
 
         for (let projectName of projectsName) {
             let node = document.createElement("option") as HTMLOptionElement;
-            node.value=projectName;
-            node.text= projectName;
-            
+            node.value = projectName;
+            node.text = projectName;
+
             parent.appendChild(node);
         }
 
-        parent.addEventListener('change', function(event) {
+        parent.addEventListener('change', function (event) {
             const projectName = (event.target as HTMLInputElement).value;
-            if(projectName !== undefined){
+            if (projectName !== undefined) {
                 ProjectController.loadProject(projectName);
                 parent.childNodes[0].nodeValue = "Project selection: " + projectName;
             }
         });
     }
 
-    public static loadProject(projectName: string){
+    public static loadProject(projectName: string) {
         this.previousParser = new VPVariantsStrategy();
 
         // clear the current view

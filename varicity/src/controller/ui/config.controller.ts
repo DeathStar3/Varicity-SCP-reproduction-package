@@ -83,7 +83,6 @@ export class ConfigController {
     }
 
 
-
     private static stringArrayListener(ke: KeyboardEvent, input: HTMLInputElement, parent: HTMLElement) {
         let prev = input.getAttribute("previous");
         if (ke.key == "Enter") {
@@ -120,7 +119,7 @@ export class ConfigController {
                     input.className = "right-input";
                     input.addEventListener("change", (ke) => {
                         let arr = this.findValidParents(node);
-                        UIController.changeConfig(arr, { name: node.getAttribute("value"), color: input.value });
+                        UIController.changeConfig(arr, {name: node.getAttribute("value"), color: input.value});
                     });
                 } else this.populateChildren(obj, parent); // it's a string
             }
@@ -129,8 +128,7 @@ export class ConfigController {
             if (values.includes(attr) || values.includes(parent.parentElement.getAttribute("value"))) {
                 this.populateChildren("", parent);
             }
-        }
-        else {
+        } else {
             if (!(config instanceof Object)) { // not [] nor object
                 let input = this.createInput(config, parent);
                 let prev = input.value;
@@ -144,12 +142,11 @@ export class ConfigController {
                 input.addEventListener("keyup", (ke) => this.stringArrayListener(ke, input, parent));
 
 
-            }
-            else {
+            } else {
                 if (config instanceof Map && parent.getAttribute("value") === "metrics") {
                     console.log(config);
                     config.forEach((value: any, key: any) => {
-                        this.populateChildren({ [key]: value }, parent);
+                        this.populateChildren({[key]: value}, parent);
                     });
                 } else if (parent.getAttribute("value") === "variables") {
                     const noneVal = " -- None -- ";
@@ -189,8 +186,7 @@ export class ConfigController {
                                         }
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 let input;
                                 if (key == "orientation") {
                                     let options = ["IN", "OUT", "IN_OUT"];

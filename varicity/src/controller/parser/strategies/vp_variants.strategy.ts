@@ -10,7 +10,7 @@ import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
 
 export class VPVariantsStrategy implements ParsingStrategy {
-    public parse(data: JsonInputInterface, config: Config, project: string) : EntitiesList {
+    public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
         console.log('Analyzing with VP and variants strategy: ', data);
         console.log('Config used: ', config);
 
@@ -65,7 +65,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         let result = new EntitiesList();
         result.district = d;
 
-        if (config.api_classes !== undefined){
+        if (config.api_classes !== undefined) {
             data.allnodes.filter(
                 nod => config.api_classes.includes(nod.name)
                     && !nodesList.map(no => no.name).includes(nod.name)
@@ -100,7 +100,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         allLinks.forEach(le => {
             const source = result.getBuildingFromName(le.source);
             const target = result.getBuildingFromName(le.target);
-            if (source !== undefined && target !== undefined){
+            if (source !== undefined && target !== undefined) {
                 result.links.push(new LinkImplem(source, target, le.type));
             }
         });
@@ -113,8 +113,8 @@ export class VPVariantsStrategy implements ParsingStrategy {
         return result;
     }
 
-    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number, orientation: Orientation) : void {
-        const newSrcNodes : NodeElement[] = [];
+    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number, orientation: Orientation): void {
+        const newSrcNodes: NodeElement[] = [];
         const nodeNames = srcNodes.map(sn => sn.name);
         nodes.forEach(n => {
             if (nodeNames.includes(n.name)) {
@@ -141,11 +141,11 @@ export class VPVariantsStrategy implements ParsingStrategy {
             }
         });
         if (newSrcNodes.length > 0) {
-            this.buildComposition(alllinks, nodes, newSrcNodes, level+1, orientation);
+            this.buildComposition(alllinks, nodes, newSrcNodes, level + 1, orientation);
         }
     }
 
-    private buildDistricts(nodes: NodeElement[], links: LinkElement[], orientation: Orientation) : VPVariantsImplem {
+    private buildDistricts(nodes: NodeElement[], links: LinkElement[], orientation: Orientation): VPVariantsImplem {
         const roots = nodes.filter(n => n.compositionLevel === 0);
         const rootElems = roots.map(r => {
             return this.buildDistrict(r, nodes, links, 0, orientation);
@@ -161,10 +161,10 @@ export class VPVariantsStrategy implements ParsingStrategy {
         return res;
     }
 
-    private buildDistrict(nodeElement: NodeElement, nodes: NodeElement[], links: LinkElement[], level: number, orientation: Orientation) : VPVariantsImplem | ClassImplem {
+    private buildDistrict(nodeElement: NodeElement, nodes: NodeElement[], links: LinkElement[], level: number, orientation: Orientation): VPVariantsImplem | ClassImplem {
         const outLinks = this.getLinkedNodesFromSource(nodeElement, nodes, links); // OUT
         const inLinks = this.getLinkedNodesToTarget(nodeElement, nodes, links); // IN
-        const linked : NodeElement[] = [];
+        const linked: NodeElement[] = [];
         if (orientation === Orientation.OUT || orientation === Orientation.IN_OUT) {
             linked.push(...outLinks);
         }
@@ -172,14 +172,14 @@ export class VPVariantsStrategy implements ParsingStrategy {
             linked.push(...inLinks);
         }
 
-        const children = linked.filter(ln => ln.compositionLevel === level+1);
+        const children = linked.filter(ln => ln.compositionLevel === level + 1);
         if (children.length > 0) {
             let result = new VPVariantsImplem(new ClassImplem(
                 nodeElement,
                 nodeElement.compositionLevel
             ));
             children.forEach(c => {
-                const r = this.buildDistrict(c, nodes, links, level+1, orientation);
+                const r = this.buildDistrict(c, nodes, links, level + 1, orientation);
                 if (r instanceof VPVariantsImplem) {
                     result.districts.push(r);
                 } else {
@@ -210,7 +210,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
     //     }
     // }
 
-    private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]) : NodeElement[]{
+    private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
 
@@ -225,7 +225,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         return res;
     }
 
-    private getLinkedNodesToTarget(n: NodeElement, nodes: NodeElement[], links: LinkElement[]) : NodeElement[]{
+    private getLinkedNodesToTarget(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
 
@@ -240,7 +240,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         return res;
     }
 
-    private findNodeByName(name: string, nodes: NodeElement[]) : NodeElement {
+    private findNodeByName(name: string, nodes: NodeElement[]): NodeElement {
         for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].name === name) {
                 return nodes[i];

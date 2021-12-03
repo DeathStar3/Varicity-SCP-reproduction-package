@@ -1,6 +1,5 @@
 import {Building3D} from '../../../view/common/3Delements/building3D';
 import {SubMenuController} from "./sub-menu.controller";
-import {Building} from "../../../model/entities/building.interface";
 import {Metrics} from "../../../model/entitiesImplems/metrics.model";
 
 export class DetailsController {
@@ -14,12 +13,12 @@ export class DetailsController {
 
     static displayObjectInfo(obj: Building3D, force: boolean) {
 
-        if (obj){
+        if (obj) {
             // clear the sub-menu
             (document.getElementById("submenu-content") as HTMLElement).innerHTML = "";
 
-            if(this.force && !force) return;
-            if(this.force && force) {
+            if (this.force && !force) return;
+            if (this.force && force) {
                 this.current.highlight(false, true);
                 this.current.showAllLinks(false);
             }
@@ -35,7 +34,7 @@ export class DetailsController {
         const metricSubMenu = SubMenuController.createMenu("Metrics", true, parent);
         const linksSubMenu = SubMenuController.createMenu("Links", true, parent);
 
-        if (obj){
+        if (obj) {
             this.populateModel(obj.elementModel, modelSubMenu);
             this.populateMetric(obj.elementModel.metrics, metricSubMenu);
             this.populateLinks(obj, linksSubMenu);

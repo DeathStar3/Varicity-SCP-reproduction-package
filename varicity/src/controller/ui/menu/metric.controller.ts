@@ -16,7 +16,7 @@ export class MetricController {
         const menuVariables = SubMenuController.createMenu("Variables", true, parent);
         const menuMetrics = SubMenuController.createMenu("Metrics", true, parent);
 
-        if(UIController.config){
+        if (UIController.config) {
 
             // fetch the links
             const metrics = UIController.config.metrics;
