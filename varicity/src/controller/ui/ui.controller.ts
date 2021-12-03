@@ -4,7 +4,7 @@ import {Color} from '../../model/entities/config.interface';
 import {Config, ConfigName, CriticalLevel, MetricSpec} from '../../model/entitiesImplems/config.model';
 import {SceneRenderer} from '../../view/sceneRenderer';
 import {ConfigController} from './config.controller';
-import {DetailsController} from './details.controller';
+import {DetailsController} from './menu/details.controller';
 import {ProjectController} from './project-selector.controller';
 import {LogsController} from "./logs.controller";
 import {DocController} from "./doc.controller";

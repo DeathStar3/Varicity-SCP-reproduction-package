@@ -1,6 +1,7 @@
 import {DocController} from "../doc.controller";
 import {BlacklistController} from "./blacklist.controller";
 import {LinkController} from "./link.controller";
+import {DetailsController} from "./details.controller";
 import {MetricController} from "./metric.controller";
 
 export class MenuController {
@@ -47,7 +48,7 @@ export class MenuController {
 
             switch (selectedTab.getAttribute("id")) {
                 case "information":
-
+                    DetailsController.createMenu();
                     break;
                 case "building":
 
