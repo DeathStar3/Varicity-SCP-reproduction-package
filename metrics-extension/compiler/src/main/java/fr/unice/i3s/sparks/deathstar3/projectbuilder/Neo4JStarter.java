@@ -42,7 +42,7 @@ public class Neo4JStarter {
 
         if (!utils.checkIfImageExists(Constants.SYMFINDER_NEO4J_IMAGE,   Constants.SYMFINDER_NEO4J_TAG )) {
             try {
-                utils.downloadImage(Constants.SYMFINDER_NEO4J_IMAGE, Constants.SYMFINDER_NEO4J_IMAGE);
+                utils.downloadImage(Constants.SYMFINDER_NEO4J_IMAGE, Constants.SYMFINDER_NEO4J_TAG);
             } catch (InterruptedException exception) {
                 log.error("Cannot neo4j image requested "+Constants.SYMFINDER_NEO4J_IMAGE +":" +  Constants.SYMFINDER_NEO4J_TAG );
                 throw new RuntimeException(exception);

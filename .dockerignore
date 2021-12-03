@@ -5,3 +5,4 @@ resources/
 .classpath
 .project
 .factorypath
+*node_modules*

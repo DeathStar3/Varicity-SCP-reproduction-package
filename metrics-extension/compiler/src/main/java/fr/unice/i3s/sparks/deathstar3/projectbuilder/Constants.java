@@ -41,10 +41,10 @@ public final class Constants {
             NEO4J_LOCAL_HOSTNAME = "symfinder-neo4j";
         }
 
-
-
         SYMFINDER_NEO4J_IMAGE = Optional.ofNullable(System.getenv ("SYMFINDER_NEO4J_IMAGE")).orElse("deathstar3/symfinder-neo4j");
         SYMFINDER_NEO4J_TAG = Optional.ofNullable(System.getenv ("SYMFINDER_NEO4J_TAG")).orElse("vissoft2021");
+
+        System.out.println("Static initialization");
     }
 
     public static String getSonarqubeLocalUrl() {

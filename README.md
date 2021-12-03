@@ -1,5 +1,34 @@
 # Varicity
 
+## Symfinder
+First you need to generate the data with symfinder.
+### With the terminal (console) interface
+
+#### Without docker-cli
+First build the new Symfinder 
+```shell
+chmod +x new-build-cli.sh
+./new-build-cli.sh
+```
+Then to use it  (replace <> by the right value for your usage). See below for details
+
+```shell
+chmod +x new-run-cli.sh
+./new-run-cli.sh <experiment-configuration>  <hotspot-configuration> <LOG_LEVEL>
+```
+| Arguments         | Type    | Description |
+|--------------|-----------|------------|
+|experiment-configuration| string | the absolute or relative path of the file containing your configuration for your experiment See [Documentation](wiki_.md) for the format of the file|
+| hotspot-configuration | string | the absolute or relative path of the file containing your hotspot configuration. See [Documentation](wiki_.md) for the format of the file.|
+| LOG_LEVEL | string | the verbosity of the program possible values are `"TRACE", "DEBUG", "INFO", "WARN", "ERROR"`. You can use any case (lowercase,uppercase) you want.
+
+#### With docker-cli
+
+
+
+
+
+
 ## Build it
 
 ### Requirements 

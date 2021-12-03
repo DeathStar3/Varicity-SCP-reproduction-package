@@ -29,10 +29,16 @@ public class Main {
         }
 
         if (args.length == 3) {
-            if (VALID_LEVELS.contains(args[1].toUpperCase())) {
+            if (VALID_LEVELS.contains(args[2].toUpperCase())) {
                 Logger root = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-                root.setLevel(Level.valueOf(args[1].toUpperCase()));
+                root.setLevel(Level.valueOf(args[2].toUpperCase()));
 
+            }
+            else{
+                System.out.println("""
+                        Unknown log level pass to the cli %s
+                        Valid levels are %s
+                        """.formatted(args[2], VALID_LEVELS));
             }
         }
 
