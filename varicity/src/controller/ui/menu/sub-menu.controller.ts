@@ -32,6 +32,41 @@ export class SubMenuController {
         return SubMenuController.createCustomText("", text, "", parent, true, 0, 12)
     }
 
+    public static createIconDisplaySVG(text: string, icons: string[], parent: HTMLElement): HTMLElement {
+        let formElement = document.createElement("form");
+        formElement.classList.add("input-group", "input-custom");
+
+        let spanElement = document.createElement("span");
+        spanElement.classList.add("input-group-text", "col-4");
+        spanElement.innerHTML = text;
+
+        let divElement = document.createElement("div");
+        divElement.classList.add("range-custom", "col-8");
+        // divElement.style.overflowX = "auto";
+
+        formElement.appendChild(spanElement);
+        formElement.appendChild(divElement);
+        icons.forEach(path =>{
+            let inputElement = document.createElement("img");
+            inputElement.src = path;
+            inputElement.width = 32;
+            inputElement.style.padding = "0 2px"
+            inputElement.setAttribute("title", path.match("[^\/]*.svg$")[0].replace(".svg", ""))
+            inputElement.setAttribute("data-bs-toggle", "tooltip")
+            inputElement.setAttribute("data-bs-placement", "bottom")
+            divElement.appendChild(inputElement);
+        });
+
+        //TODO : Ugly we should change this
+        let script = document.createElement("script");
+        script.src = "scripts/sidebars.js"
+        divElement.appendChild(script)
+
+        parent.appendChild(formElement);
+
+        return divElement;
+    }
+
     public static createSelect(text: string, defaultValue: string, parent: HTMLElement, options: string[], firstOption?: string): HTMLSelectElement {
         let divElement = document.createElement("div");
         divElement.classList.add("input-form", "vertical-container", "input-custom");

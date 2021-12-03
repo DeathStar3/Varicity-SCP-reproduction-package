@@ -46,7 +46,7 @@ export class DetailsController {
         SubMenuController.createShortReadonlyText("Origin", building.origin, parent)
         SubMenuController.createShortReadonlyText("Name", building.name, parent)
 
-        // TODO Missing Type icons here !
+        SubMenuController.createIconDisplaySVG("text", this.getIconPaths(building.types), parent);
 
         SubMenuController.createShortReadonlyText("Comp. level", building.compLevel.toString(), parent)
         SubMenuController.createShortReadonlyText("Analyzer", building.analyzed, parent)
@@ -84,5 +84,55 @@ export class DetailsController {
                 target.focus();
             });
         }
+    }
+
+    private static getIconPaths(types: string[]) {
+        let paths = [];
+
+        if (types) {
+            types.forEach(type => {
+                switch (type) {
+                    case "API":
+                        paths.push("./images/menu-icons/class-types/api/" + type + ".svg");
+                        break;
+                    case "COMPOSITION_STRATEGY":
+                    case "DECORATOR":
+                    case "FACTORY":
+                    case "STRATEGY":
+                    case "TEMPLATE":
+                        paths.push("./images/menu-icons/class-types/design-patten/" + type + ".svg");
+                        break;
+                    case "ABSTRACT":
+                    case "DENSE":
+                    case "HOTSPOT":
+                    case "INNER":
+                    case "METHOD_LEVEL_VP":
+                    case "OUT_OF_SCOPE":
+                    case "VARIANT":
+                    case "VP":
+                        paths.push("./images/menu-icons/class-types/entity-attribute/" + type + ".svg");
+                        break;
+                    case "CLASS":
+                    case "CONSTRUCTOR":
+                    case "INTERFACE":
+                    case "METHOD":
+                        paths.push("./images/menu-icons/class-types/entity-type/" + type + ".svg");
+                        break;
+                    case "PRIVATE":
+                    case "PUBLIC":
+                        paths.push("./images/menu-icons/class-types/entity-visibility/" + type + ".svg");
+                        break;
+                    case "EXTENDS":
+                    case "IMPLEMENTS":
+                    // case "INNER":
+                    // case "METHOD":
+                    case "USAGE":
+                        paths.push("./images/menu-icons/class-types/relation-type/" + type + ".svg");
+                        break;
+                }
+            });
+        }
+
+        return paths;
     }
 }
