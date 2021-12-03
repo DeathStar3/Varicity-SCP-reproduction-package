@@ -89,9 +89,9 @@ public class MetricExtensionEntrypointTest {
 
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
 
-            Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
+            Assertions.assertNotNull(experimentResult.externalMetric().get("sonarcloud"));
 
-            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());
+            Assertions.assertFalse(experimentResult.externalMetric().get("sonarcloud").isEmpty());
 
         });
 
