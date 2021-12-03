@@ -1,4 +1,5 @@
 import {DocController} from "./doc.controller";
+import {SubMenuController} from "./sub-menu.controller";
 
 export class MenuController {
 
@@ -7,6 +8,22 @@ export class MenuController {
     public static createMenu() {
         this.addListeners("main-menu");
         this.addListeners("tool-menu");
+
+        const menu = SubMenuController.createMenu("Menu", false, document.getElementById('submenu-content'));
+        SubMenuController.createCustomText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu, false, 0, 12);
+        SubMenuController.createShortReadonlyText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu)
+        SubMenuController.createLongReadonlyText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu)
+        SubMenuController.createInput("NbconstructorVariant", "", "placeholder", menu)
+        SubMenuController.createSelect("crack", "val 3", menu, "firstValue", ["val 1", "val 2", "val 3", "val 4"])
+
+        const menu2 = SubMenuController.createMenu("Menu", true, document.getElementById('submenu-content'));
+        SubMenuController.createCustomText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu2, false, 0, 12);
+        SubMenuController.createShortReadonlyText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu2)
+        SubMenuController.createLongReadonlyText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu2)
+        SubMenuController.createInput("NbconstructorVariant", "", "placeholder", menu2)
+        SubMenuController.createColorSelector("Building Color", "#1072bf", menu2)
+        SubMenuController.createSelect("crack", "val 3", menu2, "firstValue", ["val 1", "val 2", "val 3", "val 4"])
+        SubMenuController.createRange("Range", 2, 0, 10, 0.5, menu2);
     }
 
     public static addListeners(listId: string) {

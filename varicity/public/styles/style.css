@@ -7,6 +7,11 @@
     height: 100%;
 }
 
+.form-control:disabled, .form-control[readonly] {
+    background-color: white !important;
+    cursor: not-allowed;
+}
+
 #gameCanvas {
     float: left;
     width: 100%;
@@ -61,6 +66,41 @@ input {
     flex-direction: column;
 }
 
+.menu-button{
+    display: flex !important;
+    width: 100%;
+    background-color: #e9ecef !important;
+    font-weight: 600 !important;
+}
+
+.input-custom{
+    margin-bottom: 8px;
+}
+
+.menu-container{
+    padding: 12px 0;
+}
+
+.menu-container-2{
+    padding-bottom: 8px;
+}
+
+.range-custom{
+    border: 1px solid #ced4da;
+    padding: 0 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.range-custom input {
+    width: 100%;
+}
+
+.color-custom {
+    max-width: none !important;
+}
 
 html {
     height: 100%;
