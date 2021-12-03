@@ -3,6 +3,7 @@ import {BlacklistController} from "./blacklist.controller";
 import {LinkController} from "./link.controller";
 import {DetailsController} from "./details.controller";
 import {MetricController} from "./metric.controller";
+import {DistrictController} from "./district.controller";
 
 export class MenuController {
 
@@ -54,7 +55,7 @@ export class MenuController {
 
                     break;
                 case "districts":
-
+                    DistrictController.createMenu();
                     break;
                 case "links":
                     LinkController.createMenu();
