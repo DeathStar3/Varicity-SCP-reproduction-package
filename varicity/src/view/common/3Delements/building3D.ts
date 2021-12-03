@@ -453,9 +453,14 @@ export class Building3D extends Element3D {
                         this.flag = !this.flag;
                         this.highlight(this.flag, true);
                         this.links.forEach(l => l.display(this.flag, this.flag));
+
                         document.getElementById("submenu").style.display = "block"; //Display submenu
-                        MenuController.selectedTab = document.getElementById("information");
-                        MenuController.changeImage(document.getElementById("information"))
+                        const infoTab = document.getElementById("information")
+                        if (!MenuController.selectedTab && MenuController.selectedTab !== infoTab) {
+                            MenuController.changeImage(infoTab)
+                        }
+                        MenuController.selectedTab = infoTab;
+
                         UIController.displayObjectInfo(this, this.flag ? this.flag : undefined);
                     }
                 )
