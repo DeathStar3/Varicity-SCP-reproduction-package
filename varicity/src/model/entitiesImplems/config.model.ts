@@ -203,3 +203,8 @@ export class ConfigName {
         this.filename = filename;
     }
 }
+
+export class SaveResponseConfig {
+    config: Config;
+    filename: string;
+}

@@ -22,12 +22,10 @@
     font-family: "Roboto Light", serif;
     display: flex;
 }
-
 #metricity {
     float: left;
     width: 50%;
 }
-
 #evostreet {
     float: right;
     width: 50%;

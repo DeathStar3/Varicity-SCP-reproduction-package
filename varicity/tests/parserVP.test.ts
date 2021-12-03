@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ConfigLoader } from "../src/controller/parser/configLoader";
+import { ConfigService } from "../src/services/config.service";
 import { VPVariantsStrategy } from "../src/controller/parser/strategies/vp_variants.strategy";
 import { District } from '../src/model/entities/district.interface';
 import { Orientation } from "../src/model/entitiesImplems/orientation.enum";
@@ -25,7 +25,7 @@ function countDistricts(districts: District[]) : number{
 }
 describe('parsing without filtering by composition level', function() {
   it('parse', async function() {
-    let config = (await ConfigLoader.loadDataFile("config")).data;
+    let config = (await ConfigService.loadDataFile("config"));
     config.hierarchy_links = ["EXTENDS", "IMPLEMENTS"];
     let entities = new VPVariantsStrategy().parse((await ProjectService.fetchVisualizationData('test3ForVPParser')).data, config, "");
     let dis = entities.district.districts
@@ -38,7 +38,7 @@ describe('parsing without filtering by composition level', function() {
 
 describe('parsing with filtering by composition level', function() {
   it('parse', async function() {
-    let config = (await ConfigLoader.loadDataFile("config")).data;
+    let config = (await ConfigService.loadDataFile("config"));
     config.hierarchy_links = ["EXTENDS", "IMPLEMENTS"];
     config.orientation = Orientation.IN_OUT;
 

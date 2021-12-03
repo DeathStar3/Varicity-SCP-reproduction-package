@@ -1,9 +1,8 @@
 import {UIController} from './ui.controller';
 import {ConfigName, Vector3_Local} from './../../model/entitiesImplems/config.model';
 import Cookies from "js-cookie";
-import axios from "axios";
-import {backendUrl} from "../../constants";
 import {Closeable} from "../../model/entities/closeable.interface";
+import {ConfigService} from "../../services/config.service";
 
 export class SaveController {
 
@@ -32,14 +31,14 @@ export class SaveController {
             console.log('Add config ', new Date().toISOString())
             UIController.config.name = (document.querySelector('#text-field') as HTMLInputElement).value;
 
+            console.log("Metrics: ", UIController.config.metrics);
             console.log("Saving config modified", {...UIController.config, metrics: Object.fromEntries(UIController.config.metrics)});
 
             //Fetch input text and set it as Config's name
-            axios.post(`${backendUrl}/projects/configs`, {...UIController.config, metrics: Object.fromEntries(UIController.config.metrics)}).then((response) => {
-                console.log('Config saved successfully', response.data);
-                UIController.config = response.data.config;
-                UIController.configName = response.data.filename;
-                UIController.configsName.push(new ConfigName(UIController.config.name, UIController.configName));
+            ConfigService.saveConfig(UIController.config).then((saveResponseConfig) => {
+                console.log('Config saved successfully', saveResponseConfig);
+                UIController.config = saveResponseConfig.config;
+                UIController.configsName.push(new ConfigName(UIController.config.name, saveResponseConfig.filename));
                 UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
             }).catch(err => {
                 console.log('Cannot save config to database');

@@ -30,11 +30,7 @@ building:
       - name: "API"
         color: "#000000"
 
-    outlines:
-#      - name: "API"
-#        color: "#FF0000"
-# - name: "CLASS"
-# color: "#000000"
+    outlines: null
 
 district:
   padding: 0
@@ -68,14 +64,10 @@ hierarchy_links:
   - "EXTENDS"
 
 blacklist: #all classes that must not appear
-  - "org.jfree.chart.util.PublicCloneable"
-  - "org.jfree.chart.event"
-  - "org.jfree.data.general"
+  []
 
 api_classes: # configuration given in the paper
-  - "org.argouml.cognitive.Designer"
-  - "org.argouml.uml.ui.UMLModelElementListModel2"
-  - "org.argouml.uml.diagram.ui.FigNodeModelElement"
+  []
 
   
 variables: #variables to be used for width and height of a building

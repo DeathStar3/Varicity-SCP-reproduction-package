@@ -1,4 +1,4 @@
-import {Building3D} from './../../view/common/3Delements/building3D';
+import {Building3D} from '../../view/common/3Delements/building3D';
 
 export class DetailsController {
 

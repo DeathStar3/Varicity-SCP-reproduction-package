@@ -9,23 +9,16 @@ class Main {
 
     constructor() {
         document.addEventListener('DOMContentLoaded', async (_ev) => {
-            let projects = (await ProjectService.findAllProjectsName()).data;
-            console.log("projects", projects);
-
             UIController.initSearchbar();
             UIController.createSaveSection();
             UIController.createDoc();
-            UIController.createProjectSelector(projects);
             UIController.createLogs();
 
+            let projects = (await ProjectService.findAllProjectsName()).data;
+            console.log("projects", projects);
 
-            document.querySelector('#manage-api-classes').addEventListener('click', (eve)=>{
-                UIController.config.api_classes
-            })
+            UIController.createProjectSelector(projects);
         })
-
-
-        
     }
 }
 
