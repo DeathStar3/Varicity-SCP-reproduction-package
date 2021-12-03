@@ -33,7 +33,7 @@ export class SearchbarController {
                 } else { // we take the placeholder
                     this.map.get(searchbar.placeholder).focus();
                 }
-                searchbarBox.style.border = "";
+                searchbarBox.style.border = "2px solid #e9ecef";
                 return;
             }
         });
@@ -49,14 +49,14 @@ export class SearchbarController {
                     } else { // we take the placeholder
                         this.map.get(searchbar.placeholder).focus();
                     }
-                    searchbarBox.style.border = "";
+                    searchbarBox.style.border = "2px solid #e9ecef";
                     return;
                 }
             } else {
                 for (let [k, v] of this.map) {
                     if (k.includes(searchbar.value)) {
                         searchbar.placeholder = k;
-                        searchbarBox.style.border = "";
+                        searchbarBox.style.border = "2px solid #e9ecef";
 
                         // NOT YET IMPLEMENTED : HIGHLIGHTS BUILDING OF NAME BEING TYPED
                         let prev = searchbar.getAttribute("previous");
