@@ -10,7 +10,6 @@ export class LinkController {
         const title = document.getElementById("submenu-title") as HTMLElement;
         title.innerHTML = "Links";
 
-
         const menuColor = SubMenuController.createMenu("Colors", true, parent);
         const displayMenu = SubMenuController.createMenu("Display", true, parent);
         const hierarchyMenu = SubMenuController.createMenu("Hierarchy links", true, parent);
@@ -24,6 +23,8 @@ export class LinkController {
             links.colors.forEach(color => {
                 SubMenuController.createColorSelector(color.name, color.color, menuColor);
             })
+
+            // TODO replace all below with checkboxes
 
             // Air traffic
             const airTraffic = links.display.air_traffic;
