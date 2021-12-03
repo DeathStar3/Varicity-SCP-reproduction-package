@@ -2,12 +2,12 @@ export class SubMenuController {
 
     private static indexCounter = 0;
 
-    public static createLongReadonlyText(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
-        return SubMenuController.createCustomText(text, value, placeholderText, parent, true, 6, 6)
+    public static createLongReadonlyText(text: string, value: string, parent: HTMLElement): HTMLInputElement {
+        return SubMenuController.createCustomText(text, value, "", parent, true, 6, 6)
     }
 
-    public static createShortReadonlyText(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
-        return SubMenuController.createCustomText(text, value, placeholderText, parent, true, 4, 8)
+    public static createShortReadonlyText(text: string, value: string, parent: HTMLElement): HTMLInputElement {
+        return SubMenuController.createCustomText(text, value, "",  parent, true, 4, 8)
     }
 
     public static createInput(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
@@ -16,6 +16,10 @@ export class SubMenuController {
 
     public static createOnlyInputText(value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText("", value, placeholderText, parent, false, 0, 12)
+    }
+
+    public static createOnlyInputReadonlyText(value: string, parent: HTMLElement): HTMLInputElement {
+        return SubMenuController.createCustomText("", value, "", parent, true, 0, 12)
     }
 
     public static createGreyText(text: string, parent: HTMLElement): HTMLInputElement {
