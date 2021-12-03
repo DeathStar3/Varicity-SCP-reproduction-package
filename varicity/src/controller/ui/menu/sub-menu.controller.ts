@@ -46,7 +46,7 @@ export class SubMenuController {
 
         formElement.appendChild(spanElement);
         formElement.appendChild(divElement);
-        icons.forEach(path =>{
+        icons.forEach(path => {
             let inputElement = document.createElement("img");
             inputElement.src = path;
             inputElement.width = 32;

@@ -4,7 +4,9 @@
     fill: currentColor;
 }
 
-.dropdown-toggle { outline: 0; }
+.dropdown-toggle {
+    outline: 0;
+}
 
 .nav-flush .nav-link {
     border-radius: 0;
@@ -15,10 +17,10 @@
 }
 
 #submenu-title {
-    padding-left: 30px ;
+    padding-left: 30px;
 }
 
-#submenu{
+#submenu {
     display: none;
 }
 
@@ -31,6 +33,7 @@
     background-color: transparent;
     border: 0;
 }
+
 .btn-toggle:hover,
 .btn-toggle:focus {
     color: rgba(0, 0, 0, .85);
@@ -48,6 +51,7 @@
 .btn-toggle[aria-expanded="true"] {
     color: rgba(0, 0, 0, .85);
 }
+
 .btn-toggle[aria-expanded="true"]::before {
     transform: rotate(90deg);
 }
@@ -59,6 +63,7 @@
     margin-left: 1.25rem;
     text-decoration: none;
 }
+
 .btn-toggle-nav a:hover,
 .btn-toggle-nav a:focus {
     background-color: #d2f4ea;
@@ -68,23 +73,32 @@
     overflow-y: auto;
 }
 
-.fw-semibold { font-weight: 600; }
-.lh-tight { line-height: 1.25; }
+.fw-semibold {
+    font-weight: 600;
+}
+
+.lh-tight {
+    line-height: 1.25;
+}
 
 ::-webkit-scrollbar {
     -webkit-appearance: none;
 }
+
 ::-webkit-scrollbar:vertical {
     width: 11px;
 }
+
 ::-webkit-scrollbar:horizontal {
     height: 11px;
 }
+
 ::-webkit-scrollbar-thumb {
     border-radius: 8px;
     border: 2px solid white; /* should match background, can't be transparent */
     background-color: #e9ecef;
 }
+
 ::-webkit-scrollbar-track {
     background-color: #fff;
     border-radius: 8px;

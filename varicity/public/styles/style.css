@@ -66,26 +66,26 @@ input {
     flex-direction: column;
 }
 
-.menu-button{
+.menu-button {
     display: flex !important;
     width: 100%;
     background-color: #e9ecef !important;
     font-weight: 600 !important;
 }
 
-.input-custom{
+.input-custom {
     margin-bottom: 8px;
 }
 
-.menu-container{
+.menu-container {
     padding: 12px 0;
 }
 
-.menu-container-2{
+.menu-container-2 {
     padding-bottom: 8px;
 }
 
-.range-custom{
+.range-custom {
     border: 1px solid #ced4da;
     padding: 0 8px;
     display: flex;
@@ -127,6 +127,6 @@ body {
     margin-top: 1em;
 }
 
-body{
+body {
     margin: 0px;
 }
