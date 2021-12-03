@@ -9,7 +9,6 @@ class Main {
 
     constructor() {
         document.addEventListener('DOMContentLoaded', async (_ev) => {
-            UIController.initSearchbar();
             UIController.createSaveSection();
             UIController.createLogs();
 
@@ -21,6 +20,7 @@ class Main {
 
             //Open project and config selection dialog box
             document.getElementById("project-config_content").setAttribute('open', 'true');
+            UIController.initSearchbar();
         })
     }
 }

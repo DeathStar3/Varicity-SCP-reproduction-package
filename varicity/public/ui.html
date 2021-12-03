@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -31,62 +32,82 @@
     <div id="console" class="overflowable">
 
         <div class="navbar d-flex flex-column flex-shrink-0 bg-light">
-            <a href="/" class="d-block p-3 link-dark text-decoration-none" title="Icon-only" data-bs-toggle="tooltip" data-bs-placement="left">
+            <a href="/" class="d-block p-3 link-dark text-decoration-none" title="Icon-only" data-bs-toggle="tooltip"
+               data-bs-placement="left">
                 <img src="images/menu-icons/logo-varicity.svg" class="bi" width="50" height="50">
                 <span class="visually-hidden">Icon-only</span>
             </a>
             <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="main-menu">
                 <li id="project-config">
-                    <a href="#" class="nav-link py-3 border-bottom border-top" aria-current="page" title="Project and Config" data-bs-toggle="tooltip" data-bs-placement="left">
-                        <img src="images/menu-icons/section-icons/project-config.svg" class="bi" width="24" height="24" role="img" aria-label="Project and Config">
+                    <a href="#" class="nav-link py-3 border-bottom border-top" aria-current="page"
+                       title="Project and Config" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/project-config.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Project and Config">
                     </a>
                 </li>
                 <li id="information" class="collapsible-button">
-                    <a href="#" class="nav-link py-3 border-bottom" title="Information" data-bs-toggle="tooltip" data-bs-placement="left">
-                        <img src="images/menu-icons/section-icons/information.svg" class="bi" width="24" height="24" role="img" aria-label="Information">
+                    <a href="#" class="nav-link py-3 border-bottom" title="Information" data-bs-toggle="tooltip"
+                       data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/information.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Information">
                     </a>
                 </li>
                 <li id="building" class="collapsible-button">
-                    <a href="#" class="nav-link py-3" title="Building" data-bs-toggle="tooltip" data-bs-placement="left">
-                        <img src="images/menu-icons/section-icons/building.svg" class="bi" width="24" height="24" role="img" aria-label="Building">
+                    <a href="#" class="nav-link py-3" title="Building" data-bs-toggle="tooltip"
+                       data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/building.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Building">
                     </a>
                 </li>
                 <li id="districts" class="collapsible-button">
-                    <a href="#" class="nav-link py-3" title="District" data-bs-toggle="tooltip" data-bs-placement="left">
-                        <img src="images/menu-icons/section-icons/district.svg" class="bi" width="24" height="24" role="img" aria-label="District">
+                    <a href="#" class="nav-link py-3" title="District" data-bs-toggle="tooltip"
+                       data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/district.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="District">
                     </a>
                 </li>
                 <li id="links" class="collapsible-button">
                     <a href="#" class="nav-link py-3" title="Links" data-bs-toggle="tooltip" data-bs-placement="left">
-                        <img src="images/menu-icons/section-icons/links.svg" class="bi" width="24" height="24" role="img" aria-label="Links">
+                        <img src="images/menu-icons/section-icons/links.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Links">
                     </a>
                 </li>
                 <li id="blacklist" class="collapsible-button">
-                    <a href="#" class="nav-link py-3" title="Blacklist" data-bs-toggle="tooltip" data-bs-placement="left">
-                        <img src="images/menu-icons/section-icons/blacklist.svg" class="bi" width="24" height="24" role="img" aria-label="Blacklist">
+                    <a href="#" class="nav-link py-3" title="Blacklist" data-bs-toggle="tooltip"
+                       data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/blacklist.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Blacklist">
                     </a>
                 </li>
                 <li id="metric-entrypoints" class="collapsible-button">
-                    <a href="#" class="nav-link py-3 border-bottom" title="Metric and entrypoints" data-bs-toggle="tooltip" data-bs-placement="left">
-                        <img src="images/menu-icons/section-icons/metric-entrypoints.svg" class="bi" width="24" height="24" role="img" aria-label="Metric and entrypoints">
+                    <a href="#" class="nav-link py-3 border-bottom" title="Metric and entrypoints"
+                       data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/metric-entrypoints.svg" class="bi" width="24"
+                             height="24" role="img" aria-label="Metric and entrypoints">
                     </a>
                 </li>
             </ul>
             <div class="dropdown border-top">
                 <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="tool-menu">
                     <li id="save">
-                        <a href="#" class="nav-link py-3 border-bottom" aria-current="page" title="Save" data-bs-toggle="tooltip" data-bs-placement="left">
-                            <img src="images/menu-icons/section-icons/save.svg" class="bi" width="24" height="24" role="img" aria-label="Save">
+                        <a href="#" class="nav-link py-3 border-bottom" aria-current="page" title="Save"
+                           data-bs-toggle="tooltip" data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/save.svg" class="bi" width="24" height="24"
+                                 role="img" aria-label="Save">
                         </a>
                     </li>
                     <li id="documentation">
-                        <a href="#" class="nav-link py-3 border-bottom" title="Documentation" data-bs-toggle="tooltip" data-bs-placement="left">
-                            <img src="images/menu-icons/section-icons/documentation.svg" class="bi" width="24" height="24" role="img" aria-label="Documentation">
+                        <a href="#" class="nav-link py-3 border-bottom" title="Documentation" data-bs-toggle="tooltip"
+                           data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/documentation.svg" class="bi" width="24"
+                                 height="24" role="img" aria-label="Documentation">
                         </a>
                     </li>
                     <li id="settings">
-                        <a href="#" class="nav-link py-3 btn " title="Settings" data-bs-toggle="tooltip" data-bs-placement="left">
-                            <img src="images/menu-icons/section-icons/settings.svg" class="bi" width="24" height="24" role="img" aria-label="Settings">
+                        <a href="#" class="nav-link py-3 btn " title="Settings" data-bs-toggle="tooltip"
+                           data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/settings.svg" class="bi" width="24" height="24"
+                                 role="img" aria-label="Settings">
                         </a>
                     </li>
                 </ul>
@@ -101,8 +122,6 @@
                 <!-- EACH SUB MENU IS INSERTED HERE -->
             </ul>
         </div>
-
-        <input class="form-control mt-2" placeholder="Your search here" id="searchbar" style="display: none;">
 
         <!-- -------------------------------------------------------------------- --->
         <!--                        PROJECT-CONFIG DIALOG                         --->
@@ -164,14 +183,14 @@
         <!-- -------------------------------------------------------------------- --->
         <mwc-dialog id="save_content" heading="Save configuration" class="styled">
             <div class="vertical-container">
-                    <button class="btn btn-primary save-button" id="save-btn">
-                        <span class="material-icons-outlined">camera</span>
-                        Save camera position
-                    </button>
-                    <button class=" btn btn-success save-button" id="save-config">
-                        <span class="material-icons-outlined">save</span>
-                        Save Config
-                    </button>
+                <button class="btn btn-primary save-button" id="save-btn">
+                    <span class="material-icons-outlined">camera</span>
+                    Save camera position
+                </button>
+                <button class=" btn btn-success save-button" id="save-config">
+                    <span class="material-icons-outlined">save</span>
+                    Save Config
+                </button>
             </div>
             <mwc-button slot="primaryAction" dialogAction="close">
                 Cancel
@@ -186,6 +205,15 @@
                    onkeydown="return false">
             <button class="btn btn-info" id="filter-button">Filter</button>
         </div>
+    </div>
+    <div id="search-menu" class="overflowable">
+        <div class="justify-content-center px-4">
+            <div id="searchbar-box" class="search">
+                <input id="searchbar" type="text" class="search-input" placeholder="Search..." name="">
+                <a id="searchbar-btn" href="#" class="search-icon"><i class="fa fa-search"></i></a>
+            </div>
+        </div>
+
     </div>
 </div>
 <!-- <div id="project_selector">
