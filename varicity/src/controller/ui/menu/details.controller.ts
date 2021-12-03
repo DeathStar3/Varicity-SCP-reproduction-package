@@ -1,6 +1,7 @@
 import {Building3D} from '../../../view/common/3Delements/building3D';
 import {SubMenuController} from "./sub-menu.controller";
 import {Metrics} from "../../../model/entitiesImplems/metrics.model";
+import {MenuController} from "./menu.controller";
 
 export class DetailsController {
 
@@ -13,33 +14,34 @@ export class DetailsController {
 
     static displayObjectInfo(obj: Building3D, force: boolean) {
 
-        if (obj) {
-            // clear the sub-menu
-            (document.getElementById("submenu-content") as HTMLElement).innerHTML = "";
+        if (!MenuController.selectedTab || MenuController.selectedTab === document.getElementById("information")) {
+            if (obj) {
+                // clear the sub-menu
+                (document.getElementById("submenu-content") as HTMLElement).innerHTML = "";
 
-            if (this.force && !force) return;
-            if (this.force && force) {
-                this.current.highlight(false, true);
-                this.current.showAllLinks(false);
+                if (this.force && !force) return;
+                if (this.force && force) {
+                    this.current.highlight(false, true);
+                    this.current.showAllLinks(false);
+                }
+                this.current = obj
             }
-            this.current = obj
+
+            const parent = document.getElementById("submenu-content") as HTMLElement;
+
+            // Set title
+            const title = document.getElementById("submenu-title") as HTMLElement;
+            title.innerHTML = "Information";
+            const modelSubMenu = SubMenuController.createMenu("Model", true, parent);
+            const metricSubMenu = SubMenuController.createMenu("Metrics", true, parent);
+            const linksSubMenu = SubMenuController.createMenu("Links", true, parent);
+
+            if (obj) {
+                this.populateModel(obj.elementModel, modelSubMenu);
+                this.populateMetric(obj.elementModel.metrics, metricSubMenu);
+                this.populateLinks(obj, linksSubMenu);
+            }
         }
-
-        const parent = document.getElementById("submenu-content") as HTMLElement;
-
-        // Set title
-        const title = document.getElementById("submenu-title") as HTMLElement;
-        title.innerHTML = "Information";
-        const modelSubMenu = SubMenuController.createMenu("Model", true, parent);
-        const metricSubMenu = SubMenuController.createMenu("Metrics", true, parent);
-        const linksSubMenu = SubMenuController.createMenu("Links", true, parent);
-
-        if (obj) {
-            this.populateModel(obj.elementModel, modelSubMenu);
-            this.populateMetric(obj.elementModel.metrics, metricSubMenu);
-            this.populateLinks(obj, linksSubMenu);
-        }
-
     }
 
     private static populateModel(building: any, parent: HTMLElement) {

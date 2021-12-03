@@ -16,6 +16,7 @@ import {
 } from '@babylonjs/core';
 import {Building} from '../../../model/entities/building.interface';
 import {Link3D} from '../3Dinterfaces/link3D.interface';
+import {MenuController} from "../../../controller/ui/menu/menu.controller";
 
 export class Building3D extends Element3D {
     elementModel: Building;
@@ -452,6 +453,9 @@ export class Building3D extends Element3D {
                         this.flag = !this.flag;
                         this.highlight(this.flag, true);
                         this.links.forEach(l => l.display(this.flag, this.flag));
+                        document.getElementById("submenu").style.display = "block"; //Display submenu
+                        MenuController.selectedTab = document.getElementById("information");
+                        MenuController.changeImage(document.getElementById("information"))
                         UIController.displayObjectInfo(this, this.flag ? this.flag : undefined);
                     }
                 )

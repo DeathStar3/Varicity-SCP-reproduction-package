@@ -7,7 +7,7 @@ import {DistrictController} from "./district.controller";
 
 export class MenuController {
 
-    static selectedTab;
+    public static selectedTab;
 
     public static createMenu() {
         this.addListeners("main-menu");
@@ -94,7 +94,7 @@ export class MenuController {
         }
     }
 
-    private static changeImage(element: Element) {
+    public static changeImage(element: Element) {
         const img = element.getElementsByTagName('img').item(0);
         if (!img.getAttribute("src").match("_selected.svg$")) {
             img.setAttribute("src", img.getAttribute("src").replace(".svg", "_selected.svg"));
