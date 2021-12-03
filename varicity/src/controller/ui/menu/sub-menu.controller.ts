@@ -1,5 +1,3 @@
-import * as events from "events";
-
 export class SubMenuController {
 
     private static indexCounter = 0;
@@ -14,6 +12,18 @@ export class SubMenuController {
 
     public static createInput(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLElement {
         return SubMenuController.createCustomText(text, value, placeholderText, parent, false, 4, 8)
+    }
+
+    public static createOnlyInputText(value: string, placeholderText: string, parent: HTMLElement): HTMLElement {
+        return SubMenuController.createCustomText("", value, placeholderText, parent, false, 0, 12)
+    }
+
+    public static createGreyText(text: string, parent: HTMLElement): HTMLElement {
+        return SubMenuController.createCustomText(text, "", "", parent, true, 12, 0)
+    }
+
+    public static createText(text: string, parent: HTMLElement): HTMLElement {
+        return SubMenuController.createCustomText("", text, "", parent, true, 0, 12)
     }
 
     public static createSelect(text: string, defaultValue: string, parent: HTMLElement, firstOption: string, options: string[]): HTMLElement{
@@ -150,15 +160,17 @@ export class SubMenuController {
             spanElement.innerHTML = text;
         }
 
-        let inputElement = document.createElement("input");
-        inputElement.classList.add("form-control", "col-" + sizeValueText);
-        inputElement.type = "text";
-        inputElement.readOnly = isReadonly;
-        inputElement.placeholder = placeholderText;
-        inputElement.value = value.toString();
-
+        let inputElement: HTMLInputElement;
+        if(sizeValueText != 0) {
+            inputElement = document.createElement("input");
+            inputElement.classList.add("form-control", "col-" + sizeValueText);
+            inputElement.type = "text";
+            inputElement.readOnly = isReadonly;
+            inputElement.placeholder = placeholderText;
+            inputElement.value = value.toString();
+        }
         if(spanElement){ divElement.appendChild(spanElement); }
-        divElement.appendChild(inputElement);
+        if(inputElement){ divElement.appendChild(inputElement); }
         parent.appendChild(divElement);
 
         return inputElement;
@@ -166,5 +178,14 @@ export class SubMenuController {
 
     private static genIndex(): number {
         return ++SubMenuController.indexCounter;
+    }
+
+    static createSimpleText(text: string, displayMenu: HTMLElement) { // TODO Improve
+        let divElement = document.createElement("div");
+        divElement.classList.add("input-custom");
+        divElement.innerHTML = text;
+        displayMenu.appendChild(divElement);
+
+        return divElement;
     }
 }

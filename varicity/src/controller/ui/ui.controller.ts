@@ -12,7 +12,7 @@ import {ConfigSelectorController} from "./config-selector.controller";
 import {ConfigService} from "../../services/config.service";
 import {SaveController} from "./save.controller";
 import {ProjectService} from "../../services/project.service";
-import {MenuController} from "./menu.controller";
+import {MenuController} from "./menu/menu.controller";
 
 export class UIController {
 
