@@ -104,6 +104,28 @@ export class UIController {
         }
     }
 
+    public static updateScene(criticalLevel: CriticalLevel){
+        if (this.scene) {
+            SearchbarController.emptyMap();
+            switch (criticalLevel) {
+                case CriticalLevel.LOW_IMPACT: // Only change the colour, so simple rerender
+                case CriticalLevel.RERENDER_SCENE: // Changed variables important enough to warrant a complete rebuilding of the scene
+                    this.scene = this.scene.rerender(this.config);
+                    this.scene.buildScene();
+                    LogsController.updateLogs(this.scene.entitiesList);
+                    break;
+                case CriticalLevel.REPARSE_DATA: // Changed variables that modify the parsing method, need to reparse the entire file and rebuild
+                    // TODO fix issue when adding a new Entrypoint, the scene is only loading the new entry point class and not all the others, but it works after clicking on the config again
+                    ConfigSelectorController.reParse();
+                    break;
+                default:
+                    throw new Error("didn't receive the correct result from altering config field: " + criticalLevel);
+            }
+        } else {
+            console.log("not initialized");
+        }
+    }
+
     public static async initDefaultConfigValues(projectName: string, config: Config) {
         // set default values for metrics spec if doesn't exist
         const metricsNames = (await ProjectService.getProjectMetrics(projectName)).data;

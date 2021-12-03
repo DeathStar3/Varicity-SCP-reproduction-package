@@ -1,4 +1,5 @@
 import {SubMenuController} from "./sub-menu.controller";
+import {UIController} from "../ui.controller";
 
 export class BlacklistController {
 
@@ -9,20 +10,18 @@ export class BlacklistController {
         const title = document.getElementById("submenu-title") as HTMLElement;
         title.innerHTML = "Blacklist";
 
-        const menu = SubMenuController.createMenu("Menu", false, parent);
-        SubMenuController.createCustomText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu, false, 0, 12);
-        SubMenuController.createShortReadonlyText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu)
-        SubMenuController.createLongReadonlyText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu)
-        SubMenuController.createInput("NbconstructorVariant", "", "placeholder", menu)
-        SubMenuController.createSelect("crack", "val 3", menu, "firstValue", ["val 1", "val 2", "val 3", "val 4"])
+        const menuBlacklist = SubMenuController.createMenu("Blacklist", true, parent);
 
-        const menu2 = SubMenuController.createMenu("Menu", true, parent);
-        SubMenuController.createCustomText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu2, false, 0, 12);
-        SubMenuController.createShortReadonlyText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu2)
-        SubMenuController.createLongReadonlyText("NbconstructorVariant", "1235676786786 e gergerg erg eger g", "placeholder", menu2)
-        SubMenuController.createInput("NbconstructorVariant", "", "placeholder", menu2)
-        SubMenuController.createColorSelector("Building Color", "#1072bf", menu2)
-        SubMenuController.createSelect("crack", "val 3", menu2, "firstValue", ["val 1", "val 2", "val 3", "val 4"])
-        SubMenuController.createRange("Range", 2, 0, 10, 0.5, menu2);
+        if(UIController.config){
+
+            // fetch the links
+            const blacklist = UIController.config.blacklist; // TODO find a better way than getting a static value, pass it in arguments?
+
+            // Blacklisted class
+            blacklist.forEach(className => {
+                SubMenuController.createOnlyInputText(className, "ex.package.class", menuBlacklist);
+            })
+            SubMenuController.createOnlyInputText("", "ex.package.class", menuBlacklist);
+        }
     }
 }

@@ -2,31 +2,31 @@ export class SubMenuController {
 
     private static indexCounter = 0;
 
-    public static createLongReadonlyText(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLElement {
+    public static createLongReadonlyText(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText(text, value, placeholderText, parent, true, 6, 6)
     }
 
-    public static createShortReadonlyText(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLElement {
+    public static createShortReadonlyText(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText(text, value, placeholderText, parent, true, 4, 8)
     }
 
-    public static createInput(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLElement {
+    public static createInput(text: string, value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText(text, value, placeholderText, parent, false, 4, 8)
     }
 
-    public static createOnlyInputText(value: string, placeholderText: string, parent: HTMLElement): HTMLElement {
+    public static createOnlyInputText(value: string, placeholderText: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText("", value, placeholderText, parent, false, 0, 12)
     }
 
-    public static createGreyText(text: string, parent: HTMLElement): HTMLElement {
+    public static createGreyText(text: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText(text, "", "", parent, true, 12, 0)
     }
 
-    public static createText(text: string, parent: HTMLElement): HTMLElement {
+    public static createText(text: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText("", text, "", parent, true, 0, 12)
     }
 
-    public static createSelect(text: string, defaultValue: string, parent: HTMLElement, firstOption: string, options: string[]): HTMLElement{
+    public static createSelect(text: string, defaultValue: string, parent: HTMLElement, options: string[],  firstOption?: string): HTMLSelectElement {
         let divElement = document.createElement("div");
         divElement.classList.add("input-form", "vertical-container", "input-custom");
 
@@ -41,11 +41,13 @@ export class SubMenuController {
         selectElement.classList.add("custom-select", "form-select", "col-8");
         selectElement.innerHTML = text;
 
-        let defaultOptionElement = document.createElement("option");
-        defaultOptionElement.value = firstOption;
-        defaultOptionElement.label = firstOption;
-        defaultOptionElement.selected = (firstOption == defaultValue);
-        selectElement.appendChild(defaultOptionElement);
+        if(firstOption){
+            let defaultOptionElement = document.createElement("option");
+            defaultOptionElement.value = firstOption;
+            defaultOptionElement.label = firstOption;
+            defaultOptionElement.selected = (firstOption == defaultValue);
+            selectElement.appendChild(defaultOptionElement);
+        }
 
         options.forEach(function (option) {
             let optionElement = document.createElement("option");
@@ -62,7 +64,6 @@ export class SubMenuController {
 
         return selectElement;
     }
-
 
     public static createMenu(title: string, isOpen: boolean, parent: HTMLElement): HTMLElement {
         const isExpandedText = (isOpen) ? "true" : "false";
@@ -128,7 +129,7 @@ export class SubMenuController {
         return outputElement;
     }
 
-    public static createColorSelector(text: string, initColor: string, parent: HTMLElement) {
+    public static createColorSelector(text: string, initColor: string, parent: HTMLElement): HTMLInputElement {
         let divElement = document.createElement("div");
         divElement.classList.add("input-group", "input-custom");
 
@@ -149,7 +150,7 @@ export class SubMenuController {
         return inputElement;
     }
 
-    public static createCustomText(text: string, value: string, placeholderText: string, parent: HTMLElement, isReadonly:boolean, sizeFirstText: number, sizeValueText: number): HTMLElement {
+    public static createCustomText(text: string, value: string, placeholderText: string, parent: HTMLElement, isReadonly:boolean, sizeFirstText: number, sizeValueText: number): HTMLInputElement {
         let divElement = document.createElement("div");
         divElement.classList.add("input-group", "input-custom");
 
@@ -180,7 +181,7 @@ export class SubMenuController {
         return ++SubMenuController.indexCounter;
     }
 
-    static createSimpleText(text: string, displayMenu: HTMLElement) { // TODO Improve
+    static createSimpleText(text: string, displayMenu: HTMLElement): HTMLElement { // TODO Improve
         let divElement = document.createElement("div");
         divElement.classList.add("input-custom");
         divElement.innerHTML = text;

@@ -1,6 +1,7 @@
 import {DocController} from "../doc.controller";
 import {BlacklistController} from "./blacklist.controller";
 import {LinkController} from "./link.controller";
+import {MetricController} from "./metric.controller";
 
 export class MenuController {
 
@@ -61,7 +62,7 @@ export class MenuController {
                     BlacklistController.createMenu();
                     break;
                 case "metric-entrypoints":
-
+                    MetricController.createMenu();
                     break;
             }
 
