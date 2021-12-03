@@ -1,3 +1,5 @@
+import bootstrap from "../../../../public/scripts/bootstrap.bundle.min.js"
+
 export class SubMenuController {
 
     private static indexCounter = 0;
@@ -55,12 +57,8 @@ export class SubMenuController {
             inputElement.setAttribute("data-bs-toggle", "tooltip")
             inputElement.setAttribute("data-bs-placement", "bottom")
             divElement.appendChild(inputElement);
+            new bootstrap.Tooltip(inputElement, { trigger: 'hover' });
         });
-
-        //TODO : Ugly we should change this
-        let script = document.createElement("script");
-        script.src = "scripts/sidebars.js"
-        divElement.appendChild(script)
 
         parent.appendChild(formElement);
 

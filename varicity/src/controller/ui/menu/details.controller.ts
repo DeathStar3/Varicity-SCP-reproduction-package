@@ -48,7 +48,7 @@ export class DetailsController {
         SubMenuController.createShortReadonlyText("Origin", building.origin, parent)
         SubMenuController.createShortReadonlyText("Name", building.name, parent)
 
-        SubMenuController.createIconDisplaySVG("text", this.getIconPaths(building.types), parent);
+        SubMenuController.createIconDisplaySVG("Types", this.getIconPaths(building.types), parent);
 
         SubMenuController.createShortReadonlyText("Comp. level", building.compLevel.toString(), parent)
         SubMenuController.createShortReadonlyText("Analyzer", building.analyzed, parent)
