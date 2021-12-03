@@ -20,6 +20,8 @@ class Main {
 
             //Open project and config selection dialog box
             document.getElementById("project-config_content").setAttribute('open', 'true');
+            document.getElementById("project-config_content").setAttribute('scrimClickAction', '');
+            document.getElementById("project-config_content").setAttribute('escapeKeyAction', '');
             UIController.initSearchbar();
         })
     }

@@ -81,6 +81,8 @@ export class MenuController {
         switch (selectedTab.getAttribute("id")) {
             case "project-config":
                 document.getElementById("project-config_content").setAttribute('open', 'true');
+                document.getElementById("project-config_content").setAttribute('scrimClickAction', 'close');
+                document.getElementById("project-config_content").setAttribute('escapeKeyAction', 'close');
                 break;
             case "save":
                 document.getElementById("save_content").setAttribute('open', 'true');
