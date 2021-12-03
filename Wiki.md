@@ -121,9 +121,37 @@ jfreechart-v1.5.0:
 ```
 
 
-VaricityConfig
+## VaricityConfig
 
 | Attribute         | Type    | Description |
 |--------------|-----------|------------|
 
 
+## Symfinder Configuration
+
+Symfinder needs configuration information . With the extension the format required for this configuration has been changed
+
+Before
+```yaml
+experimentsFile: experiments.yaml
+
+hotspots:
+  nbAggregationsThreshold: 5
+  nbVariantsThreshold: 20
+
+neo4j:
+  boltAddress: bolt://neo4j:7687
+  password: root
+  user: neo4j
+
+```
+
+Now
+```yaml
+hotspots:
+  nbAggregationsThreshold: 5
+  nbVariantsThreshold: 20
+```
+As you can see we removed the experimentsFile and the neo4j fields.
+The `experimentsFile` will be provided by the user on the command line (or through the web Interface or through the IDE).
+The neo4j configuration is no longer needed because the neo4j is started by the Symfinder Extension now.

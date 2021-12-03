@@ -40,6 +40,8 @@ public class Neo4JStarter {
 
     public synchronized Neo4jParameters startNeo4J(){
 
+        utils.createNetwork();
+
         if (!utils.checkIfImageExists(Constants.SYMFINDER_NEO4J_IMAGE,   Constants.SYMFINDER_NEO4J_TAG )) {
             try {
                 utils.downloadImage(Constants.SYMFINDER_NEO4J_IMAGE, Constants.SYMFINDER_NEO4J_TAG);

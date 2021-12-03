@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.CreateNetworkResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
-import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
@@ -68,7 +66,7 @@ public class SonarQubeStarter {
 
         prepareVaricitySonarqube();
 
-        createNetwork();
+        utils.createNetwork();
 
         CreateContainerResponse container = dockerClient.createContainerCmd("varicity-sonarqube")
                 .withName(SONARQUBE_CONTAINER_NAME).withExposedPorts(ExposedPort.parse("9000"))
@@ -104,15 +102,6 @@ public class SonarQubeStarter {
             }
         }
         return true;
-    }
-
-    private void createNetwork() {
-        List<Network> networks = dockerClient.listNetworksCmd().withNameFilter(NETWORK_NAME).exec();
-        if (networks.isEmpty()) {
-            CreateNetworkResponse networkResponse = dockerClient.createNetworkCmd().withName(NETWORK_NAME)
-                    .withAttachable(true).withDriver("bridge").exec();
-            log.info(String.format("Network %s created...\n", networkResponse.getId()));
-        }
     }
 
     private void sonarqubeStartingWaitForSonarqubeUp() {

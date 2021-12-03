@@ -1,8 +1,10 @@
 package fr.unice.i3s.sparks.deathstar3.utils;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateNetworkResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -14,6 +16,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants.NETWORK_NAME;
 
 @Slf4j
 public class Utils {
@@ -51,6 +55,15 @@ public class Utils {
         for (var container : containers) {
             dockerClient.removeContainerCmd(container.getId())
                     .exec();
+        }
+    }
+
+    public void createNetwork() {
+        List<Network> networks = dockerClient.listNetworksCmd().withNameFilter(NETWORK_NAME).exec();
+        if (networks.isEmpty()) {
+            CreateNetworkResponse networkResponse = dockerClient.createNetworkCmd().withName(NETWORK_NAME)
+                    .withAttachable(true).withDriver("bridge").exec();
+            log.info(String.format("Network %s created...\n", networkResponse.getId()));
         }
     }
 
