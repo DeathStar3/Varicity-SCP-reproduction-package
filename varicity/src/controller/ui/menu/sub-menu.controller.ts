@@ -2,6 +2,8 @@ export class SubMenuController {
 
     private static indexCounter = 0;
 
+    private static trackMenuOpened = new Map<string, boolean>();
+
     public static createLongReadonlyText(text: string, value: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText(text, value, "", parent, true, 6, 6)
     }
@@ -70,6 +72,13 @@ export class SubMenuController {
     }
 
     public static createMenu(title: string, isOpen: boolean, parent: HTMLElement): HTMLElement {
+
+        const sectionText = document.getElementById("submenu-title").innerHTML;
+        const id = sectionText.replace(" ","") + "-" + title.replace(" ","");
+        if (this.trackMenuOpened.has(id)){
+            isOpen = this.trackMenuOpened.get(id)
+        }
+
         const isExpandedText = (isOpen) ? "true" : "false";
         const collapseGen = "collapse-" + SubMenuController.genIndex();
 
@@ -77,11 +86,16 @@ export class SubMenuController {
         listElement.classList.add("menu-container-2");
 
         let buttonElement = document.createElement("button");
+        buttonElement.setAttribute("id", id);
         buttonElement.classList.add("btn", "btn-toggle", "align-items-center", "rounded", "collapsed", "menu-button");
         buttonElement.setAttribute("data-bs-toggle", "collapse");
         buttonElement.setAttribute("data-bs-target", "#" + collapseGen);
         buttonElement.setAttribute("aria-expanded", isExpandedText);
         buttonElement.innerHTML=title;
+
+        buttonElement.addEventListener("click", () => {
+            this.trackMenuOpened.set(id, JSON.parse(buttonElement.getAttribute("aria-expanded").toLowerCase()))
+        });
 
         let divElement = document.createElement("div");
         divElement.classList.add("menu-container");
