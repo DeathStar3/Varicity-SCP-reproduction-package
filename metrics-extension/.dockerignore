@@ -1,0 +1,10 @@
+*
+!command-runner
+!compiler
+!config-loader
+!entities
+!metric-gatherer
+!sourcesfetcher
+!symfinder
+!pom.xml
+!start.sh

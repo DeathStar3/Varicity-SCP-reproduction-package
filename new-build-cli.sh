@@ -11,7 +11,7 @@ create_directory(){
     fi
 }
 
-# Installer le jar de l'extension dans le repo maven local
+
 cd metrics-extension
 echo " ### [1;32m Build metric-extension (1/1)[0m"
 mvn clean install -Dmaven.test.skip=true
