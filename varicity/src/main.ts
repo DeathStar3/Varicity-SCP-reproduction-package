@@ -4,6 +4,7 @@ import '@material/mwc-formfield/mwc-formfield';
 import '@material/mwc-radio/mwc-radio';
 import {UIController} from './controller/ui/ui.controller';
 import {ProjectService} from './services/project.service';
+import {InputKeyController} from "./controller/ui/input-key.controller";
 
 class Main {
 
@@ -23,6 +24,8 @@ class Main {
             document.getElementById("project-config_content").setAttribute('scrimClickAction', '');
             document.getElementById("project-config_content").setAttribute('escapeKeyAction', '');
             UIController.initSearchbar();
+
+            InputKeyController.createInputKeyListener()
         })
     }
 }

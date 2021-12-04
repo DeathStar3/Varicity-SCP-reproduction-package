@@ -17,16 +17,6 @@
 
 <body>
 
-<mwc-dialog id="dialog" heading="Form Validation">
-    <div>
-        <p>You are about to save your config. Are you sure ? Enter a name for your config or update it if needed.</p>
-        <input class="form-control" id="text-field" minlength="3" maxlength="64" placeholder="Config name" required>
-    </div>
-
-    <mwc-button id="save-config-confirm-btn" slot="primaryAction">Confirm</mwc-button>
-    <mwc-button slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
-</mwc-dialog>
-
 <div id="main">
 
     <div id="console" class="overflowable">
@@ -182,18 +172,33 @@
         <!-- -------------------------------------------------------------------- --->
         <mwc-dialog id="save_content" heading="Save configuration" class="styled">
             <div class="vertical-container">
-                <button class="btn btn-primary save-button" id="save-btn">
-                    <span class="material-icons-outlined">camera</span>
-                    Save camera position
+                <button class="btn btn-primary save-button" id="update-config">
+                    <span class="material-icons-outlined">save</span>
+                    Update Configuration
                 </button>
                 <button class=" btn btn-success save-button" id="save-config">
                     <span class="material-icons-outlined">save</span>
-                    Save Config
+                    Save Configuration
                 </button>
             </div>
             <mwc-button slot="primaryAction" dialogAction="close">
                 Cancel
             </mwc-button>
+        </mwc-dialog>
+
+
+        <!-- -------------------------------------------------------------------- --->
+        <!--                       SAVE VALIDATION DIALOG                         --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="save-dialog" heading="Save Validation">
+            <div>
+                <p>You are about to save a new configuration. Are you sure ? Enter a name for your configuration.</p>
+                <input class="form-control" id="text-field-configname" minlength="3" maxlength="64"
+                       placeholder="Config name" required>
+            </div>
+
+            <mwc-button id="save-config-confirm-btn" slot="primaryAction">Confirm</mwc-button>
+            <mwc-button slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
         </mwc-dialog>
 
 
