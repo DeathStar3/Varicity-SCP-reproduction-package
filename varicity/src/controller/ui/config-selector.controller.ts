@@ -34,11 +34,13 @@ export class ConfigSelectorController {
             node.selected = (UIController.config.name == config.name) // TODO problem in case multiple same config names
             parent.appendChild(node);
         }
+        UIController.configFileName = (configs[configs.length-1]).filename;
 
         // update the view & config in case of a change
         parent.addEventListener('change', async function (event) {
             const configName = (event.target as HTMLInputElement).value;
             if (configName !== undefined) {
+                UIController.configFileName = configName;
                 await ConfigSelectorController.defineConfig(configName);
                 ConfigSelectorController.reParse();
             }

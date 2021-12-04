@@ -10,16 +10,23 @@ export class InputKeyController {
                 e.preventDefault(); // Prevent the Save dialog to open
 
                 if (UIController.config) {
+                    console.log("(CTRL + SHIFT + S) Open save dialog box for: " + UIController.configFileName)
                     document.querySelector('#save-dialog').setAttribute('open', 'true');
                     UIController.config.projectId = Cookies.get('varicity-current-project');
                     (document.querySelector('#text-field-configname') as HTMLInputElement).value = UIController.config.name || "";
-                    console.log('CTRL + SHIFT + S');
                 }
             } else if (e.ctrlKey && e.key.toLowerCase() === 's') { // CTRL + S
                 e.preventDefault(); // Prevent the Save dialog to open
                 if (UIController.config) {
+                    console.log("(CTRL + S) Update config for: " + UIController.configFileName)
                     SaveController.updateConfiguration();
-                    console.log('CTRL + S');
+                }
+            } else if (e.ctrlKey && e.key.toLowerCase() === 'p') { // CTRL + P
+                e.preventDefault(); // Prevent the Save dialog to open
+                if (UIController.config) {
+                    console.log("(CTRL + P) Update camera for: " + UIController.configFileName)
+                    SaveController.saveCamera();
+                    SaveController.updateConfiguration();
                 }
             }
         });

@@ -8,9 +8,18 @@ export class SaveController {
 
     public static addSaveListeners() {
 
+        document.getElementById("update-camera").addEventListener('click', () => {
+            if (UIController.config) {
+                (document.querySelector('#save_content') as unknown as Closeable).close(); // Close save or update dialog
+                this.saveCamera();
+                this.updateConfiguration();
+            }
+        });
+
         document.getElementById("update-config").addEventListener('click', () => {
             if (UIController.config) {
-                //TODO to implement
+                (document.querySelector('#save_content') as unknown as Closeable).close(); // Close save or update dialog
+                this.updateConfiguration();
             }
         });
 
@@ -58,6 +67,7 @@ export class SaveController {
             console.log('Config saved successfully', saveResponseConfig);
             UIController.config = saveResponseConfig.config;
             UIController.configsName.push(new ConfigName(UIController.config.name, saveResponseConfig.filename));
+            UIController.configFileName = saveResponseConfig.filename;
             UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
         }).catch(err => {
             console.log('Cannot save config to database');
@@ -66,8 +76,13 @@ export class SaveController {
     }
 
     public static updateConfiguration() {
-        this.saveCamera()
-        //TODO Missing this part !
-        console.log("Configuration updated")
+        ConfigService.updateConfig(UIController.configFileName, UIController.config).then((saveResponseConfig) => {
+            console.log('Config updated successfully', saveResponseConfig);
+            UIController.config = saveResponseConfig.config;
+            UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
+        }).catch(err => {
+            console.log('Cannot update config to database');
+            console.error(err);
+        });
     }
 }
