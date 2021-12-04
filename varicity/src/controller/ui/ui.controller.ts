@@ -106,6 +106,7 @@ export class UIController {
 
     public static updateScene(criticalLevel: CriticalLevel) {
         if (this.scene) {
+            document.getElementById("loading-frame").style.display = 'inline-block';
             SearchbarController.emptyMap();
             switch (criticalLevel) {
                 case CriticalLevel.LOW_IMPACT: // Only change the colour, so simple rerender

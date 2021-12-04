@@ -61,7 +61,6 @@ export class ConfigSelectorController {
         UIController.createConfig(UIController.config);
 
         // update the city
-        document.getElementById("loading-frame").style.display = 'inline-block';
         ProjectService.fetchVisualizationData(this.filename).then((response) => {
             this.el = this.previousParser.parse(response.data, UIController.config, this.filename);
 
