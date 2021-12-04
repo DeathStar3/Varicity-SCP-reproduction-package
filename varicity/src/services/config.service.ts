@@ -44,7 +44,9 @@ export class ConfigService {
                 let saveResponseConfig = res.data;
                 ConfigService.convertMetricJsObjectToMap(saveResponseConfig.config);
                 resolve(saveResponseConfig);
-            })
+            }).catch((err) => {
+                reject(err);
+            });
         });
     }
 
@@ -63,6 +65,8 @@ export class ConfigService {
                 let saveResponseConfig = res.data;
                 ConfigService.convertMetricJsObjectToMap(saveResponseConfig.config);
                 resolve(saveResponseConfig);
+            }).catch((err) => {
+                reject(err);
             })
         });
     }
@@ -78,6 +82,8 @@ export class ConfigService {
                 let config = res.data;
                 ConfigService.convertMetricJsObjectToMap(config);
                 resolve(config);
+            }).catch((err) => {
+                reject(err);
             });
         });
     }

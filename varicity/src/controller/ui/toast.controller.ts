@@ -2,7 +2,7 @@ import bootstrap from "../../../public/scripts/bootstrap.bundle.min.js"
 
 export class ToastController {
 
-    public static addToast(text: string, toastType?: ToastType) {
+    public static addToast(text: string, toastType?: ToastType, stayOpen?: boolean) {
         const toastContainer = document.getElementById("toast-parent");
 
         // Create Toast HTML Elements
@@ -48,13 +48,16 @@ export class ToastController {
             }
         }
 
+        // Build the Toast
         toastElement.appendChild(toastBody);
         toastBody.appendChild(toastContent);
         toastBody.appendChild(buttonClose);
         toastContainer.appendChild(toastElement);
 
-        // Display the toast
-        let toast= new bootstrap.Toast(toastElement);
+        let autohide = (stayOpen) ? {autohide: false} : {};
+        let toast= new bootstrap.Toast(toastElement, autohide);
+
+        // Display the Toast
         toast.show();
     }
 

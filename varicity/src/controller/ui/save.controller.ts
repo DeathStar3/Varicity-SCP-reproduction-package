@@ -72,6 +72,7 @@ export class SaveController {
             UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
         }).catch(err => {
             console.log('Cannot save config to database');
+            ToastController.addToast("Configuration '" + UIController.config.name + "' could not be saved", ToastType.DANGER);
             console.error(err);
         });
     }
@@ -79,10 +80,12 @@ export class SaveController {
     public static updateConfiguration() {
         ConfigService.updateConfig(UIController.configFileName, UIController.config).then((saveResponseConfig) => {
             console.log('Config updated successfully', saveResponseConfig);
+            ToastController.addToast("Configuration '" + UIController.config.name + "' updated successfully", ToastType.SUCESS);
             UIController.config = saveResponseConfig.config;
             UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
         }).catch(err => {
             console.log('Cannot update config to database');
+            ToastController.addToast("Configuration '" + UIController.config.name + "' could not be updated", ToastType.DANGER, true);
             console.error(err);
         });
     }
