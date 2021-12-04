@@ -44,6 +44,7 @@ export class ProjectController {
         UIController.clearMap();
 
         const run = async () => {
+            document.getElementById("loading-frame").style.display = 'inline-block';
             await UIController.reloadConfigAndConfigSelector(projectName);
 
             // TODO find alternative
