@@ -5,6 +5,7 @@ import '@material/mwc-dialog';
 import '@material/mwc-button/mwc-button';
 import '@material/mwc-radio/mwc-radio';
 import '@material/mwc-formfield/mwc-formfield';
+import '@material/mwc-textfield';
 var W3CWebSocket = require('websocket').w3cwebsocket;
 const snackbar = require('snackbar');
 
@@ -83,4 +84,4 @@ export class ExperimentController {
     }
 }
 
-new ExperimentController();
+//new ExperimentController();

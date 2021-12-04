@@ -1,12 +1,10 @@
 package fr.unice.i3s.sparks.deathstar3.strategy;
 
-import fr.unice.i3s.sparks.deathstar3.serializer.JsonSerializer;
-import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MetricGathering {

@@ -1,5 +1,13 @@
 # Varicity
 
+## Technological Stack
+- NestJs
+- Quarkus
+- Webpack
+<p align="center">
+  <img src=""/>
+</p>
+
 ## General Requirements
 Those are general requirements, depending of the method you choose you won't need all of them.
 - Docker (cli and deamon)

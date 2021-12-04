@@ -1,11 +1,16 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import java.util.List;
+import java.util.Set;
+import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
-import java.util.Objects;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -15,7 +20,7 @@ import java.util.Objects;
 public class ExperimentConfig {
 
     @NotBlank()
-    private String projectName;
+    private String projectName;//
     private String repositoryUrl;
     /**
      * If skip clone is true then the attributes repositoryUrl, tagIds are ignored
@@ -33,8 +38,8 @@ public class ExperimentConfig {
      */
     private String sourcePackage;
 
-    private List<String> tagIds;
-    private List<String> commitIds;
+    private Set<String> tagIds;//
+    private Set<String> commitIds;//
     private String buildEnv;
     private String buildEnvTag;
     private String buildCmd;
@@ -45,7 +50,6 @@ public class ExperimentConfig {
     private boolean buildCmdIncludeSonar;
     private boolean sonarqubeNeeded = false;
     private String outputPath; // Optional
-
 
     private List<MetricSource> sources;
 
@@ -74,6 +78,46 @@ public class ExperimentConfig {
     @Override
     public int hashCode() {
         return Objects.hash(projectName, repositoryUrl, sourcePackage, tagIds);
+    }
+
+    /**
+     * Deep copy of the instance but with omission of some fields
+     * @return a copy of the instance but with some differences
+     */
+    public ExperimentConfig cloneSelf(){
+        ExperimentConfig other= new ExperimentConfig();
+
+        other.setPath(this.getPath());
+        other.setCommitIds(Set.of());
+        other.setTagIds(Set.of());
+        other.setRepositoryUrl(this.repositoryUrl);
+        other.setOutputPath(this.outputPath);
+        other.setProjectName("");
+        other.setBuildCmd(this.buildCmd);
+        other.setBuildCmdIncludeSonar(this.buildCmdIncludeSonar);
+        other.setBuildEnv(this.buildEnv);
+        other.setBuildEnvTag(this.buildEnvTag);
+        other.setSkipClone(this.skipClone);
+        if(this.sources != null){
+            other.setSources(  this.sources.stream().map(MetricSource::cloneSelfExact).toList() );
+        }
+
+        other.setSourcePackage(this.sourcePackage);
+        other.setSkipSymfinder(this.skipSymfinder);
+        other.setSonarqubeNeeded(this.sonarqubeNeeded);
+
+        return other;
+    }
+
+    public void changeComponentNameOfLocalMetricSource(String newName){
+        if(this.sources==null || this.sources.isEmpty()){
+            return;
+        }
+        for(MetricSource source:sources){
+            if(source.getName().equals("sonarqube")){
+                source.setComponentName(newName);
+            }
+        }
     }
 
 }

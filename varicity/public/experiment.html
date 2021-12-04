@@ -7,29 +7,159 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Run experiments</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
+
 
 <body>
 
-    <div>
 
 
+    <div id="app" class="p-3">
+
+        {{projectName}}
+        <!--
         <div id="run-xp-form" class="text-center">
             <h4>Load your experiment configuration here</h4>
             <input class="form-control" type="file" name="experiment" id="experiment-input">
             <button class="btn btn-info mt-3" id="run-xp-btn">Run experiment</button>
         </div>
+-->
+        <div>
+            <h4 class="text-center"> Fill the form</h4>
 
-        <div id="progress-xp">
+            <label for="projectName" class="form-label">Project name</label>
+            <input v-model="projectName" class="form-control m-2" placeholder="Project name" id="projectName">
+
+            <label for="repositoryUrl" class="form-label">Repository url</label>
+            <input class="form-control m-2" v-model="repositoryUrl" type="url" placeholder="Url if the repository"
+                name="repositoryUrl" id="repositoryUrl">
+
+            <label for="path" class="form-label">Path of the project</label>
+            <input class="form-control m-2" v-model="path" placeholder="Path of the project" type="text" id="path">
+
+            <label for="sourcePackage" class="form-label">Relative path of the souce code</label>
+            <input class="form-control m-2" v-model="sourcePackage" id="sourcePackage"
+                placeholder="Relative path of the souce code" type="text">
+
+            <label for="buildEnv" class="form-label">Docker Image</label>
+            <input class="form-control m-2" id="buildEnv" v-model="buildEnv" placeholder="Docker Image" type="text">
+
+            <label for="buildEnvTag" class="form-label">Docker Image Tag</label>
+            <input class="form-control m-2" v-model="buildEnvTag" id="buildEnvTag" placeholder="Tag of docker image"
+                type="text">
+
+            <label class="form-label" for="buildCmd">Build command</label>
+            <input v-model="buildCmd" id="buildCmd" class="form-control m-2" placeholder="Build command" type="text">
+            <div class="form-check">
+                <input class="form-check-input" v-model="buildCmdIncludeSonar" type="checkbox"
+                    id="buildCmdIncludeSonar">
+                <label class="form-check-label" for="buildCmdIncludeSonar"> The build command already includes
+                    sonar</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" v-model="skipClone" type="checkbox" id="skipClone">
+                <label class="form-check-label" for="skipClone"> Do not clone a repository </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" v-model="skipSymfinder" type="checkbox" id="skipSymfinder">
+                <label class="form-check-label" for="skipSymfinder"> Do not analyze variability
+                    sonar</label>
+            </div>
+
+            <div>
+                <div>
+                    <div>
+
+
+                        <span class="badge bg-secondary m-3" v-for="tag in tagIds"> {{tag}}
+                            <span class="material-icons-outlined pointer" v-on:click="removeTag(tag)">close
+                            </span> </span>
+                    </div>
+                    <input class="form-control m-2" v-model="currentTag" type="text" v-on:keyup.enter="addTag()"
+                        placeholder="Add a tag">
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-info mt-3">Run experiment</button>
+                </div>
+
+
+
+            </div>
+
+
+            <div id="progress-xp">
+
+
+            </div>
 
 
         </div>
 
-
     </div>
+    <!--
+
+        <mwc-dialog id="dialog-experiment-failed" heading="Error with your experiment">
+            <div>
+                <p>Your experiment has a problem, see below for details</p>
+                <p id="experiment-failed-details">
+
+                </p>
+
+            </div>
+
+            <mwc-button slot="primaryAction" dialogAction="close">OK</mwc-button>
+
+        </mwc-dialog>
+        -->
+
+    <script type="application/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                currentTag: '',
+                path: '',
+                sourcePackage: '.',
+                buildEnv: '',
+                buildEnvTag: '',
+                buildCmd: '',
+                buildCmdIncludeSonar: false,
+                sonarqubeNeeded: false,
+                outputPath: '',
+                sources: [],
+                tagIds: [],
+                commitIds: [],
+                projectName: '',
+                repositoryUrl: '',
+                skipClone: false,
+                skipSymfinder: false,
+                message: 'Hello Vue!'
+            }, methods: {
+                addTag: function () {
+                    this.tagIds.push(this.currentTag)
+                    this.currentTag = '';
+
+                },
+                removeTag: function (tagToRemove) {
+                    this.tagIds = this.tagIds.filter(tag => tag != tagToRemove)
+
+                }
+            }
+        });
+    </script>
+
+
     <style>
+        .pointer {
+            cursor: pointer;
+        }
+
         #run-xp-form {
 
             margin-top: 15px;
@@ -63,20 +193,6 @@
             transform: none;
         }
     </style>
-
-
-    <mwc-dialog id="dialog-experiment-failed" heading="Error with your experiment">
-        <div>
-            <p>Your experiment has a problem,  see below for details</p>
-            <p id="experiment-failed-details">
-
-            </p>
-
-        </div>
-
-        <mwc-button slot="primaryAction" dialogAction="close">OK</mwc-button>
-
-    </mwc-dialog>
 </body>
 
 </html>

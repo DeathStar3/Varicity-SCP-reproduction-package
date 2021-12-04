@@ -1,5 +1,7 @@
 package fr.unice.i3s.sparks.deathstar3;
 
+import java.util.List;
+
 import fr.unice.i3s.sparks.deathstar3.model.MetricSource;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
 import fr.unice.i3s.sparks.deathstar3.strategy.MetricGathering;
@@ -7,8 +9,6 @@ import fr.unice.i3s.sparks.deathstar3.strategy.sonar.sonarcloud.SonarCloudStrate
 import fr.unice.i3s.sparks.deathstar3.strategy.sonar.sonarqube.SonarQubeStrategy;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Slf4j
 @NoArgsConstructor

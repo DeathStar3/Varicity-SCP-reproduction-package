@@ -1,6 +1,5 @@
 package fr.unice.i3s.sparks.deathstar3.symfinder.webservice;
 
-import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
@@ -139,12 +138,7 @@ public class ExperimentRunnerService {
 
                             try {
 
-                                Logger root = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-                                //TO BE CONTINUED
-
-                                root.getAppender("STDOUT").stop();
-
-                                ExperimentResult experimentResult = metricExtensionEntrypoint.runExperiment(experimentConfig, parametersObject.hotspots());
+                                ExperimentResult experimentResult = metricExtensionEntrypoint.runExperiment(experimentConfig, parametersObject.hotspots()).get(0);
 
                                 this.sendExperimentSucceededToUI(session, experimentResult);
                                 System.out.println("Done with the experiment");

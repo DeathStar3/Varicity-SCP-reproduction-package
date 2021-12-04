@@ -1,11 +1,5 @@
 package fr.unice.i3s.sparks.deathstar3.serializer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
-import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
-import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriter;
-import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -15,12 +9,16 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
+import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
+
 public class ExperimentResultWriterJson implements ExperimentResultWriter {
 
     ObjectMapper objectMapperJson = new ObjectMapper();
     private ExperimentConfig experimentConfig;
-
-    //TODO use Constants class to get the prefix of where to write files
 
     public ExperimentResultWriterJson(ExperimentConfig experiment){
         this.experimentConfig = experiment;

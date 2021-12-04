@@ -1,5 +1,22 @@
 package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import org.eclipse.jgit.api.errors.GitAPIException;
+
 import fr.unice.i3s.sparks.deathstar3.MetricGatherer;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
@@ -17,16 +34,6 @@ import fr.unice.i3s.sparks.deathstar3.projectbuilder.SonarQubeStarter;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
 import fr.unice.i3s.sparks.deathstar3.sourcesfetcher.SourceFetcher;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.api.errors.GitAPIException;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.*;
 
 @Slf4j
 public class MetricExtensionEntrypoint {
@@ -44,7 +51,7 @@ public class MetricExtensionEntrypoint {
         sonarQubeStarter = new SonarQubeStarter();
     }
 
-    public synchronized ExperimentResult runExperiment(ExperimentConfig config, HotspotsParameters hotspotsParameters) {
+    synchronized ExperimentResult runSimpleExperiment(ExperimentConfig config, HotspotsParameters hotspotsParameters) {
         try {
             makePathAbsoluteIfNotAlready(config);
             return this.runExperimentInternal(config, hotspotsParameters);
@@ -65,7 +72,7 @@ public class MetricExtensionEntrypoint {
         if (!config.isSkipClone()) {
             config.setRepositoryUrl(this.sourceFetcher.normalizeRepositoryUrl(config.getRepositoryUrl()));
             List<String> repositories = sourceFetcher.cloneRepository(config);
-            repositoryPath = repositories.get(0);// TODO change this  (We assume for now one tagId or commitId per project)
+            repositoryPath = repositories.get(0);
         }
 
         Future<Boolean> compilationFuture = null;
@@ -146,11 +153,52 @@ public class MetricExtensionEntrypoint {
         }
         Path pathProvided= Paths.get(experimentConfig.getPath());
 
-        if(pathProvided.isAbsolute()){
-            return;
+        if(!pathProvided.isAbsolute()){
+            experimentConfig.setPath( Path.of(System.getProperty("user.dir"), experimentConfig.getPath()).toAbsolutePath().toString());
+        }
+    }
+
+
+    public synchronized List<ExperimentResult> runExperiment(ExperimentConfig experimentConfig, HotspotsParameters hotspotsParameters){
+
+        List<String> allVersions = new ArrayList<>();
+
+        if (experimentConfig.getTagIds() != null && !experimentConfig.getTagIds().isEmpty()) {
+            allVersions.addAll(experimentConfig.getTagIds());
+        }
+
+        if (experimentConfig.getCommitIds() != null && !experimentConfig.getCommitIds().isEmpty()) {
+            allVersions.addAll(experimentConfig.getCommitIds());
+        }
+
+        if(allVersions.size() > 1){
+            List<ExperimentResult> allResults=new ArrayList<>();
+            List<ExperimentConfig> allExperimentConfigVariants=new ArrayList<>();
+            for(String version:allVersions){
+
+               ExperimentConfig experimentConfigVariant= experimentConfig.cloneSelf();
+               experimentConfigVariant.setProjectName(experimentConfig.getProjectName()+"-"+version);
+               experimentConfigVariant.setTagIds(Set.of(version));
+               experimentConfigVariant.changeComponentNameOfLocalMetricSource(experimentConfigVariant.getProjectName());
+
+               allExperimentConfigVariants.add(experimentConfigVariant);
+            }
+
+            for(ExperimentConfig configVariant:allExperimentConfigVariants){
+                try {
+                    allResults.add(this.runSimpleExperiment(configVariant,hotspotsParameters));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    //TODO collect all exceptions of each variant that failed and return them
+                }
+            }
+
+            return  allResults;
         }
         else{
-           experimentConfig.setPath( Path.of(System.getProperty("user.dir"), experimentConfig.getPath()).toAbsolutePath().toString());
+            return List.of(this.runSimpleExperiment(experimentConfig,hotspotsParameters));
         }
+
     }
 }

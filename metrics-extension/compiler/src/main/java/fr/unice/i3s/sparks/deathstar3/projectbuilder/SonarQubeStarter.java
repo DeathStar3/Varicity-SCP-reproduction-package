@@ -1,5 +1,14 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
+import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants.NETWORK_NAME;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.Duration;
+import java.util.Set;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
@@ -13,21 +22,13 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
-import fr.unice.i3s.sparks.deathstar3.models.SonarQubeStatus;
-import fr.unice.i3s.sparks.deathstar3.utils.Utils;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.time.Duration;
-import java.util.List;
-import java.util.Set;
-
-import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants.NETWORK_NAME;
+import fr.unice.i3s.sparks.deathstar3.models.SonarQubeStatus;
+import fr.unice.i3s.sparks.deathstar3.utils.Utils;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SonarQubeStarter {
@@ -95,6 +96,7 @@ public class SonarQubeStarter {
                 log.info("Sonarqube is not ready yet " + e.getClass().getName());
             }
             try {
+                
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();

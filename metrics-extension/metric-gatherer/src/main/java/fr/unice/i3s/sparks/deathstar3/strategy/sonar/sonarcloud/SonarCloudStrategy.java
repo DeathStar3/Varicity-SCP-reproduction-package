@@ -34,7 +34,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
 
         int numElementsPerPage = 500;
 
-        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + componentName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
+        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + componentName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not found by sonar
 
         SonarResults sonarResults = new SonarResults();
         sonarResults.setComponents(new ArrayList<>());

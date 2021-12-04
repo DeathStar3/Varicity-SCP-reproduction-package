@@ -1,11 +1,17 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
-import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.AccessMode;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.HostConfig;
@@ -15,10 +21,7 @@ import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
-import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
-import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
-import fr.unice.i3s.sparks.deathstar3.utils.Utils;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpEntity;
@@ -26,17 +29,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
+import fr.unice.i3s.sparks.deathstar3.utils.Utils;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Compiler {
 
-    private static final Utils utils = new Utils();
+    private final Utils utils = new Utils();
     private final DockerClient dockerClient;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -170,8 +171,7 @@ public class Compiler {
             try {
                 utils.downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
             } catch (InterruptedException exception) {
-                this.log.warn("Cannot pull image necessary to compile project");
-
+                Compiler.log.warn("Cannot pull image necessary to compile project");
             }
 
         }
@@ -238,7 +238,7 @@ public class Compiler {
                 || projectConfig.getSourcePackage().strip().equals(".")) {
             completePath = projectConfig.getPath();
         } else {
-            completePath = projectConfig.getPath() + "/" + projectConfig.getSourcePackage();
+            completePath = Paths.get(projectConfig.getPath(), projectConfig.getSourcePackage()).toString();
         }
 
         CreateContainerResponse container = dockerClient.createContainerCmd(Constants.SONAR_SCANNER_IMAGE + ":" + Constants.SONAR_SCANNER_IMAGE_TAG)

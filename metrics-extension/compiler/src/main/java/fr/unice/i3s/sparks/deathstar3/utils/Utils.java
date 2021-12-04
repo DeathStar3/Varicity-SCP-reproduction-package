@@ -41,7 +41,7 @@ public class Utils {
                 .anyMatch(img -> Arrays.stream(img.getRepoTags()).anyMatch(name -> name.equals(image + ":" + tag)));
     }
 
-    private boolean checkIfContainerHasExited(String containerId) {
+    public boolean checkIfContainerHasExited(String containerId) {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
         log.info(container.getState().toString());
         log.info(containerId + " : " + container.getState().getStatus());
@@ -63,7 +63,7 @@ public class Utils {
         if (networks.isEmpty()) {
             CreateNetworkResponse networkResponse = dockerClient.createNetworkCmd().withName(NETWORK_NAME)
                     .withAttachable(true).withDriver("bridge").exec();
-            log.info(String.format("Network %s created...\n", networkResponse.getId()));
+            log.info(String.format("Network %s created...%n", networkResponse.getId()));
         }
     }
 
