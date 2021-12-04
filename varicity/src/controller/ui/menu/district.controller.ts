@@ -4,11 +4,10 @@ import {UIController} from "../ui.controller";
 export class DistrictController {
 
     public static createMenu() {
-        const parent = document.getElementById("submenu-content") as HTMLElement;
+        const parent = SubMenuController.getParentContentSubMenu();
 
         // Set title
-        const title = document.getElementById("submenu-title") as HTMLElement;
-        title.innerHTML = "Districts";
+        SubMenuController.changeTitleSubMenuElement("Districts");
 
         const menuPadding = SubMenuController.createMenu("Padding", true, parent);
         const menuFaceColors = SubMenuController.createMenu("Faces Color", true, parent);

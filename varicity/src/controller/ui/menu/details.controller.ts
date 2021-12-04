@@ -17,7 +17,7 @@ export class DetailsController {
         if (!MenuController.selectedTab || MenuController.selectedTab === document.getElementById("information")) {
             if (obj) {
                 // clear the sub-menu
-                (document.getElementById("submenu-content") as HTMLElement).innerHTML = "";
+                SubMenuController.getParentContentSubMenu().innerHTML = "";
 
                 if (this.force && !force) return;
                 if (this.force && force) {
@@ -27,11 +27,11 @@ export class DetailsController {
                 this.current = obj
             }
 
-            const parent = document.getElementById("submenu-content") as HTMLElement;
+            const parent = SubMenuController.getParentContentSubMenu();
 
             // Set title
-            const title = document.getElementById("submenu-title") as HTMLElement;
-            title.innerHTML = "Information";
+            SubMenuController.changeTitleSubMenuElement("Information");
+
             const modelSubMenu = SubMenuController.createMenu("Model", true, parent);
             const metricSubMenu = SubMenuController.createMenu("Metrics", true, parent);
             const linksSubMenu = SubMenuController.createMenu("Links", true, parent);

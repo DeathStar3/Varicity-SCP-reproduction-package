@@ -4,11 +4,11 @@ import {SubMenuController} from "./sub-menu.controller";
 export class LinkController {
 
     public static createMenu() {
-        const parent = document.getElementById("submenu-content") as HTMLElement;
+        const parent = SubMenuController.getParentContentSubMenu();
 
         // set title
-        const title = document.getElementById("submenu-title") as HTMLElement;
-        title.innerHTML = "Links";
+        SubMenuController.changeTitleSubMenuElement("Links");
+
 
         const menuColor = SubMenuController.createMenu("Colors", true, parent);
         const displayMenu = SubMenuController.createMenu("Display", true, parent);

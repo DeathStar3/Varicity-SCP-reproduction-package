@@ -6,6 +6,7 @@ import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
 import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
 import {UIController} from "./ui.controller";
 import {ConfigName} from "../../model/entitiesImplems/config.model";
+import {MetricController} from "./menu/metric.controller";
 
 export class ConfigSelectorController {
 
@@ -61,18 +62,12 @@ export class ConfigSelectorController {
         ProjectService.fetchVisualizationData(this.filename).then((response) => {
             this.el = this.previousParser.parse(response.data, UIController.config, this.filename);
 
-            // set the min & max usage level
-            let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-            inputElement.min = "1";
+            // set max usage level
             const maxLvl = this.el.getMaxCompLevel();
-            inputElement.max = maxLvl.toString();
-            if (+inputElement.value > maxLvl) {
-                inputElement.value = maxLvl.toString();
-            }
+            MetricController.defineMaxLevelUsage(maxLvl);
 
-            UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+inputElement.value));
+            UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+UIController.config.default_level));
             UIController.scene.buildScene();
-
         })
     }
 

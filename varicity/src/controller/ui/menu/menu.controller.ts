@@ -4,6 +4,7 @@ import {LinkController} from "./link.controller";
 import {DetailsController} from "./details.controller";
 import {MetricController} from "./metric.controller";
 import {DistrictController} from "./district.controller";
+import {SubMenuController} from "./sub-menu.controller";
 
 export class MenuController {
 
@@ -43,7 +44,7 @@ export class MenuController {
 
     private static createSubMenu(selectedTab: Element) {
         // clear the sub-menu
-        (document.getElementById("submenu-content") as HTMLElement).innerHTML = "";
+        SubMenuController.getParentContentSubMenu().innerHTML = "";
 
         if (selectedTab) {
 
