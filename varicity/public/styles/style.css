@@ -128,5 +128,16 @@ body {
 }
 
 body {
-    margin: 0px;
+    margin: 0;
+}
+
+.toast-body{
+    display: flex;
+    justify-content: space-between;
+}
+
+.toast-container{
+    position: absolute;
+    left: 10px;
+    top: 10px;
 }

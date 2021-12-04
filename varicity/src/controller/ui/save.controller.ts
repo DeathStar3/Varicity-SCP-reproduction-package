@@ -3,6 +3,7 @@ import {ConfigName, Vector3_Local} from './../../model/entitiesImplems/config.mo
 import Cookies from "js-cookie";
 import {Closeable} from "../../model/entities/closeable.interface";
 import {ConfigService} from "../../services/config.service";
+import {ToastController, ToastType} from "./toast.controller";
 
 export class SaveController {
 
@@ -26,9 +27,9 @@ export class SaveController {
         });
 
         document.querySelector('#save-config-confirm-btn').addEventListener('click', _clickev => {
-
-            this.saveConfiguration((document.querySelector('#text-field-configname') as HTMLInputElement).value);
-
+            const configName = (document.querySelector('#text-field-configname') as HTMLInputElement).value;
+            this.saveConfiguration(configName);
+            
             // Close dialog
             (document.querySelector('#save-dialog') as unknown as Closeable).close();
         })
@@ -69,5 +70,6 @@ export class SaveController {
         this.saveCamera()
         //TODO Missing this part !
         console.log("Configuration updated")
+        ToastController.addToast("Configuration 'TODO' updated", ToastType.SUCESS);
     }
 }
