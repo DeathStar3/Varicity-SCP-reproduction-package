@@ -19,6 +19,14 @@
 
 <div id="main">
 
+    <!-- -------------------------------------------------------------------- --->
+    <!--                           LOADING SCREEN                             --->
+    <!-- -------------------------------------------------------------------- --->
+    <div id="loading-frame">
+        <img src="images/logovaricity.gif" style="width: 200px">
+    </div>
+
+
     <div id="console" class="overflowable">
 
         <div class="navbar d-flex flex-column flex-shrink-0 bg-light">
@@ -172,6 +180,10 @@
         <!-- -------------------------------------------------------------------- --->
         <mwc-dialog id="save_content" heading="Save configuration" class="styled">
             <div class="vertical-container">
+                <button class="btn btn-primary save-button" id="update-camera">
+                    <span class="material-icons-outlined">camera</span>
+                    Update Camera position
+                </button>
                 <button class="btn btn-primary save-button" id="update-config">
                     <span class="material-icons-outlined">save</span>
                     Update Configuration

@@ -14,6 +14,7 @@ export class MetricityImplem extends SceneRenderer {
         this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
 
         this.render();
+        document.getElementById("loading-frame").style.display = 'none';
     }
 
     rerender(config: Config) {

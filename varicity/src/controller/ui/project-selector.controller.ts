@@ -7,6 +7,7 @@ import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
 import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
 import {UIController} from "./ui.controller";
 import {MetricController} from "./menu/metric.controller";
+import {MenuController} from "./menu/menu.controller";
 
 export class ProjectController {
 
@@ -35,6 +36,13 @@ export class ProjectController {
     }
 
     public static loadProject(projectName: string) {
+
+        document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
+        if (MenuController.selectedTab){
+            MenuController.changeImage(MenuController.selectedTab);
+            MenuController.selectedTab = undefined;
+        }
+
         this.previousParser = new VPVariantsStrategy();
 
         // clear the current view
@@ -44,6 +52,7 @@ export class ProjectController {
         UIController.clearMap();
 
         const run = async () => {
+            document.getElementById("loading-frame").style.display = 'inline-block';
             await UIController.reloadConfigAndConfigSelector(projectName);
 
             // TODO find alternative

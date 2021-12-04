@@ -17,6 +17,7 @@ export class UIController {
 
     public static scene: SceneRenderer;
     public static configsName: ConfigName[];
+    public static configFileName: string;
     public static config: Config;
 
     public static createHeader(): void {
@@ -105,6 +106,7 @@ export class UIController {
 
     public static updateScene(criticalLevel: CriticalLevel) {
         if (this.scene) {
+            document.getElementById("loading-frame").style.display = 'inline-block';
             SearchbarController.emptyMap();
             switch (criticalLevel) {
                 case CriticalLevel.LOW_IMPACT: // Only change the colour, so simple rerender

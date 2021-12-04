@@ -49,6 +49,25 @@ export class ConfigService {
     }
 
     /**
+     * Update the config in backend filesystem
+     * @param config saved in backend
+     * @param fileName file to update
+     * @return the return value is a config with a filename attribute
+     */
+    public static async updateConfig(fileName: string, config: Config): Promise<SaveResponseConfig> {
+        return new Promise<SaveResponseConfig>((resolve, reject) => {
+            axios.post<SaveResponseConfig>(`${backendUrl}/projects/configs/` + fileName, {
+                ...config,
+                metrics: Object.fromEntries(config.metrics)
+            }).then((res) => {
+                let saveResponseConfig = res.data;
+                ConfigService.convertMetricJsObjectToMap(saveResponseConfig.config);
+                resolve(saveResponseConfig);
+            })
+        });
+    }
+
+    /**
      * Middleware for Axios config calls to convert the metric js object to a map
      * @param promise of the config
      * @private
