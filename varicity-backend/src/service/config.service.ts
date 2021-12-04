@@ -1,19 +1,36 @@
 import * as fs from 'fs';
-import {CameraData, ConfigName, VaricityConfig} from "../model/config.model";
-import {Vector3} from "../model/user.model";
-import {AppModule} from "../app.module";
-import { PersistenceService } from './persistence.service';
+import { CameraData, VaricityConfig } from "../model/config.model";
+import { Vector3 } from "../model/user.model";
+import { AppModule } from "../app.module";
 import { Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JsonDB } from 'node-json-db';
+import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
+import { ConfigEntry } from 'src/model/experiment.model';
 
 const path = require('path');
 const yaml = require('js-yaml');
 const YAML = require('yaml');
 
-export class ConfigService {
-    private static defaultConfigsPath = "./config/";
-    private static defaultConfigsDirectory = "default";
+export class VaricityConfigService {
 
-    constructor(@Inject(PersistenceService) private readonly persistenceService: PersistenceService){
+
+
+    private readonly db: JsonDB;
+    private readonly databasePath;
+    private readonly pathToDefaultConfigs;
+
+    private readonly pathToVisualizationConfigs;
+
+
+    constructor(@Inject(ConfigService) private configService: ConfigService) {
+
+        this.databasePath = this.configService.get<string>('DATABASE_PATH');
+        this.pathToVisualizationConfigs = this.configService.get<string>('VISUALISATION_CONFIGS_PATH');
+        
+        this.pathToDefaultConfigs = this.configService.get<string>('DEFAULT_CONFIGS_DIR');
+
+        this.db = new JsonDB(new Config(this.databasePath, true, true, '/'));
 
     }
 
@@ -45,21 +62,21 @@ export class ConfigService {
      * @param pathToYamlOnDisk
      * @private
      */
-    private static getYamlFromDisk(pathToYamlOnDisk: string): any{
+    private static getYamlFromDisk(pathToYamlOnDisk: string): any {
         console.log("pathToYamlOnDisk", pathToYamlOnDisk)
-        return yaml.load(fs.readFileSync(path.join(process.cwd(), process.env.PERSISTENT_DIR ,ConfigService.defaultConfigsPath, pathToYamlOnDisk), 'utf8'));
+        return yaml.load(fs.readFileSync(pathToYamlOnDisk, 'utf8'));
     }
 
     /**
      * Load all the Varicity configs of the specified project
      * @param projectName
      */
-    public getConfigsFromProjectName(projectName: string): VaricityConfig[]{
+    public getConfigsFromProjectName(projectName: string): VaricityConfig[] {
         const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
         console.log("configsPaths", configsPaths)
         let configs = [];
         configsPaths.forEach(configPath => {
-                configs.push(this.getConfigsFromPath(configPath));
+            configs.push(this.getConfigsFromPath(configPath));
         })
 
         return configs;
@@ -70,8 +87,8 @@ export class ConfigService {
      * @param configPath path to the config .yaml file on the disk
      */
     public getConfigsFromPath(configPath: string): VaricityConfig {
-        const config = ConfigService.getYamlFromDisk(configPath) as VaricityConfig;
-        if(config.camera_data === undefined){
+        const config = VaricityConfigService.getYamlFromDisk(configPath) as VaricityConfig;
+        if (config.camera_data === undefined) {
             config.camera_data = new CameraData(2 * Math.PI / 3, Math.PI / 3, 100, new Vector3());
         }
         return config;
@@ -91,23 +108,22 @@ export class ConfigService {
         const doc = new YAML.Document();
         doc.contents = config;
 
-        let pathDirToConfig = path.join(process.env.PERSISTENT_DIR, ConfigService.defaultConfigsPath, config.projectId);
-
-        if (!fs.existsSync(pathDirToConfig)){
-            fs.mkdirSync(pathDirToConfig);
+        let version = 1;
+        if (this.db.exists('/configs')) {
+            version = this.db.count('/configs') + 1;
         }
-
-        const version = this.getConfigsPaths(config.projectId).length + 1; // TODO improve versionning system
+        // TODO improve versionning system
         const filename = "config-" + config.projectId + "-" + version;
-        fs.writeFile(path.join(pathDirToConfig, filename + ".yaml"),  doc.toString(), err => {
-            if (err) {
-                console.error(err)
-                return;
-            }
-            //file written successfully
-        })
 
-        return {config, filename:  filename};
+        let parentDir=path.join(this.pathToVisualizationConfigs, config.projectId)
+        if(!fs.existsSync(parentDir)){
+            fs.mkdirSync(parentDir, { recursive: true });
+        }
+        fs.writeFileSync(path.join(parentDir, filename + ".yaml"), doc.toString());
+
+        this.db.push('/configs[]', new ConfigEntry(filename, path.join(parentDir, filename + ".yaml"), config.projectId));
+        //file written successfully
+        return { config, filename: filename };
     }
 
     /**
@@ -115,10 +131,7 @@ export class ConfigService {
      * @private
      */
     private getDefaultConfigPaths(): string[] {
-        if(this.persistenceService.getDB().exists('/config/' + ConfigService.defaultConfigsDirectory)){
-            return this.persistenceService.getDB().getData('/config/' + ConfigService.defaultConfigsDirectory);
-        }
-        return [];
+        return fs.readdirSync(this.pathToDefaultConfigs, { withFileTypes: true }).filter(f => f.isFile()).map(f => path.join(this.pathToDefaultConfigs, f.name));
     }
 
     /**
@@ -127,8 +140,9 @@ export class ConfigService {
      * @private
      */
     private getConfigsPaths(projectName: string): string[] {
-        if(this.persistenceService.getDB().exists('/config/' + projectName)){
-            return this.persistenceService.getDB().getData('/config/' + projectName);
+
+        if (this.db.exists('/configs')) {
+            return this.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId == projectName).map(config => config.path);
         }
         return []
     }
@@ -139,11 +153,16 @@ export class ConfigService {
      * @private
      */
     private getConfigsPathsWithDefaultConfigsFallback(projectName: string): string[] {
-        if(this.persistenceService.getDB().exists('/config/' + projectName)){
-            return this.persistenceService.getDB().getData('/config/' + projectName);
-        }else{
-            return this.getDefaultConfigPaths();
+
+        if (this.db.exists('/configs')) {
+            let configsPath = this.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName).map(config => config.path)
+            if (configsPath.length > 0) {
+                return configsPath;
+            }
+
         }
+
+        return this.getDefaultConfigPaths();
     }
 
     /**
@@ -155,7 +174,7 @@ export class ConfigService {
         const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
         let configsNames = []
         configsPaths.forEach(configPath => {
-            configsNames.push(ConfigService.getFileNameOnly(configPath));
+            configsNames.push(VaricityConfigService.getFileNameOnly(configPath));
         })
         return configsNames;
     }
@@ -174,15 +193,18 @@ export class ConfigService {
      * Gives for all the configs of a project the config name and its filename
      * @param projectName
      */
-    public getConfigsNamesAndFileNames(projectName: string): ConfigName[] {
-        const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
-        let configsNames = []
-        configsPaths.forEach(configPath => {
-            const fileName = ConfigService.getFileNameOnly(configPath);
-            const name = this.getConfigNameFromFileName(projectName, fileName);
-            configsNames.push(new ConfigName(name, fileName));
-        })
-        return configsNames;
+    public getConfigsNamesAndFileNames(projectName: string): ConfigEntry[] {
+
+        if (this.db.exists('/configs')) {
+            let configsPath = this.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName)
+            if (configsPath && configsPath.length > 0) {
+                return configsPath;
+            }
+
+        }
+
+        //TODO
+        return [new ConfigEntry('default global config', path.join(this.pathToDefaultConfigs, 'config.yaml'), '')];
     }
 
     /**
@@ -193,7 +215,7 @@ export class ConfigService {
     public getConfigByNameFromProject(projectName: string, configName: string): VaricityConfig {
         const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
         for (const configPath of configsPaths) {
-            if(ConfigService.getFileNameOnly(configPath) === configName){
+            if (VaricityConfigService.getFileNameOnly(configPath) === configName) {
                 return this.getConfigsFromPath(configPath);
             }
         }

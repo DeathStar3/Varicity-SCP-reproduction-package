@@ -75,14 +75,22 @@
             <div>
                 <div>
                     <div>
-
-
                         <span class="badge bg-secondary m-3" v-for="tag in tagIds"> {{tag}}
                             <span class="material-icons-outlined pointer" v-on:click="removeTag(tag)">close
                             </span> </span>
                     </div>
                     <input class="form-control m-2" v-model="currentTag" type="text" v-on:keyup.enter="addTag()"
                         placeholder="Add a tag">
+                </div>
+
+                <div>
+                    <div>
+                        <span class="badge bg-secondary m-3" v-for="commit in commitIds"> {{tag}}
+                            <span class="material-icons-outlined pointer" v-on:click="removeCommit(commit)">close
+                            </span> </span>
+                    </div>
+                    <input class="form-control m-2" v-model="currentCommit" type="text" v-on:keyup.enter="addCommit()"
+                        placeholder="Add a commit">
                 </div>
 
                 <div class="text-center">
@@ -124,6 +132,7 @@
             el: '#app',
             data: {
                 currentTag: '',
+                currentCommit: '',
                 path: '',
                 sourcePackage: '.',
                 buildEnv: '',
@@ -148,6 +157,15 @@
                 },
                 removeTag: function (tagToRemove) {
                     this.tagIds = this.tagIds.filter(tag => tag != tagToRemove)
+
+                },
+                addCommit: function () {
+                    this.commitIds.push(this.currentCommit)
+                    this.currentCommit = '';
+
+                },
+                removeCommit: function (commitToRemove) {
+                    this.commitIds = this.commitIds.filter(commit => commit != commitToRemove)
 
                 }
             }

@@ -35,13 +35,14 @@ Then to use it  (replace <> by the right value for your usage). See below for de
 
 ```shell
 chmod +x new-run-cli.sh
-./new-run-cli.sh <experiment-configuration>  <hotspot-configuration> <LOG_LEVEL>
+./new-run-cli.sh -i <experiment-configuration> -s <hotspot-configuration> -verbosity <LOG_LEVEL> -http <url>
 ```
-| Arguments         | Type    | Description |
+| Options/Arguments         | Type    | Description |
 |--------------|-----------|------------|
-|experiment-configuration| string | the absolute or relative path of the file containing your configuration for your experiment See [Documentation](Wiki.md) for the format of the file|
-| hotspot-configuration | string | the absolute or relative path of the file containing your hotspot configuration. See [Documentation](Wiki.md) for the format of the file.|
-| LOG_LEVEL | string | the verbosity of the program possible values are `"TRACE", "DEBUG", "INFO", "WARN", "ERROR"`. You can use any case (lowercase,uppercase) you want.
+|-i | string | the absolute or relative path of the file containing your configuration for your experiment See [Documentation](Wiki.md) for the format of the file|
+| -s | string | the absolute or relative path of the file containing your hotspot configuration. See [Documentation](Wiki.md) for the format of the file.|
+| LOG_LEVEL | string | the verbosity of the program possible values are `"TRACE", "DEBUG", "INFO", "WARN", "ERROR"`. You can use any case (lowercase,uppercase) you want.|
+| -http | string | An url where you want the result of the analysis to be posted using `HTTP/POST`. Eg `http://localhost:3000/projects`. Nothing will be written on disk if you use that option|
 
 ### With docker-cli
 **COMING SOON**

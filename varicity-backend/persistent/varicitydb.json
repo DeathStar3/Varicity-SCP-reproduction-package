@@ -1,0 +1,104 @@
+{
+    "projects": [
+        {
+            "path": "persistent/data/symfinder_files/parsed/CookieFactoryClient.json",
+            "projectName": "CookieFactoryClient"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/argoUML-bcae373.json",
+            "projectName": "argoUML-bcae373"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/awt-jb8u202-b1532-comp.json",
+            "projectName": "awt-jb8u202-b1532-comp"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/awt-jb8u202-b1532.json",
+            "projectName": "awt-jb8u202-b1532"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/cucumber-v6.8.0.json",
+            "projectName": "cucumber-v6.8.0"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/cxf-cxf-3.2.7.json",
+            "projectName": "cxf-cxf-3.2.7"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/javaGeom-7e5ee60ea9febe2acbadb75557d9659d7fafdd28.json",
+            "projectName": "javaGeom-7e5ee60ea9febe2acbadb75557d9659d7fafdd28"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/jfreechart-v1.5.0-comp.json",
+            "projectName": "jfreechart-v1.5.0-comp"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/jfreechart-v1.5.0.json",
+            "projectName": "jfreechart-v1.5.0"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/jmeter-v5.4.1-rc2.json",
+            "projectName": "jmeter-v5.4.1-rc2"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/junit-r4.12-comp.json",
+            "projectName": "junit-r4.12-comp"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/junit-r4.12.json",
+            "projectName": "junit-r4.12"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/logbook-2.2.1.json",
+            "projectName": "logbook-2.2.1"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/maven-maven-3.6.0.json",
+            "projectName": "maven-maven-3.6.0"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/netbeans-12.2.json",
+            "projectName": "netbeans-12.2"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/regatta.json",
+            "projectName": "regatta"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/riptide-2.11.0.json",
+            "projectName": "riptide-2.11.0"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/test1WithoutLinks.json",
+            "projectName": "test1WithoutLinks"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/test2WithLinks.json",
+            "projectName": "test2WithLinks"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/test3ForVPParser.json",
+            "projectName": "test3ForVPParser"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/vert.x.json",
+            "projectName": "vert.x"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/cf-team-o.json",
+            "projectName": "cf-team-o"
+        }
+    ],
+    "configs": [
+        {
+            "name": "config-vert.x-1",
+            "path": "persistent/configs/vert.x/config-vert.x-1.yaml",
+            "projectId": "vert.x"
+        },
+        {
+            "name": "config-regatta-3",
+            "path": "persistent/configs/regatta/config-regatta-3.yaml",
+            "projectId": "regatta"
+        }
+    ]
+}

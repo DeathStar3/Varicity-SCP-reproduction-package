@@ -15,10 +15,8 @@ create_directory(){
 cd metrics-extension
 echo " ### [1;32m Build metric-extension (1/1)[0m"
 mvn clean install -Dmaven.test.skip=true
-cd config-loader
-mvn clean compile assembly:single -DskipTests=true
-cd ../../
+cd ..
 
 create_directory bin
 
-cp metrics-extension/config-loader/target/config-loader-1.0-SNAPSHOT-jar-with-dependencies.jar bin/symfinder-cli.jar
+cp metrics-extension/symfindercli/target/symfinder-cli-jar-with-dependencies.jar bin/symfinder-cli.jar

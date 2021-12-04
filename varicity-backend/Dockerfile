@@ -14,4 +14,5 @@ WORKDIR /app
 RUN ls
 COPY --from=builder /app ./
 RUN ls
+COPY persistent/default-configs /default-configs
 CMD ["npm", "run", "start:prod"]

@@ -19,7 +19,7 @@ export SYMFINDER_GID=$(id -g)
 export SYMFINDER_VERSION=$(git rev-parse HEAD)
 export TAG=local
 export DIR_PATH=$(pwd)
-
+export VOLUME_PATH=$(pwd)/dockervolume
 create_directory resources
 
 create_directory data

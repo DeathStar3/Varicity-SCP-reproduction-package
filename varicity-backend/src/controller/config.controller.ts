@@ -1,17 +1,18 @@
 import {Body, Controller, Get, Param, Post, Query} from '@nestjs/common';
-import {ConfigService} from '../service/config.service';
-import {ConfigName, VaricityConfig} from '../model/config.model';
+import {VaricityConfigService} from '../service/config.service';
+import { VaricityConfig} from '../model/config.model';
+import { ConfigEntry } from 'src/model/experiment.model';
 
 
 @Controller()
 export class ConfigController {
 
-    constructor(private readonly configService: ConfigService) {
+    constructor(private readonly configService: VaricityConfigService) {
     }
 
     @Post('/projects/configs')
     saveConfig(@Body() config: VaricityConfig): any {
-        console.log("/projects/configs - saveConfig, ", config)
+        console.log("/projects/configs - saveConfig, ")
         return this.configService.saveConfig(config);
     }
 
@@ -47,12 +48,11 @@ export class ConfigController {
     getFirstOrDefaultConfigProject(@Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/configs/firstOrDefault - getFirstOrDefaultConfigProject", query)
         let config = this.configService.getFirstProjectConfigOrDefaultOne(query['name']);
-        console.log(config);
         return config;
     }
 
     @Get('/projects/:projectName/configs/filenames-and-names')
-    getConfigsNamesOfProject(@Param('projectName') projectName: string, ): ConfigName[] {
+    getConfigsNamesOfProject(@Param('projectName') projectName: string, ): ConfigEntry[] {
         console.log(`/projects/${projectName}/configs/filenames-and-names - getConfigsNamesAndFileNames`);
         return this.configService.getConfigsNamesAndFileNames(projectName);
     }

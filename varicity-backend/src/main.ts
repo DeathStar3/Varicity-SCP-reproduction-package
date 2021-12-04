@@ -26,7 +26,7 @@ const run = async () => {
     //Start server
     await startServer();
     //Start file system watcher
-    await new FsWatcherService().instantiateWatcher();
+    //await new FsWatcherService().instantiateWatcher();
 
 }
 run().catch(console.error)

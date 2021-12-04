@@ -1,7 +1,7 @@
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import { Body, Controller, Get, Header, Param, Post } from '@nestjs/common';
 import { ExperimentResult } from 'src/model/experiment.model';
-import {JsonInputInterface} from '../model/jsonInput.interface';
-import {ProjectService} from "../service/project.service";
+import { JsonInputInterface } from '../model/jsonInput.interface';
+import { ProjectService } from "../service/project.service";
 
 
 @Controller()
@@ -37,9 +37,13 @@ export class ProjectController {
     }
 
     @Post('/projects')
-    newProject(@Body() experimentResult: ExperimentResult): string {
-         this.projectService.addProject(experimentResult);
-         return "OK";
+    @Header('content-type', 'application/json')
+    newProject(@Body() experimentResult: ExperimentResult) {
+        if(experimentResult.externalMetric !== undefined && experimentResult.externalMetric !== null){
+            experimentResult.externalMetric= new Map(Object.entries(experimentResult.externalMetric ));
+          }
+        
+        this.projectService.addProject(experimentResult);
 
     }
 }

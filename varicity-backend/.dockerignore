@@ -1,7 +1,8 @@
 persistent
-!persistent/config/default
+!persistent/default-configs
 dist
 node_modules
 Dockerfile
 build.sh
+.dockerignore
 Readme.md
