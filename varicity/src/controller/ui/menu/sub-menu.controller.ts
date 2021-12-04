@@ -6,6 +6,14 @@ export class SubMenuController {
 
     private static trackMenuOpened = new Map<string, boolean>();
 
+    public static getParentContentSubMenu(): HTMLElement {
+        return document.getElementById("submenu-content") as HTMLElement;
+    }
+
+    public static changeTitleSubMenuElement(title: string) {
+        (document.getElementById("submenu-title") as HTMLElement).innerText = title;
+    }
+
     public static createLongReadonlyText(text: string, value: string, parent: HTMLElement): HTMLInputElement {
         return SubMenuController.createCustomText(text, value, "", parent, true, 6, 6)
     }
@@ -145,7 +153,7 @@ export class SubMenuController {
         return divElement;
     }
 
-    public static createRange(text: string, startValue: number, min: number, max: number, step: number, parent: HTMLElement): HTMLElement {
+    public static createRange(text: string, startValue: number, min: number, max: number, step: number, parent: HTMLElement): HTMLInputElement {
         let formElement = document.createElement("form");
         formElement.classList.add("input-group", "input-custom");
 
@@ -177,7 +185,7 @@ export class SubMenuController {
         formElement.appendChild(outputElement);
         parent.appendChild(formElement);
 
-        return outputElement;
+        return inputElement;
     }
 
     public static createColorSelector(text: string, initColor: string, parent: HTMLElement): HTMLInputElement {
@@ -216,7 +224,7 @@ export class SubMenuController {
         if (sizeValueText != 0) {
             inputElement = document.createElement("input");
             inputElement.classList.add("form-control", "col-" + sizeValueText);
-            inputElement.type = "text";
+            inputElement.type = "search";
             inputElement.readOnly = isReadonly;
             inputElement.placeholder = placeholderText;
             inputElement.value = value.toString();

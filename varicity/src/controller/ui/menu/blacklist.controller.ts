@@ -4,11 +4,8 @@ import {UIController} from "../ui.controller";
 export class BlacklistController {
 
     public static createMenu() {
-        const parent = document.getElementById("submenu-content") as HTMLElement;
-
-        // set title
-        const title = document.getElementById("submenu-title") as HTMLElement;
-        title.innerHTML = "Blacklist";
+        const parent = SubMenuController.getParentContentSubMenu();
+        SubMenuController.changeTitleSubMenuElement("Blacklist");
 
         const menuBlacklist = SubMenuController.createMenu("Blacklist", true, parent);
 
