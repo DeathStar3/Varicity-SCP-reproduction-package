@@ -1,5 +1,6 @@
 import {SubMenuController} from "./sub-menu.controller";
 import {UIController} from "../ui.controller";
+import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 
 export class DistrictController {
 
@@ -22,7 +23,14 @@ export class DistrictController {
             SubMenuController.createRange("Padding", padding, 0, 2, 0.1, menuPadding);
 
             // Face Colors
-            // TODO
+            colors.faces.forEach(color => {
+                let colorPicker = SubMenuController.createColorSelector(color.name, color.color, menuFaceColors);
+
+                colorPicker.addEventListener("change", (ke) => {
+                    color.color = colorPicker.value
+                    UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
+                });
+            })
         }
     }
 }

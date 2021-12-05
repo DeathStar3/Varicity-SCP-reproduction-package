@@ -25,7 +25,7 @@ export class LinkController {
                 let colorPicker = SubMenuController.createColorSelector(color.name, color.color, menuColor);
 
                 colorPicker.addEventListener("change", (ke) => {
-                    UIController.config.link.colors[UIController.config.link.colors.indexOf(color)].color = colorPicker.value
+                    color.color = colorPicker.value
                     UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
                 });
             })
@@ -50,42 +50,33 @@ export class LinkController {
 
     }
 
-    public static checkBoxListener(checkbox: HTMLInputElement, selector: string, parameter: string) {
-        checkbox.addEventListener('change', function () {
-            if (checkbox.checked) {
-                UIController.config.link.display[selector].push(parameter)
-            } else {
-                UIController.config.link.display[selector].splice(UIController.config.link.display[selector].indexOf(parameter), 1)
-            }
-
-            UIController.updateScene(CriticalLevel.LOW_IMPACT);
-        });
-    }
-
     private static radioBoxListener(htmlInputElements: HTMLInputElement[], parameter: string) {
+
+        let underground_road = UIController.config.link.display.underground_road;
+        let air_traffic = UIController.config.link.display.air_traffic;
 
         htmlInputElements[0].addEventListener('change', function () {
             if (htmlInputElements[0].checked) {
-                UIController.config.link.display.air_traffic.push(parameter)
+                air_traffic.push(parameter)
                 if (htmlInputElements[1].checked) {
                     htmlInputElements[1].checked = false;
-                    UIController.config.link.display.underground_road.splice(UIController.config.link.display.underground_road.indexOf(parameter), 1)
+                    underground_road.splice(underground_road.indexOf(parameter), 1)
                 }
             } else {
-                UIController.config.link.display.air_traffic.splice(UIController.config.link.display.air_traffic.indexOf(parameter), 1)
+                air_traffic.splice(air_traffic.indexOf(parameter), 1)
             }
             UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
         });
 
         htmlInputElements[1].addEventListener('change', function () {
             if (htmlInputElements[1].checked) {
-                UIController.config.link.display.underground_road.push(parameter)
+                underground_road.push(parameter)
                 if (htmlInputElements[0].checked) {
                     htmlInputElements[0].checked = false;
-                    UIController.config.link.display.air_traffic.splice(UIController.config.link.display.air_traffic.indexOf(parameter), 1)
+                    air_traffic.splice(air_traffic.indexOf(parameter), 1)
                 }
             } else {
-                UIController.config.link.display.underground_road.splice(UIController.config.link.display.underground_road.indexOf(parameter), 1)
+                underground_road.splice(underground_road.indexOf(parameter), 1)
             }
             UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
         });
