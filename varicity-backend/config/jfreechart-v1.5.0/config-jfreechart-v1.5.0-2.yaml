@@ -60,7 +60,7 @@ api_classes:
 variables:
   width: nbConstructorVariants
   height: nbMethodVariants
-  intensity: ""
+  intensity: complexity
   fade: ""
   crack: coverage
 orientation: OUT
