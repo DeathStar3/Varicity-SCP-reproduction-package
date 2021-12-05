@@ -16,11 +16,17 @@ export class DistrictController {
         if (UIController.config) {
 
             // Fetch the attributes
-            const padding = UIController.config.district.padding;
-            const colors = UIController.config.district.colors;
+            let padding = UIController.config.district.padding;
+            let colors = UIController.config.district.colors;
 
             // Padding
-            SubMenuController.createRange("Padding", padding, 0, 2, 0.1, menuPadding);
+            let paddingSelector = SubMenuController.createRange("Padding", padding, 0, 2, 0.1, menuPadding);
+
+            paddingSelector.addEventListener("change", () => {
+                UIController.config.district.padding = +paddingSelector.value;
+                console.log(UIController.config.district.padding)
+                UIController.updateScene(CriticalLevel.RERENDER_SCENE);
+            })
 
             // Face Colors
             colors.faces.forEach(color => {
