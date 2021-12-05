@@ -84,10 +84,10 @@ export class UIController {
         let critical: CriticalLevel = Config.alterField(this.config, arr, value);
         console.log(this.config);
         if (this.scene) {
-            SearchbarController.emptyMap();
             switch (critical) {
                 case CriticalLevel.LOW_IMPACT: // Only change the colour, so simple rerender
                 case CriticalLevel.RERENDER_SCENE: // Changed variables important enough to warrant a complete rebuilding of the scene
+                    SearchbarController.emptyMap();
                     this.scene = this.scene.rerender(this.config);
                     this.scene.buildScene(true);
                     LogsController.updateLogs(this.scene.entitiesList);
@@ -107,10 +107,10 @@ export class UIController {
     public static updateScene(criticalLevel: CriticalLevel) {
         if (this.scene) {
             document.getElementById("loading-frame").style.display = 'inline-block';
-            SearchbarController.emptyMap();
             switch (criticalLevel) {
                 case CriticalLevel.LOW_IMPACT: // Only change the colour, so simple rerender
                 case CriticalLevel.RERENDER_SCENE: // Changed variables important enough to warrant a complete rebuilding of the scene
+                    SearchbarController.emptyMap();
                     this.scene = this.scene.rerender(this.config);
                     this.scene.buildScene(false);
                     LogsController.updateLogs(this.scene.entitiesList);
