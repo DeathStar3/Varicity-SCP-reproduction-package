@@ -18,14 +18,17 @@ export class LinkController {
         if (UIController.config) {
 
             // fetch the links
-            const links = UIController.config.link; // TODO find a better way than getting a static value, pass it in arguments?
+            const links = UIController.config.link;
 
             // colors
             links.colors.forEach(color => {
-                SubMenuController.createColorSelector(color.name, color.color, menuColor);
-            })
+                let colorPicker = SubMenuController.createColorSelector(color.name, color.color, menuColor);
 
-            // TODO replace all below with checkboxes
+                colorPicker.addEventListener("change", (ke) => {
+                    UIController.config.link.colors[UIController.config.link.colors.indexOf(color)].color = colorPicker.value
+                    UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
+                });
+            })
 
             // Air traffic and Underground Road
             const airTraffic = links.display.air_traffic;
@@ -88,5 +91,5 @@ export class LinkController {
         });
     }
 
-    // TODO listener to update the config
+    // TODO implement hierarchy links drag and drop
 }
