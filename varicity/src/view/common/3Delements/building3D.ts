@@ -455,9 +455,15 @@ export class Building3D extends Element3D {
                         this.links.forEach(l => l.display(this.flag, this.flag));
 
                         document.getElementById("submenu").style.display = "block"; //Display submenu
+
                         const infoTab = document.getElementById("information")
-                        if (!MenuController.selectedTab && MenuController.selectedTab !== infoTab) {
-                            MenuController.changeImage(infoTab)
+                        if (MenuController.selectedTab && MenuController.selectedTab !== infoTab) {
+                            const currentTab = document.getElementById(MenuController.selectedTab.id)
+                            MenuController.changeImage(currentTab) // Remove tab icon except if Information tab
+                        }
+
+                        if (!MenuController.selectedTab || MenuController.selectedTab !== infoTab) {
+                            MenuController.changeImage(infoTab) // Set Information tab icon to selected
                         }
                         MenuController.selectedTab = infoTab;
 
