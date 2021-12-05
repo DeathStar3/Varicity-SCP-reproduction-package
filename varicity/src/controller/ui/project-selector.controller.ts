@@ -65,7 +65,7 @@ export class ProjectController {
                 MetricController.defineMaxLevelUsage(maxLvl);
 
                 UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(config.default_level));
-                UIController.scene.buildScene();
+                UIController.scene.buildScene(true);
             })
 
             this.projectListener.projectChange(projectName);

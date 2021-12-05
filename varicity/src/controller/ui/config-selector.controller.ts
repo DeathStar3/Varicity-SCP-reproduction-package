@@ -43,12 +43,12 @@ export class ConfigSelectorController {
             if (configName !== undefined) {
                 UIController.configFileName = configName;
                 await ConfigSelectorController.defineConfig(configName);
-                ConfigSelectorController.reParse();
+                ConfigSelectorController.reParse(true);
             }
         });
     }
 
-    public static reParse() {
+    public static reParse(updateCamera: boolean) {
         this.previousParser = new VPVariantsStrategy();
 
         // clear the current city
@@ -69,7 +69,7 @@ export class ConfigSelectorController {
             MetricController.defineMaxLevelUsage(maxLvl);
 
             UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+UIController.config.default_level));
-            UIController.scene.buildScene();
+            UIController.scene.buildScene(updateCamera);
         })
     }
 

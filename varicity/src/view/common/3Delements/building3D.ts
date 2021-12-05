@@ -17,6 +17,7 @@ import {
 import {Building} from '../../../model/entities/building.interface';
 import {Link3D} from '../3Dinterfaces/link3D.interface';
 import {MenuController} from "../../../controller/ui/menu/menu.controller";
+import {SceneRenderer} from "../../sceneRenderer";
 
 export class Building3D extends Element3D {
     elementModel: Building;
@@ -98,7 +99,7 @@ export class Building3D extends Element3D {
     }
 
     focus() {
-        let cam = UIController.scene.camera;
+        let cam = SceneRenderer.camera;
         cam.focusOn([this.d3Model], true);
         cam.radius = 20;
     }

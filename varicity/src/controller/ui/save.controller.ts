@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import {Closeable} from "../../model/entities/closeable.interface";
 import {ConfigService} from "../../services/config.service";
 import {ToastController, ToastType} from "./toast.controller";
+import {SceneRenderer} from "../../view/sceneRenderer";
 
 export class SaveController {
 
@@ -45,11 +46,11 @@ export class SaveController {
     }
 
     public static saveCamera() {
-        let cameraPos = UIController.scene.camera.getTarget();
+        let cameraPos = SceneRenderer.camera.getTarget();
         UIController.config.camera_data.target = Vector3_Local.fromVector3(cameraPos);
-        UIController.config.camera_data.alpha = UIController.scene.camera["alpha"];
-        UIController.config.camera_data.beta = UIController.scene.camera["beta"];
-        UIController.config.camera_data.radius = UIController.scene.camera["radius"];
+        UIController.config.camera_data.alpha = SceneRenderer.camera["alpha"];
+        UIController.config.camera_data.beta = SceneRenderer.camera["beta"];
+        UIController.config.camera_data.radius = SceneRenderer.camera["radius"];
         UIController.createConfig(UIController.config);
     }
 
