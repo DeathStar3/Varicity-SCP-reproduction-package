@@ -5,6 +5,7 @@ import {DetailsController} from "./details.controller";
 import {MetricController} from "./metric.controller";
 import {DistrictController} from "./district.controller";
 import {SubMenuController} from "./sub-menu.controller";
+import bootstrap from "../../../../public/scripts/bootstrap.bundle.min.js"
 
 export class MenuController {
 
@@ -13,6 +14,7 @@ export class MenuController {
     public static createMenu() {
         this.addListeners("main-menu");
         this.addListeners("tool-menu");
+        this.addTooltipListeners();
     }
 
     public static addListeners(listId: string) {
@@ -105,5 +107,12 @@ export class MenuController {
             img.setAttribute("src", img.getAttribute("src").replace("_selected.svg", ".svg"));
         }
         return img;
+    }
+
+    private static addTooltipListeners() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl, { trigger: 'hover' });
+        })
     }
 }
