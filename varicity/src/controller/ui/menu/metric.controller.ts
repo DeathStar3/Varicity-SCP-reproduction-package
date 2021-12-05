@@ -2,7 +2,7 @@ import {SubMenuController} from "./sub-menu.controller";
 import {UIController} from "../ui.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
-import {ToastController} from "../toast.controller";
+import {ToastController, ToastType} from "../toast.controller";
 
 export class MetricController {
 
@@ -56,80 +56,71 @@ export class MetricController {
         const apiClasses = UIController.config.api_classes;
         const inputs = []
 
-        // TODO merge the not ending input with the ending input & make code more readable
-
         // API classes
         for (let i = 0; i < apiClasses.length; i++) {
             let className = apiClasses[i];
-            const input = SubMenuController.createOnlyInputText(className, "ex.package.class", parent);
-            inputs.push(input);
-
-            let hasSearchHappened = false;
-
-            input.addEventListener("search", (event) => {
-                const isApiAlreadyInList = apiClasses.indexOf(input.value) !== -1;
-
-                if(className !== input.value){
-                    if(input.value === ""){
-                        apiClasses.splice(apiClasses.indexOf(className), 1);
-                        input.parentElement.remove(); // input has a parent div generated with it
-                    }else if(!isApiAlreadyInList){
-                        apiClasses[i] = input.value;
-                        console.log("apiClasses", apiClasses);
-                    }else{
-                        ToastController.addToast("The class: '" + input.value + "' already exist in the API classes. You can't add it a second time...");
-                        input.value = className;
-                    }
-                    console.log("UIController.config.api_classes: ", UIController.config.api_classes)
-                    hasSearchHappened = true;
-                    UIController.updateScene(CriticalLevel.REPARSE_DATA);
-                }
-                className = input.value;
-            })
+            MetricController.createClassInput(inputs, apiClasses, parent, className);
         }
 
-        MetricController.createEmptyClassInput(inputs, apiClasses, parent);
+        MetricController.createClassInput(inputs, apiClasses, parent);
     }
 
-    private static createEmptyClassInput(inputs, apiClasses, parent) {
 
-        // TODO fix issue where when inputting a not null text, it will add a new input box even when it's not at the end of the list
-
-        const input = SubMenuController.createOnlyInputText("", "ex.package.class", parent);
+    private static createClassInput(inputs, apiClasses, parent, text?: string) {
+        let className = text || "";
+        const input = SubMenuController.createOnlyInputText(className, "ex.package.class", parent);
         inputs.push(input);
-        let hasSearch = false;
 
         input.addEventListener("search", (event) => {
-            const className = input.value;
+            const isInputLastInTheList = inputs.indexOf(input) == inputs.length - 1;
+            const isApiAlreadyInList = apiClasses.indexOf(input.value) !== -1;
 
-            if(hasSearch && className === ""){
-                apiClasses.splice(apiClasses.indexOf(className), 1);
-                input.parentElement.remove(); // input has a parent div generated with it
-
-            }else if(className !== ""){
-                apiClasses.push(className);
-                MetricController.createEmptyClassInput(inputs, apiClasses, parent);
-                UIController.updateScene(CriticalLevel.REPARSE_DATA);
-                hasSearch = true;
+            // Handle error where the input hasn't change
+            if(className === input.value){
+                ToastController.addToast("The input hasn't change...", ToastType.INFO);
+                return;
             }
+
+            // Handle error where the input already exist in an other input text
+            if(isApiAlreadyInList){
+                ToastController.addToast("The class: '" + input.value + "' already exist in the API classes. You can't add it a second time...", ToastType.DANGER);
+                input.value = className; // reset value to the last one
+                return;
+            }
+
+            // Update the config and scene depending on the position in the list of the input box
+            if(!isInputLastInTheList){
+                if(input.value === ""){ // clear an input that is not at the end, so remove it from the list
+                    apiClasses.splice(apiClasses.indexOf(className), 1);
+                    input.parentElement.remove(); // input has a parent div generated with it
+                    UIController.updateScene(CriticalLevel.REPARSE_DATA);
+                }else {
+                    apiClasses[apiClasses.indexOf(className)] = input.value;
+                    UIController.updateScene(CriticalLevel.REPARSE_DATA);
+                }
+
+            }else if(input.value !== ""){ // if is the last input and has a value, then add a new input text at the end.
+                apiClasses.push(input.value);
+                MetricController.createClassInput(inputs, apiClasses, parent);
+                UIController.updateScene(CriticalLevel.REPARSE_DATA);
+            }
+
+            className = input.value;
         })
     }
 
     private static populateVariables(parent: HTMLElement){
-        const variables = UIController.config.variables;
-        const metrics = UIController.config.metrics;
-
         // Variables
         const noneVal = " -- None -- ";
         const metricNames = [...UIController.config.metrics.keys()];
 
-        Object.keys(variables).forEach(variable => {
-            const metricRef = variables[variable];
-            const valSelected = metrics.has(metricRef) ? metricRef : noneVal;
+        Object.keys(UIController.config.variables).forEach(variable => {
+            const metricRef = UIController.config.variables[variable];
+            const valSelected = UIController.config.metrics.has(metricRef) ? metricRef : noneVal;
             const select = SubMenuController.createSelect(variable, valSelected, parent, metricNames, "--None--");
 
             select.addEventListener("change", (event) => {
-                variables[variable] = select.value === noneVal ? "" : select.value;
+                UIController.config.variables[variable] = select.value === noneVal ? "" : select.value;
                 UIController.updateScene(CriticalLevel.RERENDER_SCENE);
             })
         })
