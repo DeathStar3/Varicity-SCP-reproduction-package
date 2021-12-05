@@ -29,18 +29,18 @@ export class LinkController {
             // Air traffic
             const airTraffic = links.display.air_traffic;
             const airTrafficMenu = SubMenuController.createSimpleText("Air Traffic", displayMenu);
-            airTraffic.forEach(traffic => {
-                SubMenuController.createOnlyInputText(traffic, "LINK TYPE", airTrafficMenu);
-            })
-            SubMenuController.createOnlyInputText("", "LINK TYPE", airTrafficMenu);
+
+            SubMenuController.createCheckBox("IMPLEMENTS", airTraffic.includes('IMPLEMENTS'), airTrafficMenu);
+            SubMenuController.createCheckBox("EXTENDS", airTraffic.includes('EXTENDS'), airTrafficMenu);
+            SubMenuController.createCheckBox("USAGE", airTraffic.includes('USAGE'), airTrafficMenu);
+
 
             // Underground Road
             const undergroundRoads = links.display.underground_road;
             const undergroundRoadMenu = SubMenuController.createSimpleText("Underground Road", displayMenu);
-            undergroundRoads.forEach(road => {
-                SubMenuController.createOnlyInputText(road, "LINK TYPE", undergroundRoadMenu);
-            })
-            SubMenuController.createOnlyInputText("", "LINK TYPE", undergroundRoadMenu);
+            SubMenuController.createCheckBox("IMPLEMENTS", undergroundRoads.includes('IMPLEMENTS'), undergroundRoadMenu);
+            SubMenuController.createCheckBox("EXTENDS", undergroundRoads.includes('EXTENDS'), undergroundRoadMenu);
+            SubMenuController.createCheckBox("USAGE", undergroundRoads.includes('USAGE'), undergroundRoadMenu);
 
             // Hierarchy Links
             const hierarchyLinks = links.display.underground_road;

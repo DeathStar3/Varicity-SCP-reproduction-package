@@ -209,6 +209,37 @@ export class SubMenuController {
         return inputElement;
     }
 
+    public static createCheckBox(value: string, isChecked: boolean, parent: HTMLElement): HTMLInputElement {
+        let divElement = document.createElement("div");
+        divElement.classList.add("input-group", "input-custom");
+
+        let checkboxDivElement = document.createElement("div");
+        checkboxDivElement.classList.add("input-group-text", "col-1");
+
+        let inputElement: HTMLInputElement;
+            inputElement = document.createElement("input");
+            inputElement.classList.add("form-check-input");
+            inputElement.type = "checkbox";
+            inputElement.checked = isChecked;
+
+        checkboxDivElement.appendChild(inputElement)
+
+        let labelElement: HTMLLabelElement;
+            labelElement = document.createElement("label");
+            labelElement.classList.add("form-control", "form-check-label", "col-11");
+            labelElement.innerHTML = value.toString();
+
+        if (checkboxDivElement) {
+            divElement.appendChild(checkboxDivElement);
+        }
+        if (labelElement) {
+            divElement.appendChild(labelElement);
+        }
+        parent.appendChild(divElement);
+
+        return inputElement;
+    }
+
     public static createCustomText(text: string, value: string, placeholderText: string, parent: HTMLElement, isReadonly: boolean, sizeFirstText: number, sizeValueText: number): HTMLInputElement {
         let divElement = document.createElement("div");
         divElement.classList.add("input-group", "input-custom");

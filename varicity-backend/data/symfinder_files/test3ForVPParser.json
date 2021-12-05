@@ -276,12 +276,12 @@
     ],
     "linkscompose": [
       {
-        "type": "INSTANTIATE",
+        "type":"USAGE",
         "source": "BubbleLights",
         "target": "ChristmasTree"
       },
       {
-        "type": "INSTANTIATE",
+        "type":"USAGE",
         "source": "TreeDecorator",
         "target": "ChristmasTree"
       }
@@ -293,12 +293,12 @@
         "target": "BubbleLights"
       },
       {
-        "type": "INSTANTIATE",
+        "type":"USAGE",
         "source": "TreeDecorator",
         "target": "ChristmasTree"
       },
       {
-        "type": "INSTANTIATE",
+        "type":"USAGE",
         "source": "BubbleLights",
         "target": "ChristmasTree"
       },

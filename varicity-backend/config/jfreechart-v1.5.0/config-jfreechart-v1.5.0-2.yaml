@@ -38,16 +38,16 @@ link:
       color: "#3f97ff"
     - name: DUPLICATES
       color: "#2B914A"
-    - name: INSTANTIATE
+    - name: USAGE
       color: "#1A8039"
   display:
     air_traffic:
       - IMPLEMENTS
       - EXTENDS
     underground_road:
-      - INSTANTIATE
+      - USAGE
 hierarchy_links:
-  - INSTANTIATE
+  - USAGE
   - IMPLEMENTS
   - EXTENDS
 blacklist:
