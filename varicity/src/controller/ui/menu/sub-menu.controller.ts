@@ -65,7 +65,7 @@ export class SubMenuController {
             inputElement.setAttribute("data-bs-toggle", "tooltip")
             inputElement.setAttribute("data-bs-placement", "bottom")
             divElement.appendChild(inputElement);
-            new bootstrap.Tooltip(inputElement, { trigger: 'hover' });
+            new bootstrap.Tooltip(inputElement, {trigger: 'hover'});
         });
 
         parent.appendChild(formElement);
@@ -217,17 +217,17 @@ export class SubMenuController {
         checkboxDivElement.classList.add("input-group-text", "col-1");
 
         let inputElement: HTMLInputElement;
-            inputElement = document.createElement("input");
-            inputElement.classList.add("form-check-input");
-            inputElement.type = "checkbox";
-            inputElement.checked = isChecked;
+        inputElement = document.createElement("input");
+        inputElement.classList.add("form-check-input");
+        inputElement.type = "checkbox";
+        inputElement.checked = isChecked;
 
         checkboxDivElement.appendChild(inputElement)
 
         let labelElement: HTMLLabelElement;
-            labelElement = document.createElement("label");
-            labelElement.classList.add("form-control", "form-check-label", "col-11");
-            labelElement.innerHTML = value.toString();
+        labelElement = document.createElement("label");
+        labelElement.classList.add("form-control", "form-check-label", "col-11");
+        labelElement.innerHTML = value.toString();
 
         if (checkboxDivElement) {
             divElement.appendChild(checkboxDivElement);
@@ -238,6 +238,58 @@ export class SubMenuController {
         parent.appendChild(divElement);
 
         return inputElement;
+    }
+
+    public static createCustomRadioBox(value: string, isLeftChecked: boolean, isRightChecked: boolean, parent: HTMLElement): HTMLInputElement[] {
+
+        if (isLeftChecked && isRightChecked) {
+            isRightChecked = false;
+        }
+
+        let divElement = document.createElement("div");
+        divElement.classList.add("input-group", "input-custom");
+
+        let checkboxLeftDivElement = document.createElement("div");
+        checkboxLeftDivElement.classList.add("input-group-text", "col-1");
+
+        let inputLeftElement: HTMLInputElement;
+        inputLeftElement = document.createElement("input");
+        inputLeftElement.classList.add("form-check-input");
+        inputLeftElement.type = "checkbox";
+        inputLeftElement.checked = isLeftChecked;
+
+        checkboxLeftDivElement.appendChild(inputLeftElement)
+
+        let checkboxRightDivElement = document.createElement("div");
+        checkboxRightDivElement.classList.add("input-group-text", "col-1");
+
+        let inputRightElement: HTMLInputElement;
+        inputRightElement = document.createElement("input");
+        inputRightElement.classList.add("form-check-input");
+        inputRightElement.type = "checkbox";
+        inputRightElement.checked = isRightChecked;
+
+        checkboxRightDivElement.appendChild(inputRightElement)
+
+
+        let labelElement: HTMLLabelElement;
+        labelElement = document.createElement("label");
+        labelElement.classList.add("form-control", "form-check-label", "col-10");
+        labelElement.innerHTML = value.toString();
+        labelElement.style.textAlign = "center"
+
+        if (checkboxLeftDivElement) {
+            divElement.appendChild(checkboxLeftDivElement);
+        }
+        if (labelElement) {
+            divElement.appendChild(labelElement);
+        }
+        if (checkboxRightDivElement) {
+            divElement.appendChild(checkboxRightDivElement);
+        }
+        parent.appendChild(divElement);
+
+        return [inputLeftElement, inputRightElement];
     }
 
     public static createCustomText(text: string, value: string, placeholderText: string, parent: HTMLElement, isReadonly: boolean, sizeFirstText: number, sizeValueText: number): HTMLInputElement {
@@ -275,12 +327,34 @@ export class SubMenuController {
         return ++SubMenuController.indexCounter;
     }
 
-    static createSimpleText(text: string, displayMenu: HTMLElement): HTMLElement { // TODO Improve
+    public static createSimpleText(text: string, displayMenu: HTMLElement): HTMLElement {
         let divElement = document.createElement("div");
+        divElement.style.fontWeight = "600"
         divElement.classList.add("input-custom");
         divElement.innerHTML = text;
         displayMenu.appendChild(divElement);
 
         return divElement;
+    }
+
+    public static createDoubleText(textLeft: string, textRight: string, displayMenu: HTMLElement): HTMLElement {
+        let divMaster = document.createElement("div");
+        divMaster.classList.add("d-flex", "justify-content-between")
+        divMaster.style.fontWeight = "600"
+
+        let divElementLeft = document.createElement("div");
+        divElementLeft.classList.add("input-custom");
+        divElementLeft.innerHTML = textLeft;
+
+        let divElementRight = document.createElement("div");
+        divElementRight.classList.add("input-custom");
+        divElementRight.innerHTML = textRight;
+
+        divMaster.appendChild(divElementLeft);
+        divMaster.appendChild(divElementRight);
+
+        displayMenu.appendChild(divMaster);
+
+        return divMaster;
     }
 }
