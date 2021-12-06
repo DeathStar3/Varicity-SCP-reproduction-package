@@ -8,7 +8,7 @@ import Template from "../../../../public/images/documentation/Template.png"
 import Decorator from "../../../../public/images/documentation/Decorator.png"
 import {SubMenuInterface} from "./sub-menu.interface";
 
-export class DocController implements SubMenuInterface{
+export class DocController implements SubMenuInterface {
 
     createMenu(parent: HTMLElement) {
         (document.getElementById("factory_img") as HTMLImageElement).src = Factory;

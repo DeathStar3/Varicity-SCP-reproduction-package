@@ -41,13 +41,28 @@ export class LinkController implements SubMenuInterface {
             LinkController.radioBoxListener(SubMenuController.createCustomRadioBox("DUPLICATE", airTraffic.includes('DUPLICATE'), undergroundRoads.includes('DUPLICATE'), displayMenu), 'DUPLICATE');
 
             // Hierarchy Links
-            const hierarchyLinks = links.display.underground_road;
-            hierarchyLinks.forEach(link => {
-                SubMenuController.createOnlyInputText(link, "LINK TYPE", hierarchyMenu);
-            })
-            SubMenuController.createOnlyInputText("", "LINK TYPE", hierarchyMenu);
+            const hierarchyLinks = UIController.config.hierarchy_links;
+
+            LinkController.checkBoxListener(SubMenuController.createCheckBox("IMPLEMENTS", hierarchyLinks.includes('IMPLEMENTS'), hierarchyMenu), 'IMPLEMENTS');
+            LinkController.checkBoxListener(SubMenuController.createCheckBox("EXTENDS", hierarchyLinks.includes('EXTENDS'), hierarchyMenu), 'EXTENDS');
+            LinkController.checkBoxListener(SubMenuController.createCheckBox("USAGE", hierarchyLinks.includes('USAGE'), hierarchyMenu), 'USAGE');
+
         }
 
+    }
+
+    private static checkBoxListener(htmlInputElements: HTMLInputElement, parameter: string) {
+
+        const hierarchyLinks = UIController.config.hierarchy_links;
+
+        htmlInputElements.addEventListener('change', function () {
+            if (htmlInputElements.checked) {
+                hierarchyLinks.push(parameter)
+            } else {
+                hierarchyLinks.splice(hierarchyLinks.indexOf(parameter), 1)
+            }
+            UIController.updateScene(CriticalLevel.REPARSE_DATA); // Reload the screen
+        });
     }
 
     private static radioBoxListener(htmlInputElements: HTMLInputElement[], parameter: string) {
@@ -82,5 +97,4 @@ export class LinkController implements SubMenuInterface {
         });
     }
 
-    // TODO implement hierarchy links drag and drop
 }

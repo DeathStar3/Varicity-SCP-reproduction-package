@@ -5,7 +5,7 @@ import Sortable from 'sortablejs';
 import {SubMenuInterface} from "./sub-menu.interface";
 import {Color} from "../../../model/entities/config.interface";
 
-export class BuildingController implements SubMenuInterface  {
+export class BuildingController implements SubMenuInterface {
 
     defineSubMenuTitle(): string {
         return "Building";

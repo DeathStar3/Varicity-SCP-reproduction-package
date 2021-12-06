@@ -30,11 +30,11 @@ export class MenuController {
     private static addMenuElements() {
         MenuController.createMenuElement("Projects and Configurations", "project-config.svg", new ProjectConfigMenuController(), false, true, true, true);
 
-        MenuController.createMenuElement("Information", "information.svg",  new DetailsController(), false, false, true);
-        MenuController.createMenuElement("Building", "building.svg", new BuildingController() );
+        MenuController.createMenuElement("Information", "information.svg", new DetailsController(), false, false, true);
+        MenuController.createMenuElement("Building", "building.svg", new BuildingController());
         MenuController.createMenuElement("District", "district.svg", new DistrictController());
-        MenuController.createMenuElement("Link", "links.svg", new LinkController() );
-        MenuController.createMenuElement("Blacklist", "blacklist.svg", new BlacklistController() );
+        MenuController.createMenuElement("Link", "links.svg", new LinkController());
+        MenuController.createMenuElement("Blacklist", "blacklist.svg", new BlacklistController());
         MenuController.createMenuElement("Metrics and APIs", "metric-entrypoints.svg", new MetricController(), false, false, true);
 
         MenuController.createMenuElement("Save", "save.svg", new SaveMenuController(), true, true, false, true);
@@ -102,7 +102,7 @@ export class MenuController {
     private static addTooltipListeners() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-            new bootstrap.Tooltip(tooltipTriggerEl, { trigger: 'hover' });
+            new bootstrap.Tooltip(tooltipTriggerEl, {trigger: 'hover'});
         })
     }
 
@@ -129,23 +129,23 @@ export class MenuController {
         imageElement.src = "images/menu-icons/section-icons/" + iconNameWithExtension;
 
         // logic
-        if(hasBottomSeparator){
+        if (hasBottomSeparator) {
             linkElement.classList.add("border-bottom");
         }
-        if(hasTopSeparator){
+        if (hasTopSeparator) {
             linkElement.classList.add("border-top");
         }
 
-        if(!isNotACollapsible){
+        if (!isNotACollapsible) {
             SubMenuController.changeTitleSubMenuElement(menuController.defineSubMenuTitle());
             listElement.classList.add("collapsible-button");
         }
 
         let parent: HTMLElement;
         this.menuElements.set(menuName, menuController);
-        if(isAtTheBottom){
+        if (isAtTheBottom) {
             parent = document.getElementById(MenuController.TOOL_MENU);
-        }else{
+        } else {
             parent = document.getElementById(MenuController.MAIN_MENU);
         }
 
@@ -157,14 +157,14 @@ export class MenuController {
         return listElement;
     }
 
-    private static populateMenuElement(menuId: string){
+    private static populateMenuElement(menuId: string) {
         const subMenuParent = SubMenuController.getParentContentSubMenu();
         const menuElement = this.menuElements.get(menuId);
         menuElement.createMenu(subMenuParent);
         SubMenuController.changeTitleSubMenuElement(menuElement.defineSubMenuTitle());
     }
 
-    private static populateEmbeddedMenuElement(menuId: string){
+    private static populateEmbeddedMenuElement(menuId: string) {
         const menuElement = this.menuElements.get(menuId);
         menuElement.createMenu(undefined);
     }

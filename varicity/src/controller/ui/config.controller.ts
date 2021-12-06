@@ -1,6 +1,5 @@
 import {UIController} from './ui.controller';
 import {Config} from '../../model/entitiesImplems/config.model';
-import {ConfigSelectorController} from "./config-selector.controller";
 
 export class ConfigController {
     public static createConfigFolder(config: Config): void {

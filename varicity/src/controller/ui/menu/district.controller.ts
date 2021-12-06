@@ -3,7 +3,7 @@ import {UIController} from "../ui.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 import {SubMenuInterface} from "./sub-menu.interface";
 
-export class DistrictController implements SubMenuInterface  {
+export class DistrictController implements SubMenuInterface {
 
     defineSubMenuTitle(): string {
         return "Districts";

@@ -24,7 +24,7 @@
       "es5",
       "es2015.collection",
       "es2015.iterable"
-    ],
+    ]
   },
   "include": [
     "./src",
@@ -40,5 +40,5 @@
     "./typings/index.d.ts",
     "./custom_typings/**/*.d.ts",
     "./node_modules/@types/**/*.d.ts"
-  ],
+  ]
 }

@@ -22,7 +22,7 @@ export class ToastController {
         buttonClose.setAttribute("aria-label", "Close");
 
         // Change Toast type
-        switch (toastType){
+        switch (toastType) {
             case ToastType.PRIMARY: {
                 toastElement.classList.add("bg-primary", "text-white");
                 toastBody.classList.add("bg-primary", "text-white");
@@ -55,7 +55,7 @@ export class ToastController {
         toastContainer.appendChild(toastElement);
 
         let autohide = (stayOpen) ? {autohide: false} : {};
-        let toast= new bootstrap.Toast(toastElement, autohide);
+        let toast = new bootstrap.Toast(toastElement, autohide);
 
         // Display the Toast
         toast.show();
@@ -64,9 +64,9 @@ export class ToastController {
 }
 
 export enum ToastType {
-    PRIMARY="PRIMARY",
-    INFO="INFO",
-    DANGER="DANGER",
-    SUCESS="SUCESS",
-    WARNING="WARNING",
+    PRIMARY = "PRIMARY",
+    INFO = "INFO",
+    DANGER = "DANGER",
+    SUCESS = "SUCESS",
+    WARNING = "WARNING",
 }
