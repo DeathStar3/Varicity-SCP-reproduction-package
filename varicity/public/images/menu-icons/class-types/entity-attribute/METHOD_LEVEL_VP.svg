@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="clip-METHOD_LEVEL_VP">
+      <rect width="64" height="64"/>
+    </clipPath>
+  </defs>
+  <g id="METHOD_LEVEL_VP" clip-path="url(#clip-METHOD_LEVEL_VP)">
+    <g id="Groupe_126" data-name="Groupe 126" transform="translate(-12217 3525)">
+      <circle id="Ellipse_2" data-name="Ellipse 2" cx="32" cy="32" r="32" transform="translate(12217 -3525)" fill="#f38e08"/>
+      <text id="MLVP" transform="translate(12249 -3484)" fill="#fff" font-size="21" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-28.27" y="0">MLVP</tspan></text>
+    </g>
+  </g>
+</svg>

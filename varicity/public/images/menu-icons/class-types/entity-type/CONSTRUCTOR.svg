@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="clip-CONSTRUCTOR">
+      <rect width="64" height="64"/>
+    </clipPath>
+  </defs>
+  <g id="CONSTRUCTOR" clip-path="url(#clip-CONSTRUCTOR)">
+    <g id="Groupe_136" data-name="Groupe 136" transform="translate(-12128 3614)">
+      <circle id="Ellipse_2" data-name="Ellipse 2" cx="32" cy="32" r="32" transform="translate(12128 -3614)" fill="#4f97e6"/>
+      <text id="CON" transform="translate(12160 -3571)" fill="#fff" font-size="25" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-27.002" y="0">CON</tspan></text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,166 @@
+.overflowable {
+    overflow: auto;
+}
+
+#main {
+    width: 100%;
+    height: 100%;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: white !important;
+    cursor: not-allowed;
+}
+
+#gameCanvas {
+    float: left;
+    width: 100%;
+    height: 100%;
+}
+
+#console {
+    right: 0;
+    height: 100%;
+    border: 5px black;
+    background-color: #FFFFFF;
+    position: absolute !important;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+input {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.parent {
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: lightgrey;
+    border: 2px lightgrey solid;
+    /*padding: 0.5em;*/
+    cursor: pointer;
+}
+
+.child {
+    width: auto;
+    padding-left: inherit;
+    padding-right: inherit;
+    background-color: white;
+    border: 1px black solid;
+    cursor: auto;
+}
+
+#right-input {
+    float: right;
+    width: 50%;
+}
+
+#reset_camera {
+    color: black;
+}
+
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-button {
+    display: flex !important;
+    width: 100%;
+    background-color: #e9ecef !important;
+    font-weight: 600 !important;
+}
+
+.input-custom {
+    margin-bottom: 8px;
+}
+
+.menu-container {
+    padding: 12px 0;
+}
+
+.menu-container-2 {
+    padding-bottom: 8px;
+}
+
+.range-custom {
+    border: 1px solid #ced4da;
+    padding: 0 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.range-custom input {
+    width: 100%;
+}
+
+.color-custom {
+    max-width: none !important;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+    height: 100%;
+}
+
+#save-config {
+    /*text-align: center;*/
+    /*font-weight: bold;*/
+    /*background-color: rgb(42, 207, 21);*/
+}
+
+.save-button {
+    display: flex !important;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em !important;
+    margin-top: 1em;
+}
+
+body {
+    margin: 0;
+}
+
+.toast-body{
+    display: flex;
+    justify-content: space-between;
+}
+
+#loading-frame{
+    width: 100%;
+    height: 100%;
+    vertical-align: top; /*not required*/
+    position: absolute;
+    display: none;
+    background-color: rgba(138, 138, 138, 0.78);
+    z-index: 7;
+}
+
+#loading-frame > img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.toast-container{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}

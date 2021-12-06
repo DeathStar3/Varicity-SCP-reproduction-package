@@ -5,5 +5,6 @@ export abstract class Link {
     source: Building;
     type: string;
 
-    constructor(){}
+    constructor() {
+    }
 }

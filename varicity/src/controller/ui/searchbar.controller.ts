@@ -1,43 +1,62 @@
-import { Node } from './../parser/symfinder_elements/nodes/node.element';
-import { Building3D } from './../../view/common/3Delements/building3D';
+import {Node} from './../parser/symfinder_elements/nodes/node.element';
+import {Building3D} from './../../view/common/3Delements/building3D';
 import {Metrics} from "../../model/entitiesImplems/metrics.model";
 
 export class SearchbarController {
-    private static map: Map<string, Building3D>;
+    public static map: Map<string, Building3D>;
 
     public static initMap() {
         this.map = new Map<string, Building3D>();
 
         /* @ts-ignore */
         let searchbar: HTMLInputElement = document.getElementById("searchbar");
+        let searchbarBox = document.getElementById("searchbar-box");
         searchbar.style.display = "block";
         searchbar.setAttribute("previous", "");
 
         let datalist = document.createElement("datalist");
         datalist.id = "datalist";
+        datalist.style.maxHeight = "80px";
+        datalist.style.overflowY = "scroll";
 
         searchbar.appendChild(datalist);
         searchbar.setAttribute("list", "datalist");
 
+        let searchbarBtn = document.getElementById("searchbar-btn");
+        searchbarBtn.addEventListener("click", (ev) => {
+            // recherche and destroy
+            if (searchbar.placeholder === "" && !this.map.has(searchbar.value)) { // the search key doesn't exist
+                searchbarBox.style.border = "2px solid red";
+            } else {
+                if (this.map.has(searchbar.value)) { // we take the value because it exists
+                    this.map.get(searchbar.value).focus();
+                } else { // we take the placeholder
+                    this.map.get(searchbar.placeholder).focus();
+                }
+                searchbarBox.style.border = "2px solid #e9ecef";
+                return;
+            }
+        });
+
         searchbar.addEventListener("keydown", (ev) => {
             if (ev.key === "Enter") {
                 // recherche and destroy
-                if (searchbar.placeholder === "" && !this.map.has(searchbar.value)) { // the search key doesn't exist 
-                    searchbar.style.backgroundColor = "red";
+                if (searchbar.placeholder === "" && !this.map.has(searchbar.value)) { // the search key doesn't exist
+                    searchbarBox.style.border = "2px solid red";
                 } else {
                     if (this.map.has(searchbar.value)) { // we take the value because it exists
                         this.map.get(searchbar.value).focus();
                     } else { // we take the placeholder
                         this.map.get(searchbar.placeholder).focus();
                     }
-                    searchbar.style.backgroundColor = "";
+                    searchbarBox.style.border = "2px solid #e9ecef";
                     return;
                 }
             } else {
                 for (let [k, v] of this.map) {
                     if (k.includes(searchbar.value)) {
                         searchbar.placeholder = k;
-                        searchbar.style.backgroundColor = "";
+                        searchbarBox.style.border = "2px solid #e9ecef";
 
                         // NOT YET IMPLEMENTED : HIGHLIGHTS BUILDING OF NAME BEING TYPED
                         let prev = searchbar.getAttribute("previous");
@@ -50,7 +69,7 @@ export class SearchbarController {
                     }
                 }
                 searchbar.placeholder = "";
-                searchbar.style.backgroundColor = "red";
+                searchbarBox.style.border = "2px solid red";
             }
         });
 

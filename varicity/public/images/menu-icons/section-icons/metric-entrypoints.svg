@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <clipPath id="clip-metric-entrypoints">
+      <rect width="40" height="40"/>
+    </clipPath>
+  </defs>
+  <g id="metric-entrypoints" clip-path="url(#clip-metric-entrypoints)">
+    <g id="_172557_speedometer_icon" data-name="172557_speedometer_icon" transform="translate(0.987 0.987)">
+      <rect id="Rectangle_8" data-name="Rectangle 8" width="38" height="38" transform="translate(0.013 0.013)" fill="none"/>
+      <path id="Tracé_23" data-name="Tracé 23" d="M26.6,22.914l10.732-4.223.171.272-9.027,7.352Z" transform="translate(-6.389 -4.489)" fill="#1e232d"/>
+      <path id="Tracé_24" data-name="Tracé 24" d="M24.039,24a3.039,3.039,0,1,0,3.039,3.039A3.039,3.039,0,0,0,24.039,24Z" transform="translate(-5.044 -5.765)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+      <path id="Tracé_25" data-name="Tracé 25" d="M34.4,32.37a18.235,18.235,0,1,0-30.333,0" transform="translate(-0.24 -0.961)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+      <line id="Ligne_41" data-name="Ligne 41" x1="2.279" transform="translate(34.951 21.275)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="Ligne_42" data-name="Ligne 42" x2="2.279" transform="translate(0.76 21.275)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="Ligne_43" data-name="Ligne 43" y2="2.279" transform="translate(18.995 3.039)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="Ligne_44" data-name="Ligne 44" x2="1.14" y2="1.974" transform="translate(9.877 5.482)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="Ligne_45" data-name="Ligne 45" x1="1.974" y1="1.14" transform="translate(32.814 29.253)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="Ligne_46" data-name="Ligne 46" x2="1.974" y2="1.14" transform="translate(3.203 12.157)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="Ligne_47" data-name="Ligne 47" y1="1.14" x2="1.974" transform="translate(3.203 29.253)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="Ligne_48" data-name="Ligne 48" x1="1.973" y2="1.14" transform="translate(32.815 12.157)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <line id="Ligne_49" data-name="Ligne 49" x1="1.14" y2="1.975" transform="translate(26.973 5.481)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+      <rect id="Rectangle_9" data-name="Rectangle 9" width="15.198" height="3.038" transform="translate(11.396 31.152)" fill="none" stroke="#1e232d" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+    </g>
+  </g>
+</svg>

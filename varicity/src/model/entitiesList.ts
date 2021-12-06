@@ -1,20 +1,21 @@
-import { District } from './entities/district.interface';
-import { Building } from './entities/building.interface';
+import {District} from './entities/district.interface';
+import {Building} from './entities/building.interface';
 import {Link} from "./entities/link.interface";
 
 export class EntitiesList {
     buildings: Building[] = [];
     district: District; // [com] => [polytech, utils] => **[unice]**
     links: Link[] = [];
-    
+
     /**
      * @deprecated
      */
     compositionLinks: Link[] = [];
 
-    constructor() {}
+    constructor() {
+    }
 
-    public getBuildingFromName(name: string) : Building {
+    public getBuildingFromName(name: string): Building {
         for (let i = 0; i < this.buildings.length; i++) {
             if (this.buildings[i].name === name) {
                 return this.buildings[i];
@@ -27,7 +28,7 @@ export class EntitiesList {
         return undefined;
     }
 
-    public filterCompLevel(level: number) : EntitiesList {
+    public filterCompLevel(level: number): EntitiesList {
         let result: EntitiesList = Object.assign({}, this);
         result.district = Object.assign([], this.district);
 
@@ -50,15 +51,15 @@ export class EntitiesList {
         return result;
     }
 
-    public getMaxCompLevel() : number {
+    public getMaxCompLevel(): number {
         return this.district.getMaxCompLevel();
     }
 
-    public getNumberOfBuildings() : number {
+    public getNumberOfBuildings(): number {
         return this.buildings.length + this.district.getNumberOfBuildings();
     }
 
-    public getNumberOfDistricts() : number {
+    public getNumberOfDistricts(): number {
         return this.district === undefined ? 0 : this.district.getNumberOfDistricts();
     }
 }

@@ -1,5 +1,4 @@
+export interface Closeable {
 
-export interface Closeable{
-
-    close():void;
+    close(): void;
 }

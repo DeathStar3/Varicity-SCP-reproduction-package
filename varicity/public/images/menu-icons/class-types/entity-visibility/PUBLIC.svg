@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="clip-PUBLIC">
+      <rect width="64" height="64"/>
+    </clipPath>
+  </defs>
+  <g id="PUBLIC" clip-path="url(#clip-PUBLIC)">
+    <g id="Groupe_139" data-name="Groupe 139" transform="translate(-11950 3703)">
+      <circle id="Ellipse_2" data-name="Ellipse 2" cx="32" cy="32" r="32" transform="translate(11950 -3703)" fill="#e23692"/>
+      <text id="PUB" transform="translate(11982 -3660)" fill="#fff" font-size="25" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-24.731" y="0">PUB</tspan></text>
+    </g>
+  </g>
+</svg>

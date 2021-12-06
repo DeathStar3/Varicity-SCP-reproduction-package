@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Symfinder Varicity</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -15,57 +17,136 @@
 
 <body>
 
-<mwc-dialog id="dialog" heading="Form Validation">
-    <div>
-        <p>You are about to save your config. Are you sure ? Enter a name for your config or update it if needed.</p>
-        <input class="form-control" id="text-field" minlength="3" maxlength="64" placeholder="Config name" required>
+<div id="main">
+
+    <!-- -------------------------------------------------------------------- --->
+    <!--                           LOADING SCREEN                             --->
+    <!-- -------------------------------------------------------------------- --->
+    <div id="loading-frame">
+        <img src="images/logovaricity.gif" style="width: 200px">
     </div>
 
-    <mwc-button id="save-config-confirm-btn" slot="primaryAction">Confirm</mwc-button>
-    <mwc-button slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
-</mwc-dialog>
 
-<div id="main">
     <div id="console" class="overflowable">
 
-        <div class="btn-toolbar d-flex justify-content-around " role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group">
-                <button class="btn btn-primary " id="save-btn">
-                    <span class="material-icons-outlined">camera</span>
-                    Save camera position
-                </button>
-            </div>
-            <div class="btn-group">
-                <button class=" btn parent" id="save-config">
-                        <span class="material-icons-outlined">
-                            save
-                        </span>
-                    Save Config
-                </button>
-            </div>
-            <div class="btn-group">
-                <button id="documentation" type="button" class="btn btn-primary">
-                        <span class="material-icons-outlined">
-                            info
-                        </span>
-                    Documentation
-                </button>
+        <div class="navbar d-flex flex-column flex-shrink-0 bg-light">
+            <a href="/" class="d-block p-3 link-dark text-decoration-none" title="Icon-only" data-bs-toggle="tooltip"
+               data-bs-placement="left">
+                <img src="images/menu-icons/logo-varicity.svg" class="bi" width="50" height="50">
+                <span class="visually-hidden">Icon-only</span>
+            </a>
+            <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="main-menu">
+                <li id="project-config">
+                    <a href="#" class="nav-link py-3 border-bottom border-top" aria-current="page"
+                       title="Project and Config" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/project-config.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Project and Config">
+                    </a>
+                </li>
+                <li id="information" class="collapsible-button">
+                    <a href="#" class="nav-link py-3 border-bottom" title="Information" data-bs-toggle="tooltip"
+                       data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/information.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Information">
+                    </a>
+                </li>
+                <li id="building" class="collapsible-button">
+                    <a href="#" class="nav-link py-3" title="Building" data-bs-toggle="tooltip"
+                       data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/building.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Building">
+                    </a>
+                </li>
+                <li id="districts" class="collapsible-button">
+                    <a href="#" class="nav-link py-3" title="District" data-bs-toggle="tooltip"
+                       data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/district.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="District">
+                    </a>
+                </li>
+                <li id="links" class="collapsible-button">
+                    <a href="#" class="nav-link py-3" title="Links" data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/links.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Links">
+                    </a>
+                </li>
+                <li id="blacklist" class="collapsible-button">
+                    <a href="#" class="nav-link py-3" title="Blacklist" data-bs-toggle="tooltip"
+                       data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/blacklist.svg" class="bi" width="24" height="24"
+                             role="img" aria-label="Blacklist">
+                    </a>
+                </li>
+                <li id="metric-entrypoints" class="collapsible-button">
+                    <a href="#" class="nav-link py-3 border-bottom" title="Metric and entrypoints"
+                       data-bs-toggle="tooltip" data-bs-placement="left">
+                        <img src="images/menu-icons/section-icons/metric-entrypoints.svg" class="bi" width="24"
+                             height="24" role="img" aria-label="Metric and entrypoints">
+                    </a>
+                </li>
+            </ul>
+            <div class="dropdown border-top">
+                <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="tool-menu">
+                    <li id="save">
+                        <a href="#" class="nav-link py-3 border-bottom" aria-current="page" title="Save"
+                           data-bs-toggle="tooltip" data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/save.svg" class="bi" width="24" height="24"
+                                 role="img" aria-label="Save">
+                        </a>
+                    </li>
+                    <li id="documentation">
+                        <a href="#" class="nav-link py-3 border-bottom" title="Documentation" data-bs-toggle="tooltip"
+                           data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/documentation.svg" class="bi" width="24"
+                                 height="24" role="img" aria-label="Documentation">
+                        </a>
+                    </li>
+                    <li id="settings">
+                        <a href="#" class="nav-link py-3 btn " title="Settings" data-bs-toggle="tooltip"
+                           data-bs-placement="left">
+                            <img src="images/menu-icons/section-icons/settings.svg" class="bi" width="24" height="24"
+                                 role="img" aria-label="Settings">
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
 
 
-        <input class="form-control mt-2" placeholder="Your search here" id="searchbar" style="display: none;">
+        <div id="submenu" class="flex-shrink-0 p-3 bg-white" style="overflow-y:scroll; width: 500px;">
+            <span id="submenu-title" class="fs-5 fw-semibold border-bottom align-items-center pb-3 mb-3 d-flex ">Collapsible</span>
 
-        <select id="project_selector" class="mt-2 mb-2 parent form-select">
-            <option value=""> ---Select a project---</option>
-        </select>
+            <ul id="submenu-content" class="list-unstyled ps-0">
+                <!-- EACH SUB MENU IS INSERTED HERE -->
+            </ul>
+        </div>
 
+        <!-- -------------------------------------------------------------------- --->
+        <!--                        PROJECT-CONFIG DIALOG                         --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="project-config_content" heading="Selection" class="styled">
+            <div class="form-group">
+                <label for="project_selector">Project</label>
+                <select id="project_selector" class="mt-2 mb-2 parent form-select">
+                    <option value=""> ---Select a project---</option>
+                </select>
+            </div>
 
-        <select id="config_selector" class="mt-2 mb-2 parent form-select">
-        </select>
+            <div class="form-group">
+                <label for="project_selector">Configuration</label>
+                <select id="config_selector" class="mt-2 mb-2 parent form-select"></select>
+            </div>
+            <mwc-button slot="primaryAction" dialogAction="close">Close</mwc-button>
+        </mwc-dialog>
 
+        <!-- -------------------------------------------------------------------- --->
+        <!--                         DOCUMENTATION DIALOG                         --->
+        <!-- -------------------------------------------------------------------- --->
         <mwc-dialog id="doc_content" heading="Documentation of Varicity" class="styled">
             <div>
+                Use ctrl + s to update the configuration without camera<br/>
+                Use ctrl + shift + s to save a new configuration with camera<br/>
+                Use ctrl + p to update the configuration with camera<br/>
                 Use left click + drag to rotate camera<br/>
                 Use right click + drag to move camera<br/>
                 Use mouse wheel to zoom in/out<br/>
@@ -97,25 +178,62 @@
             </mwc-button>
         </mwc-dialog>
 
+        <!-- -------------------------------------------------------------------- --->
+        <!--                             SAVE DIALOG                              --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="save_content" heading="Save configuration" class="styled">
+            <div class="vertical-container">
+                <button class="btn btn-primary save-button" id="update-camera">
+                    <span class="material-icons-outlined">camera</span>
+                    Update Camera position
+                </button>
+                <button class="btn btn-primary save-button" id="update-config">
+                    <span class="material-icons-outlined">save</span>
+                    Update Configuration
+                </button>
+                <button class=" btn btn-success save-button" id="save-config">
+                    <span class="material-icons-outlined">save</span>
+                    Save Configuration
+                </button>
+            </div>
+            <mwc-button slot="primaryAction" dialogAction="close">
+                Cancel
+            </mwc-button>
+        </mwc-dialog>
 
-        <div id="config" class="parent"></div>
-        <div class="parent">
-            <label for="comp-level">Usage level</label>
-            <input class="form-control" type="number" id="comp-level" name="comp-level" min="0" max="0"
-                   onkeydown="return false">
-            <button class="btn btn-info" id="filter-button">Filter</button>
+
+        <!-- -------------------------------------------------------------------- --->
+        <!--                       SAVE VALIDATION DIALOG                         --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="save-dialog" heading="Save Validation">
+            <div>
+                <p>You are about to save a new configuration. Are you sure ? Enter a name for your configuration.</p>
+                <input class="form-control" id="text-field-configname" minlength="3" maxlength="64"
+                       placeholder="Config name" required>
+            </div>
+
+            <mwc-button id="save-config-confirm-btn" slot="primaryAction">Confirm</mwc-button>
+            <mwc-button slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
+        </mwc-dialog>
+
+
+        <div id="config" class="parent" style="display: none"></div>
+
+    </div>
+    <div id="search-menu" class="overflowable">
+        <div class="justify-content-center px-4">
+            <div id="searchbar-box" class="search">
+                <input id="searchbar" type="text" class="search-input" placeholder="Search..." name="">
+                <a id="searchbar-btn" href="#" class="search-icon"><i class="fa fa-search"></i></a>
+            </div>
         </div>
-        <div id="nodes_details" class="parent"></div>
+
     </div>
 </div>
-<!-- <div id="project_selector">
-<div id="metricity">Using Metricity View</div>
-<div id="evostreet">Using EvoStreet View</div>
-</div> -->
-<!--  <div id="ui_square">-->
-<!--    <button id="reset_camera">Reset camera</button>-->
-<!--    &lt;!&ndash; <p id="nodes_details"></p> &ndash;&gt;-->
-<!--  </div>-->
-</body>
 
+<!-- Toast -->
+<div class="toast-container" id="toast-parent">
+</div>
+
+</body>
 </html>

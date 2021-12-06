@@ -1,6 +1,6 @@
-import { District } from "../entities/district.interface";
-import { ClassImplem } from "./classImplem.model";
-import { Building } from "../entities/building.interface";
+import {District} from "../entities/district.interface";
+import {ClassImplem} from "./classImplem.model";
+import {Building} from "../entities/building.interface";
 
 export class VPVariantsImplem extends District {
     public vp: ClassImplem;
@@ -100,11 +100,11 @@ export class VPVariantsImplem extends District {
         }
     }
 
-    public getMaxCompLevel() : number {
+    public getMaxCompLevel(): number {
         return Math.max(this.vp === undefined ? -1 : this.vp.compLevel, super.getMaxCompLevel());
     }
 
-    public getBuildingFromName(name: string) : Building {
+    public getBuildingFromName(name: string): Building {
         if (this.vp !== undefined && this.vp.name === name) {
             return this.vp;
         }

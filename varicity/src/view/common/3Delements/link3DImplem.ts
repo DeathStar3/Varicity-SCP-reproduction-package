@@ -1,8 +1,7 @@
-import { Link3D } from '../3Dinterfaces/link3D.interface';
-import { Config } from '../../../model/entitiesImplems/config.model';
-import { Color3, Color4, MeshBuilder, Scene, Vector3 } from '@babylonjs/core';
-import { Curve3, LinesMesh } from '@babylonjs/core';
-import { Building3D } from './building3D';
+import {Link3D} from '../3Dinterfaces/link3D.interface';
+import {Config} from '../../../model/entitiesImplems/config.model';
+import {Color3, Color4, Curve3, LinesMesh, MeshBuilder, Scene, Vector3} from '@babylonjs/core';
+import {Building3D} from './building3D';
 
 export class Link3DImplem implements Link3D {
     scene: Scene;
@@ -54,7 +53,7 @@ export class Link3DImplem implements Link3D {
             colors.push(Color4.Lerp(start, end, i / this.curve.getPoints().length));
         }
 
-        this.mesh = MeshBuilder.CreateLines("curve", { points: this.curve.getPoints(), colors: colors }, this.scene);
+        this.mesh = MeshBuilder.CreateLines("curve", {points: this.curve.getPoints(), colors: colors}, this.scene);
     }
 
     // render(config: Config): void {
@@ -99,7 +98,7 @@ export class Link3DImplem implements Link3D {
     //     if(!this.force) this.line.visibility = 0;
     // }
 
-    display(force?: boolean, show?:boolean) {
+    display(force?: boolean, show?: boolean) {
         if (force != undefined) this.force = force;
         // if (!this.force && this.mesh.visibility == 1) {
         if (!show && !this.force && this.mesh) {

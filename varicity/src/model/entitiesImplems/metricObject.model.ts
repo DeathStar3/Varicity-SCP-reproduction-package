@@ -1,6 +1,3 @@
-import { District } from '../entities/district.interface';
-import { ClassImplem } from './classImplem.model';
-
 export class MetricObject {
 
     name: string;

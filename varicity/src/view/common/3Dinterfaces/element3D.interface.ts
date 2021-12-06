@@ -1,6 +1,6 @@
-import { Config } from './../../../model/entitiesImplems/config.model';
-import { Mesh, Scene } from "@babylonjs/core";
-import { Color } from "../../../model/entities/config.interface";
+import {Config} from './../../../model/entitiesImplems/config.model';
+import {Mesh, Scene} from "@babylonjs/core";
+import {Color} from "../../../model/entities/config.interface";
 
 export abstract class Element3D {
 
