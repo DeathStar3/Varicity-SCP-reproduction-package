@@ -8,21 +8,18 @@ export class DetailsController implements SubMenuInterface {
 
     private static force: boolean = false;
     private static current: Building3D;
-    private static parent: HTMLElement;
 
     defineSubMenuTitle(): string {
         return "Information";
     }
 
     public createMenu(parent: HTMLElement) {
-        DetailsController.parent = parent;
-
         DetailsController.displayObjectInfo(DetailsController.current, false)
     }
 
     public static displayObjectInfo(obj: Building3D, force: boolean) {
 
-        if (!MenuController.selectedTab || MenuController.selectedTab === document.getElementById("Information")) {
+        if (!MenuController.selectedTab || MenuController.selectedTab === DetailsController.getInformationTab()) {
             if (obj) {
                 // clear the sub-menu
                 SubMenuController.getParentContentSubMenu().innerHTML = "";
@@ -35,9 +32,11 @@ export class DetailsController implements SubMenuInterface {
                 this.current = obj
             }
 
-            const modelSubMenu = SubMenuController.createMenu("Model", true, DetailsController.parent);
-            const metricSubMenu = SubMenuController.createMenu("Metrics", true, DetailsController.parent);
-            const linksSubMenu = SubMenuController.createMenu("Links", true, DetailsController.parent);
+            const subMenuParent = SubMenuController.getParentContentSubMenu();
+
+            const modelSubMenu = SubMenuController.createMenu("Model", true, subMenuParent);
+            const metricSubMenu = SubMenuController.createMenu("Metrics", true, subMenuParent);
+            const linksSubMenu = SubMenuController.createMenu("Links", true, subMenuParent);
 
             if (DetailsController.current) {
                 this.populateModel(DetailsController.current.elementModel, modelSubMenu);
@@ -137,7 +136,10 @@ export class DetailsController implements SubMenuInterface {
                 }
             });
         }
-
         return paths;
+    }
+
+    public static getInformationTab(): HTMLElement {
+        return document.getElementById("Information")
     }
 }
