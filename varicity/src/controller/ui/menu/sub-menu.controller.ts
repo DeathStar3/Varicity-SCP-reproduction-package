@@ -433,10 +433,10 @@ export class SubMenuController {
         divHigherIsBetter.classList.add("btn");
         divHigherIsBetter.innerText = "Higher is Better";
 
-        if(isHighBetter){
+        if (isHighBetter) {
             divLowerIsBetter.classList.add("btn-outline-primary");
             divHigherIsBetter.classList.add("btn-primary");
-        }else{
+        } else {
             divLowerIsBetter.classList.add("btn-primary");
             divHigherIsBetter.classList.add("btn-outline-primary");
         }

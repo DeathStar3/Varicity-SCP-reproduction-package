@@ -36,14 +36,14 @@ export class ConfigSelectorController {
             node.selected = (UIController.config.name == config.name) // TODO problem in case multiple same config names
             parent.appendChild(node);
         }
-        UIController.configFileName = (configs[configs.length-1]).filename;
+        UIController.configFileName = (configs[configs.length - 1]).filename;
 
         // update the view & config in case of a change
         parent.addEventListener('change', async function (event) {
             const configName = (event.target as HTMLInputElement).value;
             if (configName !== undefined) {
-                 document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
-                if (MenuController.selectedTab){
+                document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
+                if (MenuController.selectedTab) {
                     MenuController.changeImage(MenuController.selectedTab);
                     MenuController.selectedTab = undefined;
                 }

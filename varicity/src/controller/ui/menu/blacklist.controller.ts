@@ -4,7 +4,8 @@ import {ToastController, ToastType} from "../toast.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 import {SearchbarController} from "../searchbar.controller";
 import {SubMenuInterface} from "./sub-menu.interface";
-export class BlacklistController implements SubMenuInterface  {
+
+export class BlacklistController implements SubMenuInterface {
 
     defineSubMenuTitle(): string {
         return "Blacklist";
@@ -40,13 +41,13 @@ export class BlacklistController implements SubMenuInterface  {
             const isAlreadyInBlacklist = apiClasses.indexOf(input.value) !== -1;
 
             // Handle error where the input hasn't change
-            if(className === input.value){
+            if (className === input.value) {
                 ToastController.addToast("The input hasn't change...", ToastType.INFO);
                 return;
             }
 
             // Handle error where the input already exist in an other input text
-            if(isAlreadyInBlacklist){
+            if (isAlreadyInBlacklist) {
                 ToastController.addToast("The class: '" + input.value + "' already exist in the blacklist. You can't add it a second time...", ToastType.DANGER);
                 input.value = className; // reset value to the last one
                 return;
@@ -54,7 +55,7 @@ export class BlacklistController implements SubMenuInterface  {
 
             if (!SearchbarController.map.has(input.value)) { // the search key doesn't exist
                 input.style.border = "1px solid red";
-            }else {
+            } else {
                 input.style.border = "1px solid #ced4da";
                 document.getElementById("loading-frame").style.display = 'inline-block'; //TODO issue: is not displayed before the following code
 

@@ -10,7 +10,7 @@ export class EvostreetImplem extends SceneRenderer {
         this.scene = new Scene(this.engine);
         if (!updateCamera) {
             SceneRenderer.camera = new ArcRotateCamera("Camera", SceneRenderer.camera["alpha"], SceneRenderer.camera["beta"], SceneRenderer.camera["radius"], Vector3_Local.toVector3(SceneRenderer.camera.getTarget()), this.scene);
-        }else{
+        } else {
             SceneRenderer.camera = new ArcRotateCamera("Camera", this.config.camera_data.alpha, this.config.camera_data.beta, this.config.camera_data.radius, Vector3_Local.toVector3(this.config.camera_data.target), this.scene);
         }
         SceneRenderer.camera.attachControl(this.canvas, true);

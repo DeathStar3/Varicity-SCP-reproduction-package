@@ -131,12 +131,12 @@ body {
     margin: 0;
 }
 
-.toast-body{
+.toast-body {
     display: flex;
     justify-content: space-between;
 }
 
-#loading-frame{
+#loading-frame {
     width: 100%;
     height: 100%;
     vertical-align: top; /*not required*/
@@ -159,56 +159,45 @@ body {
     margin: auto;
 }
 
-.toast-container{
+.toast-container {
     position: absolute;
     left: 10px;
     top: 10px;
 }
 
 
-
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-body{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: #304B5F;
-    padding: 20px;
-}
-.wrapper{
+.wrapper {
     background: #fff;
     padding-right: 8px;
     max-width: 460px;
     width: 100%;
     border-radius: 3px;
 }
-.wrapper .item{
+
+.wrapper .item {
     color: #555555;
     display: flex;
     border-radius: 3px;
     align-items: center;
     justify-content: space-between;
 }
-.wrapper .item .fa-bars{
+
+.wrapper .item .fa-bars {
     padding-left: 15px;
     margin-bottom: 8px;
 }
-.wrapper .item:last-child{
+
+.wrapper .item:last-child {
     margin-bottom: 0px;
 }
-.wrapper .item .text{
+
+.wrapper .item .text {
     font-size: 18px;
     font-weight: 400;
 }
-.wrapper .item i{
+
+.wrapper .item i {
     font-size: 18px;
     cursor: pointer;
 }
