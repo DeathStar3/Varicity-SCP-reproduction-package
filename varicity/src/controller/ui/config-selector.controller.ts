@@ -7,6 +7,7 @@ import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
 import {UIController} from "./ui.controller";
 import {ConfigName} from "../../model/entitiesImplems/config.model";
 import {MetricController} from "./menu/metric.controller";
+import {MenuController} from "./menu/menu.controller";
 
 export class ConfigSelectorController {
 
@@ -41,6 +42,12 @@ export class ConfigSelectorController {
         parent.addEventListener('change', async function (event) {
             const configName = (event.target as HTMLInputElement).value;
             if (configName !== undefined) {
+                 document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
+                if (MenuController.selectedTab){
+                    MenuController.changeImage(MenuController.selectedTab);
+                    MenuController.selectedTab = undefined;
+                }
+
                 UIController.configFileName = configName;
                 await ConfigSelectorController.defineConfig(configName);
                 ConfigSelectorController.reParse(true);
