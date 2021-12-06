@@ -1,5 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -52,6 +53,16 @@ public class Compiler {
     }
 
     public synchronized boolean executeProject(ExperimentConfig projectConfig) {
+        //faire un clone exact de l'objet puis modifier dans le clone
+
+        projectConfig=projectConfig.cloneSelfExact();
+
+        try {
+            projectConfig.setPath(utils.translatePath(projectConfig.getPath()));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
 
         utils.removeOldExitedContainer(Constants.COMPILER_SCANNER_NAME);
         utils.removeOldExitedContainer(Constants.COMPILER_NAME);
@@ -246,7 +257,8 @@ public class Compiler {
                 .withName(Constants.SCANNER_NAME).withEnv("SONAR_LOGIN=" + token.token())
                 .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(completePath, volume, AccessMode.rw))
                         .withNetworkMode(Constants.NETWORK_NAME))
-                .withEnv("SONAR_HOST_URL=" + Constants.SONARQUBE_DOCKER_URL).exec();
+                .withEnv("SONAR_HOST_URL=" + Constants.SONARQUBE_DOCKER_URL)
+                .exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
 

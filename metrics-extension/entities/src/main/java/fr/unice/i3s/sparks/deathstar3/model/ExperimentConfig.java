@@ -1,5 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Objects;
@@ -78,6 +79,36 @@ public class ExperimentConfig {
     @Override
     public int hashCode() {
         return Objects.hash(projectName, repositoryUrl, sourcePackage, tagIds);
+    }
+
+
+    public ExperimentConfig cloneSelfExact(){
+        ExperimentConfig other= new ExperimentConfig(this.projectName,this.path,this.buildEnv,this.buildEnvTag,this.buildCmd,this.buildCmdIncludeSonar);
+
+        if(this.commitIds!=null){
+            other.setCommitIds(new HashSet<>(this.commitIds));
+        }
+        else{
+            other.setCommitIds(Set.of());
+        }
+        if(this.tagIds!=null){
+            other.setTagIds(new HashSet<>(this.tagIds));
+        }else{
+            other.setTagIds(Set.of());
+        }
+
+        other.setRepositoryUrl(this.repositoryUrl);
+        other.setOutputPath(this.outputPath);
+        other.setSkipClone(this.skipClone);
+        if(this.sources != null){
+            other.setSources(  this.sources.stream().map(MetricSource::cloneSelfExact).toList() );
+        }
+
+        other.setSourcePackage(this.sourcePackage);
+        other.setSkipSymfinder(this.skipSymfinder);
+        other.setSonarqubeNeeded(this.sonarqubeNeeded);
+
+        return other;
     }
 
     /**

@@ -4,6 +4,8 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateNetworkResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.model.Bind;
+import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
@@ -12,6 +14,9 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -72,6 +77,51 @@ public class Utils {
         dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(7,
                 TimeUnit.MINUTES);
     }
+
+    public Container getCurrentContainer() throws UnknownHostException {
+        String hostname= InetAddress.getLocalHost().getHostName();
+        var containers = dockerClient.listContainersCmd().exec();
+
+        for (var container:containers){
+           var containerHostname= dockerClient.inspectContainerCmd(container.getId()).exec().getConfig().getHostName();
+           if(containerHostname.equals(hostname)){
+               return container;
+           }
+        }
+        return null;
+    }
+
+    /**
+     * If Symfinder is running in docker then the path provided must be absolute to the docker container
+     * eg: If you mount a local directory to the /data directoy in the docker container then
+     * /data/myprojets/project
+     * @author Patrick
+     * Inspired by https://gist.github.com/dpfoose/f96d4e4b76c2e01265619d545b77987a
+     * @param path
+     * @return
+     * @throws UnknownHostException
+     */
+    public String translatePath(String path) throws UnknownHostException {
+        var currentContainer=this.getCurrentContainer();
+        if(currentContainer!=null) {
+           InspectContainerResponse inspectContainerResponse= dockerClient.inspectContainerCmd(currentContainer.getId()).exec();
+
+          Bind[] binds= inspectContainerResponse.getHostConfig().getBinds();
+          if(binds!=null && binds.length != 0){
+              for (var bind:binds) {
+                  if(path.equals(bind.getVolume().getPath())){
+                      return Path.of(bind.getPath(), path).toString();
+                  }
+                  if(path.startsWith(bind.getVolume().getPath())) {
+                     return Path.of(bind.getPath(), path.substring(bind.getVolume().getPath().length())).toString();
+                  }
+              }
+          }
+        }
+
+        return  path;
+    }
+
 
 
     public String getUserIdentity() {

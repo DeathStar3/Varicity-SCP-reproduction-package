@@ -66,19 +66,12 @@ public class Neo4JStarter {
                 .createContainerCmd(Constants.SYMFINDER_NEO4J_IMAGE + ":" + Constants.SYMFINDER_NEO4J_TAG)
                 .withName(Constants.NEO4J_CONTAINER_NAME)
                 .withHostName(Constants.NEO4J_HOSTNAME)
+              .withExposedPorts(ExposedPort.parse("7687"))
                 .withHostConfig(
                         HostConfig
-                                .newHostConfig()
-                                .withPortBindings(
-                                        new PortBinding(
-                                                new Ports.Binding("127.0.0.1", "7474"),
-                                                new ExposedPort(7474)
-                                        ),
-                                        new PortBinding(
-                                                new Ports.Binding("127.0.0.1", "7687"),
-                                                new ExposedPort(7687)
-                                        )
-                                ).withNetworkMode(Constants.NETWORK_NAME)
+                                .newHostConfig().withPortBindings(PortBinding.parse("7687:7687"))
+
+                                .withNetworkMode(Constants.NETWORK_NAME)
                 )
                 .withEnv(List.of(
                         "NEO4J_AUTH=none"
@@ -87,7 +80,7 @@ public class Neo4JStarter {
 
         dockerClient.startContainerCmd(createContainerResponse.getId()).exec();
         
-        WaitFor.waitForPort(Constants.getNeo4jLocalHostname(), 7474,60_000);
+        //WaitFor.waitForPort(Constants.getNeo4jLocalHostname(), 7474,120_000);
 
         return new Neo4jParameters("bolt://"+ Constants.getNeo4jLocalHostname()+":7687","","");
 

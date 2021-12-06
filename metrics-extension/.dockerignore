@@ -6,5 +6,6 @@
 !metric-gatherer
 !sourcesfetcher
 !symfinder
+!symfindercli
 !pom.xml
 !start.sh

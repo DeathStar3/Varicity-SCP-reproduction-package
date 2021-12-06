@@ -4,6 +4,7 @@ services:
  varicitybackend:
     image: deathstar3/varicity-backend:${TAG}
     container_name: varicity-backend
+    user: "${UID}:${GID}"
     ports:
       - "3000:3000"
     volumes:

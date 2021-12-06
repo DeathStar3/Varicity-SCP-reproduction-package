@@ -6,13 +6,15 @@ WORKDIR /home
 COPY ./ ./
 
 # Build the executable jar
-RUN mvn clean compile assembly:single -DskipTests=true
+RUN mvn clean install -DskipTests=true
 
 # the second stage of our build
 FROM openjdk:17-bullseye
 
 WORKDIR /usr/src
 # copy only the artifacts we need from the first stage and discard the rest
-COPY --from=MAVEN_BUILD /home/config-loader/target/config-loader-1.0-SNAPSHOT-jar-with-dependencies.jar symfinder-cli.jar
+COPY --from=MAVEN_BUILD /home/symfindercli/target/symfinder-cli-jar-with-dependencies.jar symfinder-cli.jar
+COPY start.sh start.sh
+RUN chmod +x start.sh
 # set the startup command to execute the jar
-CMD java -jar symfinder-cli.jar
+ENTRYPOINT ["./start.sh"]

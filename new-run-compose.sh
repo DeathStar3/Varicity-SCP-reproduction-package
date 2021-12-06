@@ -21,8 +21,7 @@ export TAG=local
 export DIR_PATH=$(pwd)
 export VOLUME_PATH=$(pwd)/dockervolume
 create_directory resources
-
 create_directory data
-
-docker-compose -f new-symfinder-compose.yaml up
+create_directory dockervolume
+docker-compose -f new-symfinder-compose.docker-compose.yaml up
 

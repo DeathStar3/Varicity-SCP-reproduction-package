@@ -36,4 +36,5 @@ testadd
 sonarqube-analysis-tcf-j2e.json
 data
 *node_modules*
-
+dockervolume
+varicity-backend/dockervolume

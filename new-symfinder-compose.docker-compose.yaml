@@ -22,29 +22,34 @@
 version: "3.6"
 
 services:
-  symfinder:
-    image: deathstar3/symfinder-service:${TAG}
-    container_name: symfinder-service-host
-    networks:
-      - varicity-config
-    ports:
-      - "8080:8080"
-    volumes:
-      - ${DIR_PATH}/resources:/resources
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - VARICITY_BACKEND_URL=http://varicityback:3000
-      - RUNTIME_MODE=DOCKER
-      - SYMFINDER_UID=${SYMFINDER_UID}
-      - SYMFINDER_GID=${SYMFINDER_GID}
-      - SYMFINDER_VERSION=${SYMFINDER_VERSION}
-      - NB_AGGREGATIONS_THRESHOLD=5
-      - NB_VARIANTS_THRESHOLD=20
+#  symfinder:
+#    image: deathstar3/symfinder-service:${TAG}
+#    container_name: symfinder-service-host
+#    networks:
+#      - varicity-config
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ${DIR_PATH}/resources:/resources
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#    environment:
+#      - VARICITY_BACKEND_URL=http://varicityback:3000
+#      - RUNTIME_MODE=DOCKER
+#      - SYMFINDER_UID=${SYMFINDER_UID}
+#      - SYMFINDER_GID=${SYMFINDER_GID}
+#      - SYMFINDER_VERSION=${SYMFINDER_VERSION}
+#      - NB_AGGREGATIONS_THRESHOLD=5
+#      - NB_VARIANTS_THRESHOLD=20
 
   varicitybackend:
     image: deathstar3/varicity-backend:${TAG}
     container_name: varicity-backend
     hostname: varicityback
+    user: "${SYMFINDER_UID}:${SYMFINDER_GID}"
+    networks:
+      - varicity-config
+    expose:
+      - "3000"
     ports:
       - "3000:3000"
     volumes:
@@ -62,7 +67,7 @@ services:
     image: deathstar3/varicity:${TAG}
     container_name: varicity
     ports:
-      - "3000:3000"
+      - "80:80"
     networks:
       - varicity-config
 

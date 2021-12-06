@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -jar /usr/src/symfinder-cli.jar $1 $2 $3
+java -jar /usr/src/symfinder-cli.jar "$@"

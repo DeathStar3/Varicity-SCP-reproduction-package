@@ -3,6 +3,7 @@ package fr.unice.i3s.sparks.deathstar3.symfinder.cli;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -52,15 +53,15 @@ public final class App {
      * Says hello to the world.
      * @param args The arguments of the program.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
 
+        System.setProperty("logfilename", Optional.ofNullable(System.getenv("PROJECT_NAME")).orElse("debug.log"));
         App app =new App();
         JCommander.newBuilder()
             .addObject(app)
             .build()
             .parse(args);
 
-        
         app.run();
 
     }

@@ -51,6 +51,49 @@ public class MetricExtensionEntrypoint {
         sonarQubeStarter = new SonarQubeStarter();
     }
 
+    public synchronized List<ExperimentResult> runExperiment(ExperimentConfig experimentConfig, HotspotsParameters hotspotsParameters){
+
+        List<String> allVersions = new ArrayList<>();
+
+        if (experimentConfig.getTagIds() != null && !experimentConfig.getTagIds().isEmpty()) {
+            allVersions.addAll(experimentConfig.getTagIds());
+        }
+
+        if (experimentConfig.getCommitIds() != null && !experimentConfig.getCommitIds().isEmpty()) {
+            allVersions.addAll(experimentConfig.getCommitIds());
+        }
+
+        if(allVersions.size() > 1){
+            List<ExperimentResult> allResults=new ArrayList<>();
+            List<ExperimentConfig> allExperimentConfigVariants=new ArrayList<>();
+            for(String version:allVersions){
+
+                ExperimentConfig experimentConfigVariant= experimentConfig.cloneSelf();
+                experimentConfigVariant.setProjectName(experimentConfig.getProjectName()+"-"+version);
+                experimentConfigVariant.setTagIds(Set.of(version));
+                experimentConfigVariant.changeComponentNameOfLocalMetricSource(experimentConfigVariant.getProjectName());
+
+                allExperimentConfigVariants.add(experimentConfigVariant);
+            }
+
+            for(ExperimentConfig configVariant:allExperimentConfigVariants){
+                try {
+                    allResults.add(this.runSimpleExperiment(configVariant,hotspotsParameters));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    //TODO collect all exceptions of each variant that failed and return them
+                }
+            }
+
+            return  allResults;
+        }
+        else{
+            return List.of(this.runSimpleExperiment(experimentConfig,hotspotsParameters));
+        }
+
+    }
+
     synchronized ExperimentResult runSimpleExperiment(ExperimentConfig config, HotspotsParameters hotspotsParameters) {
         try {
             makePathAbsoluteIfNotAlready(config);
@@ -109,7 +152,7 @@ public class MetricExtensionEntrypoint {
             futureSymfinderResult = CompletableFuture.completedFuture(new SymfinderResult("", ""));
         } else {
             futureSymfinderResult = executor.submit(() -> {
-                log.info("Starting Neo4J container this may take some time ....");
+                System.out.println("Starting Neo4J container this may take some time ....");
                 Neo4jParameters neo4jParameters= neo4JStarter.startNeo4J();
                 return new Symfinder(finalRepositoryPath, new Configuration( new ParametersObject(neo4jParameters, hotspotsParameters, "" ) )).run();
             });
@@ -159,46 +202,5 @@ public class MetricExtensionEntrypoint {
     }
 
 
-    public synchronized List<ExperimentResult> runExperiment(ExperimentConfig experimentConfig, HotspotsParameters hotspotsParameters){
 
-        List<String> allVersions = new ArrayList<>();
-
-        if (experimentConfig.getTagIds() != null && !experimentConfig.getTagIds().isEmpty()) {
-            allVersions.addAll(experimentConfig.getTagIds());
-        }
-
-        if (experimentConfig.getCommitIds() != null && !experimentConfig.getCommitIds().isEmpty()) {
-            allVersions.addAll(experimentConfig.getCommitIds());
-        }
-
-        if(allVersions.size() > 1){
-            List<ExperimentResult> allResults=new ArrayList<>();
-            List<ExperimentConfig> allExperimentConfigVariants=new ArrayList<>();
-            for(String version:allVersions){
-
-               ExperimentConfig experimentConfigVariant= experimentConfig.cloneSelf();
-               experimentConfigVariant.setProjectName(experimentConfig.getProjectName()+"-"+version);
-               experimentConfigVariant.setTagIds(Set.of(version));
-               experimentConfigVariant.changeComponentNameOfLocalMetricSource(experimentConfigVariant.getProjectName());
-
-               allExperimentConfigVariants.add(experimentConfigVariant);
-            }
-
-            for(ExperimentConfig configVariant:allExperimentConfigVariants){
-                try {
-                    allResults.add(this.runSimpleExperiment(configVariant,hotspotsParameters));
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                    //TODO collect all exceptions of each variant that failed and return them
-                }
-            }
-
-            return  allResults;
-        }
-        else{
-            return List.of(this.runSimpleExperiment(experimentConfig,hotspotsParameters));
-        }
-
-    }
 }
