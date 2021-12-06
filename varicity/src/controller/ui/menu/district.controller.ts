@@ -1,15 +1,15 @@
 import {SubMenuController} from "./sub-menu.controller";
 import {UIController} from "../ui.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
+import {SubMenuInterface} from "./sub-menu.interface";
 
-export class DistrictController {
+export class DistrictController implements SubMenuInterface  {
 
-    public static createMenu() {
-        const parent = SubMenuController.getParentContentSubMenu();
+    defineSubMenuTitle(): string {
+        return "Districts";
+    }
 
-        // Set title
-        SubMenuController.changeTitleSubMenuElement("Districts");
-
+    public createMenu(parent: HTMLElement) {
         const menuPadding = SubMenuController.createMenu("Padding", true, parent);
         const menuFaceColors = SubMenuController.createMenu("Faces Color", true, parent);
 

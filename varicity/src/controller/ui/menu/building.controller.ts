@@ -2,20 +2,21 @@ import {SubMenuController} from "./sub-menu.controller";
 import {UIController} from "../ui.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 import Sortable from 'sortablejs';
+import {SubMenuInterface} from "./sub-menu.interface";
 import {Color} from "../../../model/entities/config.interface";
 
-export class BuildingController {
+export class BuildingController implements SubMenuInterface  {
 
-    public static createMenu() {
-        const parent = SubMenuController.getParentContentSubMenu();
+    defineSubMenuTitle(): string {
+        return "Building";
+    }
 
-        // Set title
-        SubMenuController.changeTitleSubMenuElement("Building");
+    public createMenu(parent: HTMLElement) {
 
         const menuPadding = SubMenuController.createMenu("Padding", true, parent);
         const menuFacesColors = SubMenuController.createMenu("Faces Color", true, parent);
         const menuEdgesColors = SubMenuController.createMenu("Edges Color", true, parent);
-        const menuOutlinesColors = SubMenuController.createMenu("Outlines Color", true, parent);
+        // const menuOutlinesColors = SubMenuController.createMenu("Outlines Color", true, parent);
 
         if (UIController.config) {
 
@@ -23,7 +24,7 @@ export class BuildingController {
             let padding = UIController.config.building.padding;
             let colorsFaces = UIController.config.building.colors.faces;
             let colorsEdges = UIController.config.building.colors.edges;
-            let colorsOutlines = UIController.config.building.colors.outlines;
+            // let colorsOutlines = UIController.config.building.colors.outlines;
 
             // Padding
             let paddingSelector = SubMenuController.createRange("Padding", padding, 0.2, 2, 0.1, menuPadding);
@@ -43,7 +44,7 @@ export class BuildingController {
         }
     }
 
-    private static createColorPickerDragAndDrop(colorsFaces: Color[], menuFacesColors: HTMLElement, colorList: Color[]) {
+    private createColorPickerDragAndDrop(colorsFaces: Color[], menuFacesColors: HTMLElement, colorList: Color[]) {
         let wrapperFaces = this.createDragAndDrop(colorsFaces, menuFacesColors);
 
         new Sortable(wrapperFaces, {
@@ -68,7 +69,7 @@ export class BuildingController {
         });
     }
 
-    private static createDragAndDrop(colorsFaces: Color[], menuFacesColors: HTMLElement) {
+    private createDragAndDrop(colorsFaces: Color[], menuFacesColors: HTMLElement) {
         let wrapperFaces = document.createElement("div");
         wrapperFaces.classList.add("wrapper");
         wrapperFaces.id = "wrapper-faces";

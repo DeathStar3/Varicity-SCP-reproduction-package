@@ -3,30 +3,31 @@ import {UIController} from "../ui.controller";
 import {ToastController, ToastType} from "../toast.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 import {SearchbarController} from "../searchbar.controller";
-export class BlacklistController {
+import {SubMenuInterface} from "./sub-menu.interface";
+export class BlacklistController implements SubMenuInterface  {
 
-    public static createMenu() {
-        const parent = SubMenuController.getParentContentSubMenu();
-        SubMenuController.changeTitleSubMenuElement("Blacklist");
+    defineSubMenuTitle(): string {
+        return "Blacklist";
+    }
 
+    public createMenu(parent: HTMLElement) {
         const menuBlacklist = SubMenuController.createMenu("Blacklist", true, parent);
 
         if (UIController.config) {
-
             // fetch the links
-            const blacklist = UIController.config.blacklist; // TODO find a better way than getting a static value, pass it in arguments?
+            const blacklist = UIController.config.blacklist;
 
             // Blacklisted class
             const inputs = []
             for (let i = 0; i < blacklist.length; i++) {
                 let className = blacklist[i];
-                this.createClassInput(inputs, blacklist, parent, className);
+                this.createClassInput(inputs, blacklist, menuBlacklist, className);
             }
-            this.createClassInput(inputs, blacklist, parent);
+            this.createClassInput(inputs, blacklist, menuBlacklist);
         }
     }
 
-    private static createClassInput(inputs, apiClasses, parent, text?: string) {
+    private createClassInput(inputs, apiClasses, parent, text?: string) {
         let className = text || "";
         const input = SubMenuController.createOnlyInputText(className, "ex.package.class", parent);
 
