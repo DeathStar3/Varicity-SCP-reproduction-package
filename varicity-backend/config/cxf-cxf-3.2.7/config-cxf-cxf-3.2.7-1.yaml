@@ -4,7 +4,7 @@ building:
   padding: 0.2
   colors:
     faces: # ordered by importance, descending : in case of conflict, the first color to match will be displayed
-      - name: "HOTSPOT"
+      - name: "!HOTSPOT"
         color: "#555555"
       - name: "VP"
         color: "#FF6F33"
@@ -30,7 +30,7 @@ building:
     edges:
       - name: "API"
         color: "#000000"
-      - name: "HOTSPOT"
+      - name: "!HOTSPOT"
       - name: "VP"
       - name: "STRATEGY"
       - name: "FACTORY"
