@@ -1,6 +1,7 @@
 import {SubMenuController} from "./sub-menu.controller";
 import {UIController} from "../ui.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
+import Sortable from 'sortablejs';
 import {Color} from "../../../model/entities/config.interface";
 
 export class BuildingController {
@@ -33,45 +34,66 @@ export class BuildingController {
                 UIController.updateScene(CriticalLevel.RERENDER_SCENE);
             })
 
-            // Face Colors
 
-            const listOfProperties = ["API", "CLASS", "INTERFACE", "ABSTRACT", "VP", "VARIANT", "HOTSPOT", "STRATEGY", "FACTORY", "TEMPLATE", "DECORATOR", "COMPOSITION_STRATEGY", "METHOD_LEVEL_VP", "DENSE", "PUBLIC", "PRIVATE"]
+            // Colors
+            this.createColorPickerDragAndDrop(colorsFaces, menuFacesColors, UIController.config.building.colors.faces);
+            this.createColorPickerDragAndDrop(colorsEdges, menuEdgesColors, UIController.config.building.colors.edges);
+            // this.createColorPickerDragAndDrop(colorsOutlines, menuOutlinesColors, UIController.config.building.colors.outlines);
 
-            if (colorsFaces) {
-                colorsFaces.forEach(color => {
-                    if (!color.color){ color.color = "#555555"}
-                    let colorPicker = SubMenuController.createColorSelector(color.name, color.color, menuFacesColors);
-
-                    colorPicker.addEventListener("change", (ke) => {
-                        color.color = colorPicker.value
-                        UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
-                    });
-                })
-            }
-
-            if (colorsEdges) {
-                colorsEdges.forEach(color => {
-                    if (!color.color){ color.color = "#555555"}
-                    let colorPicker = SubMenuController.createColorSelector(color.name, color.color, menuEdgesColors);
-
-                    colorPicker.addEventListener("change", (ke) => {
-                        color.color = colorPicker.value
-                        UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
-                    });
-                })
-            }
-
-            if (colorsOutlines) {
-                colorsOutlines.forEach(color => {
-                    if (!color.color){ color.color = "#555555"}
-                    let colorPicker = SubMenuController.createColorSelector(color.name, color.color, menuOutlinesColors);
-
-                    colorPicker.addEventListener("change", (ke) => {
-                        color.color = colorPicker.value
-                        UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
-                    });
-                })
-            }
         }
+    }
+
+    private static createColorPickerDragAndDrop(colorsFaces: Color[], menuFacesColors: HTMLElement, colorList: Color[]) {
+        let wrapperFaces = this.createDragAndDrop(colorsFaces, menuFacesColors);
+
+        new Sortable(wrapperFaces, {
+            animation: 350,
+
+            // Element dragging ended
+            onEnd: function (evt) {
+                const oldIndex = evt.oldIndex;  // target list
+                const newIndex = evt.newIndex;  // previous list
+                if (oldIndex !== newIndex) {
+                    let newColor = colorList[oldIndex]
+
+                    let indexTo = newIndex < oldIndex ? newIndex : newIndex + 1
+                    colorList.splice(indexTo, 0, newColor);
+
+                    let indexToDelete = indexTo > oldIndex ? oldIndex : oldIndex + 1
+                    colorList.splice(indexToDelete, 1)
+                    console.log(colorList)
+                    UIController.updateScene(CriticalLevel.RERENDER_SCENE);
+                }
+            },
+        });
+    }
+
+    private static createDragAndDrop(colorsFaces: Color[], menuFacesColors: HTMLElement) {
+        let wrapperFaces = document.createElement("div");
+        wrapperFaces.classList.add("wrapper");
+        wrapperFaces.id = "wrapper-faces";
+
+        if (colorsFaces) {
+            colorsFaces.forEach(color => {
+                let item = document.createElement("div");
+                item.classList.add("item");
+
+                if (!color.color) {
+                    color.color = "#555555"
+                }
+                let colorPicker = SubMenuController.createColorSelector(color.name, color.color, item);
+
+                colorPicker.addEventListener("change", (ke) => {
+                    color.color = colorPicker.value
+                    UIController.updateScene(CriticalLevel.LOW_IMPACT); // Reload the screen
+                });
+                let i = document.createElement("i");
+                i.classList.add("fas", "fa-bars")
+                item.appendChild(i);
+                wrapperFaces.appendChild(item);
+            })
+        }
+        menuFacesColors.appendChild(wrapperFaces);
+        return wrapperFaces;
     }
 }
