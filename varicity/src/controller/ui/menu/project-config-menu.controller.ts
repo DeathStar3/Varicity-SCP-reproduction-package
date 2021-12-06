@@ -11,4 +11,10 @@ export class ProjectConfigMenuController implements SubMenuInterface {
         document.getElementById("project-config_content").setAttribute('scrimClickAction', 'close');
         document.getElementById("project-config_content").setAttribute('escapeKeyAction', 'close');
     }
+
+    public static stayOpen() {
+        document.getElementById("project-config_content").setAttribute('open', 'true');
+        document.getElementById("project-config_content").setAttribute('scrimClickAction', '');
+        document.getElementById("project-config_content").setAttribute('escapeKeyAction', '');
+    }
 }

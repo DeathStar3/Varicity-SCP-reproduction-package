@@ -14,6 +14,7 @@ export class ProjectController {
     static el: EntitiesList;
     private static previousParser: ParsingStrategy;
     private static projectListener: CurrentProjectListener = new CurrentProjectListener();
+    private static nodes: { [key: string]: HTMLOptionElement } = {}; // TODO INTEGRATION: had to replace to Option instead of Div
 
     static createProjectSelector(projectsName: string[]) {
         let parent = document.getElementById("project_selector");
@@ -23,6 +24,7 @@ export class ProjectController {
             node.value = projectName;
             node.text = projectName;
 
+            ProjectController.nodes[projectName] = node;
             parent.appendChild(node);
         }
 
@@ -71,5 +73,10 @@ export class ProjectController {
             this.projectListener.projectChange(projectName);
         }
         run().then();
+    }
+
+    public static selectProject(projectName: string) {
+        const node = ProjectController.nodes[projectName];
+        if (node) node.dispatchEvent(new Event("click"));
     }
 }
