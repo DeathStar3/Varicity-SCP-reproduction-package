@@ -1,14 +1,15 @@
 import {SubMenuController} from "./sub-menu.controller";
 import {UIController} from "../ui.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
+import {SubMenuInterface} from "./sub-menu.interface";
 
-export class BuildingController {
+export class BuildingController implements SubMenuInterface  {
 
-    public static createMenu() {
-        const parent = SubMenuController.getParentContentSubMenu();
+    defineSubMenuTitle(): string {
+        return "Building";
+    }
 
-        // Set title
-        SubMenuController.changeTitleSubMenuElement("Building");
+    public createMenu(parent: HTMLElement) {
 
         const menuPadding = SubMenuController.createMenu("Padding", true, parent);
         const menuFacesColors = SubMenuController.createMenu("Faces Color", true, parent);

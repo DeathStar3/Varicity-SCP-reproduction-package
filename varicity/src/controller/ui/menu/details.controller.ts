@@ -2,19 +2,27 @@ import {Building3D} from '../../../view/common/3Delements/building3D';
 import {SubMenuController} from "./sub-menu.controller";
 import {Metrics} from "../../../model/entitiesImplems/metrics.model";
 import {MenuController} from "./menu.controller";
+import {SubMenuInterface} from "./sub-menu.interface";
 
-export class DetailsController {
+export class DetailsController implements SubMenuInterface {
 
     private static force: boolean = false;
     private static current: Building3D;
+    private static parent: HTMLElement;
 
-    static createMenu() {
-        this.displayObjectInfo(this.current, false)
+    defineSubMenuTitle(): string {
+        return "Information";
     }
 
-    static displayObjectInfo(obj: Building3D, force: boolean) {
+    public createMenu(parent: HTMLElement) {
+        DetailsController.parent = parent;
 
-        if (!MenuController.selectedTab || MenuController.selectedTab === document.getElementById("information")) {
+        DetailsController.displayObjectInfo(DetailsController.current, false)
+    }
+
+    public static displayObjectInfo(obj: Building3D, force: boolean) {
+
+        if (!MenuController.selectedTab || MenuController.selectedTab === document.getElementById("Information")) {
             if (obj) {
                 // clear the sub-menu
                 SubMenuController.getParentContentSubMenu().innerHTML = "";
@@ -27,19 +35,14 @@ export class DetailsController {
                 this.current = obj
             }
 
-            const parent = SubMenuController.getParentContentSubMenu();
+            const modelSubMenu = SubMenuController.createMenu("Model", true, DetailsController.parent);
+            const metricSubMenu = SubMenuController.createMenu("Metrics", true, DetailsController.parent);
+            const linksSubMenu = SubMenuController.createMenu("Links", true, DetailsController.parent);
 
-            // Set title
-            SubMenuController.changeTitleSubMenuElement("Information");
-
-            const modelSubMenu = SubMenuController.createMenu("Model", true, parent);
-            const metricSubMenu = SubMenuController.createMenu("Metrics", true, parent);
-            const linksSubMenu = SubMenuController.createMenu("Links", true, parent);
-
-            if (obj) {
-                this.populateModel(obj.elementModel, modelSubMenu);
-                this.populateMetric(obj.elementModel.metrics, metricSubMenu);
-                this.populateLinks(obj, linksSubMenu);
+            if (DetailsController.current) {
+                this.populateModel(DetailsController.current.elementModel, modelSubMenu);
+                this.populateMetric(DetailsController.current.elementModel.metrics, metricSubMenu);
+                this.populateLinks(DetailsController.current, linksSubMenu);
             }
         }
     }

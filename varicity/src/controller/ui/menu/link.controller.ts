@@ -1,15 +1,15 @@
 import {UIController} from "../ui.controller";
 import {SubMenuController} from "./sub-menu.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
+import {SubMenuInterface} from "./sub-menu.interface";
 
-export class LinkController {
+export class LinkController implements SubMenuInterface {
 
-    public static createMenu() {
-        const parent = SubMenuController.getParentContentSubMenu();
+    public defineSubMenuTitle(): string {
+        return "Links"
+    }
 
-        // set title
-        SubMenuController.changeTitleSubMenuElement("Links");
-
+    public createMenu(parent: HTMLElement) {
 
         const menuColor = SubMenuController.createMenu("Colors", true, parent);
         const displayMenu = SubMenuController.createMenu("Display", true, parent);
@@ -35,10 +35,10 @@ export class LinkController {
             const undergroundRoads = links.display.underground_road;
             SubMenuController.createDoubleText("Air Traffic", "Underground Road", displayMenu);
 
-            this.radioBoxListener(SubMenuController.createCustomRadioBox("IMPLEMENTS", airTraffic.includes('IMPLEMENTS'), undergroundRoads.includes('IMPLEMENTS'), displayMenu), 'IMPLEMENTS');
-            this.radioBoxListener(SubMenuController.createCustomRadioBox("EXTENDS", airTraffic.includes('EXTENDS'), undergroundRoads.includes('EXTENDS'), displayMenu), 'EXTENDS');
-            this.radioBoxListener(SubMenuController.createCustomRadioBox("USAGE", airTraffic.includes('USAGE'), undergroundRoads.includes('USAGE'), displayMenu), 'USAGE');
-            this.radioBoxListener(SubMenuController.createCustomRadioBox("DUPLICATE", airTraffic.includes('DUPLICATE'), undergroundRoads.includes('DUPLICATE'), displayMenu), 'DUPLICATE');
+            LinkController.radioBoxListener(SubMenuController.createCustomRadioBox("IMPLEMENTS", airTraffic.includes('IMPLEMENTS'), undergroundRoads.includes('IMPLEMENTS'), displayMenu), 'IMPLEMENTS');
+            LinkController.radioBoxListener(SubMenuController.createCustomRadioBox("EXTENDS", airTraffic.includes('EXTENDS'), undergroundRoads.includes('EXTENDS'), displayMenu), 'EXTENDS');
+            LinkController.radioBoxListener(SubMenuController.createCustomRadioBox("USAGE", airTraffic.includes('USAGE'), undergroundRoads.includes('USAGE'), displayMenu), 'USAGE');
+            LinkController.radioBoxListener(SubMenuController.createCustomRadioBox("DUPLICATE", airTraffic.includes('DUPLICATE'), undergroundRoads.includes('DUPLICATE'), displayMenu), 'DUPLICATE');
 
             // Hierarchy Links
             const hierarchyLinks = links.display.underground_road;
