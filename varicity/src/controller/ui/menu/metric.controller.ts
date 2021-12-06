@@ -32,12 +32,9 @@ export class MetricController {
     }
 
     private static populateOrientationAndLevelUsage(parent: HTMLElement){
-        const orientation = UIController.config.orientation;
-        const levelUsage = UIController.config.default_level;
-
         // Orientation
         let orientationOptions = ["IN", "OUT", "IN_OUT"];
-        const select = SubMenuController.createSelect("Orientation", orientation, parent, orientationOptions)
+        const select = SubMenuController.createSelect("Orientation", UIController.config.orientation, parent, orientationOptions)
 
         select.addEventListener("change", () => {
             UIController.config.orientation = select.value as Orientation;
@@ -45,7 +42,7 @@ export class MetricController {
         })
 
         // Level usage
-        const range = SubMenuController.createRange("Level usage", levelUsage, 0, MetricController.maxLevelUsage, 1, parent);
+        const range = SubMenuController.createRange("Level usage", UIController.config.default_level, 0, MetricController.maxLevelUsage, 1, parent);
         range.addEventListener("change", () => {
             UIController.config.default_level = +range.value;
             UIController.updateScene(CriticalLevel.REPARSE_DATA);
@@ -129,6 +126,72 @@ export class MetricController {
     private static populateMetrics(parent: HTMLElement){
         const metrics = UIController.config.metrics;
 
-    }
+        metrics.forEach((metric, name) => {
+            const inputs = SubMenuController.createMinMaxSelector(name, metric.min.toString(), metric.max.toString(), metric.higherIsBetter, parent);
 
+            const minInput = inputs[0] as HTMLInputElement;
+            const maxInput = inputs[1] as HTMLInputElement;
+            const lowerInput = inputs[2];
+            const higherInput = inputs[3];
+
+            const selectedClass = "btn-primary";
+            const notSelectedClass = "btn-outline-primary";
+
+            minInput.addEventListener("keypress", (event) => {
+                if(event.key === 'Enter'){
+                    console.log("min changed")
+                    let el = UIController.config.metrics.get(name);
+                    const newMin = +minInput.value;
+
+                    if(el.max < newMin){
+                        ToastController.addToast("The min value '" + newMin + "' of the metric '" + name + "' can't be lower than the max value: " + el.max, ToastType.DANGER);
+                        return;
+                    }
+
+                    UIController.config.metrics.get(name).min = +minInput.value;
+                    UIController.updateScene(CriticalLevel.RERENDER_SCENE);
+                }
+            })
+
+            maxInput.addEventListener("keypress", (event) => {
+                if(event.key === 'Enter') {
+                    console.log("max changed")
+                    let el = UIController.config.metrics.get(name);
+                    const newMax = +maxInput.value;
+
+                    if (el.min > newMax) {
+                        ToastController.addToast("The max value '" + newMax + "' of the metric '" + name + "' can't be lower than the min value: " + el.min, ToastType.DANGER);
+                        return;
+                    }
+
+                    UIController.config.metrics.get(name).max = +maxInput.value;
+                    UIController.updateScene(CriticalLevel.RERENDER_SCENE);
+                }
+            })
+
+            lowerInput.addEventListener('click', function () {
+                if(!lowerInput.classList.contains(selectedClass)){
+                    lowerInput.classList.add(selectedClass);
+                    lowerInput.classList.remove(notSelectedClass);
+                    higherInput.classList.add(notSelectedClass);
+                    higherInput.classList.remove(selectedClass);
+
+                    UIController.config.metrics.get(name).higherIsBetter = false;
+                    UIController.updateScene(CriticalLevel.RERENDER_SCENE); // Reload the screen
+                }
+            });
+
+            higherInput.addEventListener('click', function () {
+                if(!higherInput.classList.contains(selectedClass)){
+                    higherInput.classList.add(selectedClass);
+                    higherInput.classList.remove(notSelectedClass);
+                    lowerInput.classList.add(notSelectedClass);
+                    lowerInput.classList.remove(selectedClass);
+
+                    UIController.config.metrics.get(name).higherIsBetter = true;
+                    UIController.updateScene(CriticalLevel.RERENDER_SCENE); // Reload the screen
+                }
+            });
+        })
+    }
 }

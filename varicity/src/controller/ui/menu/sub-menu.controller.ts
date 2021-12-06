@@ -357,4 +357,128 @@ export class SubMenuController {
 
         return divMaster;
     }
+
+    public static createMinMaxSelector(name: string, min: string, max: string, isHighBetter: boolean, parent: HTMLElement): HTMLElement[] {
+        // MAIN CONTAINERS
+        let divMaster = document.createElement("div");
+        divMaster.style.paddingBottom = "1em";
+
+        let divTitle = document.createElement("div");
+        divTitle.style.fontWeight = "600";
+        divTitle.style.paddingBottom = "0.2em";
+        divTitle.innerText = name;
+
+        let divContainer = document.createElement("div");
+        divContainer.classList.add("d-flex", "pr-3");
+
+        divMaster.appendChild(divTitle);
+        divMaster.appendChild(divContainer);
+
+        // MIN
+        let divMinContainer = document.createElement("div");
+        divMinContainer.classList.add("col-3");
+        divMinContainer.style.paddingRight = "1em";
+
+        let divMinText = document.createElement("div");
+        divMinText.classList.add("input-group", "fill-height");
+
+        let labelMin = document.createElement("label");
+        labelMin.classList.add("col-6", "input-group-text");
+        labelMin.innerText = "Min";
+
+        let inputMin = document.createElement("input");
+        inputMin.classList.add("col-6", "form-control", "fill-height");
+        inputMin.type = "text";
+        inputMin.value = min;
+
+        divContainer.appendChild(divMinContainer);
+        divMinContainer.appendChild(divMinText);
+        divMinText.appendChild(labelMin);
+        divMinText.appendChild(inputMin);
+
+        // MAX
+        let divMaxContainer = document.createElement("div");
+        divMaxContainer.classList.add("col-4");
+        divMaxContainer.style.paddingRight = "1em";
+
+        let divMaxText = document.createElement("div");
+        divMaxText.classList.add("input-group", "fill-height");
+
+        let labelMax = document.createElement("label");
+        labelMax.classList.add("col-6", "input-group-text");
+        labelMax.innerText = "Max";
+
+        let inputMax = document.createElement("input");
+        inputMax.classList.add("col-6", "form-control", "fill-height");
+        inputMax.type = "text";
+        inputMax.value = max;
+
+        divContainer.appendChild(divMaxContainer);
+        divMaxContainer.appendChild(divMaxText);
+        divMaxText.appendChild(labelMax);
+        divMaxText.appendChild(inputMax);
+
+        // HIGHER / LOWER  IS BETTER
+        let divMinMaxColContainer = document.createElement("div");
+        divMinMaxColContainer.classList.add("col-5");
+
+        let divHigherIsBetterContainer = document.createElement("div");
+        divHigherIsBetterContainer.classList.add("btn-group");
+
+        let divLowerIsBetter = document.createElement("div");
+        divLowerIsBetter.classList.add("btn");
+        divLowerIsBetter.innerText = "Lower is Better";
+
+        let divHigherIsBetter = document.createElement("div");
+        divHigherIsBetter.classList.add("btn");
+        divHigherIsBetter.innerText = "Higher is Better";
+
+        if(isHighBetter){
+            divLowerIsBetter.classList.add("btn-outline-primary");
+            divHigherIsBetter.classList.add("btn-primary");
+        }else{
+            divLowerIsBetter.classList.add("btn-primary");
+            divHigherIsBetter.classList.add("btn-outline-primary");
+        }
+
+        divContainer.appendChild(divMinMaxColContainer);
+        divMinMaxColContainer.appendChild(divHigherIsBetterContainer);
+        divHigherIsBetterContainer.appendChild(divLowerIsBetter);
+        divHigherIsBetterContainer.appendChild(divHigherIsBetter);
+
+        // `
+        //     <div>
+        //         <div class="" style="font-weight: 600; padding-bottom: 0.2em">Complexity</div>
+        //
+        //         <div class="d-flex pr-3">
+        //             <div class="col-2 ">
+        //                 <div class="input-group " style="padding-right: 1em">
+        //                     <label for="azaet" class="input-group-text col-6">min</label>
+        //                     <input id="azaet" type="text" class="form-control col-6">
+        //                 </div>
+        //             </div>
+        //
+        //
+        //             <div class="col-2 ">
+        //                 <div class="input-group" style="padding-right: 1em">
+        //                     <label for="azaeet" class="input-group-text col-6">max</label>
+        //                     <input type="text" id="azaeet" class="form-control ">
+        //                 </div>
+        //             </div>
+        //
+        //             <div class="col-8">
+        //                 <div  class="input-group btn-group ">
+        //                     <div class="btn btn-primary ">higher is better</div>
+        //                     <div class="btn btn-outline-secondary">lower is better</div>
+        //                 </div>
+        //             </div>
+        //
+        //         </div>
+        //     </div>
+        // `
+
+        parent.appendChild(divMaster);
+
+        return [inputMin, inputMax, divLowerIsBetter, divHigherIsBetter];
+    }
 }

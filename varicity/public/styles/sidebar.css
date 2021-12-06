@@ -196,3 +196,13 @@ a:link {
 .mg-text {
     line-height: 14px
 }
+
+.fill-height{
+    height: 100%;
+}
+
+.btn-outline-primary:hover {
+    color: #000000 !important;
+    background-color: rgba(13, 110, 253, 0.16) !important;
+    /*border-color: #0d6efd !important;*/
+}
