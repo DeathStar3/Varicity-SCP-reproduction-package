@@ -18,6 +18,7 @@ import {Building} from '../../../model/entities/building.interface';
 import {Link3D} from '../3Dinterfaces/link3D.interface';
 import {MenuController} from "../../../controller/ui/menu/menu.controller";
 import {SceneRenderer} from "../../sceneRenderer";
+import {DetailsController} from "../../../controller/ui/menu/details.controller";
 
 export class Building3D extends Element3D {
     elementModel: Building;
@@ -457,7 +458,7 @@ export class Building3D extends Element3D {
 
                         document.getElementById("submenu").style.display = "block"; //Display submenu
 
-                        const infoTab = document.getElementById("information")
+                        const infoTab = DetailsController.getInformationTab();
                         if (MenuController.selectedTab && MenuController.selectedTab !== infoTab) {
                             const currentTab = document.getElementById(MenuController.selectedTab.id)
                             MenuController.changeImage(currentTab) // Remove tab icon except if Information tab

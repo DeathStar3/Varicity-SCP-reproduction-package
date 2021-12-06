@@ -25,12 +25,33 @@ building:
         color: "#2c3e50" # dark blue
       - name: "CLASS"
         color: "#335DFF"
-
+      - name: "API"
+      - name: "VARIANT"
+      - name: "TEMPLATE"
+      - name: "DECORATOR"
+      - name: "COMPOSITION_STRATEGY"
+      - name: "METHOD_LEVEL_VP"
+      - name: "DENSE"
+      - name: "PUBLIC"
+      - name: "PRIVATE"
     edges:
       - name: "API"
         color: "#000000"
-
-    outlines: null
+      - name: "!HOTSPOT"
+      - name: "VP"
+      - name: "STRATEGY"
+      - name: "FACTORY"
+      - name: "INTERFACE"
+      - name: "ABSTRACT"
+      - name: "CLASS"
+      - name: "VARIANT"
+      - name: "TEMPLATE"
+      - name: "DECORATOR"
+      - name: "COMPOSITION_STRATEGY"
+      - name: "METHOD_LEVEL_VP"
+      - name: "DENSE"
+      - name: "PUBLIC"
+      - name: "PRIVATE"
 
 district:
   padding: 0

@@ -1,30 +1,30 @@
 import {expect} from 'chai';
 import {ClassesPackagesStrategy} from "../src/controller/parser/strategies/classes_packages.strategy";
-import {JsonInputInterface} from "../../varicity-backend/dist/model/jsonInput.interface";
 import {Config} from "../src/model/entitiesImplems/config.model";
+import {JsonInputInterface} from "../src/model/entities/jsonInput.interface";
 
 describe('parsing without links', function () {
-  it('parse', function () {
-    const jsonInput = JSON.parse(test1WithoutLinks) as JsonInputInterface
-    let entities = new ClassesPackagesStrategy().parse(jsonInput, {} as Config);
-    let districts = entities.district.districts[0].districts[0].districts
-    let numberOfDistricts = districts.length;
-    expect(numberOfDistricts).equal(2);
-    let numberOfBuildings = 0;
-    districts.forEach(d => {
-      numberOfBuildings += d.buildings.length
-    })
-    expect(numberOfBuildings).equal(5);
-  });
+    it('parse', function () {
+        const jsonInput = JSON.parse(test1WithoutLinks) as JsonInputInterface
+        let entities = new ClassesPackagesStrategy().parse(jsonInput, {} as Config);
+        let districts = entities.district.districts[0].districts[0].districts
+        let numberOfDistricts = districts.length;
+        expect(numberOfDistricts).equal(2);
+        let numberOfBuildings = 0;
+        districts.forEach(d => {
+            numberOfBuildings += d.buildings.length
+        })
+        expect(numberOfBuildings).equal(5);
+    });
 });
 
 describe('parsing links', function () {
-  it('parse', function () {
-    const jsonInput = JSON.parse(test2WithLinks) as JsonInputInterface
-    let entities = new ClassesPackagesStrategy().parse(jsonInput, {} as Config);
-    let numberOfLinks = entities.links.length;
-    expect(numberOfLinks).equal(2);
-  });
+    it('parse', function () {
+        const jsonInput = JSON.parse(test2WithLinks) as JsonInputInterface
+        let entities = new ClassesPackagesStrategy().parse(jsonInput, {} as Config);
+        let numberOfLinks = entities.links.length;
+        expect(numberOfLinks).equal(2);
+    });
 });
 
 

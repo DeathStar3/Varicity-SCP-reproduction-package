@@ -51,6 +51,7 @@
     "fs": "0.0.1-security",
     "js-cookie": "^3.0.1",
     "snackbar": "^1.1.0",
+    "sortablejs": "^1.14.0",
     "websocket": "^1.0.34"
   }
 }
