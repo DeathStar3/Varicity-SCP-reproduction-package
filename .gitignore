@@ -38,3 +38,4 @@ data
 *node_modules*
 dockervolume
 varicity-backend/dockervolume
+private-tools

@@ -19,10 +19,16 @@
 # Copyright 2018-2021 Xhevahire Tërnava <t.xheva@gmail.com>
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
+#This script build the images to be used with docker
+set -e
+cd metrics-extension
+docker build -f Dockerfile -t deathstar3/symfinder-cli:local .
+cd ../varicity
+echo "Building the front"
+docker build -t deathstar3/varicity:local .
 
-cd docker/sources_fetcher/
-docker build -f docker/sources_fetcher/Dockerfile -t deathstar3/symfinder-fetcher:local .
-cd ../../
-docker build -f docker/neo4j/Dockerfile -t deathstar3/symfinder-neo4j:local --build-arg BUILD_PARAMS="$@" .
-docker build -f docker/symfinder/Dockerfile -t deathstar3/symfinder-engine:local --build-arg BUILD_PARAMS="$@" .
-docker build -f docker/runner/Dockerfile -t deathstar3/symfinder-runner:local .
+cd ../varicity-backend
+echo "Building the backend"
+docker build -t deathstar3/varicity-backend:local .
+
+echo "Done"
