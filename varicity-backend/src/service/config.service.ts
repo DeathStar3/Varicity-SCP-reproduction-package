@@ -244,7 +244,7 @@ export class VaricityConfigService {
         const doc = new YAML.Document();
         doc.contents = config;
 
-        let pathDirToConfig = path.join(ConfigService.defaultConfigsPath, config.projectId);
+        let pathDirToConfig = path.join(this.pathToVisualizationConfigs, config.projectId);
 
         if (!fs.existsSync(pathDirToConfig)){
             fs.mkdirSync(pathDirToConfig);

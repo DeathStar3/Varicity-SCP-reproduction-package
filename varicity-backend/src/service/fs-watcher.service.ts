@@ -63,11 +63,11 @@ export class FsWatcherService {
      */
     public indexConfigFile(configFilePath: string) {
         const paths: string[] = []
-        if (this.db.exists('/config/' + this.getConfigProjectName(configFilePath))) {
-            paths.push(...this.db.getData('/config/' + this.getConfigProjectName(configFilePath)))
+        if (this.db.exists('/configs/' + this.getConfigProjectName(configFilePath))) {
+            paths.push(...this.db.getData('/configs/' + this.getConfigProjectName(configFilePath)))
         }
         paths.push(this.normalizeConfigFileName(configFilePath))
-        this.db.push('/config/' + this.getConfigProjectName(configFilePath), paths);
+        this.db.push('/configs/' + this.getConfigProjectName(configFilePath), paths);
     }
 
     /**
@@ -75,9 +75,9 @@ export class FsWatcherService {
      */
     public deIndexConfigFile(configFilePath: string) {
         const paths: string[] = []
-        if (this.db.exists('/config/' + this.getConfigProjectName(configFilePath))) {
+        if (this.db.exists('/configs/' + this.getConfigProjectName(configFilePath))) {
 
-            paths.push(...this.db.getData('/config/' + this.getConfigProjectName(configFilePath)))
+            paths.push(...this.db.getData('/configs/' + this.getConfigProjectName(configFilePath)))
 
             const index = paths.indexOf(this.normalizeConfigFileName(configFilePath));
             if (index > -1) {
@@ -85,9 +85,9 @@ export class FsWatcherService {
             }
         }
         if (paths.length === 0) {
-            this.db.delete('/config/' + this.getConfigProjectName(configFilePath));
+            this.db.delete('/configs/' + this.getConfigProjectName(configFilePath));
         } else {
-            this.db.push('/config/' + this.getConfigProjectName(configFilePath), paths);
+            this.db.push('/configs/' + this.getConfigProjectName(configFilePath), paths);
         }
     }
 

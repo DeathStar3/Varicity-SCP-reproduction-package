@@ -17,6 +17,10 @@
             "projectName": "awt-jb8u202-b1532"
         },
         {
+            "path": "persistent/data/symfinder_files/parsed/cf-team-o.json",
+            "projectName": "cf-team-o"
+        },
+        {
             "path": "persistent/data/symfinder_files/parsed/cucumber-v6.8.0.json",
             "projectName": "cucumber-v6.8.0"
         },
@@ -83,22 +87,6 @@
         {
             "path": "persistent/data/symfinder_files/parsed/vert.x.json",
             "projectName": "vert.x"
-        },
-        {
-            "path": "persistent/data/symfinder_files/parsed/cf-team-o.json",
-            "projectName": "cf-team-o"
-        }
-    ],
-    "configs": [
-        {
-            "name": "config-vert.x-1",
-            "path": "persistent/configs/vert.x/config-vert.x-1.yaml",
-            "projectId": "vert.x"
-        },
-        {
-            "name": "config-regatta-3",
-            "path": "persistent/configs/regatta/config-regatta-3.yaml",
-            "projectId": "regatta"
         }
     ]
 }
