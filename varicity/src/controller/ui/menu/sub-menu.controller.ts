@@ -428,10 +428,12 @@ export class SubMenuController {
         let divLowerIsBetter = document.createElement("div");
         divLowerIsBetter.classList.add("btn");
         divLowerIsBetter.innerText = "Lower is Better";
+        divLowerIsBetter.style.lineHeight = "1em";
 
         let divHigherIsBetter = document.createElement("div");
         divHigherIsBetter.classList.add("btn");
         divHigherIsBetter.innerText = "Higher is Better";
+        divHigherIsBetter.style.lineHeight = "1em";
 
         if (isHighBetter) {
             divLowerIsBetter.classList.add("btn-outline-primary");

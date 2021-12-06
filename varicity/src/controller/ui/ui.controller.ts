@@ -3,7 +3,6 @@ import {Building3D} from '../../view/common/3Delements/building3D';
 import {Color} from '../../model/entities/config.interface';
 import {Config, ConfigName, CriticalLevel, MetricSpec} from '../../model/entitiesImplems/config.model';
 import {SceneRenderer} from '../../view/sceneRenderer';
-import {ConfigController} from './config.controller';
 import {DetailsController} from './menu/details.controller';
 import {ProjectController} from './project-selector.controller';
 import {LogsController} from "./logs.controller";
@@ -19,10 +18,6 @@ export class UIController {
     public static configsName: ConfigName[];
     public static configFileName: string;
     public static config: Config;
-
-    public static createHeader(): void {
-
-    }
 
     public static createMenu() {
         MenuController.createMenu();
@@ -51,7 +46,6 @@ export class UIController {
 
     public static createConfig(config: Config): void {
         this.config = config;
-        ConfigController.createConfigFolder(config);
     }
 
     public static createLogs() {
@@ -65,11 +59,6 @@ export class UIController {
     public static createSaveSection(): void {
         SaveController.addSaveListeners();
     }
-
-    public static createFooter(): void {
-
-    }
-
 
     public static async reloadConfigAndConfigSelector(filename: string) {
         this.configsName = (await ConfigService.loadConfigNames(filename)).data;
