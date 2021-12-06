@@ -10,7 +10,6 @@ module.exports = {
         'main': path.resolve(appDirectory, "src/main.ts"),
         'parserTest': './tests/parser.test.ts',
         'parserVPTest': './tests/parserVP.test.ts',
-        'login': path.resolve(appDirectory, 'src/controller/ui/login.controller.ts'),
         'experiment': path.resolve(appDirectory, 'src/controller/experiment/experiment.controller.ts')
     },
     optimization: {
@@ -56,13 +55,8 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            chunks: ['login'],
-            template: path.resolve(appDirectory, "public/index.html")
-        }),
-        new HtmlWebpackPlugin({
             chunks: ['main'],
-            template: path.resolve(appDirectory, "public/ui.html"),
-            filename: 'ui.html'
+            template: path.resolve(appDirectory, "public/index.html")
         }),
         new HtmlWebpackPlugin({
             chunks: ['experiment'],

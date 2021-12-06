@@ -3,30 +3,175 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symfinder Varicity</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <title>Welcome to Varicity</title>
 </head>
 
 <body>
 
-<div class="m-3" action="#" method="post">
-    <label class="form-label">Username</label>
-    <input class="form-control" type="text" name="Username" id="username">
-    <select class="form-select mt-2" name="userType" id="user-type">
-        <option value="">--Please choose an option--</option>
-        <option value="EXPERT">Expert</option>
-        <option value="NEWCOMER">Newcomer</option>
-    </select>
-    <div class="text-center mt-2">
-        <button id="loginbtn" class="btn btn-primary "> Register/Connect</button>
+<div id="main">
+
+    <!-- -------------------------------------------------------------------- --->
+    <!--                           LOADING SCREEN                             --->
+    <!-- -------------------------------------------------------------------- --->
+    <div id="loading-frame">
+        <img src="images/logovaricity.gif" style="width: 200px">
     </div>
 
-</div>
-<a href="ui.html"> UI</a>
-</body>
 
+    <div id="console" class="overflowable">
+
+        <!-- -------------------------------------------------------------------- --->
+        <!--                                MENU                                  --->
+        <!-- -------------------------------------------------------------------- --->
+        <div class="navbar d-flex flex-column flex-shrink-0 bg-light">
+
+            <!-- LOGO -->
+            <a href="/" class="d-block p-3 link-dark text-decoration-none" title="Icon-only" data-bs-toggle="tooltip"
+               data-bs-placement="left">
+                <img src="images/menu-icons/logo-varicity.svg" class="bi" width="50" height="50">
+                <span class="visually-hidden">Icon-only</span>
+            </a>
+
+            <!-- MAIN MENU -->
+            <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="main-menu">
+            </ul>
+
+            <!-- TOOL MENU -->
+            <div class="dropdown border-top">
+                <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" id="tool-menu">
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECOND MENU OPENER -->
+        <div id="submenu" class="flex-shrink-0 p-3 bg-white" style="overflow-y:scroll; width: 500px;">
+            <span id="submenu-title" class="fs-5 fw-semibold border-bottom align-items-center pb-3 mb-3 d-flex ">Collapsible</span>
+
+            <ul id="submenu-content" class="list-unstyled ps-0">
+                <!-- EACH SUB MENU IS INSERTED HERE -->
+            </ul>
+        </div>
+
+        <!-- -------------------------------------------------------------------- --->
+        <!--                        PROJECT-CONFIG DIALOG                         --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="project-config_content" heading="Selection" class="styled">
+            <div class="form-group">
+                <label for="project_selector">Project</label>
+                <select id="project_selector" class="mt-2 mb-2 parent form-select">
+                    <option value=""> ---Select a project---</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="project_selector">Configuration</label>
+                <select id="config_selector" class="mt-2 mb-2 parent form-select"></select>
+            </div>
+            <mwc-button slot="primaryAction" dialogAction="close">Close</mwc-button>
+        </mwc-dialog>
+
+        <!-- -------------------------------------------------------------------- --->
+        <!--                         DOCUMENTATION DIALOG                         --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="doc_content" heading="Documentation of Varicity" class="styled">
+            <div>
+                Use ctrl + s to update the configuration without camera<br/>
+                Use ctrl + shift + s to save a new configuration with camera<br/>
+                Use ctrl + p to update the configuration with camera<br/>
+                Use left click + drag to rotate camera<br/>
+                Use right click + drag to move camera<br/>
+                Use mouse wheel to zoom in/out<br/>
+                Hover on building to display class info in the details section below<br/>
+                Click on building to lock the info display on it<br/>
+                Legend for design patterns:<br/>
+                <ul>
+                    <li>
+                        Chimneys: A building with chimneys represents a Factory class<br/>
+                        <img id="factory_img"/>
+                    </li>
+                    <li>
+                        Dome: A building with a dome represents a Strategy class<br/>
+                        <img id="strategy_img"/>
+                    </li>
+                    <li>
+                        Inverted pyramid: A building with an inverted pyramid represents a Template class<br/>
+                        <img id="template_img"/>
+                    </li>
+                    <li>
+                        Sphere: A building with a sphere represents a Decorator class<br/>
+                        <img id="decorator_img"/>
+                    </li>
+                </ul>
+
+            </div>
+            <mwc-button slot="primaryAction" dialogAction="close">
+                Close documentation
+            </mwc-button>
+        </mwc-dialog>
+
+        <!-- -------------------------------------------------------------------- --->
+        <!--                             SAVE DIALOG                              --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="save_content" heading="Save configuration" class="styled">
+            <div class="vertical-container">
+                <button class="btn btn-primary save-button" id="update-camera">
+                    <span class="material-icons-outlined">camera</span>
+                    Update Camera position
+                </button>
+                <button class="btn btn-primary save-button" id="update-config">
+                    <span class="material-icons-outlined">save</span>
+                    Update Configuration
+                </button>
+                <button class=" btn btn-success save-button" id="save-config">
+                    <span class="material-icons-outlined">save</span>
+                    Save Configuration
+                </button>
+            </div>
+            <mwc-button slot="primaryAction" dialogAction="close">
+                Cancel
+            </mwc-button>
+        </mwc-dialog>
+
+
+        <!-- -------------------------------------------------------------------- --->
+        <!--                       SAVE VALIDATION DIALOG                         --->
+        <!-- -------------------------------------------------------------------- --->
+        <mwc-dialog id="save-dialog" heading="Save Validation">
+            <div>
+                <p>You are about to save a new configuration. Are you sure ? Enter a name for your configuration.</p>
+                <input class="form-control" id="text-field-configname" minlength="3" maxlength="64"
+                       placeholder="Config name" required>
+            </div>
+
+            <mwc-button id="save-config-confirm-btn" slot="primaryAction">Confirm</mwc-button>
+            <mwc-button slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
+        </mwc-dialog>
+
+    </div>
+    <div id="search-menu" class="overflowable">
+        <div class="justify-content-center px-4">
+            <div id="searchbar-box" class="search">
+                <input id="searchbar" type="text" class="search-input" placeholder="Search..." name="">
+                <a id="searchbar-btn" href="#" class="search-icon"><i class="fa fa-search"></i></a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toast-parent">
+</div>
+
+</body>
 </html>
