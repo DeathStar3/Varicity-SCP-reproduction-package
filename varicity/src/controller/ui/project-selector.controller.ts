@@ -6,34 +6,43 @@ import {ConfigService} from "../../services/config.service";
 import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
 import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
 import {UIController} from "./ui.controller";
+import {MetricController} from "./menu/metric.controller";
+import {MenuController} from "./menu/menu.controller";
 
 export class ProjectController {
 
     static el: EntitiesList;
     private static previousParser: ParsingStrategy;
-    private static projectListener:CurrentProjectListener = new CurrentProjectListener();
+    private static projectListener: CurrentProjectListener = new CurrentProjectListener();
 
     static createProjectSelector(projectsName: string[]) {
         let parent = document.getElementById("project_selector");
 
         for (let projectName of projectsName) {
             let node = document.createElement("option") as HTMLOptionElement;
-            node.value=projectName;
-            node.text= projectName;
-            
+            node.value = projectName;
+            node.text = projectName;
+
             parent.appendChild(node);
         }
 
-        parent.addEventListener('change', function(event) {
+        parent.addEventListener('change', function (event) {
             const projectName = (event.target as HTMLInputElement).value;
-            if(projectName !== undefined){
+            if (projectName !== undefined) {
                 ProjectController.loadProject(projectName);
                 parent.childNodes[0].nodeValue = "Project selection: " + projectName;
             }
         });
     }
 
-    public static loadProject(projectName: string){
+    public static loadProject(projectName: string) {
+
+        document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
+        if (MenuController.selectedTab){
+            MenuController.changeImage(MenuController.selectedTab);
+            MenuController.selectedTab = undefined;
+        }
+
         this.previousParser = new VPVariantsStrategy();
 
         // clear the current view
@@ -43,16 +52,20 @@ export class ProjectController {
         UIController.clearMap();
 
         const run = async () => {
+            document.getElementById("loading-frame").style.display = 'inline-block';
             await UIController.reloadConfigAndConfigSelector(projectName);
 
             // TODO find alternative
             await ProjectService.fetchVisualizationData(projectName).then(async (response) => {
                 const config = await ConfigService.loadDataFile(projectName);
                 this.el = this.previousParser.parse(response.data, config, projectName);
-                let inputElement = document.getElementById("comp-level") as HTMLInputElement;
 
-                UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(+inputElement.value));
-                UIController.scene.buildScene();
+                // set the min & max usage level
+                const maxLvl = this.el.getMaxCompLevel();
+                MetricController.defineMaxLevelUsage(maxLvl);
+
+                UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(config.default_level));
+                UIController.scene.buildScene(true);
             })
 
             this.projectListener.projectChange(projectName);

@@ -1,5 +1,5 @@
-import { Color, ConfigClones, ConfigColor, ConfigInterface, D3Config } from "../entities/config.interface";
-import { Orientation } from "./orientation.enum";
+import {Color, ConfigClones, ConfigColor, ConfigInterface, D3Config} from "../entities/config.interface";
+import {Orientation} from "./orientation.enum";
 import {Vector3} from "@babylonjs/core";
 
 export enum CriticalLevel {
@@ -22,8 +22,8 @@ export class MetricSpec {
 
 export class Config implements ConfigInterface {
 
-    id?:string; //for persistence
-    projectId?:string; //for persistence
+    id?: string; //for persistence
+    projectId?: string; //for persistence
     name?: string;
     description: string;
     building: D3Config;
@@ -61,7 +61,8 @@ export class Config implements ConfigInterface {
 
     metrics: Map<string, MetricSpec>;
 
-    constructor() { }
+    constructor() {
+    }
 
     public static instanceOfColor(object: any): object is Color {
         return object &&
@@ -107,20 +108,20 @@ export class Config implements ConfigInterface {
             console.log(fields);
             console.log(value);
             if (Array.isArray(value)) {
-                if(fields[2] === "higherIsBetter"){
+                if (fields[2] === "higherIsBetter") {
                     config.metrics.get(fields[1])[fields[2]] = (value[1].toLowerCase() === 'true');
-                }else{
+                } else {
                     config.metrics.get(fields[1])[fields[2]] = +value[1];
                 }
                 return CriticalLevel.RERENDER_SCENE;
             }
         }
-        if (fields.includes("camera_data")){
+        if (fields.includes("camera_data")) {
             if (Array.isArray(value)) {
-                if(fields.length == 2){
+                if (fields.length == 2) {
                     config[fields[0]][fields[1]] = +value[1];
-                }else{
-                    config[fields[0]][fields[1]][fields[2]]  = +value[1];
+                } else {
+                    config[fields[0]][fields[1]][fields[2]] = +value[1];
                 }
                 return CriticalLevel.RERENDER_SCENE;
             }
@@ -138,14 +139,13 @@ export class Config implements ConfigInterface {
                     let index = cur.findIndex(v => v == value[0])
                     if (value[1] == "") { // prev value was defined, current wasn't, therefore we delete entry
                         cur.splice(index, 1);
-                    }
-                    else { // prev and current are defined, therefore we change value
+                    } else { // prev and current are defined, therefore we change value
                         cur[index] = value[1];
                     }
                 } else { // doesn't exist, so we push the new value
                     cur.push(value[1]);
                 }
-                if(fields.includes("api_classes") || fields.includes("hierarchy_links")) return CriticalLevel.REPARSE_DATA;
+                if (fields.includes("api_classes") || fields.includes("hierarchy_links")) return CriticalLevel.REPARSE_DATA;
             }
             return CriticalLevel.RERENDER_SCENE;
         }
@@ -186,10 +186,11 @@ export class Vector3_Local {
         this.z = z || 0;
     }
 
-    public static toVector3(v: Vector3_Local): Vector3{
+    public static toVector3(v: Vector3_Local): Vector3 {
         return new Vector3(v.x, v.y, v.z);
     }
-    public static fromVector3(v: Vector3): Vector3_Local{
+
+    public static fromVector3(v: Vector3): Vector3_Local {
         return new Vector3_Local(v.x, v.y, v.z);
     }
 }

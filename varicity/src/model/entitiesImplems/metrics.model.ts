@@ -17,7 +17,7 @@ export class Metrics {
     }
 
     getMetricValue(metricName: string): number {
-        if(!this.hasMetric(metricName)){
+        if (!this.hasMetric(metricName)) {
             return 0;
         }
 

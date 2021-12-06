@@ -8,7 +8,7 @@ export interface Node {
     metrics: Metrics;
 }
 
-export class NodeElement implements Node{
+export class NodeElement implements Node {
     name: string;
     types: string[];
     metrics: Metrics;
@@ -33,8 +33,8 @@ export class NodeElement implements Node{
         return this.metrics.addMetric(new MetricObject(metricName, value));
     }
 
-    public fillMetricsFromNodeInterface(nodeI: NodeInterface){
-        if(nodeI.additionalMetrics !== undefined){
+    public fillMetricsFromNodeInterface(nodeI: NodeInterface) {
+        if (nodeI.additionalMetrics !== undefined) {
             nodeI.additionalMetrics.forEach(metric => {
                 this.metrics.addMetric(new MetricObject(metric.name, metric.value));
             })

@@ -1,23 +1,25 @@
-import { Vector3 } from "@babylonjs/core";
+import {Vector3} from "@babylonjs/core";
 
-export enum UserType{
-    EXPERT="EXPERT",
-    NEWCOMER="NEWCOMER"
-}
-export class CityViewConfig{
-    userType:UserType;
-    username:string;
-    timestamp:Date;
-    projectName:string;
-    cameraPosition:Vector3;
+export enum UserType {
+    EXPERT = "EXPERT",
+    NEWCOMER = "NEWCOMER"
 }
 
-export class User{
+export class CityViewConfig {
+    userType: UserType;
+    username: string;
+    timestamp: Date;
+    projectName: string;
+    cameraPosition: Vector3;
+}
 
-    constructor(n:string , u:UserType){
-        this.userType=u;
-        this.username=n;
+export class User {
+
+    constructor(n: string, u: UserType) {
+        this.userType = u;
+        this.username = n;
     }
-    userType:UserType;
-    username:string;
+
+    userType: UserType;
+    username: string;
 }

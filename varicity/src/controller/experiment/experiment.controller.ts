@@ -1,6 +1,5 @@
-import axios from "axios";
-import { backendUrl, symfinderServiceUrl } from "../../constants";
-import { SymfinderServiceResponse, SymfinderServiceResponseType } from "./response.model";
+import {symfinderServiceUrl} from "../../constants";
+import {SymfinderServiceResponse, SymfinderServiceResponseType} from "./response.model";
 import '@material/mwc-dialog';
 import '@material/mwc-button/mwc-button';
 import '@material/mwc-radio/mwc-radio';
@@ -35,8 +34,6 @@ export class ExperimentController {
         });
 
 
-
-
         this.client.onerror = function () {
             console.log('Connection Error');
         };
@@ -69,9 +66,9 @@ export class ExperimentController {
                     document.querySelector('#dialog-experiment-failed').setAttribute('open', 'true');
                     break;
                 case SymfinderServiceResponseType.EXPERIMENT_COMPLETED:
-                        snackbar.show('Your experiment has been processed successfully :')
-                        console.log(response.content)
-                        break;
+                    snackbar.show('Your experiment has been processed successfully :')
+                    console.log(response.content)
+                    break;
                 default:
                     snackbar.show('State unknown');
                     break;

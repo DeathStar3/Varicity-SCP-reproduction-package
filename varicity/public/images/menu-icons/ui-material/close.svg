@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <clipPath id="clip-close">
+      <rect width="40" height="40"/>
+    </clipPath>
+  </defs>
+  <g id="close" clip-path="url(#clip-close)">
+    <g id="icons">
+      <path id="exit" d="M26,20l7.714-7.714a4.143,4.143,0,0,0,0-6,4.143,4.143,0,0,0-6,0L20,14,12.286,6.286a4.143,4.143,0,0,0-6,0,4.143,4.143,0,0,0,0,6L14,20,6.286,27.714a4.143,4.143,0,0,0,0,6,4.143,4.143,0,0,0,6,0L20,26l7.714,7.714a4.143,4.143,0,0,0,6,0,4.143,4.143,0,0,0,0-6Z" fill="red"/>
+    </g>
+  </g>
+</svg>

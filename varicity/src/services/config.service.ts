@@ -8,7 +8,7 @@ export class ConfigService {
      * Get the names of all configs from the specified project
      * @param projectName
      */
-    public static loadConfigNames(projectName: string): Promise<AxiosResponse<ConfigName[],any>>  {
+    public static loadConfigNames(projectName: string): Promise<AxiosResponse<ConfigName[], any>> {
         return axios.get<ConfigName[]>(`${backendUrl}/projects/${projectName}/configs/filenames-and-names`);
     }
 
@@ -37,10 +37,36 @@ export class ConfigService {
      */
     public static async saveConfig(config: Config): Promise<SaveResponseConfig> {
         return new Promise<SaveResponseConfig>((resolve, reject) => {
-            axios.post<SaveResponseConfig>(`${backendUrl}/projects/configs`, {...config, metrics: Object.fromEntries(config.metrics)}).then((res) => {
+            axios.post<SaveResponseConfig>(`${backendUrl}/projects/configs`, {
+                ...config,
+                metrics: Object.fromEntries(config.metrics)
+            }).then((res) => {
                 let saveResponseConfig = res.data;
                 ConfigService.convertMetricJsObjectToMap(saveResponseConfig.config);
                 resolve(saveResponseConfig);
+            }).catch((err) => {
+                reject(err);
+            });
+        });
+    }
+
+    /**
+     * Update the config in backend filesystem
+     * @param config saved in backend
+     * @param fileName file to update
+     * @return the return value is a config with a filename attribute
+     */
+    public static async updateConfig(fileName: string, config: Config): Promise<SaveResponseConfig> {
+        return new Promise<SaveResponseConfig>((resolve, reject) => {
+            axios.post<SaveResponseConfig>(`${backendUrl}/projects/configs/` + fileName, {
+                ...config,
+                metrics: Object.fromEntries(config.metrics)
+            }).then((res) => {
+                let saveResponseConfig = res.data;
+                ConfigService.convertMetricJsObjectToMap(saveResponseConfig.config);
+                resolve(saveResponseConfig);
+            }).catch((err) => {
+                reject(err);
             })
         });
     }
@@ -50,12 +76,14 @@ export class ConfigService {
      * @param promise of the config
      * @private
      */
-    private static async loadConfig(promise: Promise<AxiosResponse<Config,any>>): Promise<Config> {
+    private static async loadConfig(promise: Promise<AxiosResponse<Config, any>>): Promise<Config> {
         return new Promise<Config>((resolve, reject) => {
             promise.then((res) => {
                 let config = res.data;
                 ConfigService.convertMetricJsObjectToMap(config);
                 resolve(config);
+            }).catch((err) => {
+                reject(err);
             });
         });
     }
@@ -66,11 +94,11 @@ export class ConfigService {
      * @param config
      * @private
      */
-    private static convertMetricJsObjectToMap(config: Config){
-        if(config.metrics === undefined){
+    private static convertMetricJsObjectToMap(config: Config) {
+        if (config.metrics === undefined) {
             config.metrics = new Map<string, MetricSpec>();
-        }else if(!(config.metrics instanceof Map)){
-            config.metrics =  new Map(Object.entries(config.metrics));
+        } else if (!(config.metrics instanceof Map)) {
+            config.metrics = new Map(Object.entries(config.metrics));
         }
     }
 }

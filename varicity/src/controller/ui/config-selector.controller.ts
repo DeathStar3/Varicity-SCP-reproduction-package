@@ -6,6 +6,8 @@ import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
 import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
 import {UIController} from "./ui.controller";
 import {ConfigName} from "../../model/entitiesImplems/config.model";
+import {MetricController} from "./menu/metric.controller";
+import {MenuController} from "./menu/menu.controller";
 
 export class ConfigSelectorController {
 
@@ -34,18 +36,26 @@ export class ConfigSelectorController {
             node.selected = (UIController.config.name == config.name) // TODO problem in case multiple same config names
             parent.appendChild(node);
         }
+        UIController.configFileName = (configs[configs.length-1]).filename;
 
         // update the view & config in case of a change
-        parent.addEventListener('change', async function(event) {
+        parent.addEventListener('change', async function (event) {
             const configName = (event.target as HTMLInputElement).value;
-            if(configName !== undefined){
+            if (configName !== undefined) {
+                 document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
+                if (MenuController.selectedTab){
+                    MenuController.changeImage(MenuController.selectedTab);
+                    MenuController.selectedTab = undefined;
+                }
+
+                UIController.configFileName = configName;
                 await ConfigSelectorController.defineConfig(configName);
-                ConfigSelectorController.reParse();
+                ConfigSelectorController.reParse(true);
             }
         });
     }
 
-    public static reParse() {
+    public static reParse(updateCamera: boolean) {
         this.previousParser = new VPVariantsStrategy();
 
         // clear the current city
@@ -61,18 +71,12 @@ export class ConfigSelectorController {
         ProjectService.fetchVisualizationData(this.filename).then((response) => {
             this.el = this.previousParser.parse(response.data, UIController.config, this.filename);
 
-            // set the min & max usage level
-            let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-            inputElement.min = "1";
+            // set max usage level
             const maxLvl = this.el.getMaxCompLevel();
-            inputElement.max = maxLvl.toString();
-            if (+inputElement.value > maxLvl) {
-                inputElement.value = maxLvl.toString();
-            }
+            MetricController.defineMaxLevelUsage(maxLvl);
 
-            UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+inputElement.value));
-            UIController.scene.buildScene();
-
+            UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+UIController.config.default_level));
+            UIController.scene.buildScene(updateCamera);
         })
     }
 

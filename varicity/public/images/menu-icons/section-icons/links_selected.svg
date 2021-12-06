@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <clipPath id="clip-links_selected">
+      <rect width="40" height="40"/>
+    </clipPath>
+  </defs>
+  <g id="links_selected" clip-path="url(#clip-links_selected)">
+    <path id="_2638329_chain_link_sign_icon" data-name="2638329_chain_link_sign_icon" d="M15.667,17.333l5.667-5.667h9.333V0H19V9.333L13.333,15H4V26.667h9.333l4,4V40H29V28.333H19.667l-4-4Zm6.667-14h5v5h-5Zm-10,20h-5v-5h5Zm8.333,8.333h5v5h-5Z" transform="translate(2.667)" fill="#66abf7"/>
+  </g>
+</svg>

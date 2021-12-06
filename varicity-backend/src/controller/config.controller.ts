@@ -16,6 +16,12 @@ export class ConfigController {
         return this.configService.saveConfig(config);
     }
 
+    @Post('/projects/configs/:configFile')
+    updateConfig(@Param('configFile') configFile: string, @Body() config: VaricityConfig): any {
+        console.log("/projects/configs/" + configFile + " - updateConfig, ", config)
+        return this.configService.updateConfig(configFile, config);
+    }
+
     @Get('/projects/configs/names')
     getConfigsFilenamesOfProject(@Query() query: Record<string, any>): string[] {
         console.log("/projects/configs/names - getConfigsNamesOfProject", query)

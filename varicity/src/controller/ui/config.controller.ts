@@ -9,16 +9,6 @@ export class ConfigController {
 
         this.populateChildren(config, configNode);
 
-        // set the usage level
-        let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-        inputElement.value = UIController.config.default_level.toString();
-
-        // set set filter button when changing the usage level
-        let filterButton = document.getElementById("filter-button") as HTMLButtonElement;
-        filterButton.onclick = () => {
-            ConfigSelectorController.reParse();
-        }
-
         /* @ts-ignore */
         for (let child of configNode.children) {
             child.style.display = "none";
@@ -52,26 +42,6 @@ export class ConfigController {
         return input;
     }
 
-    private static createSelect(defaultValue: string, parent: HTMLElement, options: string[]): HTMLSelectElement {
-        let input = document.createElement("select");
-        input.classList.add("mt-2")
-        input.classList.add("mb-2")
-        input.classList.add("parent")
-        input.classList.add("form-select")
-
-        options.forEach(function (opt) {
-            let optionElement = document.createElement("option");
-            optionElement.value = opt;
-            optionElement.label = opt;
-            if (opt == defaultValue) {
-                optionElement.defaultSelected = true;
-            }
-            input.add(optionElement)
-        });
-        parent.appendChild(input);
-        return input;
-    }
-
     private static findValidParents(node: HTMLElement): string[] {
         let p = node.parentElement
         let arr = [p.getAttribute("value")];
@@ -81,7 +51,6 @@ export class ConfigController {
         }
         return arr.reverse();
     }
-
 
 
     private static stringArrayListener(ke: KeyboardEvent, input: HTMLInputElement, parent: HTMLElement) {
@@ -120,7 +89,7 @@ export class ConfigController {
                     input.className = "right-input";
                     input.addEventListener("change", (ke) => {
                         let arr = this.findValidParents(node);
-                        UIController.changeConfig(arr, { name: node.getAttribute("value"), color: input.value });
+                        UIController.changeConfig(arr, {name: node.getAttribute("value"), color: input.value});
                     });
                 } else this.populateChildren(obj, parent); // it's a string
             }
@@ -129,8 +98,7 @@ export class ConfigController {
             if (values.includes(attr) || values.includes(parent.parentElement.getAttribute("value"))) {
                 this.populateChildren("", parent);
             }
-        }
-        else {
+        } else {
             if (!(config instanceof Object)) { // not [] nor object
                 let input = this.createInput(config, parent);
                 let prev = input.value;
@@ -144,29 +112,12 @@ export class ConfigController {
                 input.addEventListener("keyup", (ke) => this.stringArrayListener(ke, input, parent));
 
 
-            }
-            else {
+            } else {
                 if (config instanceof Map && parent.getAttribute("value") === "metrics") {
                     console.log(config);
                     config.forEach((value: any, key: any) => {
-                        this.populateChildren({ [key]: value }, parent);
+                        this.populateChildren({[key]: value}, parent);
                     });
-                } else if (parent.getAttribute("value") === "variables") {
-                    const noneVal = " -- None -- ";
-                    const metricNames = [noneVal, ...UIController.config.metrics.keys()];
-
-                    for (let key in config) {
-                        const valSelected = UIController.config.metrics.has(config[key]) ? config[key] : noneVal;
-                        let node = this.createKey(key, parent);
-                        let select = this.createSelect(valSelected, node, metricNames);
-                        select.addEventListener("change", (event) => {
-                            let attributesListToCurrentElement = this.findValidParents(select);
-                            const configSelected = select.value === noneVal ? "" : select.value;
-
-                            UIController.changeConfig(attributesListToCurrentElement, ["", configSelected]);
-                        })
-                    }
-
                 } else {
                     for (let key in config) {
                         if (key !== "default_level") {
@@ -189,32 +140,20 @@ export class ConfigController {
                                         }
                                     }
                                 }
-                            }
-                            else {
-                                let input;
-                                if (key == "orientation") {
-                                    let options = ["IN", "OUT", "IN_OUT"];
-                                    input = this.createSelect(config[key], node, options);
-                                } else {
-                                    input = this.createInput(config[key], node);
-                                }
+                            } else {
+                                let input = this.createInput(config[key], node);
+
                                 node.className = "child";
                                 if (parent.getAttribute("value") === "variables") {
                                     input.setAttribute("list", "attributelist");
                                 }
-                                if (key == "orientation") {
-                                    input.addEventListener("change", () => {
+
+                                input.addEventListener("keyup", (ke) => {
+                                    if (ke.key == "Enter") {
                                         let arr = this.findValidParents(input);
                                         UIController.changeConfig(arr, ["", input.value]);
-                                    })
-                                } else {
-                                    input.addEventListener("keyup", (ke) => {
-                                        if (ke.key == "Enter") {
-                                            let arr = this.findValidParents(input);
-                                            UIController.changeConfig(arr, ["", input.value]);
-                                        }
-                                    });
-                                }
+                                    }
+                                });
                             }
                         }
                     }

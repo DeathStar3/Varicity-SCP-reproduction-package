@@ -233,4 +233,31 @@ export class VaricityConfigService {
     private static getProjectNameFromConfigPath(configPath: string) {
         return configPath.split('/')[0];
     }
+
+    public updateConfig(configFile: string, config: VaricityConfig) {
+        if (!config.projectId) {
+            console.warn('projectId of config is not defined');
+            return config;
+        }
+
+        // Saves file in filesystem
+        const doc = new YAML.Document();
+        doc.contents = config;
+
+        let pathDirToConfig = path.join(ConfigService.defaultConfigsPath, config.projectId);
+
+        if (!fs.existsSync(pathDirToConfig)){
+            fs.mkdirSync(pathDirToConfig);
+        }
+
+        fs.writeFile(path.join(pathDirToConfig, configFile + ".yaml"),  doc.toString(), err => {
+            if (err) {
+                console.error(err)
+                return;
+            }
+            //file written successfully
+        })
+
+        return {config, filename:  configFile};
+    }
 }

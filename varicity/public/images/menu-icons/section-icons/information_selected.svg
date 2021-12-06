@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <clipPath id="clip-information_selected">
+      <rect width="40" height="40"/>
+    </clipPath>
+  </defs>
+  <g id="information_selected" clip-path="url(#clip-information_selected)">
+    <g id="_216254_info_large_icon" data-name="216254_info_large_icon" transform="translate(2.499 -3.501)">
+      <path id="Tracé_33" data-name="Tracé 33" d="M23.349,29.564a9.718,9.718,0,0,1-2.6.465,1.808,1.808,0,0,1-1.015-.2c-.42-.293-1.2-.84.135-3.5l2.5-4.985c1.483-2.96,1.7-5.823.613-8.063a6.618,6.618,0,0,0-4.8-3.54,11.941,11.941,0,0,0-2.4-.243,12.712,12.712,0,0,0-7.865,2.815,1.25,1.25,0,0,0,1.233,2.12,9.649,9.649,0,0,1,2.6-.468,1.8,1.8,0,0,1,1.005.2c.423.3,1.205.85-.128,3.505l-2.5,4.988c-1.485,2.963-1.7,5.825-.613,8.063a6.613,6.613,0,0,0,4.8,3.54,12.178,12.178,0,0,0,2.385.243,12.725,12.725,0,0,0,7.87-2.815,1.25,1.25,0,0,0-1.228-2.123Z" transform="translate(0 8.999)" fill="#66abf7"/>
+      <circle id="Ellipse_7" data-name="Ellipse 7" cx="6.25" cy="6.25" r="6.25" transform="translate(15.001 3.501)" fill="#66abf7"/>
+    </g>
+  </g>
+</svg>

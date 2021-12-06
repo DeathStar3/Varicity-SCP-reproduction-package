@@ -1,5 +1,5 @@
-import { District } from '../entities/district.interface';
-import { ClassImplem } from './classImplem.model';
+import {District} from '../entities/district.interface';
+import {ClassImplem} from './classImplem.model';
 
 export class PackageImplem extends District {
     name: string;
@@ -36,8 +36,8 @@ export class PackageImplem extends District {
         // objNameSplitted should always be > thisNameSplitted, since it will be recursive
         // therefore, it should be possible to only compare thisNameSplitted[thisNameSplitted.length] with districtNameSplitted[thisNameSplitted.length]
         // since previous districts should have compared the others before
-        for(let i = 0; i < thisNameSplitted.length; i++) {
-            if(thisNameSplitted[i] != objNameSplitted[i]) {
+        for (let i = 0; i < thisNameSplitted.length; i++) {
+            if (thisNameSplitted[i] != objNameSplitted[i]) {
                 return false;
             }
         }
