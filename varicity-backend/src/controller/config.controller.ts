@@ -1,6 +1,6 @@
-import {Body, Controller, Get, Param, Post, Query} from '@nestjs/common';
-import {VaricityConfigService} from '../service/config.service';
-import { VaricityConfig} from '../model/config.model';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { VaricityConfigService } from '../service/config.service';
+import { VaricityConfig } from '../model/config.model';
 import { ConfigEntry } from 'src/model/experiment.model';
 
 
@@ -53,12 +53,11 @@ export class ConfigController {
     @Get('/projects/configs/firstOrDefault')
     getFirstOrDefaultConfigProject(@Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/configs/firstOrDefault - getFirstOrDefaultConfigProject", query)
-        let config = this.configService.getFirstProjectConfigOrDefaultOne(query['name']);
-        return config;
+        return this.configService.getFirstProjectConfigOrDefaultOne(query['name']);
     }
 
     @Get('/projects/:projectName/configs/filenames-and-names')
-    getConfigsNamesOfProject(@Param('projectName') projectName: string, ): ConfigEntry[] {
+    getConfigsNamesOfProject(@Param('projectName') projectName: string,): ConfigEntry[] {
         console.log(`/projects/${projectName}/configs/filenames-and-names - getConfigsNamesAndFileNames`);
         return this.configService.getConfigsNamesAndFileNames(projectName);
     }

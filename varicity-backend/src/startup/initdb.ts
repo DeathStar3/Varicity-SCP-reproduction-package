@@ -2,11 +2,13 @@ import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JsonDB } from "node-json-db";
 import { Config } from "node-json-db/dist/lib/JsonDBConfig";
-import { ProjectEntry } from "src/model/experiment.model";
+import { ConfigEntry, ProjectEntry } from "src/model/experiment.model";
 import { JsonInputInterface, MetricClassInterface } from "src/model/jsonInput.interface";
 import { ProjectService } from "src/service/project.service";
 const fsextra = require('fs-extra')
 import * as fs from 'fs';
+import { VaricityConfig } from "src/model/config.model";
+import { VaricityConfigService } from "src/service/config.service";
 var path = require('path');
 @Injectable()
 export class InitDBService implements OnApplicationBootstrap {
@@ -14,16 +16,16 @@ export class InitDBService implements OnApplicationBootstrap {
 
     private static EXTENSION = '.json'
 
-    private readonly databasePath;
-    private readonly pathToSymfinderJsons;
-    private readonly pathToMetricsJsons;
-    private readonly persistentDir;
-    private readonly pathToParsedJsons;
-    private readonly pathToVisualizationConfigs;
+    private readonly databasePath: string;
+    private readonly pathToSymfinderJsons: string;
+    private readonly pathToMetricsJsons: string;
+    private readonly persistentDir: string;
+    private readonly pathToParsedJsons: string;
+    private readonly pathToVisualizationConfigs: string;
 
-    private readonly db;
+    private readonly db: JsonDB;
 
-    constructor(private configService: ConfigService, private projectService:ProjectService) {
+    constructor(private configService: ConfigService) {
         this.pathToSymfinderJsons = this.configService.get<string>('SYMFINDER_DIR');
         this.persistentDir = this.configService.get<string>('PERSISTENT_DIR');
         this.pathToMetricsJsons = this.configService.get<string>('METRICS_DIR');
@@ -39,18 +41,17 @@ export class InitDBService implements OnApplicationBootstrap {
         console.log('Application has started');
         this.createFoldersIfNotExists();
         this.findProjects();
-
-        
+        this.findConfigs();
     }
 
 
-    createFoldersIfNotExists(){
-        if(!fs.existsSync(this.pathToSymfinderJsons)){
+    createFoldersIfNotExists() {
+        if (!fs.existsSync(this.pathToSymfinderJsons)) {
             console.log('The path to the symfinder Jsons does not exist yet, creating it');
             fs.mkdirSync(this.pathToSymfinderJsons, { recursive: true })
         }
 
-        if(!fs.existsSync(this.pathToMetricsJsons)){
+        if (!fs.existsSync(this.pathToMetricsJsons)) {
             console.log('The path to the metrics Jsons does not exist yet, creating it');
             fs.mkdirSync(this.pathToMetricsJsons, { recursive: true })
         }
@@ -75,18 +76,37 @@ export class InitDBService implements OnApplicationBootstrap {
 
     }
 
+    findConfigs() {
+        let files = fs.readdirSync(this.pathToVisualizationConfigs, { withFileTypes: true });
+
+        files.filter(f => f.isDirectory()).forEach(configFolder => {
+            this.indexConfigFile(configFolder);
+        })
+    }
 
 
+    indexConfigFile(configFolder: fs.Dirent) {
+        let files = fs.readdirSync(path.join(this.pathToVisualizationConfigs, configFolder.name), { withFileTypes: true });
+
+        files.filter(f => f.isFile()).forEach(configFile => {
+            let configFilePath = path.join(this.pathToVisualizationConfigs, configFolder.name, configFile.name);
+
+            if (!this.checkIfConfigIsIndexed(configFilePath)) {
+                //we read the file to get the human readable name of the config but it is ok because we only do it once at startup
+                const configObject = VaricityConfigService.getYamlFromDisk(configFilePath) as VaricityConfig;
+
+                this.db.push('/configs[]', new ConfigEntry(configObject.name, configFilePath, configFolder.name));
+            }
+        });
+    }
+    
 
     findProjects() {
-
-       
         let files = fs.readdirSync(this.pathToSymfinderJsons, { withFileTypes: true });
 
         files.filter(f => f.isFile() && path.extname(f.name).toLowerCase() === InitDBService.EXTENSION).
             filter(projectSymfinderFile => !this.checkIfParsed(path.parse(projectSymfinderFile.name).name)).forEach(projectSymfinderFile => {
 
-                //check if it is already parsed
                 console.log(projectSymfinderFile.name)
 
                 let fullPath = path.resolve(path.join(this.pathToSymfinderJsons, projectSymfinderFile.name));
@@ -126,7 +146,7 @@ export class InitDBService implements OnApplicationBootstrap {
                         });
                     });
                 }
-                let parsedInputPath = path.join(this.pathToParsedJsons,projectName);
+                let parsedInputPath = path.join(this.pathToParsedJsons, projectName);
                 fs.mkdirSync(this.pathToParsedJsons, { recursive: true })
                 fsextra.writeJsonSync(`${parsedInputPath}.json`, symfinderObj, { flag: 'w+', recursive: true })
                 this.db.push('/projects[]', new ProjectEntry(projectName, parsedInputPath + '.json'));
@@ -141,9 +161,15 @@ export class InitDBService implements OnApplicationBootstrap {
      * @param projectName 
      */
     checkIfParsed(projectName: string) {
-        let db = new JsonDB(new Config(this.databasePath, true, true, '/'));
-        if (db.exists('/projects')) {
-            return db.getIndex('/projects', projectName, 'projectName') > -1;
+        if (this.db.exists('/projects')) {
+            return this.db.getIndex('/projects', projectName, 'projectName') > -1;
+        }
+        return false;
+    }
+
+    checkIfConfigIsIndexed(configFilePath) {
+        if (this.db.exists('/configs')) {
+            return this.db.getIndex('/configs', configFilePath, 'path') > -1
         }
         return false;
     }

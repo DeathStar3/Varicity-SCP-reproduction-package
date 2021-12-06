@@ -88,5 +88,88 @@
             "path": "persistent/data/symfinder_files/parsed/vert.x.json",
             "projectName": "vert.x"
         }
+    ],
+    "configs": [
+        {
+            "path": "persistent/configs/CookieFactoryClient/config-CookieFactoryClient-1.yaml",
+            "projectId": "CookieFactoryClient"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/argoUML-bcae373/config-argoUML-bcae373-1.yaml",
+            "projectId": "argoUML-bcae373"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/awt-jb8u202-b1532/config-awt-jb8u202-b1532-1.yaml",
+            "projectId": "awt-jb8u202-b1532"
+        },
+        {
+            "path": "persistent/configs/awt-jb8u202-b1532-comp/config-awt-jb8u202-b1532-comp-1.yaml",
+            "projectId": "awt-jb8u202-b1532-comp"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/cucumber-v6.8.0/config-cucumber-v6.8.0-1.yaml",
+            "projectId": "cucumber-v6.8.0"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/cxf-cxf-3.2.7/config-cxf-cxf-3.2.7-1.yaml",
+            "projectId": "cxf-cxf-3.2.7"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/jfreechart-v1.5.0/config-jfreechart-v1.5.0-1.yaml",
+            "projectId": "jfreechart-v1.5.0"
+        },
+        {
+            "name": "<80% crack coverage",
+            "path": "persistent/configs/jfreechart-v1.5.0/config-jfreechart-v1.5.0-2.yaml",
+            "projectId": "jfreechart-v1.5.0"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/jmeter-v5.4.1-rc2/config-jmeter-v5.4.1-rc2-1.yaml",
+            "projectId": "jmeter-v5.4.1-rc2"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/junit-r4.12/config-junit-r4.12-1.yaml",
+            "projectId": "junit-r4.12"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/logbook-2.2.1/config-logbook-2.2.1-1.yaml",
+            "projectId": "logbook-2.2.1"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/maven-maven-3.6.0/config-maven-maven-3.6.0-1.yaml",
+            "projectId": "maven-maven-3.6.0"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/netbeans-12.2/config-netbeans-12.2-1.yaml",
+            "projectId": "netbeans-12.2"
+        },
+        {
+            "path": "persistent/configs/regatta/config-regatta-1.yaml",
+            "projectId": "regatta"
+        },
+        {
+            "path": "persistent/configs/regatta/config-regatta-2.yaml",
+            "projectId": "regatta"
+        },
+        {
+            "name": "default config",
+            "path": "persistent/configs/riptide-2.11.0/config-riptide-2.11.0-1.yaml",
+            "projectId": "riptide-2.11.0"
+        },
+        {
+            "name": "Complete View of Vertx City",
+            "path": "persistent/configs/vert.x/config-vert.x-1.yaml",
+            "projectId": "vert.x"
+        }
     ]
 }

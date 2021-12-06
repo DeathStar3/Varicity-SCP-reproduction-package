@@ -14,11 +14,11 @@ export class ProjectService {
     private readonly db: JsonDB;
 
     
-    private readonly pathToSymfinderJsons;
-    private readonly pathToMetricsJsons;
-    private readonly persistentDir;
-    private readonly databasePath;
-    private readonly pathToParsedJsons;
+    private readonly pathToSymfinderJsons: string;
+    private readonly pathToMetricsJsons: string;
+    private readonly persistentDir: string;
+    private readonly databasePath: string;
+    private readonly pathToParsedJsons: string;
 
 
     constructor(@Inject(ConfigService) private configService: ConfigService) {

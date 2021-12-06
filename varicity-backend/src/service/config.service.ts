@@ -17,17 +17,17 @@ export class VaricityConfigService {
 
 
     private readonly db: JsonDB;
-    private readonly databasePath;
-    private readonly pathToDefaultConfigs;
+    private readonly databasePath: string;
+    private readonly pathToDefaultConfigs: string;
 
-    private readonly pathToVisualizationConfigs;
+    private readonly pathToVisualizationConfigs: string;
 
 
     constructor(@Inject(ConfigService) private configService: ConfigService) {
 
         this.databasePath = this.configService.get<string>('DATABASE_PATH');
         this.pathToVisualizationConfigs = this.configService.get<string>('VISUALISATION_CONFIGS_PATH');
-        
+
         this.pathToDefaultConfigs = this.configService.get<string>('DEFAULT_CONFIGS_DIR');
 
         this.db = new JsonDB(new Config(this.databasePath, true, true, '/'));
@@ -62,7 +62,7 @@ export class VaricityConfigService {
      * @param pathToYamlOnDisk
      * @private
      */
-    private static getYamlFromDisk(pathToYamlOnDisk: string): any {
+    public static getYamlFromDisk(pathToYamlOnDisk: string): any {
         console.log("pathToYamlOnDisk", pathToYamlOnDisk)
         return yaml.load(fs.readFileSync(pathToYamlOnDisk, 'utf8'));
     }
@@ -115,8 +115,8 @@ export class VaricityConfigService {
         // TODO improve versionning system
         const filename = "config-" + config.projectId + "-" + version;
 
-        let parentDir=path.join(this.pathToVisualizationConfigs, config.projectId)
-        if(!fs.existsSync(parentDir)){
+        let parentDir = path.join(this.pathToVisualizationConfigs, config.projectId)
+        if (!fs.existsSync(parentDir)) {
             fs.mkdirSync(parentDir, { recursive: true });
         }
         fs.writeFileSync(path.join(parentDir, filename + ".yaml"), doc.toString());
@@ -246,11 +246,11 @@ export class VaricityConfigService {
 
         let pathDirToConfig = path.join(this.pathToVisualizationConfigs, config.projectId);
 
-        if (!fs.existsSync(pathDirToConfig)){
+        if (!fs.existsSync(pathDirToConfig)) {
             fs.mkdirSync(pathDirToConfig);
         }
 
-        fs.writeFile(path.join(pathDirToConfig, configFile + ".yaml"),  doc.toString(), err => {
+        fs.writeFile(path.join(pathDirToConfig, configFile + ".yaml"), doc.toString(), err => {
             if (err) {
                 console.error(err)
                 return;
@@ -258,6 +258,6 @@ export class VaricityConfigService {
             //file written successfully
         })
 
-        return {config, filename:  configFile};
+        return { config, filename: configFile };
     }
 }

@@ -39,10 +39,10 @@ export class ProjectController {
     @Post('/projects')
     @Header('content-type', 'application/json')
     newProject(@Body() experimentResult: ExperimentResult) {
-        if(experimentResult.externalMetric !== undefined && experimentResult.externalMetric !== null){
-            experimentResult.externalMetric= new Map(Object.entries(experimentResult.externalMetric ));
-          }
-        
+        if (experimentResult.externalMetric !== undefined && experimentResult.externalMetric !== null) {
+            experimentResult.externalMetric = new Map(Object.entries(experimentResult.externalMetric));
+        }
+
         this.projectService.addProject(experimentResult);
 
     }

@@ -10,7 +10,7 @@ export class FsWatcherService {
 
     
     private readonly db: JsonDB;
-    private readonly databasePath;
+    private readonly databasePath: string;
     constructor(private configService: ConfigService) {
        
         this.databasePath = this.configService.get<string>('DATABASE_PATH');
