@@ -139,6 +139,7 @@ export default class NeoGraph{
         await this.detectDensity();
         await this.setModuleVP();
         await this.setModuleVariant();
+        await this.setProximityFolder()
     }
 
     async setMethodVPs(): Promise<void>{
@@ -247,6 +248,20 @@ export default class NeoGraph{
     async setModuleVariant(){
         const request = "MATCH (m:MODULE)-[:EXPORT]->(c:MODULE_VP) SET m:"+EntityAttribut.MODULE_VARIANT;
         await this.submitRequest(request, {});  
+    }
+
+    async setProximityFolder(){
+        const request = "MATCH (n:DIRECTORY)-[:CHILD]->(d1:DIRECTORY)-[:CHILD]->(f1:FILE), (n:DIRECTORY)-[:CHILD]->(d2:DIRECTORY)-[:CHILD]->(f2:FILE)\n"+
+        "WHERE ID(f1)<>ID(f2)\n"+
+        "AND ID(d1)<>ID(d2)\n"+
+        "AND f1.name = f2.name\n"+
+        "AND f1.name <> $index\n"+
+        "AND f1.name <> $utils\n"+
+        "AND f1.name <> $types\n"+
+        "SET n:VP_FOLDER\n"+
+        "SET d1:VARIANT_FOLDER\n"+
+        "SET f1:VARAINT_FILE\n";
+        await this.submitRequest(request, {index:"index.ts",utils:"utils.ts",types:'types.ts'}); 
     }
 
     async detectStrategiesWithComposition(){
