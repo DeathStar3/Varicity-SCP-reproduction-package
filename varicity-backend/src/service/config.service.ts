@@ -1,6 +1,5 @@
 import * as fs from 'fs';
-import {CameraData, ConfigName, VaricityConfig} from "../model/config.model";
-import {Vector3} from "../model/user.model";
+import {CameraData, ConfigName, VaricityConfig, Vector3} from "../model/config.model";
 import {AppModule} from "../app.module";
 
 const path = require('path');
