@@ -84,17 +84,17 @@ export class UIController {
         let critical: CriticalLevel = Config.alterField(this.config, arr, value);
         console.log(this.config);
         if (this.scene) {
-            SearchbarController.emptyMap();
             switch (critical) {
                 case CriticalLevel.LOW_IMPACT: // Only change the colour, so simple rerender
                 case CriticalLevel.RERENDER_SCENE: // Changed variables important enough to warrant a complete rebuilding of the scene
+                    SearchbarController.emptyMap();
                     this.scene = this.scene.rerender(this.config);
-                    this.scene.buildScene();
+                    this.scene.buildScene(true);
                     LogsController.updateLogs(this.scene.entitiesList);
                     break;
                 case CriticalLevel.REPARSE_DATA: // Changed variables that modify the parsing method, need to reparse the entire file and rebuild
                     // TODO fix issue when adding a new Entrypoint, the scene is only loading the new entry point class and not all the others, but it works after clicking on the config again
-                    ConfigSelectorController.reParse();
+                    ConfigSelectorController.reParse(true);
                     break;
                 default:
                     throw new Error("didn't receive the correct result from altering config field: " + critical);
@@ -107,17 +107,17 @@ export class UIController {
     public static updateScene(criticalLevel: CriticalLevel) {
         if (this.scene) {
             document.getElementById("loading-frame").style.display = 'inline-block';
-            SearchbarController.emptyMap();
             switch (criticalLevel) {
                 case CriticalLevel.LOW_IMPACT: // Only change the colour, so simple rerender
                 case CriticalLevel.RERENDER_SCENE: // Changed variables important enough to warrant a complete rebuilding of the scene
+                    SearchbarController.emptyMap();
                     this.scene = this.scene.rerender(this.config);
-                    this.scene.buildScene();
+                    this.scene.buildScene(false);
                     LogsController.updateLogs(this.scene.entitiesList);
                     break;
                 case CriticalLevel.REPARSE_DATA: // Changed variables that modify the parsing method, need to reparse the entire file and rebuild
                     // TODO fix issue when adding a new Entrypoint, the scene is only loading the new entry point class and not all the others, but it works after clicking on the config again
-                    ConfigSelectorController.reParse();
+                    ConfigSelectorController.reParse(false);
                     break;
                 default:
                     throw new Error("didn't receive the correct result from altering config field: " + criticalLevel);

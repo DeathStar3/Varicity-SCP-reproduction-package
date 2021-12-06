@@ -3,6 +3,7 @@ import {UIController} from "../ui.controller";
 import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
 import {ToastController, ToastType} from "../toast.controller";
+import {SearchbarController} from "../searchbar.controller";
 
 export class MetricController {
 
@@ -66,6 +67,9 @@ export class MetricController {
     private static createClassInput(inputs, apiClasses, parent, text?: string) {
         let className = text || "";
         const input = SubMenuController.createOnlyInputText(className, "ex.package.class", parent);
+
+        input.setAttribute("list", "datalist");
+
         inputs.push(input);
 
         input.addEventListener("search", (event) => {
@@ -85,25 +89,32 @@ export class MetricController {
                 return;
             }
 
-            // Update the config and scene depending on the position in the list of the input box
-            if(!isInputLastInTheList){
-                if(input.value === ""){ // clear an input that is not at the end, so remove it from the list
-                    apiClasses.splice(apiClasses.indexOf(className), 1);
-                    input.parentElement.remove(); // input has a parent div generated with it
-                    UIController.updateScene(CriticalLevel.REPARSE_DATA);
-                }else {
-                    apiClasses[apiClasses.indexOf(className)] = input.value;
+            if (!SearchbarController.map.has(input.value)) { // the search key doesn't exist
+                input.style.border = "1px solid red";
+            }else {
+                input.style.border = "2px solid #ced4da";
+
+                // Update the config and scene depending on the position in the list of the input box
+                if (!isInputLastInTheList) {
+                    if (input.value === "") { // clear an input that is not at the end, so remove it from the list
+                        apiClasses.splice(apiClasses.indexOf(className), 1);
+                        input.parentElement.remove(); // input has a parent div generated with it
+                        UIController.updateScene(CriticalLevel.REPARSE_DATA);
+                    } else {
+                        apiClasses[apiClasses.indexOf(className)] = input.value;
+                        UIController.updateScene(CriticalLevel.REPARSE_DATA);
+                    }
+
+                } else if (input.value !== "") { // if is the last input and has a value, then add a new input text at the end.
+                    apiClasses.push(input.value);
+                    MetricController.createClassInput(inputs, apiClasses, parent);
                     UIController.updateScene(CriticalLevel.REPARSE_DATA);
                 }
 
-            }else if(input.value !== ""){ // if is the last input and has a value, then add a new input text at the end.
-                apiClasses.push(input.value);
-                MetricController.createClassInput(inputs, apiClasses, parent);
-                UIController.updateScene(CriticalLevel.REPARSE_DATA);
+                className = input.value;
             }
-
-            className = input.value;
         })
+
     }
 
     private static populateVariables(parent: HTMLElement){

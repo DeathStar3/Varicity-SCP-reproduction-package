@@ -38,7 +38,7 @@ export class LinkController {
             this.radioBoxListener(SubMenuController.createCustomRadioBox("IMPLEMENTS", airTraffic.includes('IMPLEMENTS'), undergroundRoads.includes('IMPLEMENTS'), displayMenu), 'IMPLEMENTS');
             this.radioBoxListener(SubMenuController.createCustomRadioBox("EXTENDS", airTraffic.includes('EXTENDS'), undergroundRoads.includes('EXTENDS'), displayMenu), 'EXTENDS');
             this.radioBoxListener(SubMenuController.createCustomRadioBox("USAGE", airTraffic.includes('USAGE'), undergroundRoads.includes('USAGE'), displayMenu), 'USAGE');
-            // this.radioBoxListener(SubMenuController.createCustomRadioBox("DUPLICATE", airTraffic.includes('DUPLICATE'), undergroundRoads.includes('DUPLICATE'), airTrafficMenu), 'DUPLICATE'); //TODO Need to fix this
+            this.radioBoxListener(SubMenuController.createCustomRadioBox("DUPLICATE", airTraffic.includes('DUPLICATE'), undergroundRoads.includes('DUPLICATE'), displayMenu), 'DUPLICATE');
 
             // Hierarchy Links
             const hierarchyLinks = links.display.underground_road;

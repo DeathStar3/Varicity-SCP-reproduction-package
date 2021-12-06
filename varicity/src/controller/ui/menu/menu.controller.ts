@@ -6,6 +6,7 @@ import {MetricController} from "./metric.controller";
 import {DistrictController} from "./district.controller";
 import {SubMenuController} from "./sub-menu.controller";
 import bootstrap from "../../../../public/scripts/bootstrap.bundle.min.js"
+import {BuildingController} from "./building.controller";
 
 export class MenuController {
 
@@ -55,7 +56,7 @@ export class MenuController {
                     DetailsController.createMenu();
                     break;
                 case "building":
-
+                    BuildingController.createMenu();
                     break;
                 case "districts":
                     DistrictController.createMenu();

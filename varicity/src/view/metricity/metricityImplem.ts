@@ -5,12 +5,13 @@ import {SceneRenderer} from "../sceneRenderer";
 
 export class MetricityImplem extends SceneRenderer {
 
-    buildScene() {
+    buildScene(updateCamera: boolean) {
         this.scene = new Scene(this.engine);
-
-        this.camera = new ArcRotateCamera("Camera", 2 * Math.PI / 3, Math.PI / 3, 1000, Vector3.Zero(), this.scene);
-        this.camera.attachControl(this.canvas, true);
-        this.camera.panningSensibility = 10;
+        if (updateCamera) {
+            SceneRenderer.camera = new ArcRotateCamera("Camera", 2 * Math.PI / 3, Math.PI / 3, 1000, Vector3.Zero(), this.scene);
+        }
+        SceneRenderer.camera.attachControl(this.canvas, true);
+        SceneRenderer.camera.panningSensibility = 10;
         this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
 
         this.render();

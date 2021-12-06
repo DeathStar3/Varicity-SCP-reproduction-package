@@ -3,7 +3,7 @@ import {Building3D} from './../../view/common/3Delements/building3D';
 import {Metrics} from "../../model/entitiesImplems/metrics.model";
 
 export class SearchbarController {
-    private static map: Map<string, Building3D>;
+    public static map: Map<string, Building3D>;
 
     public static initMap() {
         this.map = new Map<string, Building3D>();
