@@ -33,8 +33,7 @@ testadd
 .project
 .settings/
 *.vscode
-sonarqube-analysis-tcf-j2e.json
-data
+/data
 *node_modules*
 dockervolume
 varicity-backend/dockervolume

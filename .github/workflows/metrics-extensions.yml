@@ -29,16 +29,18 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
-
-#      - name: Test Whole Chain on Cookie Factory
-#        working-directory: ./metrics-extension/integration-tests/test-cookie-factory
-#        run: bash runtest.sh
-#      - name: Non Regression Test on Cookie Factory
-#        working-directory: ./metrics-extension/integration-tests/test-non-regression-cf
-#        run: bash runtest.sh
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+      - name: Test Whole Chain on Cookie Factory
+        working-directory: ./metrics-extension/integration-tests/test-cookie-factory
+        run: bash runtest.sh
+      - name: Non Regression Test on Cookie Factory
+        working-directory: ./metrics-extension/integration-tests/test-non-regression-cf
+        run: bash runtest.sh
       - name: Test Possibility to Skip Symfinder #58
         working-directory: ./metrics-extension/integration-tests/test-skip-symfinder-engine
         run: bash runtest.sh
-#      - name: Test metricExtension works in command line mode  #58
-#        working-directory: ./metrics-extension/integration-tests/test-symfinder-cli
-#        run: bash runtest.sh
+      - name: Test metricExtension works in command line mode  #58
+        working-directory: ./metrics-extension/integration-tests/test-symfinder-cli
+        run: bash runtest.sh
