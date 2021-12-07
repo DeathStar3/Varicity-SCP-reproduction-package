@@ -1,15 +1,5 @@
 # VariCity-Config
 
-
-## Documentation
-- [Go to symfinder's documentation](./metrics-extension/symfinder/README.md)
-- [Go to metrics-extension's documentation](./metrics-extension/README.md)
-- [Go to varicity-backend's documentation](./varicity-backend/README.md)
-- [Go to varicity's documentation](./varicity/README.md)
-
-
-# VariCity - IntelliJ plugin
-
 <p align="center">
 <img src="varicity/public/images/logovaricity.gif" width="200" alt="Logo"/>
 </p>
@@ -25,6 +15,11 @@ The output of SymFinder consists in JSON files containing information on the pre
 
 **VariCity-backend** . . . .
 
+## Documentation
+- [Go to symfinder's documentation](./metrics-extension/symfinder/README.md)
+- [Go to metrics-extension's documentation](./metrics-extension/README.md)
+- [Go to varicity-backend's documentation](./varicity-backend/README.md)
+- [Go to varicity's documentation](./varicity/README.md)
 
 ## Authors
 
