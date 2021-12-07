@@ -1,6 +1,6 @@
 import { Inject } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-var path = require('path');
+const path = require('path');
 import { VaricityConfig } from "src/model/config.model";
 import { ConfigEntry, ProjectEntry } from "src/model/experiment.model";
 import { VaricityConfigService } from "./config.service";
@@ -55,13 +55,8 @@ export class FsWatcherService {
         });
         chokidar.watch(this.pathToWatchedSymfinderJsons).on('all', (event, _path) => {
             console.log(event, _path);
-            switch (event) {
-                case "add":
-                    this.indexDataFile(_path);
-                    break;
-                case "unlink":
-                    this.deIndexDataFile(_path);
-                    break;
+            if (event === 'add') {
+                this.indexDataFile(_path);   
             }
         });
 
@@ -101,7 +96,7 @@ export class FsWatcherService {
      * Index a data file
      */
       public indexDataFile(dataFilePath: string) {
-        let projectName=path.parse(dataFilePath).name
+        const projectName=path.parse(dataFilePath).name
         console.log('indexDataFile',projectName )
         if(!this.projectService.checkIfParsed(projectName)){
             this.parseSymfinderJsons(dataFilePath, projectName)
@@ -109,15 +104,8 @@ export class FsWatcherService {
         
     }
 
-    /**
-     * DeIndex a deleted data file
-     */
-    public deIndexDataFile(dataFilePath: string) {
-        
-    }
-
     getExternalMetricsPaths(projectName: string) {
-        let fullPath = path.join(this.pathToMetricsJsons, projectName);
+        const fullPath = path.join(this.pathToMetricsJsons, projectName);
         if (fs.existsSync(fullPath)) {
             return fs.readdirSync(fullPath, { withFileTypes: true })
                 .filter(f => f.isFile() && path.extname(f.name).toLowerCase() === InitDBService.EXTENSION)
@@ -129,20 +117,19 @@ export class FsWatcherService {
     }
 
     parseSymfinderJsons(fullPath: string, projectName: string) {
-        let symfinderObj = JSON.parse(fs.readFileSync(fullPath, 'utf8')) as JsonInputInterface;
-        let externalsMetricsPaths = this.getExternalMetricsPaths(projectName);
-
+        const symfinderObj = JSON.parse(fs.readFileSync(fullPath, 'utf8')) as JsonInputInterface;
+        const externalsMetricsPaths = this.getExternalMetricsPaths(projectName);
 
         if (externalsMetricsPaths.length !== 0) {
 
             // index all classes indexes to reduce the complexity of merging external jsons.
-            let mapSymFinderClassesIndex = ProjectService.indexSymFinderClassesToMap(symfinderObj);
+            const mapSymFinderClassesIndex = ProjectService.indexSymFinderClassesToMap(symfinderObj);
 
             // loop over all the external metrics Json for the project
             externalsMetricsPaths.forEach((externalsMetricsPath) => {
 
                 // get the object of external metrics
-                let externalMetricsClasses = JSON.parse(fs.readFileSync(externalsMetricsPath, 'utf8')) as MetricClassInterface[];
+                const externalMetricsClasses = JSON.parse(fs.readFileSync(externalsMetricsPath, 'utf8')) as MetricClassInterface[];
 
                 // loop over all the classes in the external jsons object
                 externalMetricsClasses.forEach((classMetrics) => {
@@ -163,7 +150,7 @@ export class FsWatcherService {
         }
 
         console.log(this.dbFacade.db.getData('/'));
-        let parsedInputPath = path.join(this.pathToParsedJsons, projectName);
+        const parsedInputPath = path.join(this.pathToParsedJsons, projectName);
         fs.mkdirSync(this.pathToParsedJsons, { recursive: true })
         fsextra.writeJsonSync(`${parsedInputPath}.json`, symfinderObj, { flag: 'w+', recursive: true })
         this.dbFacade.db.push('/projects[]', new ProjectEntry(projectName, parsedInputPath + '.json'));
@@ -175,8 +162,8 @@ export class FsWatcherService {
      * Get the project name from config file path
      */
     public getConfigProjectName(_path: string): string {
-        let newPath = _path.replace(/\\+/g, "/");
-        let newPathSplit = newPath.split('\/');
+        const newPath = _path.replace(/\\+/g, "/");
+        const newPathSplit = newPath.split('\/');
         return newPathSplit[1];
     }
 
@@ -184,8 +171,8 @@ export class FsWatcherService {
      * Get the project name from data file path
      */
     public getDataProjectName(_path: string): string {
-        let newPath = _path.replace(/\\+/g, "/");
-        let newPathSplit = newPath.split('\/');
+        const newPath = _path.replace(/\\+/g, "/");
+        const newPathSplit = newPath.split('\/');
         if (newPathSplit[2] === 'externals') {
             return newPathSplit[3];
         } else {
@@ -197,8 +184,8 @@ export class FsWatcherService {
      * Normalize data file path (remove "data/symfinder_files/")
      */
     public normalizeDataFileName(_path: string): string {
-        let newPath = _path.replace(/\\+/g, "/");
-        let newPathSplit = newPath.split('\/');
+        const newPath = _path.replace(/\\+/g, "/");
+        const newPathSplit = newPath.split('\/');
         newPathSplit.shift(); // Remove "data/"
         newPathSplit.shift(); // Remove "symfinder_files/"
         return newPathSplit.join('/');
@@ -208,8 +195,8 @@ export class FsWatcherService {
      * Normalize config file path (remove "config/)
      */
     public normalizeConfigFileName(_path: string): string {
-        let newPath = _path.replace(/\\+/g, "/");
-        let newPathSplit = newPath.split('\/');
+        const newPath = _path.replace(/\\+/g, "/");
+        const newPathSplit = newPath.split('\/');
         newPathSplit.shift(); // Remove "config/"
         return newPathSplit.join('/');
     }

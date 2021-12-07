@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import * as bodyParser from 'body-parser';
-import { FsWatcherService } from './service/fs-watcher.service';
 
 async function startServer() {
 

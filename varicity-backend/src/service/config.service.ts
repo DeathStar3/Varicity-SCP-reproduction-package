@@ -68,7 +68,7 @@ export class VaricityConfigService {
     public getConfigsFromProjectName(projectName: string): VaricityConfig[] {
         const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
         console.log("configsPaths", configsPaths)
-        let configs = [];
+        const configs = [];
         configsPaths.forEach(configPath => {
             configs.push(this.getConfigsFromPath(configPath));
         })
@@ -109,7 +109,7 @@ export class VaricityConfigService {
         // TODO improve versionning system
         const filename = "config-" + config.projectId + "-" + version;
 
-        let parentDir = path.join(this.pathToVisualizationConfigs, config.projectId)
+        const parentDir = path.join(this.pathToVisualizationConfigs, config.projectId)
         if (!fs.existsSync(parentDir)) {
             fs.mkdirSync(parentDir, { recursive: true });
         }
@@ -149,7 +149,7 @@ export class VaricityConfigService {
     private getConfigsPathsWithDefaultConfigsFallback(projectName: string): string[] {
 
         if (this.dbFacade.db.exists('/configs')) {
-            let configsPath = this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName).map(config => config.path)
+            const configsPath = this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName).map(config => config.path)
             if (configsPath.length > 0) {
                 return configsPath;
             }
@@ -166,7 +166,7 @@ export class VaricityConfigService {
      */
     public getConfigsFilesNames(projectName: string): string[] {
         const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
-        let configsNames = []
+        const configsNames = []
         configsPaths.forEach(configPath => {
             configsNames.push(VaricityConfigService.getFileNameOnly(configPath));
         })
@@ -190,7 +190,7 @@ export class VaricityConfigService {
     public getConfigsNamesAndFileNames(projectName: string): ConfigEntry[] {
 
         if (this.dbFacade.db.exists('/configs')) {
-            let configsPath = this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName)
+            const configsPath = this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName)
             if (configsPath && configsPath.length > 0) {
                 return configsPath;
             }
@@ -238,7 +238,7 @@ export class VaricityConfigService {
         const doc = new YAML.Document();
         doc.contents = config;
 
-        let pathDirToConfig = path.join(this.pathToVisualizationConfigs, config.projectId);
+        const pathDirToConfig = path.join(this.pathToVisualizationConfigs, config.projectId);
 
         if (!fs.existsSync(pathDirToConfig)) {
             fs.mkdirSync(pathDirToConfig);

@@ -35,7 +35,7 @@ export class ProjectService {
      */
     public loadProject(projectName: string): JsonInputInterface {
 
-        let projectObj = this.dbFacade.db.find('/projects', (project, _index) => project.projectName === projectName) as ProjectEntry;
+        const projectObj = this.dbFacade.db.find('/projects', (project, _index) => project.projectName === projectName) as ProjectEntry;
         if (projectObj) {
             return JSON.parse(fs.readFileSync(projectObj.path, 'utf8')) as JsonInputInterface;
         }
@@ -46,7 +46,7 @@ export class ProjectService {
      * Create a map base on SymFinder json, the map is then used to easily merge the SymFinder data with the external metrics
      */
     public static indexSymFinderClassesToMap(symfinderObj: JsonInputInterface) {
-        let mapSymFinderClassesIndex = new Map<string, number>();
+        const mapSymFinderClassesIndex = new Map<string, number>();
         for (let i = 0; i < symfinderObj.nodes.length; i++) {
             mapSymFinderClassesIndex.set(symfinderObj.nodes[i].name, i);
         }
@@ -88,7 +88,7 @@ export class ProjectService {
      */
     getProjectMetricsExternal(projectName): string[] {
         const project = this.loadProject(projectName);
-        let metrics = new Set<string>();
+        const metrics = new Set<string>();
 
         // TODO save in DB after first time
         project.nodes.forEach(node => {
@@ -104,12 +104,12 @@ export class ProjectService {
 
     parseExperimentResultToJsonInputInterface(project: ExperimentResult): JsonInputInterface {
 
-        let symfinderObj = JSON.parse(project.symfinderResult.vpJsonGraph) as JsonInputInterface;
+        const symfinderObj = JSON.parse(project.symfinderResult.vpJsonGraph) as JsonInputInterface;
 
         if (project.externalMetric.size !== 0) {
 
             // index all classes indexes to reduce the complexity of merging external jsons.
-            let mapSymFinderClassesIndex = ProjectService.indexSymFinderClassesToMap(symfinderObj);
+            const mapSymFinderClassesIndex = ProjectService.indexSymFinderClassesToMap(symfinderObj);
 
             // loop over all the external metrics Json for the project
             project.externalMetric.forEach((externalMetricsClasses, source) => {
@@ -155,11 +155,11 @@ export class ProjectService {
             fs.writeFileSync(path.join(this.pathToSymfinderJsons, `${project.projectName}.json`), project.symfinderResult.vpJsonGraph);
         }
         //parse the result
-        let symfinderObj=this.parseExperimentResultToJsonInputInterface(project);
+        const symfinderObj=this.parseExperimentResultToJsonInputInterface(project);
 
         //write the parsed result
 
-        let parsedInputPath = path.join(this.pathToParsedJsons, project.projectName);
+        const parsedInputPath = path.join(this.pathToParsedJsons, project.projectName);
         fs.mkdirSync(this.pathToParsedJsons, { recursive: true })
         fsextra.writeJsonSync(`${parsedInputPath}.json`, symfinderObj, { flag: 'w+', recursive: true })
         

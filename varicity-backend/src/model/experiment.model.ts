@@ -1,4 +1,3 @@
-import { stringify } from "querystring";
 import { MetricClassInterface } from "./jsonInput.interface";
 
 const pathLib = require('path');

@@ -39,7 +39,7 @@ export class ConfigController {
     @Get('/projects/configs/path')
     getConfigByPath(@Query() query: Record<string, any>): VaricityConfig {
         console.log("/projects/configs/paths/{" + query["configPath"] + "} - getConfigsFromPath");
-        let config = this.configService.getConfigsFromPath(query["configPath"]);
+        const config = this.configService.getConfigsFromPath(query["configPath"]);
         console.log(config);
         return config;
     }

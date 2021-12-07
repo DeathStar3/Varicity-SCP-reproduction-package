@@ -7,7 +7,7 @@ import { VaricityConfigService } from "src/service/config.service";
 import { DbFacadeService } from "src/service/db-facade/db-facade.service";
 import { FsWatcherService } from "src/service/fs-watcher.service";
 import { ProjectService } from "src/service/project.service";
-var path = require('path');
+const path = require('path');
 
 
 @Injectable()
@@ -92,7 +92,7 @@ export class InitDBService implements OnApplicationBootstrap {
 
 
     findConfigs() {
-        let files = fs.readdirSync(this.pathToVisualizationConfigs, { withFileTypes: true });
+        const files = fs.readdirSync(this.pathToVisualizationConfigs, { withFileTypes: true });
 
         files.filter(f => f.isDirectory()).forEach(configFolder => {
             this.indexConfigFile(configFolder);
@@ -101,10 +101,10 @@ export class InitDBService implements OnApplicationBootstrap {
 
 
     indexConfigFile(configFolder: fs.Dirent) {
-        let files = fs.readdirSync(path.join(this.pathToVisualizationConfigs, configFolder.name), { withFileTypes: true });
+        const files = fs.readdirSync(path.join(this.pathToVisualizationConfigs, configFolder.name), { withFileTypes: true });
 
         files.filter(f => f.isFile()).forEach(configFile => {
-            let configFilePath = path.join(this.pathToVisualizationConfigs, configFolder.name, configFile.name);
+            const configFilePath = path.join(this.pathToVisualizationConfigs, configFolder.name, configFile.name);
 
             if (!this.varicityConfigService.checkIfConfigIsIndexed(configFilePath)) {
                 //we read the file to get the human readable name of the config but it is ok because we only do it once at startup
@@ -116,16 +116,16 @@ export class InitDBService implements OnApplicationBootstrap {
     }
 
     findProjects() {
-        let files = fs.readdirSync(this.pathToSymfinderJsons, { withFileTypes: true });
+        const files = fs.readdirSync(this.pathToSymfinderJsons, { withFileTypes: true });
 
         files.filter(f => f.isFile() && path.extname(f.name).toLowerCase() === InitDBService.EXTENSION).
             filter(projectSymfinderFile => !this.projectService.checkIfParsed(path.parse(projectSymfinderFile.name).name)).forEach(projectSymfinderFile => {
 
                 console.log(projectSymfinderFile.name)
 
-                let fullPath = path.resolve(path.join(this.pathToSymfinderJsons, projectSymfinderFile.name));
+                const fullPath = path.resolve(path.join(this.pathToSymfinderJsons, projectSymfinderFile.name));
 
-                let projectName = path.parse(projectSymfinderFile.name).name;
+                const projectName = path.parse(projectSymfinderFile.name).name;
 
                 this.watcherService.parseSymfinderJsons(fullPath, projectName);
             });
