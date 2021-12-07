@@ -7,8 +7,8 @@ import {BackgroundColor} from "../../../model/entitiesImplems/config.model";
 
 export class SettingsController implements SubMenuInterface {
 
-    public static LIGHT_COLOR = "#9cebff"
-    public static DARK_COLOR = "#001b2f"
+    public static LIGHT_COLOR = "#C4C4C4"
+    public static DARK_COLOR = "#313335"
 
     private static BACKGROUND_COLOR_COOKIE_NAME = "varicity_isbackgroundlight";
 
