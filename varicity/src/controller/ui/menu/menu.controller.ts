@@ -1,21 +1,44 @@
-import {DocController} from "../doc.controller";
-import {BlacklistController} from "./blacklist.controller";
 import {LinkController} from "./link.controller";
-import {DetailsController} from "./details.controller";
-import {MetricController} from "./metric.controller";
-import {DistrictController} from "./district.controller";
 import {SubMenuController} from "./sub-menu.controller";
 import bootstrap from "../../../../public/scripts/bootstrap.bundle.min.js"
+import {SubMenuInterface} from "./sub-menu.interface";
+import {MetricController} from "./metric.controller";
+import {DetailsController} from "./details.controller";
 import {BuildingController} from "./building.controller";
+import {DistrictController} from "./district.controller";
+import {BlacklistController} from "./blacklist.controller";
+import {ProjectConfigMenuController} from "./project-config-menu.controller";
+import {SaveMenuController} from "./save-menu.controller";
+import {DocController} from "./doc.controller";
 
 export class MenuController {
 
     public static selectedTab;
 
+    private static menuElements = new Map<string, SubMenuInterface>();
+
+    private static MAIN_MENU = "main-menu";
+    private static TOOL_MENU = "tool-menu";
+
     public static createMenu() {
-        this.addListeners("main-menu");
-        this.addListeners("tool-menu");
+        this.addMenuElements();
+        this.addListeners(MenuController.MAIN_MENU);
+        this.addListeners(MenuController.TOOL_MENU);
         this.addTooltipListeners();
+    }
+
+    private static addMenuElements() {
+        MenuController.createMenuElement("Projects and Configurations", "project-config.svg", new ProjectConfigMenuController(), false, true, true, true);
+
+        MenuController.createMenuElement("Information", "information.svg", new DetailsController(), false, false, true);
+        MenuController.createMenuElement("Building", "building.svg", new BuildingController());
+        MenuController.createMenuElement("District", "district.svg", new DistrictController());
+        MenuController.createMenuElement("Link", "links.svg", new LinkController());
+        MenuController.createMenuElement("Blacklist", "blacklist.svg", new BlacklistController());
+        MenuController.createMenuElement("Metrics and APIs", "metric-entrypoints.svg", new MetricController(), false, false, true);
+
+        MenuController.createMenuElement("Save", "save.svg", new SaveMenuController(), true, true, false, true);
+        MenuController.createMenuElement("Documentation", "documentation.svg", new DocController(), true, true);
     }
 
     public static addListeners(listId: string) {
@@ -47,30 +70,11 @@ export class MenuController {
 
     private static createSubMenu(selectedTab: Element) {
         // clear the sub-menu
-        SubMenuController.getParentContentSubMenu().innerHTML = "";
+        const subMenuParent = SubMenuController.getParentContentSubMenu();
+        subMenuParent.innerHTML = "";
 
         if (selectedTab) {
-
-            switch (selectedTab.getAttribute("id")) {
-                case "information":
-                    DetailsController.createMenu();
-                    break;
-                case "building":
-                    BuildingController.createMenu();
-                    break;
-                case "districts":
-                    DistrictController.createMenu();
-                    break;
-                case "links":
-                    LinkController.createMenu();
-                    break;
-                case "blacklist":
-                    BlacklistController.createMenu();
-                    break;
-                case "metric-entrypoints":
-                    MetricController.createMenu();
-                    break;
-            }
+            MenuController.populateMenuElement(selectedTab.getAttribute("id"));
 
             // Display the sub menu
             document.getElementById("submenu").style.display = "block";
@@ -82,22 +86,7 @@ export class MenuController {
     }
 
     private static displayEmbeddedMenu(selectedTab: Element) {
-        switch (selectedTab.getAttribute("id")) {
-            case "project-config":
-                document.getElementById("project-config_content").setAttribute('open', 'true');
-                document.getElementById("project-config_content").setAttribute('scrimClickAction', 'close');
-                document.getElementById("project-config_content").setAttribute('escapeKeyAction', 'close');
-                break;
-            case "save":
-                document.getElementById("save_content").setAttribute('open', 'true');
-                break;
-            case "documentation":
-                DocController.displayDocumentation();
-                break;
-            case "settings":
-
-                break;
-        }
+        MenuController.populateEmbeddedMenuElement(selectedTab.getAttribute("id"));
     }
 
     public static changeImage(element: Element) {
@@ -113,7 +102,70 @@ export class MenuController {
     private static addTooltipListeners() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-            new bootstrap.Tooltip(tooltipTriggerEl, { trigger: 'hover' });
+            new bootstrap.Tooltip(tooltipTriggerEl, {trigger: 'hover'});
         })
+    }
+
+    private static createMenuElement(menuName: string, iconNameWithExtension: string, menuController: SubMenuInterface, isAtTheBottom?: boolean, isNotACollapsible?: boolean, hasBottomSeparator?: boolean, hasTopSeparator?: boolean): HTMLElement {
+
+        // create menu icon button
+        const listElement = document.createElement("li");
+        listElement.id = menuName;
+
+        const linkElement = document.createElement("a");
+        linkElement.classList.add("nav-link", "py-3");
+        linkElement.href = "#";
+        linkElement.setAttribute("aria-current", "page");
+        linkElement.title = menuName;
+        linkElement.setAttribute("data-bs-toggle", "tooltip");
+        linkElement.setAttribute("data-bs-placement", "left");
+
+        const imageElement = document.createElement("img");
+        imageElement.classList.add("bi");
+        imageElement.width = 24;
+        imageElement.height = 24;
+        imageElement.setAttribute("role", "img");
+        imageElement.setAttribute("aria-label", menuName);
+        imageElement.src = "images/menu-icons/section-icons/" + iconNameWithExtension;
+
+        // logic
+        if (hasBottomSeparator) {
+            linkElement.classList.add("border-bottom");
+        }
+        if (hasTopSeparator) {
+            linkElement.classList.add("border-top");
+        }
+
+        if (!isNotACollapsible) {
+            SubMenuController.changeTitleSubMenuElement(menuController.defineSubMenuTitle());
+            listElement.classList.add("collapsible-button");
+        }
+
+        let parent: HTMLElement;
+        this.menuElements.set(menuName, menuController);
+        if (isAtTheBottom) {
+            parent = document.getElementById(MenuController.TOOL_MENU);
+        } else {
+            parent = document.getElementById(MenuController.MAIN_MENU);
+        }
+
+        // create element structure and add to
+        parent.appendChild(listElement);
+        listElement.appendChild(linkElement);
+        linkElement.appendChild(imageElement);
+
+        return listElement;
+    }
+
+    private static populateMenuElement(menuId: string) {
+        const subMenuParent = SubMenuController.getParentContentSubMenu();
+        const menuElement = this.menuElements.get(menuId);
+        menuElement.createMenu(subMenuParent);
+        SubMenuController.changeTitleSubMenuElement(menuElement.defineSubMenuTitle());
+    }
+
+    private static populateEmbeddedMenuElement(menuId: string) {
+        const menuElement = this.menuElements.get(menuId);
+        menuElement.createMenu(undefined);
     }
 }

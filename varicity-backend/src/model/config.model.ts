@@ -1,5 +1,3 @@
-import { Vector3 } from './user.model';
-
 export class CameraData {
   alpha: number;
   beta: number;
@@ -46,6 +44,12 @@ export interface ConfigColor {
   faces: Color[];
   outlines: Color[];
   // }
+}
+
+export class Vector3 {
+    x?: number;
+    y?: number;
+    z?: number
 }
 
 export class VaricityConfig {

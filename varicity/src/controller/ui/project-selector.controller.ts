@@ -38,7 +38,7 @@ export class ProjectController {
     public static loadProject(projectName: string) {
 
         document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
-        if (MenuController.selectedTab){
+        if (MenuController.selectedTab) {
             MenuController.changeImage(MenuController.selectedTab);
             MenuController.selectedTab = undefined;
         }

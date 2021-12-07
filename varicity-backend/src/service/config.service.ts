@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import { CameraData, VaricityConfig } from '../model/config.model';
-import { Vector3 } from '../model/user.model';
+import { CameraData, VaricityConfig, Vector3 } from '../model/config.model';
+
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigEntry } from 'src/model/experiment.model';

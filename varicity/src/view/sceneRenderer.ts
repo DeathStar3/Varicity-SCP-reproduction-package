@@ -1,4 +1,4 @@
-import {Config, Vector3_Local} from './../model/entitiesImplems/config.model';
+import {Config} from './../model/entitiesImplems/config.model';
 import {ArcRotateCamera, Engine, HemisphericLight, Scene, Vector3} from "@babylonjs/core";
 import {EntitiesList} from "../model/entitiesList";
 

@@ -17,101 +17,103 @@
 <body>
 
 
+    <div id="progress-xp">
 
-    <div id="app" class="p-3">
+        <div id="app" class="p-3">
 
-        {{projectName}}
-        <!--
+            {{projectName}}
+            <!--
         <div id="run-xp-form" class="text-center">
             <h4>Load your experiment configuration here</h4>
             <input class="form-control" type="file" name="experiment" id="experiment-input">
             <button class="btn btn-info mt-3" id="run-xp-btn">Run experiment</button>
         </div>
 -->
-        <div>
-            <h4 class="text-center"> Fill the form</h4>
-
-            <label for="projectName" class="form-label">Project name</label>
-            <input v-model="projectName" class="form-control m-2" placeholder="Project name" id="projectName">
-
-            <label for="repositoryUrl" class="form-label">Repository url</label>
-            <input class="form-control m-2" v-model="repositoryUrl" type="url" placeholder="Url if the repository"
-                name="repositoryUrl" id="repositoryUrl">
-
-            <label for="path" class="form-label">Path of the project</label>
-            <input class="form-control m-2" v-model="path" placeholder="Path of the project" type="text" id="path">
-
-            <label for="sourcePackage" class="form-label">Relative path of the souce code</label>
-            <input class="form-control m-2" v-model="sourcePackage" id="sourcePackage"
-                placeholder="Relative path of the souce code" type="text">
-
-            <label for="buildEnv" class="form-label">Docker Image</label>
-            <input class="form-control m-2" id="buildEnv" v-model="buildEnv" placeholder="Docker Image" type="text">
-
-            <label for="buildEnvTag" class="form-label">Docker Image Tag</label>
-            <input class="form-control m-2" v-model="buildEnvTag" id="buildEnvTag" placeholder="Tag of docker image"
-                type="text">
-
-            <label class="form-label" for="buildCmd">Build command</label>
-            <input v-model="buildCmd" id="buildCmd" class="form-control m-2" placeholder="Build command" type="text">
-            <div class="form-check">
-                <input class="form-check-input" v-model="buildCmdIncludeSonar" type="checkbox"
-                    id="buildCmdIncludeSonar">
-                <label class="form-check-label" for="buildCmdIncludeSonar"> The build command already includes
-                    sonar</label>
-            </div>
-
-            <div class="form-check">
-                <input class="form-check-input" v-model="skipClone" type="checkbox" id="skipClone">
-                <label class="form-check-label" for="skipClone"> Do not clone a repository </label>
-            </div>
-
-            <div class="form-check">
-                <input class="form-check-input" v-model="skipSymfinder" type="checkbox" id="skipSymfinder">
-                <label class="form-check-label" for="skipSymfinder"> Do not analyze variability
-                    sonar</label>
-            </div>
-
             <div>
-                <div>
-                    <div>
-                        <span class="badge bg-secondary m-3" v-for="tag in tagIds"> {{tag}}
-                            <span class="material-icons-outlined pointer" v-on:click="removeTag(tag)">close
-                            </span> </span>
-                    </div>
-                    <input class="form-control m-2" v-model="currentTag" type="text" v-on:keyup.enter="addTag()"
-                        placeholder="Add a tag">
+                <h4 class="text-center"> Fill the form</h4>
+
+                <label for="projectName" class="form-label">Project name</label>
+                <input v-model="projectName" class="form-control m-2" placeholder="Project name" id="projectName">
+
+                <label for="repositoryUrl" class="form-label">Repository url</label>
+                <input class="form-control m-2" v-model="repositoryUrl" type="url" placeholder="Url if the repository"
+                    name="repositoryUrl" id="repositoryUrl">
+
+                <label for="path" class="form-label">Path of the project</label>
+                <input class="form-control m-2" v-model="path" placeholder="Path of the project" type="text" id="path">
+
+                <label for="sourcePackage" class="form-label">Relative path of the souce code</label>
+                <input class="form-control m-2" v-model="sourcePackage" id="sourcePackage"
+                    placeholder="Relative path of the souce code" type="text">
+
+                <label for="buildEnv" class="form-label">Docker Image</label>
+                <input class="form-control m-2" id="buildEnv" v-model="buildEnv" placeholder="Docker Image" type="text">
+
+                <label for="buildEnvTag" class="form-label">Docker Image Tag</label>
+                <input class="form-control m-2" v-model="buildEnvTag" id="buildEnvTag" placeholder="Tag of docker image"
+                    type="text">
+
+                <label class="form-label" for="buildCmd">Build command</label>
+                <input v-model="buildCmd" id="buildCmd" class="form-control m-2" placeholder="Build command"
+                    type="text">
+                <div class="form-check">
+                    <input class="form-check-input" v-model="buildCmdIncludeSonar" type="checkbox"
+                        id="buildCmdIncludeSonar">
+                    <label class="form-check-label" for="buildCmdIncludeSonar"> The build command already includes
+                        sonar</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" v-model="skipClone" type="checkbox" id="skipClone">
+                    <label class="form-check-label" for="skipClone"> Do not clone a repository </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" v-model="skipSymfinder" type="checkbox" id="skipSymfinder">
+                    <label class="form-check-label" for="skipSymfinder"> Do not analyze variability
+                        sonar</label>
                 </div>
 
                 <div>
                     <div>
-                        <span class="badge bg-secondary m-3" v-for="commit in commitIds"> {{tag}}
-                            <span class="material-icons-outlined pointer" v-on:click="removeCommit(commit)">close
-                            </span> </span>
+                        <div>
+                            <span class="badge bg-secondary m-3" v-for="tag in tagIds"> {{tag}}
+                                <span class="material-icons-outlined pointer" v-on:click="removeTag(tag)">close
+                                </span> </span>
+                        </div>
+                        <input class="form-control m-2" v-model="currentTag" type="text" v-on:keyup.enter="addTag()"
+                            placeholder="Add a tag">
                     </div>
-                    <input class="form-control m-2" v-model="currentCommit" type="text" v-on:keyup.enter="addCommit()"
-                        placeholder="Add a commit">
+
+                    <div>
+                        <div>
+                            <span class="badge bg-secondary m-3" v-for="commit in commitIds"> {{tag}}
+                                <span class="material-icons-outlined pointer" v-on:click="removeCommit(commit)">close
+                                </span> </span>
+                        </div>
+                        <input class="form-control m-2" v-model="currentCommit" type="text"
+                            v-on:keyup.enter="addCommit()" placeholder="Add a commit">
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-info mt-3">Run experiment</button>
+                    </div>
+
+
+
                 </div>
 
-                <div class="text-center">
-                    <button class="btn btn-info mt-3">Run experiment</button>
-                </div>
 
+                <div id="progress-xp">
+
+
+                </div>
 
 
             </div>
-
-
-            <div id="progress-xp">
-
-
-            </div>
-
 
         </div>
-
-    </div>
-    <!--
+        <!--
 
         <mwc-dialog id="dialog-experiment-failed" heading="Error with your experiment">
             <div>
@@ -127,90 +129,90 @@
         </mwc-dialog>
         -->
 
-    <script type="application/javascript">
-        var app = new Vue({
-            el: '#app',
-            data: {
-                currentTag: '',
-                currentCommit: '',
-                path: '',
-                sourcePackage: '.',
-                buildEnv: '',
-                buildEnvTag: '',
-                buildCmd: '',
-                buildCmdIncludeSonar: false,
-                sonarqubeNeeded: false,
-                outputPath: '',
-                sources: [],
-                tagIds: [],
-                commitIds: [],
-                projectName: '',
-                repositoryUrl: '',
-                skipClone: false,
-                skipSymfinder: false,
-                message: 'Hello Vue!'
-            }, methods: {
-                addTag: function () {
-                    this.tagIds.push(this.currentTag)
-                    this.currentTag = '';
+        <script type="application/javascript">
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    currentTag: '',
+                    currentCommit: '',
+                    path: '',
+                    sourcePackage: '.',
+                    buildEnv: '',
+                    buildEnvTag: '',
+                    buildCmd: '',
+                    buildCmdIncludeSonar: false,
+                    sonarqubeNeeded: false,
+                    outputPath: '',
+                    sources: [],
+                    tagIds: [],
+                    commitIds: [],
+                    projectName: '',
+                    repositoryUrl: '',
+                    skipClone: false,
+                    skipSymfinder: false,
+                    message: 'Hello Vue!'
+                }, methods: {
+                    addTag: function () {
+                        this.tagIds.push(this.currentTag)
+                        this.currentTag = '';
 
-                },
-                removeTag: function (tagToRemove) {
-                    this.tagIds = this.tagIds.filter(tag => tag != tagToRemove)
+                    },
+                    removeTag: function (tagToRemove) {
+                        this.tagIds = this.tagIds.filter(tag => tag != tagToRemove)
 
-                },
-                addCommit: function () {
-                    this.commitIds.push(this.currentCommit)
-                    this.currentCommit = '';
+                    },
+                    addCommit: function () {
+                        this.commitIds.push(this.currentCommit)
+                        this.currentCommit = '';
 
-                },
-                removeCommit: function (commitToRemove) {
-                    this.commitIds = this.commitIds.filter(commit => commit != commitToRemove)
+                    },
+                    removeCommit: function (commitToRemove) {
+                        this.commitIds = this.commitIds.filter(commit => commit != commitToRemove)
 
+                    }
                 }
+            });
+        </script>
+
+
+        <style>
+            .pointer {
+                cursor: pointer;
             }
-        });
-    </script>
 
+            #run-xp-form {
 
-    <style>
-        .pointer {
-            cursor: pointer;
-        }
+                margin-top: 15px;
+                margin-left: auto;
+                margin-right: auto;
+                width: 60%;
+            }
 
-        #run-xp-form {
+            .snackbar {
+                display: inline-block;
+                position: fixed;
+                background: #323232;
+                color: #f1f1f1;
+                min-height: 50px;
+                min-width: 290px;
+                padding: 16px 24px 12px;
+                box-sizing: border-box;
+                box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+                border-radius: 2px;
+                bottom: 1rem;
+                left: 1rem;
+                font-size: 90%;
+                transition: visibility 0.3s, transform 0.3s;
+                transform: translateY(100px);
+                visibility: hidden;
+                will-change: transform;
+            }
 
-            margin-top: 15px;
-            margin-left: auto;
-            margin-right: auto;
-            width: 60%;
-        }
-
-        .snackbar {
-            display: inline-block;
-            position: fixed;
-            background: #323232;
-            color: #f1f1f1;
-            min-height: 50px;
-            min-width: 290px;
-            padding: 16px 24px 12px;
-            box-sizing: border-box;
-            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-            border-radius: 2px;
-            bottom: 1rem;
-            left: 1rem;
-            font-size: 90%;
-            transition: visibility 0.3s, transform 0.3s;
-            transform: translateY(100px);
-            visibility: hidden;
-            will-change: transform;
-        }
-
-        .snackbar--visible {
-            visibility: visible;
-            transform: none;
-        }
-    </style>
+            .snackbar--visible {
+                visibility: visible;
+                transform: none;
+            }
+        </style>
 </body>
 
 </html>

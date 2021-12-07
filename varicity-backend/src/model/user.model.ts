@@ -1,4 +1,4 @@
-import { VaricityConfig } from './config.model';
+import { VaricityConfig, Vector3 } from './config.model';
 import { JsonInputInterface } from './jsonInput.interface';
 
 export enum UserType {
@@ -24,11 +24,7 @@ export class CityViewConfig {
   cameraPosition: Vector3;
 }
 
-export class Vector3 {
-  x?: number;
-  y?: number;
-  z?: number;
-}
+
 
 export class User {
   constructor(n: string, u: UserType) {

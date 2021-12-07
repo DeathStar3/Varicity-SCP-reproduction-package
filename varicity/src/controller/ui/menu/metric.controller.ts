@@ -4,17 +4,17 @@ import {CriticalLevel} from "../../../model/entitiesImplems/config.model";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
 import {ToastController, ToastType} from "../toast.controller";
 import {SearchbarController} from "../searchbar.controller";
+import {SubMenuInterface} from "./sub-menu.interface";
 
-export class MetricController {
+export class MetricController implements SubMenuInterface {
 
     private static maxLevelUsage = 0;
 
-    public static createMenu() {
-        const parent = SubMenuController.getParentContentSubMenu();
+    public defineSubMenuTitle(): string {
+        return "Metrics and APIs";
+    }
 
-        // set title
-        SubMenuController.changeTitleSubMenuElement("Metrics and APIs");
-
+    public createMenu(parent: HTMLElement) {
         const menuOrientation = SubMenuController.createMenu("Orientation and Level usage", true, parent);
         const menuAPIClasses = SubMenuController.createMenu("API classes", true, parent);
         const menuVariables = SubMenuController.createMenu("Variables", true, parent);
@@ -32,7 +32,7 @@ export class MetricController {
         MetricController.maxLevelUsage = max;
     }
 
-    private static populateOrientationAndLevelUsage(parent: HTMLElement){
+    private populateOrientationAndLevelUsage(parent: HTMLElement) {
         // Orientation
         let orientationOptions = ["IN", "OUT", "IN_OUT"];
         const select = SubMenuController.createSelect("Orientation", UIController.config.orientation, parent, orientationOptions)
@@ -50,21 +50,21 @@ export class MetricController {
         })
     }
 
-    private static populateApiClasses(parent: HTMLElement){
+    private populateApiClasses(parent: HTMLElement) {
         const apiClasses = UIController.config.api_classes;
         const inputs = []
 
         // API classes
         for (let i = 0; i < apiClasses.length; i++) {
             let className = apiClasses[i];
-            MetricController.createClassInput(inputs, apiClasses, parent, className);
+            this.createClassInput(inputs, apiClasses, parent, className);
         }
 
-        MetricController.createClassInput(inputs, apiClasses, parent);
+        this.createClassInput(inputs, apiClasses, parent);
     }
 
 
-    private static createClassInput(inputs, apiClasses, parent, text?: string) {
+    private createClassInput(inputs, apiClasses, parent, text?: string) {
         let className = text || "";
         const input = SubMenuController.createOnlyInputText(className, "ex.package.class", parent);
 
@@ -77,13 +77,13 @@ export class MetricController {
             const isApiAlreadyInList = apiClasses.indexOf(input.value) !== -1;
 
             // Handle error where the input hasn't change
-            if(className === input.value){
+            if (className === input.value) {
                 ToastController.addToast("The input hasn't change...", ToastType.INFO);
                 return;
             }
 
             // Handle error where the input already exist in an other input text
-            if(isApiAlreadyInList){
+            if (isApiAlreadyInList) {
                 ToastController.addToast("The class: '" + input.value + "' already exist in the API classes. You can't add it a second time...", ToastType.DANGER);
                 input.value = className; // reset value to the last one
                 return;
@@ -91,7 +91,7 @@ export class MetricController {
 
             if (!SearchbarController.map.has(input.value)) { // the search key doesn't exist
                 input.style.border = "1px solid red";
-            }else {
+            } else {
                 input.style.border = "2px solid #ced4da";
 
                 // Update the config and scene depending on the position in the list of the input box
@@ -107,7 +107,7 @@ export class MetricController {
 
                 } else if (input.value !== "") { // if is the last input and has a value, then add a new input text at the end.
                     apiClasses.push(input.value);
-                    MetricController.createClassInput(inputs, apiClasses, parent);
+                    this.createClassInput(inputs, apiClasses, parent);
                     UIController.updateScene(CriticalLevel.REPARSE_DATA);
                 }
 
@@ -117,7 +117,7 @@ export class MetricController {
 
     }
 
-    private static populateVariables(parent: HTMLElement){
+    private populateVariables(parent: HTMLElement) {
         // Variables
         const noneVal = " -- None -- ";
         const metricNames = [...UIController.config.metrics.keys()];
@@ -134,7 +134,7 @@ export class MetricController {
         })
     }
 
-    private static populateMetrics(parent: HTMLElement){
+    private populateMetrics(parent: HTMLElement) {
         const metrics = UIController.config.metrics;
 
         metrics.forEach((metric, name) => {
@@ -149,12 +149,12 @@ export class MetricController {
             const notSelectedClass = "btn-outline-primary";
 
             minInput.addEventListener("keypress", (event) => {
-                if(event.key === 'Enter'){
+                if (event.key === 'Enter') {
                     console.log("min changed")
                     let el = UIController.config.metrics.get(name);
                     const newMin = +minInput.value;
 
-                    if(el.max < newMin){
+                    if (el.max < newMin) {
                         ToastController.addToast("The min value '" + newMin + "' of the metric '" + name + "' can't be lower than the max value: " + el.max, ToastType.DANGER);
                         return;
                     }
@@ -165,7 +165,7 @@ export class MetricController {
             })
 
             maxInput.addEventListener("keypress", (event) => {
-                if(event.key === 'Enter') {
+                if (event.key === 'Enter') {
                     console.log("max changed")
                     let el = UIController.config.metrics.get(name);
                     const newMax = +maxInput.value;
@@ -181,7 +181,7 @@ export class MetricController {
             })
 
             lowerInput.addEventListener('click', function () {
-                if(!lowerInput.classList.contains(selectedClass)){
+                if (!lowerInput.classList.contains(selectedClass)) {
                     lowerInput.classList.add(selectedClass);
                     lowerInput.classList.remove(notSelectedClass);
                     higherInput.classList.add(notSelectedClass);
@@ -193,7 +193,7 @@ export class MetricController {
             });
 
             higherInput.addEventListener('click', function () {
-                if(!higherInput.classList.contains(selectedClass)){
+                if (!higherInput.classList.contains(selectedClass)) {
                     higherInput.classList.add(selectedClass);
                     higherInput.classList.remove(notSelectedClass);
                     lowerInput.classList.add(notSelectedClass);

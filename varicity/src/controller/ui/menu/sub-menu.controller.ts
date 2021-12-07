@@ -214,7 +214,7 @@ export class SubMenuController {
         divElement.classList.add("input-group", "input-custom");
 
         let checkboxDivElement = document.createElement("div");
-        checkboxDivElement.classList.add("input-group-text", "col-1");
+        checkboxDivElement.classList.add("input-group-text", "col-2", "d-flex", "justify-content-center");
 
         let inputElement: HTMLInputElement;
         inputElement = document.createElement("input");
@@ -226,7 +226,7 @@ export class SubMenuController {
 
         let labelElement: HTMLLabelElement;
         labelElement = document.createElement("label");
-        labelElement.classList.add("form-control", "form-check-label", "col-11");
+        labelElement.classList.add("form-control", "form-check-label", "col-10");
         labelElement.innerHTML = value.toString();
 
         if (checkboxDivElement) {
@@ -250,7 +250,7 @@ export class SubMenuController {
         divElement.classList.add("input-group", "input-custom");
 
         let checkboxLeftDivElement = document.createElement("div");
-        checkboxLeftDivElement.classList.add("input-group-text", "col-1");
+        checkboxLeftDivElement.classList.add("input-group-text", "col-2", "d-flex", "justify-content-center");
 
         let inputLeftElement: HTMLInputElement;
         inputLeftElement = document.createElement("input");
@@ -261,7 +261,7 @@ export class SubMenuController {
         checkboxLeftDivElement.appendChild(inputLeftElement)
 
         let checkboxRightDivElement = document.createElement("div");
-        checkboxRightDivElement.classList.add("input-group-text", "col-1");
+        checkboxRightDivElement.classList.add("input-group-text", "col-2", "d-flex", "justify-content-center");
 
         let inputRightElement: HTMLInputElement;
         inputRightElement = document.createElement("input");
@@ -274,7 +274,7 @@ export class SubMenuController {
 
         let labelElement: HTMLLabelElement;
         labelElement = document.createElement("label");
-        labelElement.classList.add("form-control", "form-check-label", "col-10");
+        labelElement.classList.add("form-control", "form-check-label", "col-8");
         labelElement.innerHTML = value.toString();
         labelElement.style.textAlign = "center"
 
@@ -428,15 +428,17 @@ export class SubMenuController {
         let divLowerIsBetter = document.createElement("div");
         divLowerIsBetter.classList.add("btn");
         divLowerIsBetter.innerText = "Lower is Better";
+        divLowerIsBetter.style.lineHeight = "1em";
 
         let divHigherIsBetter = document.createElement("div");
         divHigherIsBetter.classList.add("btn");
         divHigherIsBetter.innerText = "Higher is Better";
+        divHigherIsBetter.style.lineHeight = "1em";
 
-        if(isHighBetter){
+        if (isHighBetter) {
             divLowerIsBetter.classList.add("btn-outline-primary");
             divHigherIsBetter.classList.add("btn-primary");
-        }else{
+        } else {
             divLowerIsBetter.classList.add("btn-primary");
             divHigherIsBetter.classList.add("btn-outline-primary");
         }
