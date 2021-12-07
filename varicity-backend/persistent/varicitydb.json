@@ -5,10 +5,6 @@
             "projectName": "CookieFactoryClient"
         },
         {
-            "path": "persistent/data/symfinder_files/parsed/argoUML-bcae373.json",
-            "projectName": "argoUML-bcae373"
-        },
-        {
             "path": "persistent/data/symfinder_files/parsed/awt-jb8u202-b1532-comp.json",
             "projectName": "awt-jb8u202-b1532-comp"
         },
@@ -79,6 +75,10 @@
         {
             "path": "persistent/data/symfinder_files/parsed/test3ForVPParser.json",
             "projectName": "test3ForVPParser"
+        },
+        {
+            "path": "persistent/data/symfinder_files/parsed/argoUML-bcae373.json",
+            "projectName": "argoUML-bcae373"
         }
     ],
     "configs": [
@@ -146,6 +146,7 @@
             "projectId": "netbeans-12.2"
         },
         {
+            "name": "First Config of regatta",
             "path": "persistent/configs/regatta/config-regatta-1.yaml",
             "projectId": "regatta"
         },

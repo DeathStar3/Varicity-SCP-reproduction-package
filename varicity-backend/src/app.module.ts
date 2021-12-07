@@ -5,6 +5,8 @@ import { ProjectService } from "./service/project.service";
 import { VaricityConfigService } from "./service/config.service";
 import { InitDBService } from './startup/initdb';
 import { ConfigModule } from '@nestjs/config';
+import { FsWatcherService } from './service/fs-watcher.service';
+import { DbFacadeService } from './service/db-facade/db-facade.service';
 
 @Module({
     imports: [ConfigModule.forRoot()],
@@ -14,7 +16,7 @@ import { ConfigModule } from '@nestjs/config';
     ],
     providers: [
         ProjectService,
-        VaricityConfigService,InitDBService
+        VaricityConfigService,InitDBService, FsWatcherService, DbFacadeService
     ],
 })
 export class AppModule {

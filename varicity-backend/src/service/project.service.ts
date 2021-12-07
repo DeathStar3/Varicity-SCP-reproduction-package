@@ -1,35 +1,28 @@
 import { Inject } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as fs from 'fs';
-import { JsonDB } from "node-json-db";
-import { Config } from "node-json-db/dist/lib/JsonDBConfig";
 import { ExperimentResult, ProjectEntry } from "src/model/experiment.model";
 import { JsonInputInterface } from "../model/jsonInput.interface";
+import { DbFacadeService } from "./db-facade/db-facade.service";
 const fsextra = require('fs-extra')
 const path = require('path');
 
 
 export class ProjectService {
 
-    private readonly db: JsonDB;
-
-    
     private readonly pathToSymfinderJsons: string;
     private readonly pathToMetricsJsons: string;
     private readonly persistentDir: string;
-    private readonly databasePath: string;
+    
     private readonly pathToParsedJsons: string;
 
 
-    constructor(@Inject(ConfigService) private configService: ConfigService) {
+    constructor(@Inject(DbFacadeService) private readonly dbFacade:DbFacadeService,@Inject(ConfigService) private configService: ConfigService) {
         this.pathToSymfinderJsons = this.configService.get<string>('SYMFINDER_DIR');
         this.persistentDir = this.configService.get<string>('PERSISTENT_DIR');
         this.pathToMetricsJsons = this.configService.get<string>('METRICS_DIR');
-        this.databasePath = this.configService.get<string>('DATABASE_PATH');
-        this.pathToParsedJsons = this.configService.get<string>('PARSED_INPUT_DIR')
-
-
-        this.db = new JsonDB(new Config(this.databasePath, true, true, '/'));
+        this.pathToParsedJsons = this.configService.get<string>('PARSED_INPUT_DIR');
+       
     }
 
     /******************
@@ -42,7 +35,7 @@ export class ProjectService {
      */
     public loadProject(projectName: string): JsonInputInterface {
 
-        let projectObj = this.db.find('/projects', (project, _index) => project.projectName === projectName) as ProjectEntry;
+        let projectObj = this.dbFacade.db.find('/projects', (project, _index) => project.projectName === projectName) as ProjectEntry;
         if (projectObj) {
             return JSON.parse(fs.readFileSync(projectObj.path, 'utf8')) as JsonInputInterface;
         }
@@ -64,8 +57,8 @@ export class ProjectService {
      * Return a list with all the project names
      */
     public getAllProjectsName(): string[] {
-        if (this.db.exists('/projects')) {
-            return this.db.getData('/projects').map(p => p.projectName);
+        if (this.dbFacade.db.exists('/projects')) {
+            return this.dbFacade.db.getData('/projects').map(p => p.projectName);
         }
         return [];
     }
@@ -171,18 +164,31 @@ export class ProjectService {
         fsextra.writeJsonSync(`${parsedInputPath}.json`, symfinderObj, { flag: 'w+', recursive: true })
         
         //update the entry in the database
-        if (this.db.exists('/projects')) {
-            index = this.db.getIndex('/projects', project.projectName, 'projectName')
+        if (this.dbFacade.db.exists('/projects')) {
+            index = this.dbFacade.db.getIndex('/projects', project.projectName, 'projectName')
 
             if (index > -1) {
-                this.db.push(`/projects[${index}]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'));
+                this.dbFacade.db.push(`/projects[${index}]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'));
             }
             else {
-                this.db.push(`/projects[]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'));
+                this.dbFacade.db.push(`/projects[]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'));
             }
         } else {
-            this.db.push(`/projects[]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'));
+            this.dbFacade.db.push(`/projects[]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'));
         }
 
+    }
+
+      /**
+     * To check if a file is already parsed we will use the database instead of the filesystem
+     * If a change is done manually on the filesystem to the 'gross' results then the user has the responsibility to remove
+     * the previous parsed result and delete the entry from the database.
+     * @param projectName 
+     */
+       checkIfParsed(projectName: string) {
+        if (this.dbFacade.db.exists('/projects')) {
+            return this.dbFacade.db.getIndex('/projects', projectName, 'projectName') > -1;
+        }
+        return false;
     }
 }

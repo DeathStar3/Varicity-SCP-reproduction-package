@@ -1,12 +1,10 @@
 import * as fs from 'fs';
 import { CameraData, VaricityConfig } from "../model/config.model";
 import { Vector3 } from "../model/user.model";
-import { AppModule } from "../app.module";
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JsonDB } from 'node-json-db';
-import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
 import { ConfigEntry } from 'src/model/experiment.model';
+import { DbFacadeService } from './db-facade/db-facade.service';
 
 const path = require('path');
 const yaml = require('js-yaml');
@@ -16,22 +14,18 @@ export class VaricityConfigService {
 
 
 
-    private readonly db: JsonDB;
-    private readonly databasePath: string;
+   
+   
     private readonly pathToDefaultConfigs: string;
 
     private readonly pathToVisualizationConfigs: string;
 
 
-    constructor(@Inject(ConfigService) private configService: ConfigService) {
+    constructor(@Inject(DbFacadeService) private readonly dbFacade:DbFacadeService,@Inject(ConfigService) private configService: ConfigService) {
 
-        this.databasePath = this.configService.get<string>('DATABASE_PATH');
         this.pathToVisualizationConfigs = this.configService.get<string>('VISUALISATION_CONFIGS_PATH');
 
         this.pathToDefaultConfigs = this.configService.get<string>('DEFAULT_CONFIGS_DIR');
-
-        this.db = new JsonDB(new Config(this.databasePath, true, true, '/'));
-
     }
 
 
@@ -109,8 +103,8 @@ export class VaricityConfigService {
         doc.contents = config;
 
         let version = 1;
-        if (this.db.exists('/configs')) {
-            version = this.db.count('/configs') + 1;
+        if (this.dbFacade.db.exists('/configs')) {
+            version = this.dbFacade.db.count('/configs') + 1;
         }
         // TODO improve versionning system
         const filename = "config-" + config.projectId + "-" + version;
@@ -121,7 +115,7 @@ export class VaricityConfigService {
         }
         fs.writeFileSync(path.join(parentDir, filename + ".yaml"), doc.toString());
 
-        this.db.push('/configs[]', new ConfigEntry(filename, path.join(parentDir, filename + ".yaml"), config.projectId));
+        this.dbFacade.db.push('/configs[]', new ConfigEntry(filename, path.join(parentDir, filename + ".yaml"), config.projectId));
         //file written successfully
         return { config, filename: filename };
     }
@@ -141,8 +135,8 @@ export class VaricityConfigService {
      */
     private getConfigsPaths(projectName: string): string[] {
 
-        if (this.db.exists('/configs')) {
-            return this.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId == projectName).map(config => config.path);
+        if (this.dbFacade.db.exists('/configs')) {
+            return this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId == projectName).map(config => config.path);
         }
         return []
     }
@@ -154,8 +148,8 @@ export class VaricityConfigService {
      */
     private getConfigsPathsWithDefaultConfigsFallback(projectName: string): string[] {
 
-        if (this.db.exists('/configs')) {
-            let configsPath = this.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName).map(config => config.path)
+        if (this.dbFacade.db.exists('/configs')) {
+            let configsPath = this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName).map(config => config.path)
             if (configsPath.length > 0) {
                 return configsPath;
             }
@@ -195,8 +189,8 @@ export class VaricityConfigService {
      */
     public getConfigsNamesAndFileNames(projectName: string): ConfigEntry[] {
 
-        if (this.db.exists('/configs')) {
-            let configsPath = this.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName)
+        if (this.dbFacade.db.exists('/configs')) {
+            let configsPath = this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName)
             if (configsPath && configsPath.length > 0) {
                 return configsPath;
             }
@@ -259,5 +253,13 @@ export class VaricityConfigService {
         })
 
         return { config, filename: configFile };
+    }
+
+
+    public checkIfConfigIsIndexed(configFilePath) {
+        if (this.dbFacade.db.exists('/configs')) {
+            return this.dbFacade.db.getIndex('/configs', configFilePath, 'path') > -1
+        }
+        return false;
     }
 }
