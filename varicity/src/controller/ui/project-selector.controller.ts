@@ -8,6 +8,7 @@ import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
 import {UIController} from "./ui.controller";
 import {MetricController} from "./menu/metric.controller";
 import {MenuController} from "./menu/menu.controller";
+import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
 
 export class ProjectController {
 
@@ -64,7 +65,7 @@ export class ProjectController {
 
                 // set the min & max usage level
                 const maxLvl = this.el.getMaxCompLevel();
-                MetricController.defineMaxLevelUsage(maxLvl);
+                ApiAndBlacklistController.defineMaxLevelUsage(maxLvl);
 
                 UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(config.default_level));
                 UIController.scene.buildScene(true);

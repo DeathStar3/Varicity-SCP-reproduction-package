@@ -7,6 +7,11 @@ export class SaveMenuController implements SubMenuInterface {
     }
 
     public createMenu(parent: HTMLElement) {
-        document.getElementById("save_content").setAttribute('open', 'true');
+        const saveElement = document.getElementById("save_content");
+        saveElement.style.display = "block";
+        const saveConfirmElement = document.getElementById("save-dialog");
+        saveConfirmElement.style.display = "block";
+
+        saveElement.setAttribute('open', 'true');
     }
 }

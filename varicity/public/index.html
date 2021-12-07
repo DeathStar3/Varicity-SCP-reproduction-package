@@ -18,15 +18,14 @@
 
 <body>
 
+<!-- -------------------------------------------------------------------- --->
+<!--                           LOADING SCREEN                             --->
+<!-- -------------------------------------------------------------------- --->
+<div id="loading-frame" style="z-index: 10">
+    <img src="images/logovaricity_2.gif" style="width: 200px">
+</div>
+
 <div id="main">
-
-    <!-- -------------------------------------------------------------------- --->
-    <!--                           LOADING SCREEN                             --->
-    <!-- -------------------------------------------------------------------- --->
-    <div id="loading-frame">
-        <img src="images/logovaricity.gif" style="width: 200px">
-    </div>
-
 
     <div id="console" class="overflowable">
 
@@ -65,11 +64,11 @@
         <!-- -------------------------------------------------------------------- --->
         <!--                        PROJECT-CONFIG DIALOG                         --->
         <!-- -------------------------------------------------------------------- --->
-        <mwc-dialog id="project-config_content" heading="Selection" class="styled">
+        <mwc-dialog id="project-config_content" heading="Selection" class="styled" style="display: none">
             <div class="form-group">
                 <label for="project_selector">Project</label>
                 <select id="project_selector" class="mt-2 mb-2 parent form-select">
-                    <option value=""> ---Select a project---</option>
+                    <option disabled selected="true" value=""> ---Select a project---</option>
                 </select>
             </div>
 
@@ -83,7 +82,7 @@
         <!-- -------------------------------------------------------------------- --->
         <!--                         DOCUMENTATION DIALOG                         --->
         <!-- -------------------------------------------------------------------- --->
-        <mwc-dialog id="doc_content" heading="Documentation of Varicity" class="styled">
+        <mwc-dialog id="doc_content" heading="Documentation of Varicity" class="styled" style="display: none">
             <div>
                 Use ctrl + s to update the configuration without camera<br/>
                 Use ctrl + shift + s to save a new configuration with camera<br/>
@@ -122,7 +121,7 @@
         <!-- -------------------------------------------------------------------- --->
         <!--                             SAVE DIALOG                              --->
         <!-- -------------------------------------------------------------------- --->
-        <mwc-dialog id="save_content" heading="Save configuration" class="styled">
+        <mwc-dialog id="save_content" heading="Save configuration" class="styled" style="display: none">
             <div class="vertical-container">
                 <button class="btn btn-primary save-button" id="update-camera">
                     <span class="material-icons-outlined">camera</span>
@@ -146,7 +145,7 @@
         <!-- -------------------------------------------------------------------- --->
         <!--                       SAVE VALIDATION DIALOG                         --->
         <!-- -------------------------------------------------------------------- --->
-        <mwc-dialog id="save-dialog" heading="Save Validation">
+        <mwc-dialog id="save-dialog" heading="Save Validation" style="display: none">
             <div>
                 <p>You are about to save a new configuration. Are you sure ? Enter a name for your configuration.</p>
                 <input class="form-control" id="text-field-configname" minlength="3" maxlength="64"

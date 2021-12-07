@@ -6,8 +6,8 @@ import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
 import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
 import {UIController} from "./ui.controller";
 import {ConfigName} from "../../model/entitiesImplems/config.model";
-import {MetricController} from "./menu/metric.controller";
 import {MenuController} from "./menu/menu.controller";
+import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
 
 export class ConfigSelectorController {
 
@@ -43,6 +43,7 @@ export class ConfigSelectorController {
             const configName = (event.target as HTMLInputElement).value;
             if (configName !== undefined) {
                 document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
+                document.getElementById("loading-frame").style.display = 'inline-block'; // TODO can be remove if it's too much
                 if (MenuController.selectedTab) {
                     MenuController.changeImage(MenuController.selectedTab);
                     MenuController.selectedTab = undefined;
@@ -73,7 +74,7 @@ export class ConfigSelectorController {
 
             // set max usage level
             const maxLvl = this.el.getMaxCompLevel();
-            MetricController.defineMaxLevelUsage(maxLvl);
+            ApiAndBlacklistController.defineMaxLevelUsage(maxLvl);
 
             UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+UIController.config.default_level));
             UIController.scene.buildScene(updateCamera);

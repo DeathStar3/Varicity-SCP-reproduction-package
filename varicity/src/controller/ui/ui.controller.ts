@@ -1,6 +1,5 @@
 import {SearchbarController} from './searchbar.controller';
 import {Building3D} from '../../view/common/3Delements/building3D';
-import {Color} from '../../model/entities/config.interface';
 import {Config, ConfigName, CriticalLevel, MetricSpec} from '../../model/entitiesImplems/config.model';
 import {SceneRenderer} from '../../view/sceneRenderer';
 import {DetailsController} from './menu/details.controller';

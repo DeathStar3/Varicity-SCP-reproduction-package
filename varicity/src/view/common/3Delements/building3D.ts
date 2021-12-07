@@ -240,7 +240,8 @@ export class Building3D extends Element3D {
         }
 
         // New way to display a metric: building cracks
-        if (this.config.variables.crack && this.config.variables.crack != "") {
+        if (this.config.variables.crack && this.config.variables.crack !== "") {
+            console.log("this.config.variables.crack", this.config.variables.crack);
 
             let color = "" //(rgbToYIQ(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b) >= 128) ? "" : "w_" //TODO White color is absorbed find how to fix it
 
