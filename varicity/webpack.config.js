@@ -57,10 +57,10 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin(
             {patterns: [
-                { from: 'public/images', to: 'images' },
-                    { from: 'public/scripts', to: 'scripts' },
-                    { from: 'public/styles', to: 'styles' },
-                    { from: 'public/favicon.ico', to: 'favicon.ico' }
+                { from: 'images/**/*', to: 'images/', context: 'public/' },
+                    { from: 'scripts/**/*', to: 'scripts/', context: 'public/' },
+                    { from: 'styles/**/*', to: 'styles/', context: 'public/' },
+                    { from: 'favicon.ico', to: 'favicon.ico', context: 'public/' }
                 ]
             }
 
