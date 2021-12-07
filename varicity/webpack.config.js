@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
@@ -54,6 +55,16 @@ module.exports = {
         ]
     },
     plugins: [
+        new CopyWebpackPlugin(
+            {patterns: [
+                { from: 'public/images', to: 'images' },
+                    { from: 'public/scripts', to: 'scripts' },
+                    { from: 'public/styles', to: 'styles' },
+                    { from: 'public/favicon.ico', to: 'favicon.ico' }
+                ]
+            }
+
+        ),
         new HtmlWebpackPlugin({
             chunks: ['main'],
             template: path.resolve(appDirectory, "public/index.html")

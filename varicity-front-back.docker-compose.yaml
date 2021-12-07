@@ -43,6 +43,9 @@ services:
       - DATABASE_PATH=/persistent/varicitydb
       - VISUALISATION_CONFIGS_PATH=/persistent/configs
       - DEFAULT_CONFIGS_DIR=/default-configs
+      - WATCH_DIRECTORIES=1
+      - WATCHED_CONFIGS_DIR=/persistent/manual/configs
+      - WATCHED_SYMFINDER_DIR=/persistent/manual/symfinder_files
 
   varicity:
     image: deathstar3/varicity:${TAG}

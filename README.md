@@ -62,10 +62,13 @@ So for the path of the files your need to take that into account.
 You need to take that into account for the `path` and `outputPath` in the experiments config.
 If you are using the option `-http`, then you can't use `localhost` your url must be accessible through the internet or must be 
 a docker container in the same network as symfinder-cli. There will be more details on this in other sections.
+When using docker you need to provide a `path`.
 ```shell
 chmod +x new-run-docker-cli.sh
 ./new-run-docker-cli.sh -i <experiment-configuration> -s <hotspot-configuration> -verbosity <LOG_LEVEL> -http <url>
 ```
+
+
 **COMING SOON**
 
 ## Use Symfinder with a web interface
