@@ -35,7 +35,7 @@ export class MenuController {
         MenuController.createMenuElement("Building", "building.svg", new BuildingController());
         MenuController.createMenuElement("District", "district.svg", new DistrictController());
         MenuController.createMenuElement("Link", "links.svg", new LinkController());
-        MenuController.createMenuElement("APIs and Blacklist", "api.svg", new ApiAndBlacklistController());
+        MenuController.createMenuElement("APIs and Blacklist", "api_2.svg", new ApiAndBlacklistController());
         MenuController.createMenuElement("Metrics", "metric-entrypoints.svg", new MetricController(), false, false, true);
 
         MenuController.createMenuElement("Save", "save.svg", new SaveMenuController(), true, true, false, true);
