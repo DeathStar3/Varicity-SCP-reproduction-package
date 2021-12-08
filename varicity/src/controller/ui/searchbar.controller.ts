@@ -4,11 +4,12 @@ import {Metrics} from "../../model/entitiesImplems/metrics.model";
 
 export class SearchbarController {
     public static map: Map<string, Building3D>;
-    public static classList: string[] = []
+    public static classSet: Set<string>;
     private static searchbar: HTMLInputElement;
 
     public static initMap() {
         this.map = new Map<string, Building3D>();
+        this.classSet = new Set<string>();
 
         /* @ts-ignore */
         let searchbar: HTMLInputElement = document.getElementById("searchbar");
@@ -119,7 +120,7 @@ export class SearchbarController {
     }
 
     public static emptyClassList() {
-        this.map.clear();
+        this.classSet.clear();
 
         let datalist = document.getElementById("datalist-classes");
 
@@ -129,7 +130,7 @@ export class SearchbarController {
     }
 
     public static addEntryToClassList(key: string) {
-        this.classList.push(key)
+        this.classSet.add(key)
 
         let datalist = document.getElementById("datalist-classes");
 

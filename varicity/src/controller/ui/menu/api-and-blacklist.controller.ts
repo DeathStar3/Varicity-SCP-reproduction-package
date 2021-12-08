@@ -102,7 +102,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
                     return;
                 }
 
-                if (!SearchbarController.classList.includes(input.value) && input.value !== "") { // the search key doesn't exist
+                if (!SearchbarController.classSet.has(input.value) && input.value !== "") { // the search key doesn't exist
                     input.style.border = "1px solid red";
                 } else {
                     input.style.border = "2px solid #ced4da";
@@ -156,7 +156,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
                     return;
                 }
 
-                if (!SearchbarController.classList.includes(input.value) && input.value !== "") { // the search key doesn't exist
+                if (!SearchbarController.classSet.has(input.value) && input.value !== "") { // the search key doesn't exist
                     input.style.border = "1px solid red";
                 } else {
                     input.style.border = "1px solid #ced4da";
