@@ -2,7 +2,7 @@ name: Testing metrics extension
 on:
   push:
     branches:
-      - us/66-packaging
+      - main
   workflow_dispatch:
 jobs:
 #  sourcesfetchertest:
