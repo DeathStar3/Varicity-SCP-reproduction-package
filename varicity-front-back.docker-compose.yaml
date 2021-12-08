@@ -51,7 +51,7 @@ services:
     image: deathstar3/varicity:${TAG}
     container_name: varicity
     ports:
-      - "80:80"
+      - "8000:80"
     networks:
       - varicity-config
 
