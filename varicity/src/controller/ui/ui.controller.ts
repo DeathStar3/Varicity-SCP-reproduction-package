@@ -1,6 +1,5 @@
 import {SearchbarController} from './searchbar.controller';
 import {Building3D} from '../../view/common/3Delements/building3D';
-import {Color} from '../../model/entities/config.interface';
 import {Config, ConfigName, CriticalLevel, MetricSpec} from '../../model/entitiesImplems/config.model';
 import {SceneRenderer} from '../../view/sceneRenderer';
 import {DetailsController} from './menu/details.controller';
@@ -11,6 +10,7 @@ import {ConfigService} from "../../services/config.service";
 import {SaveController} from "./save.controller";
 import {ProjectService} from "../../services/project.service";
 import {MenuController} from "./menu/menu.controller";
+import {ProjectConfigMenuController} from "./menu/project-config-menu.controller";
 
 export class UIController {
 
@@ -50,6 +50,10 @@ export class UIController {
 
     public static createLogs() {
         LogsController.createLogsDisplay();
+    }
+
+    public static createProjectSelectorStayOpen(){
+        ProjectConfigMenuController.stayOpen();
     }
 
     public static displayObjectInfo(obj: Building3D, force: boolean = false): void {
@@ -103,5 +107,16 @@ export class UIController {
         })
 
         // TODO set default values for the rest
+    }
+
+    public static parseQueryParameters() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const project = urlParams.get('project');
+        const clazz = urlParams.get('class');
+        if (project) {
+            ProjectController.selectProject(project);
+            if (clazz) SearchbarController.focusOn(clazz);
+        }
     }
 }

@@ -483,4 +483,82 @@ export class SubMenuController {
 
         return [inputMin, inputMax, divLowerIsBetter, divHigherIsBetter];
     }
+
+    public static createSwitchWithText(text: string, firstText: string, secondText: string, isLeftSelected: boolean, parent: HTMLElement): HTMLElement[] {
+        // MAIN CONTAINERS
+        let divMaster = document.createElement("div");
+        divMaster.style.paddingBottom = "1em";
+
+        let divContainer = document.createElement("div");
+        divContainer.classList.add("d-flex");
+        divContainer.style.alignItems = "center";
+
+        divMaster.appendChild(divContainer);
+
+        // TEXT
+        let divMinContainer = document.createElement("div");
+        divMinContainer.classList.add("col-6");
+        // divMinContainer.style.paddingRight = "1em";
+
+        let divMinText = document.createElement("div");
+        divMinText.classList.add("input-group", "fill-height");
+
+        let labelMin = document.createElement("label");
+        labelMin.classList.add("input-group-text");
+        labelMin.style.width = "100%";
+        labelMin.innerText = text;
+
+        divContainer.appendChild(divMinContainer);
+        divMinContainer.appendChild(divMinText);
+        divMinText.appendChild(labelMin);
+
+        // HIGHER / LOWER  IS BETTER
+        let divMinMaxColContainer = document.createElement("div");
+        divMinMaxColContainer.classList.add("col-6");
+
+        let divHigherIsBetterContainer = document.createElement("div");
+        divHigherIsBetterContainer.classList.add("btn-group");
+        divHigherIsBetterContainer.style.width = "100%";
+        divHigherIsBetterContainer.style.padding = "0 1em";
+
+        let divLeftButton = document.createElement("div");
+        divLeftButton.classList.add("btn");
+        divLeftButton.innerText = firstText;
+        divLeftButton.style.lineHeight = "1em";
+
+        let divRightButton = document.createElement("div");
+        divRightButton.classList.add("btn");
+        divRightButton.innerText = secondText;
+        divRightButton.style.lineHeight = "1em";
+
+        if (isLeftSelected) {
+            divLeftButton.classList.add("btn-primary");
+            divRightButton.classList.add("btn-outline-primary");
+        } else {
+            divRightButton.classList.add("btn-primary");
+            divLeftButton.classList.add("btn-outline-primary");
+        }
+
+        divContainer.appendChild(divMinMaxColContainer);
+        divMinMaxColContainer.appendChild(divHigherIsBetterContainer);
+        divHigherIsBetterContainer.appendChild(divLeftButton);
+        divHigherIsBetterContainer.appendChild(divRightButton);
+        parent.appendChild(divMaster)
+        // <div class="d-flex">
+        //     <div class="col-4">
+        //         <div class="input-group " style="padding-right: 1em">
+        //               <div class="input-group-text">Color</div>
+        //         </div>
+        //     </div>
+        //
+        //         <div class="col-8">
+        //              <div  class="input-group btn-group ">
+        //                 <div class="btn btn-primary ">Light</div>
+        //                 <div class="btn btn-outline-primary">Dark</div>
+        //             </div>
+        //         </div>
+        //     </div>
+
+        return [divLeftButton, divRightButton];
+    }
 }

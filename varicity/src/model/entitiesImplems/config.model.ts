@@ -209,3 +209,8 @@ export class SaveResponseConfig {
     config: Config;
     filename: string;
 }
+
+export enum BackgroundColor {
+    LIGHT="LIGHT",
+    DARK="DARK",
+}
