@@ -5,6 +5,10 @@ import {SaveController} from "./save.controller";
 export class InputKeyController {
 
     public static createInputKeyListener() {
+
+        const saveConfirmElement = document.getElementById("save-dialog");
+        saveConfirmElement.style.display = "block";
+
         document.addEventListener('keydown', e => {
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') {// CTRL + SHIFT + S
                 e.preventDefault(); // Prevent the Save dialog to open

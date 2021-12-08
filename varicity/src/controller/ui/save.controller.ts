@@ -67,6 +67,7 @@ export class SaveController {
         //Fetch input text and set it as Config's name
         ConfigService.saveConfig(UIController.config).then((saveResponseConfig) => {
             console.log('Config saved successfully', saveResponseConfig);
+            ToastController.addToast("Configuration '" + UIController.config.name + "' saved successfully", ToastType.SUCESS);
             UIController.config = saveResponseConfig.config;
             UIController.configsName.push(new ConfigName(UIController.config.name, saveResponseConfig.filename));
             UIController.configFileName = saveResponseConfig.filename;
