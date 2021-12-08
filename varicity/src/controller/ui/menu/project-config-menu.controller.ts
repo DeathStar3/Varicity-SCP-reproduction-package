@@ -7,8 +7,20 @@ export class ProjectConfigMenuController implements SubMenuInterface {
     }
 
     public createMenu(parent: HTMLElement) {
-        document.getElementById("project-config_content").setAttribute('open', 'true');
-        document.getElementById("project-config_content").setAttribute('scrimClickAction', 'close');
-        document.getElementById("project-config_content").setAttribute('escapeKeyAction', 'close');
+        const projectConfigElement = document.getElementById("project-config_content");
+        projectConfigElement.style.display = "block";
+
+        projectConfigElement.setAttribute('open', 'true');
+        projectConfigElement.setAttribute('scrimClickAction', 'close');
+        projectConfigElement.setAttribute('escapeKeyAction', 'close');
+    }
+
+    public static stayOpen() {
+        const projectConfigElement = document.getElementById("project-config_content");
+        projectConfigElement.style.display = "block";
+
+        projectConfigElement.setAttribute('open', 'true');
+        projectConfigElement.setAttribute('scrimClickAction', '');
+        projectConfigElement.setAttribute('escapeKeyAction', '');
     }
 }

@@ -30,21 +30,6 @@ building:
     edges:
       - name: "API"
         color: "#000000"
-      - name: "!HOTSPOT"
-      - name: "VP"
-      - name: "STRATEGY"
-      - name: "FACTORY"
-      - name: "INTERFACE"
-      - name: "ABSTRACT"
-      - name: "CLASS"
-      - name: "VARIANT"
-      - name: "TEMPLATE"
-      - name: "DECORATOR"
-      - name: "COMPOSITION_STRATEGY"
-      - name: "METHOD_LEVEL_VP"
-      - name: "DENSE"
-      - name: "PUBLIC"
-      - name: "PRIVATE"
 district:
   padding: 0
   colors:

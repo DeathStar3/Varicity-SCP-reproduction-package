@@ -4,12 +4,16 @@ import {Metrics} from "../../model/entitiesImplems/metrics.model";
 
 export class SearchbarController {
     public static map: Map<string, Building3D>;
+    public static classSet: Set<string>;
+    private static searchbar: HTMLInputElement;
 
     public static initMap() {
         this.map = new Map<string, Building3D>();
+        this.classSet = new Set<string>();
 
         /* @ts-ignore */
         let searchbar: HTMLInputElement = document.getElementById("searchbar");
+        SearchbarController.searchbar = searchbar;
         let searchbarBox = document.getElementById("searchbar-box");
         searchbar.style.display = "block";
         searchbar.setAttribute("previous", "");
@@ -113,5 +117,30 @@ export class SearchbarController {
         let option = document.createElement("option");
         option.innerHTML = key;
         datalist.appendChild(option);
+    }
+
+    public static emptyClassList() {
+        this.classSet.clear();
+
+        let datalist = document.getElementById("datalist-classes");
+
+        while (datalist.firstChild) {
+            datalist.removeChild(datalist.lastChild);
+        }
+    }
+
+    public static addEntryToClassList(key: string) {
+        this.classSet.add(key)
+
+        let datalist = document.getElementById("datalist-classes");
+
+        let option = document.createElement("option");
+        option.innerHTML = key;
+        datalist.appendChild(option);
+    }
+
+    public static focusOn(className: string): void {
+        SearchbarController.searchbar.value = className;
+        SearchbarController.searchbar.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter"}))
     }
 }

@@ -6,10 +6,11 @@ import {MetricController} from "./metric.controller";
 import {DetailsController} from "./details.controller";
 import {BuildingController} from "./building.controller";
 import {DistrictController} from "./district.controller";
-import {BlacklistController} from "./blacklist.controller";
+import {ApiAndBlacklistController} from "./api-and-blacklist.controller";
 import {ProjectConfigMenuController} from "./project-config-menu.controller";
 import {SaveMenuController} from "./save-menu.controller";
 import {DocController} from "./doc.controller";
+import {SettingsController} from "./settings.controller";
 
 export class MenuController {
 
@@ -34,11 +35,12 @@ export class MenuController {
         MenuController.createMenuElement("Building", "building.svg", new BuildingController());
         MenuController.createMenuElement("District", "district.svg", new DistrictController());
         MenuController.createMenuElement("Link", "links.svg", new LinkController());
-        MenuController.createMenuElement("Blacklist", "blacklist.svg", new BlacklistController());
-        MenuController.createMenuElement("Metrics and APIs", "metric-entrypoints.svg", new MetricController(), false, false, true);
+        MenuController.createMenuElement("APIs and Blacklist", "api_2.svg", new ApiAndBlacklistController());
+        MenuController.createMenuElement("Metrics", "metric-entrypoints.svg", new MetricController(), false, false, true);
 
         MenuController.createMenuElement("Save", "save.svg", new SaveMenuController(), true, true, false, true);
         MenuController.createMenuElement("Documentation", "documentation.svg", new DocController(), true, true);
+        MenuController.createMenuElement("Settings", "settings.svg", new SettingsController(), true);
     }
 
     public static addListeners(listId: string) {

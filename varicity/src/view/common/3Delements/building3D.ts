@@ -19,6 +19,7 @@ import {Link3D} from '../3Dinterfaces/link3D.interface';
 import {MenuController} from "../../../controller/ui/menu/menu.controller";
 import {SceneRenderer} from "../../sceneRenderer";
 import {DetailsController} from "../../../controller/ui/menu/details.controller";
+import {SelectedBuildingController} from "../../../controller/ui/selected-building.controller";
 
 export class Building3D extends Element3D {
     elementModel: Building;
@@ -239,7 +240,8 @@ export class Building3D extends Element3D {
         }
 
         // New way to display a metric: building cracks
-        if (this.config.variables.crack && this.config.variables.crack != "") {
+        if (this.config.variables.crack && this.config.variables.crack !== "") {
+            console.log("this.config.variables.crack", this.config.variables.crack);
 
             let color = "" //(rgbToYIQ(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b) >= 128) ? "" : "w_" //TODO White color is absorbed find how to fix it
 
@@ -453,6 +455,11 @@ export class Building3D extends Element3D {
                     },
                     () => {
                         this.flag = !this.flag;
+                        if(this.flag) {
+                            SelectedBuildingController.selectABuilding(this.elementModel);
+                        } else {
+                            SelectedBuildingController.unselectABuilding(this.elementModel);
+                        }
                         this.highlight(this.flag, true);
                         this.links.forEach(l => l.display(this.flag, this.flag));
 
