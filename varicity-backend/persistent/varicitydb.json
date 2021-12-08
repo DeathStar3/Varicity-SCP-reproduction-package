@@ -1,10 +1,6 @@
 {
     "projects": [
         {
-            "path": "persistent/data/symfinder_files/parsed/CookieFactoryClient.json",
-            "projectName": "CookieFactoryClient"
-        },
-        {
             "path": "persistent/data/symfinder_files/parsed/awt-jb8u202-b1532-comp.json",
             "projectName": "awt-jb8u202-b1532-comp"
         },
@@ -57,10 +53,6 @@
             "projectName": "netbeans-12.2"
         },
         {
-            "path": "persistent/data/symfinder_files/parsed/regatta.json",
-            "projectName": "regatta"
-        },
-        {
             "path": "persistent/data/symfinder_files/parsed/riptide-2.11.0.json",
             "projectName": "riptide-2.11.0"
         },
@@ -82,10 +74,6 @@
         }
     ],
     "configs": [
-        {
-            "path": "persistent/configs/CookieFactoryClient/config-CookieFactoryClient-1.yaml",
-            "projectId": "CookieFactoryClient"
-        },
         {
             "name": "default config",
             "path": "persistent/configs/argoUML-bcae373/config-argoUML-bcae373-1.yaml",
@@ -144,15 +132,6 @@
             "name": "default config",
             "path": "persistent/configs/netbeans-12.2/config-netbeans-12.2-1.yaml",
             "projectId": "netbeans-12.2"
-        },
-        {
-            "name": "First Config of regatta",
-            "path": "persistent/configs/regatta/config-regatta-1.yaml",
-            "projectId": "regatta"
-        },
-        {
-            "path": "persistent/configs/regatta/config-regatta-2.yaml",
-            "projectId": "regatta"
         },
         {
             "name": "default config",

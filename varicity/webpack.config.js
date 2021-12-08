@@ -10,8 +10,7 @@ module.exports = {
     entry: {
         'main': path.resolve(appDirectory, "src/main.ts"),
         'parserTest': './tests/parser.test.ts',
-        'parserVPTest': './tests/parserVP.test.ts',
-        'experiment': path.resolve(appDirectory, 'src/controller/experiment/experiment.controller.ts')
+        'parserVPTest': './tests/parserVP.test.ts'
     },
     optimization: {
         splitChunks: {
@@ -69,11 +68,7 @@ module.exports = {
             chunks: ['main'],
             template: path.resolve(appDirectory, "public/index.html")
         }),
-        new HtmlWebpackPlugin({
-            chunks: ['experiment'],
-            template: path.resolve(appDirectory, "public/experiment.html"),
-            filename: 'experiment.html'
-        }),
+
         new CleanWebpackPlugin()
     ],
     mode: "development"

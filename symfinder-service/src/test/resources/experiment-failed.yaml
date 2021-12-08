@@ -1,5 +1,0 @@
-CookieFactoryClient:
-  repositoryUrl: https://github.com/DeathStar3-projects/repository-that-dont-exist.git
-  sourcePackage: client
-  tagIds:
-    - b52f267ce7c17e0a2017b4d0d23cc0cd35c2c591
