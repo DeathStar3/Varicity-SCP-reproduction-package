@@ -4,8 +4,9 @@ export enum EntityAttribut {
     VP = "VP",
     METHOD_LEVEL_VP = "METHOD_LEVEL_VP",
     VARIANT = "VARIANT",
-    MODULE_VP = "MODULE_VP",
-    MODULE_VARIANT = "MODULE_VARIANT"
+    FOLDER_VP = "MODULE_VP",
+    FOLDER_VARIANT = "MODULE_VARIANT",
+    FILE_VARIANT = "FILE_VARIANT"
 }
 
 export enum EntityType {
@@ -38,7 +39,8 @@ export enum RelationType {
     INTERNAL = "INTERNAL",
     IMPORT = "IMPORT",
     LOAD = "LOAD",
-    CHILD = "CHILD"
+    CHILD = "CHILD",
+    CODE_DUPLICATED = "CODE_DUPLICATED"
 }
 
 export enum DesignPatternType {

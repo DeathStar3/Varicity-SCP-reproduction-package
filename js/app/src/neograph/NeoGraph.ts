@@ -91,6 +91,17 @@ export default class NeoGraph{
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
+    async linkTwoNodesWithCodeDuplicated(node1: Node, node2: Node, type: RelationType, codeDuplicated: string, percent: string): Promise<void> {
+        const request = "MATCH(a)\n" +
+        "WHERE ID(a)=$aId\n" +
+        "WITH a\n" +
+        "MATCH (b)\n" +
+        "WITH a,b\n" +
+        "WHERE ID(b)=$bId\n" +
+        "CREATE (a)-[r:"+type+" {fragment: $codeDuplicated, codePercent: $percent}]->(b)";
+        await this.submitRequest(request, {aId: node1.identity, bId: node2.identity, percent:percent, codeDuplicated:codeDuplicated});
+    }
+
     async updateLinkTwoNode(node1: Node, node2: Node, oldType: RelationType, newType: RelationType): Promise<void> {
         const request = "MATCH(a)\n" +
         "WHERE ID(a)=$aId\n" +
@@ -137,8 +148,8 @@ export default class NeoGraph{
         await this.setAllMethods();
         await this.detectStrategiesWithComposition();
         await this.detectDensity();
-        await this.setModuleVP();
-        await this.setModuleVariant();
+        //await this.setModuleVP();
+        //await this.setModuleVariant();
         await this.setProximityFolder()
     }
 
@@ -213,7 +224,7 @@ export default class NeoGraph{
         "SET c.publicMethods = 0",{});
     }
 
-    async setPublicConstructors() {
+    async setPublicConstructors(): Promise<void> {
         await this.submitRequest("MATCH (c)-->(a) \n" +
         "WHERE c:PUBLIC AND c:CLASS AND  a:CONSTRUCTOR AND a:PUBLIC\n" +
         "WITH count( a.name ) AS cnt, c\n" +
@@ -227,7 +238,7 @@ export default class NeoGraph{
         await this.submitRequest("MATCH (c)-[:INSTANTIATE]->(a) WITH count(a) AS nbComp, c SET c.nbCompositions = nbComp",{});
     }
 
-    async setAllMethods(){
+    async setAllMethods(): Promise<void>{
         await this.submitRequest("MATCH (c:CLASS)-->(a:METHOD)\n" +
         "WITH count( a.name ) AS cnt, c\n" +
         "SET c.allMethods = cnt", {});
@@ -236,21 +247,21 @@ export default class NeoGraph{
         "SET c.allMethods = 0", {});
     }
 
-    async setModuleVP(){
-        const request = "MATCH (c1:CLASS) MATCH (c2:CLASS)\n"+
-        "WHERE c1.name = c2.name\n" +
-        "AND ID(c1)<>ID(c2)\n" +
-        "SET c1:"+EntityAttribut.MODULE_VP+"\n" +
-        "SET c2:"+EntityAttribut.MODULE_VP;
-        await this.submitRequest(request,{});
-    }
+    // async setModuleVP(): Promise<void>{
+    //     const request = "MATCH (c1:CLASS) MATCH (c2:CLASS)\n"+
+    //     "WHERE c1.name = c2.name\n" +
+    //     "AND ID(c1)<>ID(c2)\n" +
+    //     "SET c1:"+EntityAttribut.MODULE_VP+"\n" +
+    //     "SET c2:"+EntityAttribut.MODULE_VP;
+    //     await this.submitRequest(request,{});
+    // }
 
-    async setModuleVariant(){
-        const request = "MATCH (m:MODULE)-[:EXPORT]->(c:MODULE_VP) SET m:"+EntityAttribut.MODULE_VARIANT;
-        await this.submitRequest(request, {});  
-    }
+    // async setModuleVariant(): Promise<void>{
+    //     const request = "MATCH (m:MODULE)-[:EXPORT]->(c:MODULE_VP) SET m:"+EntityAttribut.MODULE_VARIANT;
+    //     await this.submitRequest(request, {});  
+    // }
 
-    async setProximityFolder(){
+    async setProximityFolder(): Promise<void>{
         const request = "MATCH (n:DIRECTORY)-[:CHILD]->(d1:DIRECTORY)-[:CHILD]->(f1:FILE), (n:DIRECTORY)-[:CHILD]->(d2:DIRECTORY)-[:CHILD]->(f2:FILE)\n"+
         "WHERE ID(f1)<>ID(f2)\n"+
         "AND ID(d1)<>ID(d2)\n"+
@@ -258,13 +269,13 @@ export default class NeoGraph{
         "AND f1.name <> $index\n"+
         "AND f1.name <> $utils\n"+
         "AND f1.name <> $types\n"+
-        "SET n:VP_FOLDER\n"+
-        "SET d1:VARIANT_FOLDER\n"+
-        "SET f1:VARAINT_FILE\n";
+        "SET n:"+EntityAttribut.FOLDER_VP+"\n"+
+        "SET d1:"+EntityAttribut.FOLDER_VARIANT+"\n"+
+        "SET f1:"+EntityAttribut.FILE_VARIANT+"\n";
         await this.submitRequest(request, {index:"index.ts",utils:"utils.ts",types:'types.ts'}); 
     }
 
-    async detectStrategiesWithComposition(){
+    async detectStrategiesWithComposition(): Promise<void>{
         const request = "MATCH (c)-[:INSTANTIATE]->(c1) " +
         "WHERE (c:CLASS OR c:INTERFACE) AND (EXISTS(c1.classVariants) AND c1.classVariants > 1) " +
         "SET c1:" + DesignPatternType.COMPOSITION_STRATEGY;
@@ -337,6 +348,12 @@ export default class NeoGraph{
     async getNbRelationships(): Promise<number>{
         return this.submitRequest("MATCH (n)-[r]->() RETURN COUNT(r)", {}).then((result: Record[]) =>{
             return +(result[0].get(0));
+        });
+    }
+
+    async getVariantFiles(): Promise<Node[]>{
+        return this.submitRequest("MATCH (n:VARAINT_FILE) RETURN n", {}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
         });
     }
 

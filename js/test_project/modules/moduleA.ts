@@ -1,4 +1,4 @@
-export class ClassOne{
+class ClassOne{
 
     constructor(){
 
@@ -8,3 +8,5 @@ export class ClassOne{
         return 0;
     }
 }
+
+export {ClassOne}

@@ -9,6 +9,9 @@ import { join } from "path";
 import { readdirSync, statSync } from "fs";
 import { EntityType, RelationType } from "./neograph/NodeType";
 import { Node } from "neo4j-driver-core";
+import { detectClones } from "jscpd";
+import { readFileSync } from "fs";
+
 
 export class Symfinder{
 
@@ -30,6 +33,8 @@ export class Symfinder{
         await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies");
         
         await this.neoGraph.detectVPsAndVariants();
+        await this.detectCodeClone();
+
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
         console.log("Number of constructor VPs: " + await this.neoGraph.getNbConstructorVPs());
@@ -93,5 +98,40 @@ export class Symfinder{
             }
         }
         return files;
+    }
+
+    async detectCodeClone(): Promise<void>{
+        var nodes: Node[] = await this.neoGraph.getVariantFiles();
+        var groupedNode: any[] = [];
+        for(let node of nodes){
+            if(groupedNode[node.properties.name] === undefined){
+                groupedNode[node.properties.name] = [node]
+            }
+            else{
+                groupedNode[node.properties.name].push(node)
+            }
+        }
+        let i = 0;
+        let len = Object.entries(groupedNode).length
+        for(let [key, value] of Object.entries(groupedNode)){
+            i++;
+            process.stdout.write("\rCheck duplication code : "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
+
+            var clones: any[] = await detectClones({
+                path: value.map((node: Node) => node.properties.path),
+                silent: true
+            })
+            for(let clone of clones){
+                var node1: Node = value.find((node: Node) => node.properties.path == clone.duplicationA.sourceId);
+                var node2: Node = value.find((node: Node) => node.properties.path == clone.duplicationB.sourceId);
+                var data = readFileSync(node2.properties.path, 'utf-8');
+                var percent = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / data.length) * 100).toFixed(0);
+                await this.neoGraph.linkTwoNodesWithCodeDuplicated(node1, node2, RelationType.CODE_DUPLICATED, clone.duplicationA.fragment, percent);
+            }            
+        }
+        if(i > 0)
+            process.stdout.write("\rCheck duplication code : "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")\n");
+
+        
     }
 }

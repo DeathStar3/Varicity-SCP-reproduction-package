@@ -10,14 +10,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@jscpd/core": "^3.4.1",
     "@types/glob": "^7.2.0",
     "@types/node": "^16.11.7",
     "js-yaml": "^4.1.0",
+    "jscpd": "^3.4.2",
     "neo4j-driver": "^4.4.0",
     "tslog": "^3.2.2",
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@jscpd/tokenizer": "^3.4.1",
     "@types/js-yaml": "^4.0.4"
   }
 }

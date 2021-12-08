@@ -1,5 +1,6 @@
 import { ClassOne as ClassOneOne } from './moduleA';
 import ClassOne from './moduleAbis';
+import {a} from './moduleC';
 
 class ClassTwo{
 
