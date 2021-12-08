@@ -8,8 +8,10 @@ import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInp
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
+import {SearchbarController} from "../../ui/searchbar.controller";
 
 export class VPVariantsStrategy implements ParsingStrategy {
+
     public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
         console.log('Analyzing with VP and variants strategy: ', data);
         console.log('Config used: ', config);
@@ -17,7 +19,17 @@ export class VPVariantsStrategy implements ParsingStrategy {
         let nodesList: NodeElement[] = [];
         const apiList: NodeElement[] = [];
 
+        let datalist = document.createElement("datalist"); //Data list used for Blacklist and API entry points
+        datalist.id = "datalist-classes"
+
+        document.getElementById("main").appendChild(datalist)
+
+        SearchbarController.emptyClassList()
+
         data.nodes.forEach(n => {
+
+            SearchbarController.addEntryToClassList(n.name)
+
             let node = new NodeElement(n.name);
 
             node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
