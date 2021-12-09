@@ -9,6 +9,7 @@ import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
 export class ApiAndBlacklistController implements SubMenuInterface {
 
     private static maxLevelUsage = 0;
+    private static rangeParentElement;
 
     defineSubMenuTitle(): string {
         return "APIs and Blacklist";
@@ -16,6 +17,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
 
     public createMenu(parent: HTMLElement) {
         const menuOrientation = SubMenuController.createMenu("Orientation and Level usage", true, parent);
+        ApiAndBlacklistController.rangeParentElement = menuOrientation;
         const menuAPIClasses = SubMenuController.createMenu("API classes", true, parent);
         const menuBlacklist = SubMenuController.createMenu("Blacklist", true, parent);
 
@@ -28,6 +30,19 @@ export class ApiAndBlacklistController implements SubMenuInterface {
 
     public static defineMaxLevelUsage(max: number) {
         ApiAndBlacklistController.maxLevelUsage = max;
+
+        if (ApiAndBlacklistController.rangeParentElement) {
+
+            ApiAndBlacklistController.rangeParentElement.removeChild(ApiAndBlacklistController.rangeParentElement.childNodes[1])
+
+            let defaultLevel = Math.min(UIController.config.default_level, ApiAndBlacklistController.maxLevelUsage);
+
+            let newRange = SubMenuController.createRange("Level usage", defaultLevel, 0, ApiAndBlacklistController.maxLevelUsage, 1, ApiAndBlacklistController.rangeParentElement);
+            newRange.addEventListener("change", () => {
+                UIController.config.default_level = +newRange.value;
+                UIController.updateScene(CriticalLevel.REPARSE_DATA);
+            })
+        }
     }
 
     private populateBlackList(parent: HTMLElement) {
@@ -55,7 +70,8 @@ export class ApiAndBlacklistController implements SubMenuInterface {
         })
 
         // Level usage
-        const range = SubMenuController.createRange("Level usage", UIController.config.default_level, 0, ApiAndBlacklistController.maxLevelUsage, 1, parent);
+        let defaultLevel = Math.min(UIController.config.default_level, ApiAndBlacklistController.maxLevelUsage);
+        const range = SubMenuController.createRange("Level usage", defaultLevel, 0, ApiAndBlacklistController.maxLevelUsage, 1, parent);
         range.addEventListener("change", () => {
             UIController.config.default_level = +range.value;
             UIController.updateScene(CriticalLevel.REPARSE_DATA);
