@@ -6,7 +6,12 @@ import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityType;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.neo4j.driver.types.Node;
 
 import java.util.Optional;

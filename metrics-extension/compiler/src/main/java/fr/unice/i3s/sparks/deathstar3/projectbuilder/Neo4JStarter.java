@@ -11,6 +11,7 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Neo4jParameters;
 import fr.unice.i3s.sparks.deathstar3.utils.Utils;
+import fr.unice.i3s.sparks.deathstar3.utils.WaitFor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
@@ -32,7 +33,6 @@ public class Neo4JStarter {
                 .responseTimeout(Duration.ofSeconds(45))
                 .build();
         dockerClient = DockerClientBuilder.getInstance().withDockerHttpClient(httpClient).build();
-
     }
 
     public synchronized Neo4jParameters startNeo4J() {
@@ -40,10 +40,12 @@ public class Neo4JStarter {
         utils.createNetwork();
 
         if (!utils.checkIfImageExists(Constants.SYMFINDER_NEO4J_IMAGE, Constants.SYMFINDER_NEO4J_TAG)) {
+            log.info("{}:{} does not exist in local", Constants.SYMFINDER_NEO4J_IMAGE, Constants.SYMFINDER_NEO4J_TAG);
             try {
+                log.info("Attempting to download {}:{}", Constants.SYMFINDER_NEO4J_IMAGE, Constants.SYMFINDER_NEO4J_TAG);
                 utils.downloadImage(Constants.SYMFINDER_NEO4J_IMAGE, Constants.SYMFINDER_NEO4J_TAG);
             } catch (InterruptedException exception) {
-                log.error("Cannot neo4j image requested " + Constants.SYMFINDER_NEO4J_IMAGE + ":" + Constants.SYMFINDER_NEO4J_TAG);
+                log.error("Cannot download neo4j image requested {}:{}", Constants.SYMFINDER_NEO4J_IMAGE, Constants.SYMFINDER_NEO4J_TAG);
                 throw new RuntimeException(exception);
             }
 
@@ -56,7 +58,6 @@ public class Neo4JStarter {
             return new Neo4jParameters("bolt://" + Constants.getNeo4jLocalHostname() + ":7687", "", "");
         }
 
-
         // Create the container.
         CreateContainerResponse createContainerResponse = dockerClient
                 .createContainerCmd(Constants.SYMFINDER_NEO4J_IMAGE + ":" + Constants.SYMFINDER_NEO4J_TAG)
@@ -65,8 +66,7 @@ public class Neo4JStarter {
                 .withExposedPorts(ExposedPort.parse("7687"))
                 .withHostConfig(
                         HostConfig
-                                .newHostConfig().withPortBindings(PortBinding.parse("7687:7687"))
-
+                                .newHostConfig().withPortBindings(PortBinding.parse("7687:7687"), PortBinding.parse("7474:7474"))
                                 .withNetworkMode(Constants.NETWORK_NAME)
                 )
                 .withEnv(List.of(
@@ -76,7 +76,7 @@ public class Neo4JStarter {
 
         dockerClient.startContainerCmd(createContainerResponse.getId()).exec();
 
-        //WaitFor.waitForPort(Constants.getNeo4jLocalHostname(), 7474,120_000);
+        WaitFor.waitForPort(Constants.getNeo4jLocalHostname(), 7474, Constants.getNeo4jTimeout() * 60_000L);
 
         return new Neo4jParameters("bolt://" + Constants.getNeo4jLocalHostname() + ":7687", "", "");
 

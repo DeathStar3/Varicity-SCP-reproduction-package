@@ -1,15 +1,14 @@
 package fr.unice.i3s.sparks.deathstar3.sourcesfetcher;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Set;
-
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Set;
 
 public class SourceFetcherTest {
 

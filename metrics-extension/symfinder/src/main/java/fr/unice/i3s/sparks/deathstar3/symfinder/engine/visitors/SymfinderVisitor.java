@@ -4,7 +4,11 @@ import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jdt.core.dom.*;
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.util.Arrays;
 

@@ -1,13 +1,5 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
@@ -22,7 +14,10 @@ import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
-
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
+import fr.unice.i3s.sparks.deathstar3.utils.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpEntity;
@@ -30,10 +25,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
-import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
-import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
-import fr.unice.i3s.sparks.deathstar3.utils.Utils;
-import lombok.extern.slf4j.Slf4j;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 public class Compiler {
@@ -108,8 +106,8 @@ public class Compiler {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
 
         while (!container.getState().getStatus().strip().equals("exited")) {
-            log.info(container.getState().toString());
-            log.info(containerId + " : " + container.getState().getStatus());
+            log.trace(container.getState().toString());
+            log.trace(containerId + " : " + container.getState().getStatus());
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
@@ -165,8 +163,8 @@ public class Compiler {
         }
 
         var container = command.withHostConfig(HostConfig.newHostConfig()
-                .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw))
-                .withNetworkMode(Constants.NETWORK_NAME))
+                        .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw))
+                        .withNetworkMode(Constants.NETWORK_NAME))
                 .exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();

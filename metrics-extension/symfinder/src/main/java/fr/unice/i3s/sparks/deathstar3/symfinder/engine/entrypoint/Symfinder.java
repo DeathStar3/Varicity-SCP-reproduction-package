@@ -22,7 +22,12 @@ package fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint;/*
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.result.SymfinderResult;
-import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.*;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ClassesVisitor;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.FactoryVisitor;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.GraphBuilderVisitor;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.StrategyTemplateDecoratorVisitor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,33 +52,25 @@ import java.util.stream.Stream;
 /**
  * Inspired by https://www.programcreek.com/2014/01/how-to-resolve-bindings-when-using-eclipse-jdt-astparser/
  */
+@Slf4j
 public class Symfinder {
 
     private static final Logger logger = LogManager.getLogger(Symfinder.class);
 
     private NeoGraph neoGraph;
     private String sourcePackage;
-    private String graphOutputPath;
     private Configuration configuration;
 
-    public Symfinder(String sourcePackage, String graphOutputPath) {
+    public Symfinder(String sourcePackage) {
         this.configuration = new Configuration();
         this.sourcePackage = sourcePackage;
-        this.graphOutputPath = graphOutputPath;
         this.neoGraph = new NeoGraph(this.configuration);
 
     }
 
 
-    public Symfinder(String sourcePackage,  Configuration configuration) {
+    public Symfinder(String sourcePackage, Configuration configuration) {
         this.sourcePackage = sourcePackage;
-        this.configuration = configuration;
-        this.neoGraph = new NeoGraph(this.configuration);
-    }
-
-    public Symfinder(String sourcePackage, String graphOutputPath, Configuration configuration) {
-        this.sourcePackage = sourcePackage;
-        this.graphOutputPath = graphOutputPath;
         this.configuration = configuration;
         this.neoGraph = new NeoGraph(this.configuration);
     }
@@ -137,12 +134,6 @@ public class Symfinder {
         logger.log(Level.getLevel("MY_LEVEL"), "Number of nodes: " + neoGraph.getNbNodes());
         logger.log(Level.getLevel("MY_LEVEL"), "Number of relationships: " + neoGraph.getNbRelationships());
         logger.log(Level.getLevel("MY_LEVEL"), "Number of corrected inheritance relationships: " + GraphBuilderVisitor.getNbCorrectedInheritanceLinks() + "/" + neoGraph.getNbInheritanceRelationships());
-        /*try {
-            neoGraph.writeVPGraphFile(graphOutputPath);
-            neoGraph.writeStatisticsFile(graphOutputPath.replace(".json", "-stats.json"));
-        } catch (Exception e) {
-            logger.error(e);
-        }*/
 
         SymfinderResult result = new SymfinderResult(neoGraph.generateVPJsonGraph(), neoGraph.generateStatisticsJson());
         neoGraph.deleteGraph();

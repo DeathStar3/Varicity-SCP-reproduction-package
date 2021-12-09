@@ -1,10 +1,10 @@
 package fr.unice.i3s.sparks.deathstar3;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class CommandScheduler {
