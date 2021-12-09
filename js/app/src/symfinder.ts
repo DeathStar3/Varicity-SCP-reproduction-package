@@ -131,7 +131,5 @@ export class Symfinder{
         }
         if(i > 0)
             process.stdout.write("\rCheck duplication code : "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")\n");
-
-        
     }
 }
