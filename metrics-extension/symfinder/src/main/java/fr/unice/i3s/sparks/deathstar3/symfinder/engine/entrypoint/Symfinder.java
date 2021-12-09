@@ -1,4 +1,4 @@
-package fr.unice.i3s.sparks.deathstar3.engine.entrypoint;/*
+package fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint;/*
  * This file is part of symfinder.
  *
  * symfinder is free software: you can redistribute it and/or modify
@@ -19,9 +19,9 @@ package fr.unice.i3s.sparks.deathstar3.engine.entrypoint;/*
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
-import fr.unice.i3s.sparks.deathstar3.engine.neograph.NeoGraph;
-import fr.unice.i3s.sparks.deathstar3.engine.result.SymfinderResult;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Configuration;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.result.SymfinderResult;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

@@ -6,10 +6,7 @@ import { ConfigEntry, ProjectEntry } from 'src/model/experiment.model';
 import { VaricityConfigService } from './config.service';
 import { ProjectService } from './project.service';
 import * as fs from 'fs';
-import {
-  JsonInputInterface,
-  MetricClassInterface,
-} from 'src/model/jsonInput.interface';
+import { JsonInputInterface, MetricClassInterface } from 'src/model/jsonInput.interface';
 import { InitDBService } from 'src/startup/initdb';
 import { DbFacadeService } from './db-facade/db-facade.service';
 const fsextra = require('fs-extra');
@@ -88,18 +85,8 @@ export class FsWatcherService {
 
     if (!this.varicityConfigService.checkIfConfigIsIndexed(configFilePath)) {
       //we read the file to get the human readable name of the config but it is ok because we only do it once at startup
-      const configObject = VaricityConfigService.getYamlFromDisk(
-        configFilePath,
-      ) as VaricityConfig;
-
-      this.dbFacade.db.push(
-        '/configs[]',
-        new ConfigEntry(
-          configObject.name,
-          configFilePath,
-          configObject.projectId,
-        ),
-      );
+      const configObject = VaricityConfigService.getYamlFromDisk(configFilePath) as VaricityConfig;
+      this.dbFacade.db.push('/configs[]', new ConfigEntry(configObject.name, configFilePath, configObject.projectId));
     }
   }
 
@@ -109,12 +96,7 @@ export class FsWatcherService {
   public deIndexConfigFile(configFilePath: string) {
     console.log('DeIndexConfigFile', configFilePath);
     if (this.varicityConfigService.checkIfConfigIsIndexed(configFilePath)) {
-      this.dbFacade.db.delete(
-        `/configs[${this.dbFacade.db.getIndex(
-          '/configs',
-          configFilePath,
-          'path',
-        )}]`,
+      this.dbFacade.db.delete(`/configs[${this.dbFacade.db.getIndex('/configs', configFilePath, 'path')}]`,
       );
     }
   }
@@ -133,24 +115,14 @@ export class FsWatcherService {
   getExternalMetricsPaths(projectName: string) {
     const fullPath = path.join(this.pathToMetricsJsons, projectName);
     if (fs.existsSync(fullPath)) {
-      return fs
-        .readdirSync(fullPath, { withFileTypes: true })
-        .filter(
-          (f) =>
-            f.isFile() &&
-            path.extname(f.name).toLowerCase() === InitDBService.EXTENSION,
-        )
-        .map((f) =>
-          path.resolve(path.join(this.pathToMetricsJsons, projectName, f.name)),
-        );
+      return fs.readdirSync(fullPath, { withFileTypes: true }).filter((f) => f.isFile() && path.extname(f.name).toLowerCase() === InitDBService.EXTENSION)
+        .map((f) => path.resolve(path.join(this.pathToMetricsJsons, projectName, f.name)));
     }
     return [];
   }
 
   parseSymfinderJsons(fullPath: string, projectName: string) {
-    const symfinderObj = JSON.parse(
-      fs.readFileSync(fullPath, 'utf8'),
-    ) as JsonInputInterface;
+    const symfinderObj = JSON.parse(fs.readFileSync(fullPath, 'utf8')) as JsonInputInterface;
     const externalsMetricsPaths = this.getExternalMetricsPaths(projectName);
 
     if (externalsMetricsPaths.length !== 0) {
@@ -161,10 +133,7 @@ export class FsWatcherService {
       // loop over all the external metrics Json for the project
       externalsMetricsPaths.forEach((externalsMetricsPath) => {
         // get the object of external metrics
-        const externalMetricsClasses = JSON.parse(
-          fs.readFileSync(externalsMetricsPath, 'utf8'),
-        ) as MetricClassInterface[];
-
+        const externalMetricsClasses = JSON.parse(fs.readFileSync(externalsMetricsPath, 'utf8')) as MetricClassInterface[];
         // loop over all the classes in the external jsons object
         externalMetricsClasses.forEach((classMetrics) => {
           if (mapSymFinderClassesIndex.has(classMetrics.name)) {
@@ -189,10 +158,7 @@ export class FsWatcherService {
       flag: 'w+',
       recursive: true,
     });
-    this.dbFacade.db.push(
-      '/projects[]',
-      new ProjectEntry(projectName, parsedInputPath + '.json'),
-    );
+    this.dbFacade.db.push('/projects[]', new ProjectEntry(projectName, parsedInputPath + '.json'));
   }
 
   /**

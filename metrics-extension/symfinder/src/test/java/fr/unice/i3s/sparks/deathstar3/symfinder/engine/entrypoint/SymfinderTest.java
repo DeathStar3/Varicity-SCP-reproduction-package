@@ -1,4 +1,4 @@
-package fr.unice.i3s.sparks.deathstar3.engine.entrypoint;
+package fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint;
 
 
 import org.junit.jupiter.api.Test;

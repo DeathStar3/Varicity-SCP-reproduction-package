@@ -2,7 +2,6 @@ package fr.unice.i3s.sparks.deathstar3.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,35 +22,28 @@ public class WaitFor {
     public static void waitForPort(String hostname, int port, long timeoutMs) {
         log.info("Waiting for port " + port);
         long startTs = System.currentTimeMillis();
-        boolean scanning=true;
-        while(scanning)
-        {
+        boolean scanning = true;
+        while (scanning) {
             if (System.currentTimeMillis() - startTs > timeoutMs) {
                 throw new RuntimeException("Timeout waiting for port " + port);
             }
-            try
-            {
+            try {
                 SocketAddress addr = new InetSocketAddress(hostname, port);
                 Selector.open();
                 SocketChannel socketChannel = SocketChannel.open();
                 socketChannel.configureBlocking(true);
                 try {
                     socketChannel.connect(addr);
-                }
-                finally {
+                } finally {
                     socketChannel.close();
                 }
 
-                scanning=false;
-            }
-            catch(IOException e)
-            {
+                scanning = false;
+            } catch (IOException e) {
                 log.debug("Still waiting for port " + port);
-                try
-                {
+                try {
                     Thread.sleep(2000);//2 seconds
-                }
-                catch(InterruptedException ie){
+                } catch (InterruptedException ie) {
                     log.error("Interrupted", ie);
                 }
             }
@@ -75,12 +67,10 @@ public class WaitFor {
                         sb.append(inputLine);
                     }
                     if (sb.toString().contains(response)) return;
-                }
-                finally {
+                } finally {
                     try {
                         in.close();
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         // ignore and retry ...
                     }
                 }

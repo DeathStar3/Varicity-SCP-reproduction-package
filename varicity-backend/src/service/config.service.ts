@@ -19,13 +19,8 @@ export class VaricityConfigService {
     @Inject(DbFacadeService) private readonly dbFacade: DbFacadeService,
     @Inject(ConfigService) private configService: ConfigService,
   ) {
-    this.pathToVisualizationConfigs = this.configService.get<string>(
-      'VISUALISATION_CONFIGS_PATH',
-    );
-
-    this.pathToDefaultConfigs = this.configService.get<string>(
-      'DEFAULT_CONFIGS_DIR',
-    );
+    this.pathToVisualizationConfigs = this.configService.get<string>('VISUALISATION_CONFIGS_PATH',);
+    this.pathToDefaultConfigs = this.configService.get<string>('DEFAULT_CONFIGS_DIR');
   }
 
   /**
@@ -45,11 +40,8 @@ export class VaricityConfigService {
    * if not found load the first default config
    * @param projectName
    */
-  public getFirstProjectConfigOrDefaultOne(
-    projectName: string,
-  ): VaricityConfig {
-    const configsPaths =
-      this.getConfigsPathsWithDefaultConfigsFallback(projectName);
+  public getFirstProjectConfigOrDefaultOne(projectName: string): VaricityConfig {
+    const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
     return this.getConfigsFromPath(configsPaths[configsPaths.length - 1]);
   }
 
@@ -68,8 +60,7 @@ export class VaricityConfigService {
    * @param projectName
    */
   public getConfigsFromProjectName(projectName: string): VaricityConfig[] {
-    const configsPaths =
-      this.getConfigsPathsWithDefaultConfigsFallback(projectName);
+    const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
     console.log('configsPaths', configsPaths);
     const configs = [];
     configsPaths.forEach((configPath) => {
@@ -88,12 +79,7 @@ export class VaricityConfigService {
       configPath,
     ) as VaricityConfig;
     if (config.camera_data === undefined) {
-      config.camera_data = new CameraData(
-        (2 * Math.PI) / 3,
-        Math.PI / 3,
-        100,
-        new Vector3(),
-      );
+      config.camera_data = new CameraData((2 * Math.PI) / 3, Math.PI / 3, 100, new Vector3());
     }
     return config;
   }
@@ -128,14 +114,7 @@ export class VaricityConfigService {
     }
     fs.writeFileSync(path.join(parentDir, filename + '.yaml'), doc.toString());
 
-    this.dbFacade.db.push(
-      '/configs[]',
-      new ConfigEntry(
-        filename,
-        path.join(parentDir, filename + '.yaml'),
-        config.projectId,
-      ),
-    );
+    this.dbFacade.db.push('/configs[]', new ConfigEntry(filename, path.join(parentDir, filename + '.yaml'), config.projectId));
     //file written successfully
     return { config, filename: filename };
   }
@@ -158,12 +137,7 @@ export class VaricityConfigService {
    */
   private getConfigsPaths(projectName: string): string[] {
     if (this.dbFacade.db.exists('/configs')) {
-      return this.dbFacade.db
-        .filter<ConfigEntry>(
-          '/configs',
-          (config, index) => config.projectId == projectName,
-        )
-        .map((config) => config.path);
+      return this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId == projectName).map((config) => config.path);
     }
     return [];
   }
@@ -173,16 +147,9 @@ export class VaricityConfigService {
    * @param projectName
    * @private
    */
-  private getConfigsPathsWithDefaultConfigsFallback(
-    projectName: string,
-  ): string[] {
+  private getConfigsPathsWithDefaultConfigsFallback(projectName: string): string[] {
     if (this.dbFacade.db.exists('/configs')) {
-      const configsPath = this.dbFacade.db
-        .filter<ConfigEntry>(
-          '/configs',
-          (config, index) => config.projectId === projectName,
-        )
-        .map((config) => config.path);
+      const configsPath = this.dbFacade.db.filter<ConfigEntry>('/configs', (config, index) => config.projectId === projectName).map((config) => config.path);
       if (configsPath.length > 0) {
         return configsPath;
       }
@@ -197,8 +164,7 @@ export class VaricityConfigService {
    * @private
    */
   public getConfigsFilesNames(projectName: string): string[] {
-    const configsPaths =
-      this.getConfigsPathsWithDefaultConfigsFallback(projectName);
+    const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
     const configsNames = [];
     configsPaths.forEach((configPath) => {
       configsNames.push(VaricityConfigService.getFileNameOnly(configPath));
@@ -211,10 +177,7 @@ export class VaricityConfigService {
    * @param projectName ex: junit-r4.12
    * @param configName ex config-junit-r4.12-14 (without extension)
    */
-  public getConfigNameFromFileName(
-    projectName: string,
-    configName: string,
-  ): string {
+  public getConfigNameFromFileName(projectName: string,configName: string): string {
     const config = this.getConfigByNameFromProject(projectName, configName);
     return config.name || '-blank-';
   }
@@ -235,13 +198,7 @@ export class VaricityConfigService {
     }
 
     //TODO
-    return [
-      new ConfigEntry(
-        'default global config',
-        path.join(this.pathToDefaultConfigs, 'config.yaml'),
-        '',
-      ),
-    ];
+    return [new ConfigEntry('default global config',path.join(this.pathToDefaultConfigs, 'config.yaml'),'')];
   }
 
   /**
@@ -249,10 +206,7 @@ export class VaricityConfigService {
    * @param projectName equivalent to the config/projectName/... on disk
    * @param configName without the extension
    */
-  public getConfigByNameFromProject(
-    projectName: string,
-    configName: string,
-  ): VaricityConfig {
+  public getConfigByNameFromProject(projectName: string,configName: string): VaricityConfig {
     const configsPaths =
       this.getConfigsPathsWithDefaultConfigsFallback(projectName);
     for (const configPath of configsPaths) {
@@ -268,11 +222,7 @@ export class VaricityConfigService {
    * @param filePath ex: config/my-file.yaml
    */
   public static getFileNameOnly(filePath: string): string {
-    return filePath
-      .split('/')
-      .pop()
-      .split(/\.y?aml/g)
-      .shift();
+    return filePath.split('/').pop().split(/\.y?aml/g).shift();
   }
 
   private static getProjectNameFromConfigPath(configPath: string) {
@@ -298,13 +248,10 @@ export class VaricityConfigService {
       fs.mkdirSync(pathDirToConfig);
     }
 
-    fs.writeFile(
-      path.join(pathDirToConfig, configFile + '.yaml'),
-      doc.toString(),
-      (err) => {
+    fs.writeFile(path.join(pathDirToConfig, configFile + '.yaml'),doc.toString(),(err) => {
         if (err) {
           console.error(err);
-          return;
+          
         }
         //file written successfully
       },

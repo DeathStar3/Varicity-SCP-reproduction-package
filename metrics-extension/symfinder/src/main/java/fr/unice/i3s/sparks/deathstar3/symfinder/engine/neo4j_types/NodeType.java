@@ -19,7 +19,7 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-package fr.unice.i3s.sparks.deathstar3.engine.neo4j_types;
+package fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types;
 
 public interface NodeType {
     String getString();

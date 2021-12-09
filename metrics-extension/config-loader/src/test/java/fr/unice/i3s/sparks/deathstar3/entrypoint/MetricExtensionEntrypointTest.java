@@ -2,12 +2,12 @@ package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
 
 import fr.unice.i3s.sparks.deathstar3.deserializer.ConfigLoader;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Neo4jParameters;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.HotspotsParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Neo4jParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.ParametersObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -146,7 +146,7 @@ public class MetricExtensionEntrypointTest {
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
 
-            
+
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
             Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
             Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());
@@ -155,18 +155,18 @@ public class MetricExtensionEntrypointTest {
     }
 
     @Test
-    void runExperimentWithMultipleTagsAndCommits() throws  IOException{
+    void runExperimentWithMultipleTagsAndCommits() throws IOException {
         HotspotsParameters hotspotsParameters = new HotspotsParameters(20, 5);
 
         ExperimentConfig cf = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("experiment-cookie-factory-config-multiple-tags.yaml").readAllBytes())).get(0);
 
-        List<ExperimentResult> experimentResultList= this.entrypoint.runExperiment(cf, hotspotsParameters );
+        List<ExperimentResult> experimentResultList = this.entrypoint.runExperiment(cf, hotspotsParameters);
         Assertions.assertEquals(4, experimentResultList.size());
 
         ExperimentResultWriterJson experimentResultWriterJson = new ExperimentResultWriterJson(cf);
 
-        for(ExperimentResult result:experimentResultList){
+        for (ExperimentResult result : experimentResultList) {
             try {
                 experimentResultWriterJson.writeResult(result);
             } catch (Exception e) {

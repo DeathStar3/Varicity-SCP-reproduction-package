@@ -21,7 +21,7 @@
 
 import apoc.cypher.Cypher;
 import apoc.path.PathExplorer;
-import fr.unice.i3s.sparks.deathstar3.engine.neograph.NeoGraph;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

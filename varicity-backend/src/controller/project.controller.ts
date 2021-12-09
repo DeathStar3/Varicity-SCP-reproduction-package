@@ -5,7 +5,7 @@ import { ProjectService } from '../service/project.service';
 
 @Controller()
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(private readonly projectService: ProjectService) { }
 
   @Get('/projects/names')
   getAllProjectsNames(): string[] {
@@ -35,15 +35,9 @@ export class ProjectController {
   @Post('/projects')
   @Header('content-type', 'application/json')
   newProject(@Body() experimentResult: ExperimentResult) {
-    if (
-      experimentResult.externalMetric !== undefined &&
-      experimentResult.externalMetric !== null
-    ) {
-      experimentResult.externalMetric = new Map(
-        Object.entries(experimentResult.externalMetric),
-      );
+    if (experimentResult.externalMetric !== undefined && experimentResult.externalMetric !== null) {
+      experimentResult.externalMetric = new Map(Object.entries(experimentResult.externalMetric),);
     }
-
     this.projectService.addProject(experimentResult);
   }
 }

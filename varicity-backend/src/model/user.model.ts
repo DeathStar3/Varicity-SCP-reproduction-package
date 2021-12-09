@@ -24,8 +24,6 @@ export class CityViewConfig {
   cameraPosition: Vector3;
 }
 
-
-
 export class User {
   constructor(n: string, u: UserType) {
     this.userType = u;

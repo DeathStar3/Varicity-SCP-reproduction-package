@@ -19,10 +19,10 @@
  * Copyright 2018-2020 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-package fr.unice.i3s.sparks.deathstar3.engine.neograph;
+package fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph;
 
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.*;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Configuration;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.*;
 import org.json.JSONObject;
 import org.neo4j.driver.*;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;

@@ -196,44 +196,14 @@
                     
     
     </dependency>
-                
-    
-    <dependency>
-                        
-      
-      <groupId>org.glassfish</groupId>
-                        
-      
-      <artifactId>javax.el</artifactId>
-                        
-      
-      <version>3.0.0</version>
-                    
-    
-    </dependency>
-                
-    
     <!-- Dependencies for the testing frameworks (Junit, Mockito) (tests only) -->
-                
-    
     <dependency>
-                        
-      
       <groupId>org.mockito</groupId>
-                        
-      
       <artifactId>mockito-core</artifactId>
-                        
-      
       <version>${versions.mockito}</version>
-                        
-      
       <scope>test</scope>
-                    
-    
     </dependency>
-                
-    
+
     <dependency>
                         
       

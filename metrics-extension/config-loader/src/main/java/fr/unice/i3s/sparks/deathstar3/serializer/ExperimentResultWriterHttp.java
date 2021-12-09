@@ -11,12 +11,12 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExperimentResultWriterHttp implements  ExperimentResultWriter{
+public class ExperimentResultWriterHttp implements ExperimentResultWriter {
     private String serverUrl;
-    private RestTemplate restTemplate=new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
 
     public ExperimentResultWriterHttp(@Valid @URL @NotNull String url) {
-        this.serverUrl=url;
+        this.serverUrl = url;
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
         restTemplate.setMessageConverters(converters);
@@ -24,7 +24,7 @@ public class ExperimentResultWriterHttp implements  ExperimentResultWriter{
 
     @Override
     public void writeResult(ExperimentResult experimentResult) throws Exception {
-        this.restTemplate.postForEntity(this.serverUrl,experimentResult ,String.class);
+        this.restTemplate.postForEntity(this.serverUrl, experimentResult, String.class);
 
     }
 }
