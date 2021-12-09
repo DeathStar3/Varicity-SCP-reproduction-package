@@ -53,9 +53,7 @@ public class Compiler {
     }
 
     public synchronized boolean executeProject(ExperimentConfig projectConfig) {
-        //faire un clone exact de l'objet puis modifier dans le clone
-
-        projectConfig=projectConfig.cloneSelfExact();
+        projectConfig = projectConfig.cloneSelfExact();
 
         try {
             projectConfig.setPath(utils.translatePath(projectConfig.getPath()));
@@ -63,17 +61,16 @@ public class Compiler {
             e.printStackTrace();
         }
 
-
         utils.removeOldExitedContainer(Constants.COMPILER_SCANNER_NAME);
         utils.removeOldExitedContainer(Constants.COMPILER_NAME);
         utils.removeOldExitedContainer(Constants.SCANNER_NAME);
 
-
         if (projectConfig.isBuildCmdIncludeSonar()) {
             try {
                 var compileAndScanProjectId = this.compileAndScanProject(projectConfig);
-                InspectContainerResponse.ContainerState containerState= waitForContainerCorrectExit(compileAndScanProjectId);
-                if(containerState.getExitCodeLong()!=0){
+                InspectContainerResponse.ContainerState containerState = waitForContainerCorrectExit(
+                        compileAndScanProjectId);
+                if (containerState.getExitCodeLong() != 0) {
                     return false;
                 }
 
@@ -84,7 +81,7 @@ public class Compiler {
             var compileProjectId = compileProject(projectConfig);
 
             InspectContainerResponse.ContainerState containerState = waitForContainerCorrectExit(compileProjectId);
-            if(containerState.getExitCodeLong() != 0){
+            if (containerState.getExitCodeLong() != 0) {
                 return false;
             }
 
@@ -92,8 +89,9 @@ public class Compiler {
                 String tokenName = RandomStringUtils.randomAlphabetic(8, 10).toUpperCase(Locale.ENGLISH);
                 SonarQubeToken result = this.getToken(tokenName, Constants.getSonarqubeLocalUrl());
                 String scannerContainerId = this.runSonarScannerCli(projectConfig, result);
-                InspectContainerResponse.ContainerState scannerContainerState = waitForContainerCorrectExit(scannerContainerId);
-                if(scannerContainerState.getExitCodeLong() != 0){
+                InspectContainerResponse.ContainerState scannerContainerState = waitForContainerCorrectExit(
+                        scannerContainerId);
+                if (scannerContainerState.getExitCodeLong() != 0) {
                     return false;
                 }
             } catch (JsonProcessingException e) {
@@ -108,7 +106,6 @@ public class Compiler {
 
     private InspectContainerResponse.ContainerState waitForContainerCorrectExit(String containerId) {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
-
 
         while (!container.getState().getStatus().strip().equals("exited")) {
             log.info(container.getState().toString());
@@ -153,12 +150,13 @@ public class Compiler {
         Volume volume = new Volume("/project");
 
         var command = dockerClient
-                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())//.withUser(utils.getUserIdentity())
+                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())// .withUser(utils.getUserIdentity())
                 .withName(Constants.COMPILER_SCANNER_NAME);
         if (projectConfig.getBuildEnv().equals("maven")) { // to use sonar in maven jdk version need to be greater or
             // equals to 11
 
-            //List.of() result is not mutable so we transform it in mutable through new ArrayList<>()
+            // List.of() result is not mutable so we transform it in mutable through new
+            // ArrayList<>()
             List<String> mvnCommmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip().split("\\s+")));
             mvnCommmands.add("-Dsonar.login=" + result.token());
             mvnCommmands.add("-Dsonar.host.url=" + Constants.SONARQUBE_DOCKER_URL);
@@ -167,7 +165,8 @@ public class Compiler {
         }
 
         var container = command.withHostConfig(HostConfig.newHostConfig()
-                        .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)).withNetworkMode(Constants.NETWORK_NAME))
+                .withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw))
+                .withNetworkMode(Constants.NETWORK_NAME))
                 .exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
@@ -190,9 +189,10 @@ public class Compiler {
         Volume volume = new Volume("/project");
         List<String> commmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip().split("\\s+")));
         CreateContainerResponse container = dockerClient
-                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())//.withUser(utils.getUserIdentity())
+                .createContainerCmd(projectConfig.getBuildEnv() + ":" + projectConfig.getBuildEnvTag())// .withUser(utils.getUserIdentity())
                 .withName(Constants.COMPILER_NAME)
-                .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
+                .withHostConfig(
+                        HostConfig.newHostConfig().withBinds(new Bind(projectConfig.getPath(), volume, AccessMode.rw)))
                 .withEntrypoint(commmands).exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
@@ -200,8 +200,6 @@ public class Compiler {
         return container.getId();
 
     }
-
-
 
     private HttpHeaders createHeaders(String username, String password) {
         return new HttpHeaders() {
@@ -252,8 +250,9 @@ public class Compiler {
             completePath = Paths.get(projectConfig.getPath(), projectConfig.getSourcePackage()).toString();
         }
 
-        CreateContainerResponse container = dockerClient.createContainerCmd(Constants.SONAR_SCANNER_IMAGE + ":" + Constants.SONAR_SCANNER_IMAGE_TAG)
-                //.withUser(utils.getUserIdentity())
+        CreateContainerResponse container = dockerClient
+                .createContainerCmd(Constants.SONAR_SCANNER_IMAGE + ":" + Constants.SONAR_SCANNER_IMAGE_TAG)
+                // .withUser(utils.getUserIdentity())
                 .withName(Constants.SCANNER_NAME).withEnv("SONAR_LOGIN=" + token.token())
                 .withHostConfig(HostConfig.newHostConfig().withBinds(new Bind(completePath, volume, AccessMode.rw))
                         .withNetworkMode(Constants.NETWORK_NAME))

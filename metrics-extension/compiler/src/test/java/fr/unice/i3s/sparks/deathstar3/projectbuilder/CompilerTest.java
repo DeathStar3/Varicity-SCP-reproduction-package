@@ -1,23 +1,21 @@
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CompilerTest {
-    
+
     private final Logger logger = Logger.getLogger(CompilerTest.class.getName());
     private final ExperimentConfig jfreeChart = new ExperimentConfig("jfreechart",
             "/tmp/varicity-xp-projects/jfreechart", "maven",

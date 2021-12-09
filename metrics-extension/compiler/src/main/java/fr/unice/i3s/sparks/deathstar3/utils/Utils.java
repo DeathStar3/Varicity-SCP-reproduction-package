@@ -79,14 +79,14 @@ public class Utils {
     }
 
     public Container getCurrentContainer() throws UnknownHostException {
-        String hostname= InetAddress.getLocalHost().getHostName();
+        String hostname = InetAddress.getLocalHost().getHostName();
         var containers = dockerClient.listContainersCmd().exec();
 
-        for (var container:containers){
-           var containerHostname= dockerClient.inspectContainerCmd(container.getId()).exec().getConfig().getHostName();
-           if(containerHostname.equals(hostname)){
-               return container;
-           }
+        for (var container : containers) {
+            var containerHostname = dockerClient.inspectContainerCmd(container.getId()).exec().getConfig().getHostName();
+            if (containerHostname.equals(hostname)) {
+                return container;
+            }
         }
         return null;
     }
@@ -95,32 +95,32 @@ public class Utils {
      * If Symfinder is running in docker then the path provided must be absolute to the docker container
      * eg: If you mount a local directory to the /data directoy in the docker container then
      * /data/myprojets/project
-     * @author Patrick
-     * Inspired by https://gist.github.com/dpfoose/f96d4e4b76c2e01265619d545b77987a
+     *
      * @param path
      * @return
      * @throws UnknownHostException
+     * @author Patrick
+     * Inspired by https://gist.github.com/dpfoose/f96d4e4b76c2e01265619d545b77987a
      */
     public String translatePath(String path) throws UnknownHostException {
-        var currentContainer=this.getCurrentContainer();
-        if(currentContainer!=null) {
-           InspectContainerResponse inspectContainerResponse= dockerClient.inspectContainerCmd(currentContainer.getId()).exec();
+        var currentContainer = this.getCurrentContainer();
+        if (currentContainer != null) {
+            InspectContainerResponse inspectContainerResponse = dockerClient.inspectContainerCmd(currentContainer.getId()).exec();
 
-          Bind[] binds= inspectContainerResponse.getHostConfig().getBinds();
-          if(binds!=null && binds.length != 0){
-              for (var bind:binds) {
-                  if(path.equals(bind.getVolume().getPath())){
-                      return Path.of(bind.getPath(), path).toString();
-                  }
-                  if(path.startsWith(bind.getVolume().getPath())) {
-                     return Path.of(bind.getPath(), path.substring(bind.getVolume().getPath().length())).toString();
-                  }
-              }
-          }
+            Bind[] binds = inspectContainerResponse.getHostConfig().getBinds();
+            if (binds != null && binds.length != 0) {
+                for (var bind : binds) {
+                    if (path.equals(bind.getVolume().getPath())) {
+                        return Path.of(bind.getPath(), path).toString();
+                    }
+                    if (path.startsWith(bind.getVolume().getPath())) {
+                        return Path.of(bind.getPath(), path.substring(bind.getVolume().getPath().length())).toString();
+                    }
+                }
+            }
         }
-        return  path;
+        return path;
     }
-
 
 
     public String getUserIdentity() {
@@ -146,8 +146,6 @@ public class Utils {
 
         return user + ":" + group;
     }
-
-
 
 
 }
