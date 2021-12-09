@@ -20,6 +20,7 @@ import {MenuController} from "../../../controller/ui/menu/menu.controller";
 import {SceneRenderer} from "../../sceneRenderer";
 import {DetailsController} from "../../../controller/ui/menu/details.controller";
 import {SelectedBuildingController} from "../../../controller/ui/selected-building.controller";
+import highlight = Mocha.utils.highlight;
 
 export class Building3D extends Element3D {
     elementModel: Building;
@@ -104,6 +105,34 @@ export class Building3D extends Element3D {
         let cam = SceneRenderer.camera;
         cam.focusOn([this.d3Model], true);
         cam.radius = 20;
+
+        this.flag = true;
+        this.selectAndDisplayDetails(this.flag);
+    }
+
+    private selectAndDisplayDetails(flag) {
+        if(flag) {
+            SelectedBuildingController.selectABuilding(this.elementModel);
+        } else {
+            SelectedBuildingController.unselectABuilding(this.elementModel);
+        }
+        this.highlight(flag, true);
+        this.links.forEach(l => l.display(flag, flag));
+
+        document.getElementById("submenu").style.display = "block"; //Display submenu
+
+        const infoTab = DetailsController.getInformationTab();
+        if (MenuController.selectedTab && MenuController.selectedTab !== infoTab) {
+            const currentTab = document.getElementById(MenuController.selectedTab.id)
+            MenuController.changeImage(currentTab) // Remove tab icon except if Information tab
+        }
+
+        if (!MenuController.selectedTab || MenuController.selectedTab !== infoTab) {
+            MenuController.changeImage(infoTab) // Set Information tab icon to selected
+        }
+        MenuController.selectedTab = infoTab;
+
+        UIController.displayObjectInfo(this, flag ? flag : undefined);
     }
 
     build() {
@@ -455,28 +484,7 @@ export class Building3D extends Element3D {
                     },
                     () => {
                         this.flag = !this.flag;
-                        if(this.flag) {
-                            SelectedBuildingController.selectABuilding(this.elementModel);
-                        } else {
-                            SelectedBuildingController.unselectABuilding(this.elementModel);
-                        }
-                        this.highlight(this.flag, true);
-                        this.links.forEach(l => l.display(this.flag, this.flag));
-
-                        document.getElementById("submenu").style.display = "block"; //Display submenu
-
-                        const infoTab = DetailsController.getInformationTab();
-                        if (MenuController.selectedTab && MenuController.selectedTab !== infoTab) {
-                            const currentTab = document.getElementById(MenuController.selectedTab.id)
-                            MenuController.changeImage(currentTab) // Remove tab icon except if Information tab
-                        }
-
-                        if (!MenuController.selectedTab || MenuController.selectedTab !== infoTab) {
-                            MenuController.changeImage(infoTab) // Set Information tab icon to selected
-                        }
-                        MenuController.selectedTab = infoTab;
-
-                        UIController.displayObjectInfo(this, this.flag ? this.flag : undefined);
+                        this.selectAndDisplayDetails(this.flag);
                     }
                 )
             );

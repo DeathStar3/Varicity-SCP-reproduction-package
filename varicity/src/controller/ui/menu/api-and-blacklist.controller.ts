@@ -9,6 +9,7 @@ import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
 export class ApiAndBlacklistController implements SubMenuInterface {
 
     private static maxLevelUsage = 0;
+    private static rangeParentElement;
 
     defineSubMenuTitle(): string {
         return "APIs and Blacklist";
@@ -16,6 +17,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
 
     public createMenu(parent: HTMLElement) {
         const menuOrientation = SubMenuController.createMenu("Orientation and Level usage", true, parent);
+        ApiAndBlacklistController.rangeParentElement = menuOrientation;
         const menuAPIClasses = SubMenuController.createMenu("API classes", true, parent);
         const menuBlacklist = SubMenuController.createMenu("Blacklist", true, parent);
 
@@ -28,6 +30,19 @@ export class ApiAndBlacklistController implements SubMenuInterface {
 
     public static defineMaxLevelUsage(max: number) {
         ApiAndBlacklistController.maxLevelUsage = max;
+
+        if (ApiAndBlacklistController.rangeParentElement) {
+
+            ApiAndBlacklistController.rangeParentElement.removeChild(ApiAndBlacklistController.rangeParentElement.childNodes[1])
+
+            let defaultLevel = Math.min(UIController.config.default_level, ApiAndBlacklistController.maxLevelUsage);
+
+            let newRange = SubMenuController.createRange("Level usage", defaultLevel, 0, ApiAndBlacklistController.maxLevelUsage, 1, ApiAndBlacklistController.rangeParentElement);
+            newRange.addEventListener("change", () => {
+                UIController.config.default_level = +newRange.value;
+                UIController.updateScene(CriticalLevel.REPARSE_DATA);
+            })
+        }
     }
 
     private populateBlackList(parent: HTMLElement) {
@@ -55,7 +70,8 @@ export class ApiAndBlacklistController implements SubMenuInterface {
         })
 
         // Level usage
-        const range = SubMenuController.createRange("Level usage", UIController.config.default_level, 0, ApiAndBlacklistController.maxLevelUsage, 1, parent);
+        let defaultLevel = Math.min(UIController.config.default_level, ApiAndBlacklistController.maxLevelUsage);
+        const range = SubMenuController.createRange("Level usage", defaultLevel, 0, ApiAndBlacklistController.maxLevelUsage, 1, parent);
         range.addEventListener("change", () => {
             UIController.config.default_level = +range.value;
             UIController.updateScene(CriticalLevel.REPARSE_DATA);
@@ -76,7 +92,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
     }
 
 
-    private createClassInputBlackList(inputs, apiClasses, parent, text?: string) {
+    private createClassInputBlackList(inputs, blackListClasses, parent, text?: string) {
         let className = text || "";
         const input = SubMenuController.createOnlyInputText(className, "ex.package.class", parent);
 
@@ -87,7 +103,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
         input.addEventListener("keydown", (event) => {
             if (event.key === "Enter" || event.key === "Clear") {
                 const isInputLastInTheList = inputs.indexOf(input) == inputs.length - 1;
-                const isApiAlreadyInList = apiClasses.indexOf(input.value) !== -1;
+                const isClassAlreadyInList = blackListClasses.indexOf(input.value) !== -1;
 
                 // Handle error where the input hasn't change
                 if (className === input.value) {
@@ -96,31 +112,34 @@ export class ApiAndBlacklistController implements SubMenuInterface {
                 }
 
                 // Handle error where the input already exist in an other input text
-                if (isApiAlreadyInList) {
-                    ToastController.addToast("The class: '" + input.value + "' already exist in the API classes. You can't add it a second time...", ToastType.DANGER);
+                if (isClassAlreadyInList) {
+                    ToastController.addToast("The class: '" + input.value + "' already exist in the API classes. You can't add it a second time...", ToastType.WARNING);
                     input.value = className; // reset value to the last one
                     return;
                 }
 
-                if (!SearchbarController.classSet.has(input.value) && input.value !== "") { // the search key doesn't exist
+                if ((!SearchbarController.classSet.has(input.value) && input.value !== "") || UIController.config.api_classes.includes(input.value)) { // the search key doesn't exist
                     input.style.border = "1px solid red";
+                    if (UIController.config.api_classes.includes(input.value)) {
+                        ToastController.addToast("Unable to register " + input.value + " as a blacklisted class because it is an API class", ToastType.WARNING, false)
+                    }
                 } else {
                     input.style.border = "2px solid #ced4da";
 
                     // Update the config and scene depending on the position in the list of the input box
                     if (!isInputLastInTheList) {
                         if (input.value === "") { // clear an input that is not at the end, so remove it from the list
-                            apiClasses.splice(apiClasses.indexOf(className), 1);
+                            blackListClasses.splice(blackListClasses.indexOf(className), 1);
                             input.parentElement.remove(); // input has a parent div generated with it
                             UIController.updateScene(CriticalLevel.REPARSE_DATA);
                         } else {
-                            apiClasses[apiClasses.indexOf(className)] = input.value;
+                            blackListClasses[blackListClasses.indexOf(className)] = input.value;
                             UIController.updateScene(CriticalLevel.REPARSE_DATA);
                         }
 
                     } else if (input.value !== "") { // if is the last input and has a value, then add a new input text at the end.
-                        apiClasses.push(input.value);
-                        this.createClassInputBlackList(inputs, apiClasses, parent);
+                        blackListClasses.push(input.value);
+                        this.createClassInputBlackList(inputs, blackListClasses, parent);
                         UIController.updateScene(CriticalLevel.REPARSE_DATA);
                     }
 
@@ -151,13 +170,16 @@ export class ApiAndBlacklistController implements SubMenuInterface {
 
                 // Handle error where the input already exist in an other input text
                 if (isAlreadyInBlacklist) {
-                    ToastController.addToast("The class: '" + input.value + "' already exist in the blacklist. You can't add it a second time...", ToastType.DANGER);
+                    ToastController.addToast("The class: '" + input.value + "' already exist in the blacklist. You can't add it a second time...", ToastType.WARNING);
                     input.value = className; // reset value to the last one
                     return;
                 }
 
-                if (!SearchbarController.classSet.has(input.value) && input.value !== "") { // the search key doesn't exist
+                if ((!SearchbarController.classSet.has(input.value) && input.value !== "") || UIController.config.blacklist.includes(input.value)) { // the search key doesn't exist
                     input.style.border = "1px solid red";
+                    if (UIController.config.blacklist.includes(input.value)) {
+                        ToastController.addToast("Unable to register " + input.value + " as a API class because it is an blacklisted class", ToastType.WARNING, false)
+                    }
                 } else {
                     input.style.border = "1px solid #ced4da";
                     document.getElementById("loading-frame").style.display = 'inline-block'; //TODO issue: is not displayed before the following code
