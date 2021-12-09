@@ -26,8 +26,7 @@ export class InitDBService implements OnApplicationBootstrap {
 
   constructor(
     @Inject(DbFacadeService) private readonly dbFacade: DbFacadeService,
-    @Inject(VaricityConfigService)
-    private readonly varicityConfigService: VaricityConfigService,
+    @Inject(VaricityConfigService) private readonly varicityConfigService: VaricityConfigService,
     @Inject(ProjectService) private readonly projectService: ProjectService,
     @Inject(ConfigService) private configService: ConfigService,
     @Inject(FsWatcherService) private readonly watcherService: FsWatcherService,
@@ -94,9 +93,7 @@ export class InitDBService implements OnApplicationBootstrap {
       withFileTypes: true,
     });
 
-    files
-      .filter((f) => f.isDirectory())
-      .forEach((configFolder) => {
+    files.filter((f) => f.isDirectory()).forEach((configFolder) => {
         this.indexConfigFile(configFolder);
       });
   }

@@ -34,8 +34,8 @@ The following demo will use the JUnit project with a custom ``pom.xml`` to build
   - Instructions to install Docker are available [here](https://docs.docker.com/get-docker/).
 - Docker-compose
   - Instructions to install Docker Compose are available [here](https://docs.docker.com/compose/install/#install-compose).
-- JDK 17
-  - The JAVA_HOME environment variable must be defined and pointing to a JDK >= 11
+- JDK 17 (if you want to develop the `metrics-extension` project)
+  - The JAVA_HOME environment variable must be defined and pointing to a JDK >= 11 (if you want to run Symfinder directly on the host)
 - Maven
   - Under Ubuntu, you need to manually install Maven 3.8.4+ to be compatible with JDK 17
 - Internet connexion
