@@ -22,9 +22,17 @@
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph;
 
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Configuration;
-import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.*;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.DesignPatternType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.NodeType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.RelationType;
 import org.json.JSONObject;
-import org.neo4j.driver.*;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Session;
+import org.neo4j.driver.Transaction;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;
 import org.neo4j.driver.types.MapAccessor;
 import org.neo4j.driver.types.Node;
@@ -34,7 +42,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.neo4j.driver.Values.parameters;

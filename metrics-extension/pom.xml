@@ -98,103 +98,70 @@
     </dependency>
         
     <!-- Codding tools -->
-                
-    
+
+    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
     <dependency>
-                        
-      
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.32</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <version>1.7.32</version>
+      <scope>compile</scope>
+    </dependency>
+  <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-nop</artifactId>
+    <version>1.7.25</version>
+    <scope>provided</scope>
+  </dependency>
+
+
+
+    <dependency>
       <groupId>org.projectlombok</groupId>
-                        
-      
       <artifactId>lombok</artifactId>
-                        
-      
       <version>${versions.lombok}</version>
-                        
-      
       <optional>true</optional>
-                    
-    
     </dependency>
     
     <!-- Dependencies for serialization -->
                 
     
     <dependency>
-                        
-      
       <groupId>com.fasterxml.jackson.core</groupId>
-                        
-      
       <artifactId>jackson-databind</artifactId>
-                        
-      
       <version>${versions.jackson}</version>
-                    
-    
     </dependency>
                 
     
     <dependency>
-                        
-      
       <groupId>com.fasterxml.jackson.dataformat</groupId>
-                        
-      
       <artifactId>jackson-dataformat-yaml</artifactId>
-                        
-      
       <version>${versions.jackson}</version>
-                    
-    
     </dependency>
                 
     
     <dependency>
-                        
-      
       <groupId>javax.validation</groupId>
-                        
-      
       <artifactId>validation-api</artifactId>
-                        
-      
       <version>2.0.1.Final</version>
-                    
-    
     </dependency>
-                
-    
+
     <dependency>
-                        
-      
       <groupId>org.hibernate.validator</groupId>
-                        
-      
       <artifactId>hibernate-validator</artifactId>
-                        
-      
       <version>7.0.1.Final</version>
-                    
-    
     </dependency>
-                
-    
+
     <dependency>
-                        
-      
       <groupId>org.apache.commons</groupId>
-                        
-      
       <artifactId>commons-lang3</artifactId>
-                        
-      
       <version>3.12.0</version>
-                        
-      
       <scope>compile</scope>
-                    
-    
     </dependency>
     <!-- Dependencies for the testing frameworks (Junit, Mockito) (tests only) -->
     <dependency>
@@ -205,53 +172,24 @@
     </dependency>
 
     <dependency>
-                        
-      
       <groupId>org.junit.jupiter</groupId>
-                        
-      
       <artifactId>junit-jupiter-engine</artifactId>
-                        
-      
-      <version>5.8.1</version>
-                    
-    
+      <version>5.8.2</version>
     </dependency>
                 
     
     <dependency>
-                        
-      
       <groupId>org.junit.platform</groupId>
-                        
-      
       <artifactId>junit-platform-runner</artifactId>
-                        
-      
-      <version>1.8.1</version>
-                        
-      
+      <version>1.8.2</version>
       <scope>test</scope>
-                    
-    
     </dependency>
-                
-    
+
     <dependency>
-                        
-      
       <groupId>org.junit.platform</groupId>
-                        
-      
       <artifactId>junit-platform-launcher</artifactId>
-                        
-      
-      <version>1.8.1</version>
-                        
-      
+      <version>1.8.2</version>
       <scope>test</scope>
-                    
-    
     </dependency>
             
   

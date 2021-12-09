@@ -1,18 +1,17 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Objects;
-
-import javax.validation.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -84,26 +83,25 @@ public class ExperimentConfig {
     }
 
 
-    public ExperimentConfig cloneSelfExact(){
-        ExperimentConfig other= new ExperimentConfig(this.projectName,this.path,this.buildEnv,this.buildEnvTag,this.buildCmd,this.buildCmdIncludeSonar);
+    public ExperimentConfig cloneSelfExact() {
+        ExperimentConfig other = new ExperimentConfig(this.projectName, this.path, this.buildEnv, this.buildEnvTag, this.buildCmd, this.buildCmdIncludeSonar);
 
-        if(this.commitIds!=null){
+        if (this.commitIds != null) {
             other.setCommitIds(new HashSet<>(this.commitIds));
-        }
-        else{
+        } else {
             other.setCommitIds(Set.of());
         }
-        if(this.tagIds!=null){
+        if (this.tagIds != null) {
             other.setTagIds(new HashSet<>(this.tagIds));
-        }else{
+        } else {
             other.setTagIds(Set.of());
         }
 
         other.setRepositoryUrl(this.repositoryUrl);
         other.setOutputPath(this.outputPath);
         other.setSkipClone(this.skipClone);
-        if(this.sources != null){
-            other.setSources(  this.sources.stream().map(MetricSource::cloneSelfExact).toList() );
+        if (this.sources != null) {
+            other.setSources(this.sources.stream().map(MetricSource::cloneSelfExact).toList());
         }
 
         other.setSourcePackage(this.sourcePackage);
@@ -115,10 +113,11 @@ public class ExperimentConfig {
 
     /**
      * Deep copy of the instance but with omission of some fields
+     *
      * @return a copy of the instance but with some differences
      */
-    public ExperimentConfig cloneSelf(){
-        ExperimentConfig other= new ExperimentConfig();
+    public ExperimentConfig cloneSelf() {
+        ExperimentConfig other = new ExperimentConfig();
 
         other.setPath(this.getPath());
         other.setCommitIds(Set.of());
@@ -131,8 +130,8 @@ public class ExperimentConfig {
         other.setBuildEnv(this.buildEnv);
         other.setBuildEnvTag(this.buildEnvTag);
         other.setSkipClone(this.skipClone);
-        if(this.sources != null){
-            other.setSources(  this.sources.stream().map(MetricSource::cloneSelfExact).toList() );
+        if (this.sources != null) {
+            other.setSources(this.sources.stream().map(MetricSource::cloneSelfExact).toList());
         }
 
         other.setSourcePackage(this.sourcePackage);
@@ -142,12 +141,12 @@ public class ExperimentConfig {
         return other;
     }
 
-    public void changeComponentNameOfLocalMetricSource(String newName){
-        if(this.sources==null || this.sources.isEmpty()){
+    public void changeComponentNameOfLocalMetricSource(String newName) {
+        if (this.sources == null || this.sources.isEmpty()) {
             return;
         }
-        for(MetricSource source:sources){
-            if(source.getName().equals("sonarqube")){
+        for (MetricSource source : sources) {
+            if (source.getName().equals("sonarqube")) {
                 source.setComponentName(newName);
             }
         }

@@ -11,6 +11,7 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -73,8 +74,7 @@ public class Utils {
     }
 
     public void downloadImage(String image, String tag) throws InterruptedException {
-
-        dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(20,
+        dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(Constants.getImageDownloadTimeout(),
                 TimeUnit.MINUTES);
     }
 

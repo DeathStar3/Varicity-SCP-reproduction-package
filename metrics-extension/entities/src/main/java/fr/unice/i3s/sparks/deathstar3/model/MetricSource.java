@@ -1,13 +1,13 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,10 +22,9 @@ public class MetricSource {
     private List<String> metrics;
 
     /**
-     *
      * @return a deep exact copy of this instance
      */
-    public MetricSource cloneSelfExact(){
-        return new MetricSource(name,enabled,componentName,rootUrl,new ArrayList<>(metrics));
+    public MetricSource cloneSelfExact() {
+        return new MetricSource(name, enabled, componentName, rootUrl, new ArrayList<>(metrics));
     }
 }

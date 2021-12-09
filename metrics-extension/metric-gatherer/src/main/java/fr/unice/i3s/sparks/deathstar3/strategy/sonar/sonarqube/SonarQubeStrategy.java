@@ -2,7 +2,6 @@ package fr.unice.i3s.sparks.deathstar3.strategy.sonar.sonarqube;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
 import fr.unice.i3s.sparks.deathstar3.strategy.sonar.model.SonarMetricAvailable;
 import fr.unice.i3s.sparks.deathstar3.strategy.sonar.sonarcloud.SonarCloudStrategy;
 import fr.unice.i3s.sparks.deathstar3.utils.HttpRequest;
