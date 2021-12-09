@@ -58,6 +58,7 @@ public class SourceFetcher {
                 destinations.add(specificTagPath.toString());
                 log.info(destinations.toString());
             }
+            FileUtils.deleteDirectory(originalDestinationPath.toFile());
         }
         return destinations;
     }
