@@ -22,7 +22,7 @@
 package fr.unice.i3s.sparks.deathstar3.engine.neo4j_types;
 
 public enum RelationType implements NodeType {
-    METHOD, INNER, IMPLEMENTS, EXTENDS, INSTANTIATE;
+    METHOD, INNER, IMPLEMENTS, EXTENDS, USAGE;
 
     @Override
     public String getString() {

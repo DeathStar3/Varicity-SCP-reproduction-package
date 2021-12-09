@@ -38,10 +38,10 @@ public class AggregationHotspotTest extends Neo4jTest {
             Node vp3 = graph.createNode("VP3", EntityType.CLASS, EntityAttribute.VP);
             Node vp4 = graph.createNode("VP4", EntityType.CLASS, EntityAttribute.VP);
             Node vp5 = graph.createNode("VP5", EntityType.CLASS, EntityAttribute.VP);
-            graph.linkTwoNodes(vp1, vp2, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(vp1, vp3, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(vp2, vp4, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(vp3, vp5, RelationType.INSTANTIATE);
+            graph.linkTwoNodes(vp1, vp2, RelationType.USAGE);
+            graph.linkTwoNodes(vp1, vp3, RelationType.USAGE);
+            graph.linkTwoNodes(vp2, vp4, RelationType.USAGE);
+            graph.linkTwoNodes(vp3, vp5, RelationType.USAGE);
             graph.detectHotspotsInAggregation(5);
             Assertions.assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP1").get(), "aggregation"));
             Assertions.assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP2").get(), "aggregation"));
@@ -59,10 +59,10 @@ public class AggregationHotspotTest extends Neo4jTest {
             Node vp3 = graph.createNode("VP3", EntityType.CLASS, EntityAttribute.VP);
             Node vp4 = graph.createNode("VP4", EntityType.CLASS, EntityAttribute.VP);
             Node v1 = graph.createNode("V1", EntityType.CLASS);
-            graph.linkTwoNodes(vp1, vp2, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(vp3, vp4, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(vp2, v1, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(vp4, v1, RelationType.INSTANTIATE);
+            graph.linkTwoNodes(vp1, vp2, RelationType.USAGE);
+            graph.linkTwoNodes(vp3, vp4, RelationType.USAGE);
+            graph.linkTwoNodes(vp2, v1, RelationType.USAGE);
+            graph.linkTwoNodes(vp4, v1, RelationType.USAGE);
             graph.detectHotspotsInAggregation(2);
             assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP1").get(), "aggregation"));
             assertTrue((boolean) graph.getPropertyValue(graph.getNode("VP2").get(), "aggregation"));
@@ -81,7 +81,7 @@ public class AggregationHotspotTest extends Neo4jTest {
             Node vp2 = graph.createNode("VP2", EntityType.CLASS, EntityAttribute.VP);
             Node vp2v1 = graph.createNode("VP2V1", EntityType.CLASS, EntityAttribute.VARIANT);
             Node vp2v2 = graph.createNode("VP2V2", EntityType.CLASS, EntityAttribute.VARIANT);
-            graph.linkTwoNodes(vp1, vp2, RelationType.INSTANTIATE);
+            graph.linkTwoNodes(vp1, vp2, RelationType.USAGE);
             graph.linkTwoNodes(vp1, vp1v1, RelationType.EXTENDS);
             graph.linkTwoNodes(vp1, vp1v2, RelationType.EXTENDS);
             graph.linkTwoNodes(vp2, vp2v1, RelationType.EXTENDS);

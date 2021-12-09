@@ -74,7 +74,7 @@ public class Utils {
 
     public void downloadImage(String image, String tag) throws InterruptedException {
 
-        dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(7,
+        dockerClient.pullImageCmd(image).withTag(tag).exec(new PullImageResultCallback()).awaitCompletion(20,
                 TimeUnit.MINUTES);
     }
 

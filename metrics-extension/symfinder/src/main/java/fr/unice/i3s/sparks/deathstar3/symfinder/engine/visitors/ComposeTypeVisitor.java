@@ -37,7 +37,7 @@ public class ComposeTypeVisitor extends ImportsVisitor {
                     if (!node.hasLabel(OUT_OF_SCOPE.getString())) {
                         Node parentClassNode = neoGraph.getOrCreateNode(parentClassName, fieldDeclaringClassBinding.isInterface() ? EntityType.INTERFACE : EntityType.CLASS);
                         if (!neoGraph.relatedTo(parentClassNode, node)) {
-                            neoGraph.linkTwoNodes(parentClassNode, node, RelationType.INSTANTIATE);
+                            neoGraph.linkTwoNodes(parentClassNode, node, RelationType.USAGE);
                         }
                     }
                 });
@@ -64,7 +64,7 @@ public class ComposeTypeVisitor extends ImportsVisitor {
                         typeNode.ifPresent(node -> {
                             if (!node.hasLabel(OUT_OF_SCOPE.getString())) {
                                 if (!neoGraph.relatedTo(parentClassNode, node)) {
-                                    neoGraph.linkTwoNodes(parentClassNode, node, RelationType.INSTANTIATE);
+                                    neoGraph.linkTwoNodes(parentClassNode, node, RelationType.USAGE);
                                 }
                             }
                         });
@@ -83,7 +83,7 @@ public class ComposeTypeVisitor extends ImportsVisitor {
             returnedTypeNode.ifPresent(node -> {
                 if (!node.hasLabel(OUT_OF_SCOPE.getString()) && !node.get("name").asString().equals(parentClassNode.get("name").asString())) {
                     if (!neoGraph.relatedTo(parentClassNode, node)) {
-                        neoGraph.linkTwoNodes(parentClassNode, node, RelationType.INSTANTIATE);
+                        neoGraph.linkTwoNodes(parentClassNode, node, RelationType.USAGE);
                     }
                 }
             });

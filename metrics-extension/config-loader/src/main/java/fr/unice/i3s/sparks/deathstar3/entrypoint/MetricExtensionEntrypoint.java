@@ -130,7 +130,7 @@ public class MetricExtensionEntrypoint {
 
                     return false;
                 }
-                //the update of sonarqube is not immediate, the sleep introduce a dealy so that the update of sonarqube is done before
+                //the update of sonarqube is not immediate, the sleep introduce a delay so that the update of sonarqube is done before
                 //MetricGatherer is called
                 try {
                     Thread.sleep(30_000);

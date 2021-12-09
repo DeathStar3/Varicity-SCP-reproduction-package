@@ -23,8 +23,8 @@ public class CompositionDensityTest extends Neo4jTest {
             neoGraph.linkTwoNodes(vp1, v2vp1, RelationType.EXTENDS);
             neoGraph.linkTwoNodes(vp2, v1vp2, RelationType.EXTENDS);
             neoGraph.linkTwoNodes(vp2, v2vp2, RelationType.EXTENDS);
-            neoGraph.linkTwoNodes(v1vp1, v1vp2, RelationType.INSTANTIATE);
-            neoGraph.linkTwoNodes(v2vp1, v2vp2, RelationType.INSTANTIATE);
+            neoGraph.linkTwoNodes(v1vp1, v1vp2, RelationType.USAGE);
+            neoGraph.linkTwoNodes(v2vp1, v2vp2, RelationType.USAGE);
             neoGraph.detectDensity();
             assertTrue(neoGraph.getNode("V1Vp1").get().hasLabel("DENSE"));
             assertTrue(neoGraph.getNode("V1Vp2").get().hasLabel("DENSE"));
@@ -43,7 +43,7 @@ public class CompositionDensityTest extends Neo4jTest {
             Node v1vp2 = neoGraph.createNode("V1Vp2", EntityType.CLASS, EntityAttribute.VARIANT);
             neoGraph.linkTwoNodes(vp1, v1vp1, RelationType.EXTENDS);
             neoGraph.linkTwoNodes(vp2, v1vp2, RelationType.EXTENDS);
-            neoGraph.linkTwoNodes(v1vp1, v1vp2, RelationType.INSTANTIATE);
+            neoGraph.linkTwoNodes(v1vp1, v1vp2, RelationType.USAGE);
             neoGraph.detectDensity();
             assertFalse(neoGraph.getNode("V1Vp1").get().hasLabel("DENSE"));
             assertFalse(neoGraph.getNode("V1Vp2").get().hasLabel("DENSE"));

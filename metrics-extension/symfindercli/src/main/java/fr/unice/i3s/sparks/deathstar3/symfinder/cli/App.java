@@ -82,11 +82,11 @@ public final class App {
             root.info("This is info");
         }
 
-        ConfigLoader configLoader = new ConfigLoader();
         SymfinderConfigParser symfinderConfigParser = new SymfinderConfigParser();
-        List<ExperimentConfig> configs = configLoader.loadConfigFile(configFilePath);
         MetricExtensionEntrypoint metricExtension = new MetricExtensionEntrypoint();
 
+        ConfigLoader configLoader = new ConfigLoader();
+        List<ExperimentConfig> configs = configLoader.loadConfigFile(configFilePath);
         ExperimentConfig firstConfig = configs.get(0);
 
         List<ExperimentResult> results = metricExtension.runExperiment(firstConfig, symfinderConfigParser.parseSymfinderConfigurationFromFile(symfinderConfiguration).hotspots() );

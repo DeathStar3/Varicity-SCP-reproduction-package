@@ -51,7 +51,7 @@ public class LocalVariablesVisitor extends ImportsVisitor {
                                             || node.get("name").asString().equals("long") || node.get("name").asString().equals("float") || node.get("name").asString().equals("boolean")
                                             || node.get("name").asString().contains("int[]") || node.get("name").asString().contains("double[]") || node.get("name").asString().contains("float[]")
                                             || node.get("name").asString().contains("long[]") || node.get("name").asString().contains("bytes[]") || node.get("name").asString().equals("bytes") || node.get("name").asString().equals("byte"))) {
-                                        neoGraph.linkTwoNodes(parentClassNode, node, RelationType.INSTANTIATE);
+                                        neoGraph.linkTwoNodes(parentClassNode, node, RelationType.USAGE);
                                         logger.log(Level.getLevel("MY_LEVEL"), "\n ************* Local variable " + node.get("name") + " ----- " + parentClassNode.get("name") + " ******** \n");
                                     }
                                 });

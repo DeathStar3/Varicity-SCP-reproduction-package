@@ -20,7 +20,7 @@ public class CompositionStrategiesTest extends Neo4jTest {
             Node main = neoGraph.createNode("Main", EntityType.CLASS);
             neoGraph.linkTwoNodes(shape, rectangle, RelationType.EXTENDS);
             neoGraph.linkTwoNodes(shape, circle, RelationType.EXTENDS);
-            neoGraph.linkTwoNodes(main, shape, RelationType.INSTANTIATE);
+            neoGraph.linkTwoNodes(main, shape, RelationType.USAGE);
             neoGraph.setNbVariantsProperty();
             neoGraph.detectStrategiesWithComposition();
             assertTrue(neoGraph.getNode("Shape").get().hasLabel(cs));
@@ -36,7 +36,7 @@ public class CompositionStrategiesTest extends Neo4jTest {
             Node rectangle = neoGraph.createNode("Rectangle", EntityType.CLASS);
             Node main = neoGraph.createNode("Main", EntityType.CLASS);
             neoGraph.linkTwoNodes(shape, rectangle, RelationType.EXTENDS);
-            neoGraph.linkTwoNodes(main, shape, RelationType.INSTANTIATE);
+            neoGraph.linkTwoNodes(main, shape, RelationType.USAGE);
             neoGraph.setNbVariantsProperty();
             neoGraph.detectStrategiesWithComposition();
             assertFalse(neoGraph.getNode("Shape").get().hasLabel(cs));
