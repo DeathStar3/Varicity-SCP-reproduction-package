@@ -352,7 +352,7 @@ export default class NeoGraph{
     }
 
     async getVariantFiles(): Promise<Node[]>{
-        return this.submitRequest("MATCH (n:VARAINT_FILE) RETURN n", {}).then((results: Record[]) =>{
+        return this.submitRequest("MATCH (n:"+EntityAttribut.FILE_VARIANT+") RETURN n", {}).then((results: Record[]) =>{
             return <Node[]> (results.map((result: Record) => result.get(0)));
         });
     }
