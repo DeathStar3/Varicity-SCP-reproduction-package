@@ -8,15 +8,13 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Neo4jParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Neo4jParameters;
 import fr.unice.i3s.sparks.deathstar3.utils.Utils;
-import fr.unice.i3s.sparks.deathstar3.utils.WaitFor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

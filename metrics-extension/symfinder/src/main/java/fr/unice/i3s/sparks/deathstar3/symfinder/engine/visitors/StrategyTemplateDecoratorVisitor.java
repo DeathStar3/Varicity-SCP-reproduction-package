@@ -1,9 +1,9 @@
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors;
 
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.DesignPatternType;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityAttribute;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.engine.neograph.NeoGraph;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.DesignPatternType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.*;

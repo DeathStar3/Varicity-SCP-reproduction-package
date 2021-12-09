@@ -1,6 +1,6 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
-import fr.unice.i3s.sparks.deathstar3.engine.result.SymfinderResult;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.result.SymfinderResult;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
 
 import java.util.List;

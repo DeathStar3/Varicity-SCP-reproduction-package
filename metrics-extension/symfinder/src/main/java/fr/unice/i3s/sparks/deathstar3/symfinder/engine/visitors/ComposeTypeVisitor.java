@@ -1,8 +1,8 @@
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors;
 
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.RelationType;
-import fr.unice.i3s.sparks.deathstar3.engine.neograph.NeoGraph;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -13,7 +13,7 @@ import org.neo4j.driver.types.Node;
 
 import java.util.Optional;
 
-import static fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityAttribute.OUT_OF_SCOPE;
+import static fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityAttribute.OUT_OF_SCOPE;
 
 public class ComposeTypeVisitor extends ImportsVisitor {
 
@@ -37,7 +37,7 @@ public class ComposeTypeVisitor extends ImportsVisitor {
                     if (!node.hasLabel(OUT_OF_SCOPE.getString())) {
                         Node parentClassNode = neoGraph.getOrCreateNode(parentClassName, fieldDeclaringClassBinding.isInterface() ? EntityType.INTERFACE : EntityType.CLASS);
                         if (!neoGraph.relatedTo(parentClassNode, node)) {
-                            neoGraph.linkTwoNodes(parentClassNode, node, RelationType.INSTANTIATE);
+                            neoGraph.linkTwoNodes(parentClassNode, node, RelationType.USAGE);
                         }
                     }
                 });
@@ -64,7 +64,7 @@ public class ComposeTypeVisitor extends ImportsVisitor {
                         typeNode.ifPresent(node -> {
                             if (!node.hasLabel(OUT_OF_SCOPE.getString())) {
                                 if (!neoGraph.relatedTo(parentClassNode, node)) {
-                                    neoGraph.linkTwoNodes(parentClassNode, node, RelationType.INSTANTIATE);
+                                    neoGraph.linkTwoNodes(parentClassNode, node, RelationType.USAGE);
                                 }
                             }
                         });
@@ -83,7 +83,7 @@ public class ComposeTypeVisitor extends ImportsVisitor {
             returnedTypeNode.ifPresent(node -> {
                 if (!node.hasLabel(OUT_OF_SCOPE.getString()) && !node.get("name").asString().equals(parentClassNode.get("name").asString())) {
                     if (!neoGraph.relatedTo(parentClassNode, node)) {
-                        neoGraph.linkTwoNodes(parentClassNode, node, RelationType.INSTANTIATE);
+                        neoGraph.linkTwoNodes(parentClassNode, node, RelationType.USAGE);
                     }
                 }
             });

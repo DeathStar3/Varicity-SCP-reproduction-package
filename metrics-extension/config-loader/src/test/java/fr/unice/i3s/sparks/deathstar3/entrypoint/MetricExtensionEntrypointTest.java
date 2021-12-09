@@ -2,9 +2,9 @@ package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
 
 import fr.unice.i3s.sparks.deathstar3.deserializer.ConfigLoader;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Neo4jParameters;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.HotspotsParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Neo4jParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.ParametersObject;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson;

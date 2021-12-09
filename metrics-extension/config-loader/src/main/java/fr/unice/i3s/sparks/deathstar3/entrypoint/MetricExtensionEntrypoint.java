@@ -18,12 +18,12 @@ import java.util.concurrent.Future;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import fr.unice.i3s.sparks.deathstar3.MetricGatherer;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Neo4jParameters;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
-import fr.unice.i3s.sparks.deathstar3.engine.entrypoint.Symfinder;
-import fr.unice.i3s.sparks.deathstar3.engine.result.SymfinderResult;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Configuration;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.HotspotsParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Neo4jParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.ParametersObject;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.result.SymfinderResult;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.model.MetricSource;

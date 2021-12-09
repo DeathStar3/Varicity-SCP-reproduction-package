@@ -19,10 +19,8 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-package fr.unice.i3s.sparks.deathstar3.engine.configuration;
+package fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration;
 
-public record ParametersObject(Neo4jParameters neo4j,
-                               HotspotsParameters hotspots,
-                               String experimentsFile) {
+public record Neo4jParameters(String boltAddress, String user, String password) {
 
 }

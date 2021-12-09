@@ -61,16 +61,12 @@ export class InitDBService implements OnApplicationBootstrap {
 
   createFoldersIfNotExists() {
     if (!fs.existsSync(this.pathToSymfinderJsons)) {
-      console.log(
-        'The path to the symfinder Jsons does not exist yet, creating it',
-      );
+      console.log('The path to the symfinder Jsons does not exist yet, creating it',);
       fs.mkdirSync(this.pathToSymfinderJsons, { recursive: true });
     }
 
     if (!fs.existsSync(this.pathToMetricsJsons)) {
-      console.log(
-        'The path to the metrics Jsons does not exist yet, creating it',
-      );
+      console.log('The path to the metrics Jsons does not exist yet, creating it');
       fs.mkdirSync(this.pathToMetricsJsons, { recursive: true });
     }
 
@@ -82,16 +78,12 @@ export class InitDBService implements OnApplicationBootstrap {
     if (this.watchDirectories != 0) {
       ///
       if (!fs.existsSync(this.pathToWatchedSymfinderJsons)) {
-        console.log(
-          'The path to the Watched symfinder Jsons does not exist yet, creating it',
-        );
+        console.log('The path to the Watched symfinder Jsons does not exist yet, creating it',);
         fs.mkdirSync(this.pathToWatchedSymfinderJsons, { recursive: true });
       }
 
       if (!fs.existsSync(this.pathToWatchedConfigsDir)) {
-        console.log(
-          'The path to the watched configs does not exist yet, creating it',
-        );
+        console.log('The path to the watched configs does not exist yet, creating it',);
         fs.mkdirSync(this.pathToWatchedConfigsDir, { recursive: true });
       }
     }
@@ -115,71 +107,33 @@ export class InitDBService implements OnApplicationBootstrap {
       { withFileTypes: true },
     );
 
-    files
-      .filter((f) => f.isFile())
-      .forEach((configFile) => {
-        const configFilePath = path.join(
-          this.pathToVisualizationConfigs,
-          configFolder.name,
-          configFile.name,
-        );
+    files.filter((f) => f.isFile()).forEach((configFile) => {
+      const configFilePath = path.join(this.pathToVisualizationConfigs, configFolder.name, configFile.name,);
 
-        if (
-          !this.varicityConfigService.checkIfConfigIsIndexed(configFilePath)
-        ) {
-          //we read the file to get the human readable name of the config but it is ok because we only do it once at startup
-          const configObject = VaricityConfigService.getYamlFromDisk(
-            configFilePath,
-          ) as VaricityConfig;
+      if (!this.varicityConfigService.checkIfConfigIsIndexed(configFilePath)) {
+        //we read the file to get the human readable name of the config but it is ok because we only do it once at startup
+        const configObject = VaricityConfigService.getYamlFromDisk(configFilePath,) as VaricityConfig;
 
-          this.dbFacade.db.push(
-            '/configs[]',
-            new ConfigEntry(
-              configObject.name,
-              configFilePath,
-              configFolder.name,
-            ),
-          );
-        }
-      });
+        this.dbFacade.db.push('/configs[]', new ConfigEntry(configObject.name, configFilePath, configFolder.name,),);
+      }
+    });
   }
 
   findProjects() {
-    const files = fs.readdirSync(this.pathToSymfinderJsons, {
-      withFileTypes: true,
-    });
+    const files = fs.readdirSync(this.pathToSymfinderJsons, { withFileTypes: true, });
 
-    files
-      .filter(
-        (f) =>
-          f.isFile() &&
-          path.extname(f.name).toLowerCase() === InitDBService.EXTENSION,
-      )
-      .filter(
-        (projectSymfinderFile) =>
-          !this.projectService.checkIfParsed(
-            path.parse(projectSymfinderFile.name).name,
-          ),
-      )
+    files.filter((f) => f.isFile() && path.extname(f.name).toLowerCase() === InitDBService.EXTENSION,)
+      .filter((projectSymfinderFile) => !this.projectService.checkIfParsed(path.parse(projectSymfinderFile.name).name,),)
       .forEach((projectSymfinderFile) => {
         console.log(projectSymfinderFile.name);
-
-        const fullPath = path.resolve(
-          path.join(this.pathToSymfinderJsons, projectSymfinderFile.name),
-        );
-
+        const fullPath = path.resolve(path.join(this.pathToSymfinderJsons, projectSymfinderFile.name),);
         const projectName = path.parse(projectSymfinderFile.name).name;
-
         this.watcherService.parseSymfinderJsons(fullPath, projectName);
       });
   }
 
   handleWatcher() {
-    if (
-      this.watchDirectories != 0 &&
-      this.pathToWatchedConfigsDir !== this.pathToVisualizationConfigs &&
-      this.pathToSymfinderJsons !== this.pathToWatchedSymfinderJsons
-    ) {
+    if (this.watchDirectories != 0 && this.pathToWatchedConfigsDir !== this.pathToVisualizationConfigs && this.pathToSymfinderJsons !== this.pathToWatchedSymfinderJsons) {
       console.log('Watch directory is set to true');
       this.watcherService.instantiateWatcher();
     }

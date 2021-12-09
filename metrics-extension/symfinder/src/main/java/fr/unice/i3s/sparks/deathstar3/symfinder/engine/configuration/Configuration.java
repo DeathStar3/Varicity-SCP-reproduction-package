@@ -19,7 +19,7 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-package fr.unice.i3s.sparks.deathstar3.engine.configuration;
+package fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;

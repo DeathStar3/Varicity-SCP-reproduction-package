@@ -19,10 +19,10 @@
  * Copyright 2018-2020 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-package fr.unice.i3s.sparks.deathstar3.engine.neograph;
+package fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph;
 
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Configuration;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.*;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Configuration;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.*;
 import org.json.JSONObject;
 import org.neo4j.driver.*;
 import org.neo4j.driver.exceptions.ServiceUnavailableException;
@@ -201,7 +201,7 @@ public class NeoGraph {
 
     public void detectHotspotsInAggregation(int threshold) {
         submitRequest("MATCH (vp:VP) " +
-                "CALL apoc.path.subgraphAll(vp, {relationshipFilter: \"INSTANTIATE\", minLevel: 0}) " +
+                "CALL apoc.path.subgraphAll(vp, {relationshipFilter: \"USAGE\", minLevel: 0}) " +
                 "YIELD nodes " +
                 "WITH collect(nodes)[0] AS nodesList, count(nodes) as cnt " +
                 "FOREACH (n IN CASE WHEN cnt >= $threshold THEN nodesList ELSE [] END | SET n.aggregation = TRUE)", "threshold", threshold);
@@ -381,7 +381,7 @@ public class NeoGraph {
     }
 
     public void setNbCompositions() {
-        submitRequest("MATCH (c)-[:INSTANTIATE]->(a) WITH count(a) AS nbComp, c SET c.nbCompositions = nbComp");
+        submitRequest("MATCH (c)-[:USAGE]->(a) WITH count(a) AS nbComp, c SET c.nbCompositions = nbComp");
     }
 
     /**
@@ -606,12 +606,12 @@ public class NeoGraph {
     }
 
     public void detectDensity() {
-        submitRequest("MATCH (v1:VARIANT)-[:INSTANTIATE]->(v2:VARIANT) " +
+        submitRequest("MATCH (v1:VARIANT)-[:USAGE]->(v2:VARIANT) " +
                 "SET v1:DENSE SET v2:DENSE");
     }
 
     public void detectStrategiesWithComposition() {
-        submitRequest(String.format("MATCH (c)-[:INSTANTIATE]->(c1) " +
+        submitRequest(String.format("MATCH (c)-[:USAGE]->(c1) " +
                 "WHERE (c:CLASS OR c:INTERFACE) AND (EXISTS(c1.classVariants) AND c1.classVariants > 1) " +
                 "SET c1:%s", DesignPatternType.COMPOSITION_STRATEGY));
     }
@@ -679,7 +679,7 @@ public class NeoGraph {
     }
 
     private String getCompositionLinksAsJson() {
-        String request = "MATCH path = (c1:CLASS)-[r:INSTANTIATE]->(c2) WHERE NONE(n IN nodes(path) WHERE n:OUT_OF_SCOPE) RETURN collect({source:c1.name, target:c2.name, type:TYPE(r)})";
+        String request = "MATCH path = (c1:CLASS)-[r:USAGE]->(c2) WHERE NONE(n IN nodes(path) WHERE n:OUT_OF_SCOPE) RETURN collect({source:c1.name, target:c2.name, type:TYPE(r)})";
         return submitRequest(request)
                 .get(0)
                 .get(0)
@@ -690,7 +690,7 @@ public class NeoGraph {
     }
 
     private String getAllLinksAsJson() {
-        String request = "MATCH path = (c1)-[r:INSTANTIATE|EXTENDS|IMPLEMENTS]->(c2) WHERE NONE(n IN nodes(path) WHERE n:OUT_OF_SCOPE) RETURN collect({source:c1.name, target:c2.name, type:TYPE(r)})";
+        String request = "MATCH path = (c1)-[r:USAGE|EXTENDS|IMPLEMENTS]->(c2) WHERE NONE(n IN nodes(path) WHERE n:OUT_OF_SCOPE) RETURN collect({source:c1.name, target:c2.name, type:TYPE(r)})";
         return submitRequest(request)
                 .get(0)
                 .get(0)
@@ -731,7 +731,7 @@ public class NeoGraph {
     }
 
     public int getNbCompositionRelationship() {
-        return submitRequest("MATCH (n) - [r:INSTANTIATE]-> () RETURN COUNT(r)").get(0).get(0).asInt();
+        return submitRequest("MATCH (n) - [r:USAGE]-> () RETURN COUNT(r)").get(0).get(0).asInt();
     }
 
     public void createClassesIndex() {

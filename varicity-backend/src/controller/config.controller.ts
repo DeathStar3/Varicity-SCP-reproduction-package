@@ -5,7 +5,7 @@ import { ConfigEntry } from 'src/model/experiment.model';
 
 @Controller()
 export class ConfigController {
-  constructor(private readonly configService: VaricityConfigService) {}
+  constructor(private readonly configService: VaricityConfigService) { }
 
   @Post('/projects/configs')
   saveConfig(@Body() config: VaricityConfig): any {
@@ -14,14 +14,8 @@ export class ConfigController {
   }
 
   @Post('/projects/configs/:configFile')
-  updateConfig(
-    @Param('configFile') configFile: string,
-    @Body() config: VaricityConfig,
-  ): any {
-    console.log(
-      '/projects/configs/' + configFile + ' - updateConfig, ',
-      config,
-    );
+  updateConfig(@Param('configFile') configFile: string, @Body() config: VaricityConfig,): any {
+    console.log('/projects/configs/' + configFile + ' - updateConfig, ', config);
     return this.configService.updateConfig(configFile, config);
   }
 
@@ -32,17 +26,8 @@ export class ConfigController {
   }
 
   @Get('/projects/:projectName/configs')
-  getConfigByNameFromProject(
-    @Param('projectName') projectName: string,
-    @Query() query: Record<string, any>,
-  ): VaricityConfig {
-    console.log(
-      '/projects/{' +
-        projectName +
-        '}/configs/{' +
-        query['configName'] +
-        '} - getConfigByNameFromProject',
-    );
+  getConfigByNameFromProject(@Param('projectName') projectName: string, @Query() query: Record<string, any>,): VaricityConfig {
+    console.log(`/projects/${projectName}/configs/${query['configName']} - getConfigByNameFromProject`);
     const config = this.configService.getConfigByNameFromProject(
       projectName,
       query['configName'],
@@ -53,13 +38,8 @@ export class ConfigController {
 
   @Get('/projects/configs/path')
   getConfigByPath(@Query() query: Record<string, any>): VaricityConfig {
-    console.log(
-      '/projects/configs/paths/{' +
-        query['configPath'] +
-        '} - getConfigsFromPath',
-    );
+    console.log('/projects/configs/paths/{' + query['configPath'] + '} - getConfigsFromPath');
     const config = this.configService.getConfigsFromPath(query['configPath']);
-    console.log(config);
     return config;
   }
 
@@ -70,23 +50,14 @@ export class ConfigController {
   }
 
   @Get('/projects/configs/firstOrDefault')
-  getFirstOrDefaultConfigProject(
-    @Query() query: Record<string, any>,
-  ): VaricityConfig {
-    console.log(
-      '/projects/configs/firstOrDefault - getFirstOrDefaultConfigProject',
-      query,
-    );
+  getFirstOrDefaultConfigProject(@Query() query: Record<string, any>,): VaricityConfig {
+    console.log('/projects/configs/firstOrDefault - getFirstOrDefaultConfigProject', query);
     return this.configService.getFirstProjectConfigOrDefaultOne(query['name']);
   }
 
   @Get('/projects/:projectName/configs/filenames-and-names')
-  getConfigsNamesOfProject(
-    @Param('projectName') projectName: string,
-  ): ConfigEntry[] {
-    console.log(
-      `/projects/${projectName}/configs/filenames-and-names - getConfigsNamesAndFileNames`,
-    );
+  getConfigsNamesOfProject(@Param('projectName') projectName: string,): ConfigEntry[] {
+    console.log(`/projects/${projectName}/configs/filenames-and-names - getConfigsNamesAndFileNames`);
     return this.configService.getConfigsNamesAndFileNames(projectName);
   }
 }

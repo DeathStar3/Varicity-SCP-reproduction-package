@@ -47,9 +47,9 @@ export interface ConfigColor {
 }
 
 export class Vector3 {
-    x?: number;
-    y?: number;
-    z?: number
+  x?: number;
+  y?: number;
+  z?: number;
 }
 
 export class VaricityConfig {

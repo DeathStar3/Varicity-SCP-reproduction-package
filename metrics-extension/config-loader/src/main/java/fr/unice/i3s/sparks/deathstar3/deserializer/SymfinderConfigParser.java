@@ -3,7 +3,7 @@ package fr.unice.i3s.sparks.deathstar3.deserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.ParametersObject;
 
 import java.io.IOException;
 import java.nio.file.Files;

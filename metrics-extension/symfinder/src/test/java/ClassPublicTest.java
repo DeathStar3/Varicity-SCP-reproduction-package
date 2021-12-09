@@ -1,5 +1,5 @@
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityVisibility;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityVisibility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

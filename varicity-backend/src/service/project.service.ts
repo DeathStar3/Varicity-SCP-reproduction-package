@@ -149,79 +149,35 @@ export class ProjectService {
     let index = 0;
 
     //write the unparsed result
-    if (
-      project.externalMetric !== undefined &&
-      project.externalMetric !== null &&
-      project.externalMetric.size > 0
-    ) {
+    if (project.externalMetric !== undefined && project.externalMetric !== null && project.externalMetric.size > 0) {
       project.externalMetric.forEach((nodes, sourceName) => {
-        fs.mkdirSync(path.join(this.pathToMetricsJsons, sourceName), {
-          recursive: true,
-        });
-        fsextra.writeJsonSync(
-          path.join(
-            this.pathToMetricsJsons,
-            sourceName,
-            `${project.projectName}-${sourceName}.json`,
-          ),
-          nodes,
-          { flag: 'w+' },
-        );
+        fs.mkdirSync(path.join(this.pathToMetricsJsons, sourceName), { recursive: true });
+        fsextra.writeJsonSync(path.join(this.pathToMetricsJsons, sourceName, `${project.projectName}-${sourceName}.json`), nodes, { flag: 'w+' });
       });
     }
 
-    if (
-      project.symfinderResult &&
-      project.symfinderResult != null &&
-      project.symfinderResult != undefined &&
-      project.symfinderResult.vpJsonGraph &&
-      project.symfinderResult.vpJsonGraph.trim().length > 0
-    ) {
-      fs.writeFileSync(
-        path.join(this.pathToSymfinderJsons, `${project.projectName}.json`),
-        project.symfinderResult.vpJsonGraph,
-      );
+    if (project.symfinderResult && project.symfinderResult != null && project.symfinderResult != undefined && project.symfinderResult.vpJsonGraph && project.symfinderResult.vpJsonGraph.trim().length > 0) {
+      fs.writeFileSync(path.join(this.pathToSymfinderJsons, `${project.projectName}.json`), project.symfinderResult.vpJsonGraph,);
     }
     //parse the result
-    const symfinderObj =
-      this.parseExperimentResultToJsonInputInterface(project);
+    const symfinderObj = this.parseExperimentResultToJsonInputInterface(project);
 
     //write the parsed result
 
-    const parsedInputPath = path.join(
-      this.pathToParsedJsons,
-      project.projectName,
-    );
+    const parsedInputPath = path.join(this.pathToParsedJsons, project.projectName,);
     fs.mkdirSync(this.pathToParsedJsons, { recursive: true });
-    fsextra.writeJsonSync(`${parsedInputPath}.json`, symfinderObj, {
-      flag: 'w+',
-      recursive: true,
-    });
+    fsextra.writeJsonSync(`${parsedInputPath}.json`, symfinderObj, { flag: 'w+', recursive: true });
 
     //update the entry in the database
     if (this.dbFacade.db.exists('/projects')) {
-      index = this.dbFacade.db.getIndex(
-        '/projects',
-        project.projectName,
-        'projectName',
-      );
-
+      index = this.dbFacade.db.getIndex('/projects', project.projectName, 'projectName');
       if (index > -1) {
-        this.dbFacade.db.push(
-          `/projects[${index}]`,
-          new ProjectEntry(project.projectName, parsedInputPath + '.json'),
-        );
+        this.dbFacade.db.push(`/projects[${index}]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'));
       } else {
-        this.dbFacade.db.push(
-          `/projects[]`,
-          new ProjectEntry(project.projectName, parsedInputPath + '.json'),
-        );
+        this.dbFacade.db.push(`/projects[]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'),);
       }
     } else {
-      this.dbFacade.db.push(
-        `/projects[]`,
-        new ProjectEntry(project.projectName, parsedInputPath + '.json'),
-      );
+      this.dbFacade.db.push(`/projects[]`, new ProjectEntry(project.projectName, parsedInputPath + '.json'));
     }
   }
 
@@ -233,9 +189,7 @@ export class ProjectService {
    */
   checkIfParsed(projectName: string) {
     if (this.dbFacade.db.exists('/projects')) {
-      return (
-        this.dbFacade.db.getIndex('/projects', projectName, 'projectName') > -1
-      );
+      return this.dbFacade.db.getIndex('/projects', projectName, 'projectName') > -1
     }
     return false;
   }
