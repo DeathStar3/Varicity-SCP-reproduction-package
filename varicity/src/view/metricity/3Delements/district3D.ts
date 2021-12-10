@@ -1,10 +1,8 @@
-import { Config } from './../../../model/entitiesImplems/config.model';
-import { Element3D } from '../../common/3Dinterfaces/element3D.interface';
-import { Building3D } from '../../common/3Delements/building3D';
-import { District } from '../../../model/entities/district.interface';
-import { ActionManager, Color3, ExecuteCodeAction, StandardMaterial } from '@babylonjs/core';
-import { Scene } from '@babylonjs/core';
-import { MeshBuilder, Vector3 } from '@babylonjs/core';
+import {Config} from './../../../model/entitiesImplems/config.model';
+import {Element3D} from '../../common/3Dinterfaces/element3D.interface';
+import {Building3D} from '../../common/3Delements/building3D';
+import {District} from '../../../model/entities/district.interface';
+import {ActionManager, Color3, ExecuteCodeAction, MeshBuilder, Scene, StandardMaterial, Vector3} from '@babylonjs/core';
 
 export class District3D extends Element3D {
     elementModel: District;
@@ -70,8 +68,7 @@ export class District3D extends Element3D {
                     currentWidth += sizesArray[1];
                     placements[0][1] = sizesArray[1];
                     currentRow = 1;
-                }
-                else { // sinon
+                } else { // sinon
                     if (sizesArray[i] + placements.reduce<number>((prev, cur) => prev += cur[0], 0) > currentWidth) { // si on dépasse la height aussi alors il faut resize
                         currentWidth += placements[0][1];
                         placements = this.resize(placements, currentWidth);
@@ -137,8 +134,7 @@ export class District3D extends Element3D {
                     this.d3Buildings.push(d3Building);
                     d3Building.build();
                 }
-            }
-            else {
+            } else {
                 let d3Building = new Building3D(this.scene, b, this.depth, config);
                 this.d3Buildings.push(d3Building);
                 d3Building.build();

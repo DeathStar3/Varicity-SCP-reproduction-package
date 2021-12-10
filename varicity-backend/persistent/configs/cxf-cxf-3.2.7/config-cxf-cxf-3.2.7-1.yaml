@@ -1,0 +1,97 @@
+description: basic config with default colors and building representation
+name: default config
+building:
+  padding: 0.2
+  colors:
+    faces: # ordered by importance, descending : in case of conflict, the first color to match will be displayed
+      - name: "!HOTSPOT"
+        color: "#555555"
+      - name: "VP"
+        color: "#FF6F33"
+      - name: "STRATEGY"
+        color: "#17202a" # black
+      - name: "FACTORY"
+        color: "#7d3c98" # purple
+      - name: "INTERFACE"
+        color: "#e67e22" # orange
+      - name: "ABSTRACT"
+        color: "#2c3e50" # dark blue
+      - name: "CLASS"
+        color: "#335DFF"
+      - name: "API"
+      - name: "VARIANT"
+      - name: "TEMPLATE"
+      - name: "DECORATOR"
+      - name: "COMPOSITION_STRATEGY"
+      - name: "METHOD_LEVEL_VP"
+      - name: "DENSE"
+      - name: "PUBLIC"
+      - name: "PRIVATE"
+    edges:
+      - name: "API"
+        color: "#000000"
+district:
+  padding: 0
+  colors:
+    faces:
+      - name: PACKAGE
+        color: "#801A2E"
+      - name: VP
+        color: "#1A8039"
+link:
+  colors:
+    - name: IMPLEMENTS
+      color: "#ef2222"
+    - name: EXTENDS
+      color: "#3f97ff"
+    - name: DUPLICATES
+      color: "#2B914A"
+    - name: USAGE
+      color: "#1A8039"
+  display:
+    air_traffic:
+      - IMPLEMENTS
+      - EXTENDS
+    underground_road:
+      - USAGE
+hierarchy_links:
+  - USAGE
+  - IMPLEMENTS
+  - EXTENDS
+blacklist: []
+api_classes:
+  - org.apache.cxf.endpoint.Endpoint
+variables:
+  width: nbConstructorVariants
+  height: nbMethodVariants
+  intensity: ""
+  fade: ""
+  crack: ""
+orientation: OUT
+default_level: 6
+camera_data:
+  alpha: -3.5622908675068343
+  beta: 0.8928783580675261
+  radius: 100.30321531648963
+  target:
+    x: 46.346370229149755
+    y: -15.975084736266771
+    z: 12.806251768522904
+metrics:
+  nbMethodVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbAttributes:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbConstructorVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+projectId: cxf-cxf-3.2.7

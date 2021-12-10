@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="clip-API">
+      <rect width="64" height="64"/>
+    </clipPath>
+  </defs>
+  <g id="API" clip-path="url(#clip-API)">
+    <g id="Groupe_147" data-name="Groupe 147" transform="translate(-11950 3881)">
+      <g id="Groupe_146" data-name="Groupe 146">
+        <g id="Groupe_120" data-name="Groupe 120">
+          <circle id="Ellipse_6" data-name="Ellipse 6" cx="32" cy="32" r="32" transform="translate(11950 -3881)" fill="#ff6464"/>
+          <text id="API-2" data-name="API" transform="translate(11982 -3838)" fill="#fff" font-size="25" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-20.428" y="0">API</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

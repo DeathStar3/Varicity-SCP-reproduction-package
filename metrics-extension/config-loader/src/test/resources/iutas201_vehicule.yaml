@@ -1,0 +1,17 @@
+iutas201_vehicule: #Project name
+  skipSymfinder: true
+  skipClone: true
+  buildEnv: "maven"
+  buildEnvTag: "3.8-openjdk-8"
+  sonarqubeNeeded: false # for now this means that a varicity-sonarqube instance will be started (if not already started) and a compilation followed by the scan will be done.
+  #This behavior will be changed so that the build can be skipped but the varicity-sonarqube will still be started and the scan performed
+  #can be useful if the user has already done the build
+  outputPath: ""
+  sources:
+    - name: "sonarcloud"
+      enabled: true
+      componentName: "iutas201_vehicule"
+      rootUrl: "https://sonarqube.inria.fr/sonarqube"
+      metrics:
+        - "complexity"
+        - "cognitive_complexity"

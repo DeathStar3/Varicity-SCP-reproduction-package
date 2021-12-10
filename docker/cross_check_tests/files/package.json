@@ -38,8 +38,16 @@
       "yaml-loader": "^0.6.0"
     },
     "dependencies": {
+      "@material/mwc-button": "^0.25.3",
+      "@material/mwc-dialog": "^0.25.3",
+      "@material/mwc-formfield": "^0.25.3",
+      "@material/mwc-radio": "^0.25.3",
+      "@material/mwc-textfield": "^0.25.3",
+      "@types/js-cookie": "^3.0.1",
       "@types/webpack-env": "^1.15.3",
-      "fs": "0.0.1-security"
+      "axios": "^0.24.0",
+      "fs": "0.0.1-security",
+      "js-cookie": "^3.0.1"
     }
   }
   

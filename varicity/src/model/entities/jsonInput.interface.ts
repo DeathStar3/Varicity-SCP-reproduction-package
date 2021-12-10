@@ -1,3 +1,5 @@
+import {MetricObject} from "../entitiesImplems/metricObject.model";
+
 export interface NumerableInterface {
     name: string;
     number: number;
@@ -18,6 +20,8 @@ export interface NodeInterface {
 
     constructorVariants?: number;
     methodVariants?: number;
+
+    additionalMetrics?: MetricObject[];
 
     methodVPs?: number;
 

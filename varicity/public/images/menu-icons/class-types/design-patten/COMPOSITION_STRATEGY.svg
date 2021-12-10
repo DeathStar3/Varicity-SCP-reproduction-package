@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="clip-COMPOSITION_STRATEGY">
+      <rect width="64" height="64"/>
+    </clipPath>
+  </defs>
+  <g id="COMPOSITION_STRATEGY" clip-path="url(#clip-COMPOSITION_STRATEGY)">
+    <g id="Groupe_134" data-name="Groupe 134" transform="translate(-12306 3436)">
+      <circle id="Ellipse_1" data-name="Ellipse 1" cx="32" cy="32" r="32" transform="translate(12306 -3436)" fill="#ae54ce"/>
+      <text id="CS" transform="translate(12338 -3393)" fill="#fff" font-size="25" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-14.807" y="0">CS</tspan></text>
+    </g>
+  </g>
+</svg>

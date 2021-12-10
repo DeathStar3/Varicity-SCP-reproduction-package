@@ -1,77 +1,83 @@
-import { MetricityImplem } from './../../view/metricity/metricityImplem';
-import { ParsingStrategy } from './../parser/strategies/parsing.strategy.interface';
-import { EvostreetImplem } from "../../view/evostreet/evostreetImplem";
-import { ClassesPackagesStrategy } from "../parser/strategies/classes_packages.strategy";
-import { UIController } from "./ui.controller";
-import { EntitiesList } from "../../model/entitiesList";
-import { FilesLoader } from "../parser/filesLoader";
-import { VPVariantsStrategy } from "../parser/strategies/vp_variants.strategy";
+import {CurrentProjectListener} from "../../configsaver/listener/current-project-listener";
+import {EntitiesList} from "../../model/entitiesList";
+import {ProjectService} from "../../services/project.service";
+import {EvostreetImplem} from "../../view/evostreet/evostreetImplem";
+import {ConfigService} from "../../services/config.service";
+import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
+import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
+import {UIController} from "./ui.controller";
+import {MetricController} from "./menu/metric.controller";
+import {MenuController} from "./menu/menu.controller";
+import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
 
 export class ProjectController {
 
     static el: EntitiesList;
     private static previousParser: ParsingStrategy;
-    private static filename: string;
+    private static projectListener: CurrentProjectListener = new CurrentProjectListener();
+    private static nodes: { [key: string]: HTMLOptionElement } = {}; // TODO INTEGRATION: had to replace to Option instead of Div
 
-    static createProjectSelector(keys: string[]) {
+    static createProjectSelector(projectsName: string[]) {
         let parent = document.getElementById("project_selector");
-        parent.innerHTML = "Project selection";
 
-        let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-        inputElement.value = UIController.config.default_level.toString();
+        for (let projectName of projectsName) {
+            let node = document.createElement("option") as HTMLOptionElement;
+            node.value = projectName;
+            node.text = projectName;
 
-        let filterButton = document.getElementById("filter-button") as HTMLButtonElement;
-        filterButton.onclick = () => {
-            ProjectController.reParse();
-        }
-
-        for (let key of keys) {
-            let node = document.createElement("div");
-            node.innerHTML = key;
+            ProjectController.nodes[projectName] = node;
             parent.appendChild(node);
-
-            // projets en vision evostreet
-            node.addEventListener("click", () => {
-                this.previousParser = new VPVariantsStrategy();
-                this.filename = key;
-
-                this.reParse();
-
-                parent.childNodes[0].nodeValue = "Project selection: " + key;
-
-                /* @ts-ignore */
-                for (let child of parent.children) {
-                    child.style.display = "none";
-                }
-            });
-
         }
-        /* @ts-ignore */
-        for (let child of parent.children) {
-            child.style.display = "none";
-        }
-        parent.onclick = (me) => {
-            if (me.target == parent) {
-                /* @ts-ignore */
-                for (let child of parent.children) {
-                    if (child.style.display == "block") child.style.display = "none";
-                    else child.style.display = "block";
-                }
+
+        parent.addEventListener('change', function (event) {
+            const projectName = (event.target as HTMLInputElement).value;
+            if (projectName !== undefined) {
+                ProjectController.loadProject(projectName);
+                parent.childNodes[0].nodeValue = "Project selection: " + projectName;
             }
-        }
+        });
     }
 
-    public static reParse() {
-        if (UIController.scene) UIController.scene.dispose();
+    public static loadProject(projectName: string) {
+
+        document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
+        if (MenuController.selectedTab) {
+            MenuController.changeImage(MenuController.selectedTab);
+            MenuController.selectedTab = undefined;
+        }
+
+        this.previousParser = new VPVariantsStrategy();
+
+        // clear the current view
+        if (UIController.scene) {
+            UIController.scene.dispose();
+        }
         UIController.clearMap();
-        this.el = this.previousParser.parse(FilesLoader.loadDataFile(this.filename), UIController.config, this.filename);
-        let inputElement = document.getElementById("comp-level") as HTMLInputElement;
-        inputElement.min = "1";
-        const maxLvl = this.el.getMaxCompLevel();
-        inputElement.max = maxLvl.toString();
-        if (+inputElement.value > maxLvl)
-            inputElement.value = maxLvl.toString();
-        UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+inputElement.value));
-        UIController.scene.buildScene();
+
+        const run = async () => {
+            document.getElementById("loading-frame").style.display = 'inline-block';
+            await UIController.reloadConfigAndConfigSelector(projectName);
+
+            // TODO find alternative
+            await ProjectService.fetchVisualizationData(projectName).then(async (response) => {
+                const config = await ConfigService.loadDataFile(projectName);
+                this.el = this.previousParser.parse(response.data, config, projectName);
+
+                // set the min & max usage level
+                const maxLvl = this.el.getMaxCompLevel();
+                ApiAndBlacklistController.defineMaxLevelUsage(maxLvl);
+
+                UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(config.default_level));
+                UIController.scene.buildScene(true);
+            })
+
+            this.projectListener.projectChange(projectName);
+        }
+        run().then();
+    }
+
+    public static selectProject(projectName: string) {
+        const node = ProjectController.nodes[projectName];
+        if (node) node.dispatchEvent(new Event("click"));
     }
 }

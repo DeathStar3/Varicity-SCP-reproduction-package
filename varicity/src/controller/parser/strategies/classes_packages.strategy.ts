@@ -1,13 +1,13 @@
-import { Node } from './../symfinder_elements/nodes/node.element';
-import { EntitiesList } from "../../../model/entitiesList";
-import { NodeElement } from "../symfinder_elements/nodes/node.element";
-import { ClassImplem } from "../../../model/entitiesImplems/classImplem.model";
-import { PackageImplem } from "../../../model/entitiesImplems/packageImplem.model";
-import { LinkElement } from "../symfinder_elements/links/link.element";
-import { LinkImplem } from "../../../model/entitiesImplems/linkImplem.model";
-import { JsonInputInterface } from "../../../model/entities/jsonInput.interface";
-import { Config } from "../../../model/entitiesImplems/config.model";
-import { ParsingStrategy } from "./parsing.strategy.interface";
+import {Node, VariabilityMetricsName} from './../symfinder_elements/nodes/node.element';
+import {EntitiesList} from "../../../model/entitiesList";
+import {NodeElement} from "../symfinder_elements/nodes/node.element";
+import {ClassImplem} from "../../../model/entitiesImplems/classImplem.model";
+import {PackageImplem} from "../../../model/entitiesImplems/packageImplem.model";
+import {LinkElement} from "../symfinder_elements/links/link.element";
+import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
+import {JsonInputInterface} from "../../../model/entities/jsonInput.interface";
+import {Config} from "../../../model/entitiesImplems/config.model";
+import {ParsingStrategy} from "./parsing.strategy.interface";
 
 export class ClassesPackagesStrategy implements ParsingStrategy {
     public parse(data: JsonInputInterface, config: Config): EntitiesList {
@@ -16,19 +16,22 @@ export class ClassesPackagesStrategy implements ParsingStrategy {
         const nodesList: NodeElement[] = [];
         data.nodes.forEach(n => {
             let node = new NodeElement(n.name);
-            node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
-            node.nbFunctions = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+
+            node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
+            node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
             const attr = n.attributes;
             let nbAttributes = 0;
             attr.forEach(a => {
                 nbAttributes += a.number;
             })
-            const cVar = (n.constructorVariants === undefined) ? 0 : n.constructorVariants;
-            node.nbAttributes = nbAttributes;
-            node.nbConstructorVariants = cVar;
+
+            node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+            node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
 
             node.types = n.types;
+
+            node.fillMetricsFromNodeInterface(n);
             nodesList.push(node);
         });
 

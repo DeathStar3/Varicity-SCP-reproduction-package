@@ -1,11 +1,11 @@
-import { Config } from './../../../model/entitiesImplems/config.model';
-import { VPVariantsImplem } from './../../../model/entitiesImplems/vpVariantsImplem.model';
-import { Link } from '../../../model/entities/link.interface';
-import { Color3, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
-import { Building3D } from '../../common/3Delements/building3D';
-import { Road3D } from './road3D';
-import { EntitiesList } from '../../../model/entitiesList';
-import { Link3DFactory } from '../../common/3Dfactory/link3D.factory';
+import {Config} from '../../../model/entitiesImplems/config.model';
+import {VPVariantsImplem} from '../../../model/entitiesImplems/vpVariantsImplem.model';
+import {Link} from '../../../model/entities/link.interface';
+import {Color3, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3} from '@babylonjs/core';
+import {Building3D} from '../../common/3Delements/building3D';
+import {Road3D} from './road3D';
+import {EntitiesList} from '../../../model/entitiesList';
+import {Link3DFactory} from '../../common/3Dfactory/link3D.factory';
 
 export class City3D {
 
@@ -85,7 +85,7 @@ export class City3D {
     }
 
     getSize(): number {
-        return Math.max(this.road.getSideWidth(true)*2, this.road.getSideWidth(false)*2, this.road.getLength());
+        return Math.max(this.road.getSideWidth(true) * 2, this.road.getSideWidth(false) * 2, this.road.getLength());
     }
 
     place() {
@@ -101,8 +101,10 @@ export class City3D {
         mat.diffuseColor = Color3.FromHexString("#222222");
         mat.emissiveColor = Color3.FromHexString("#222222");
         mat.specularColor = Color3.FromHexString("#000000");
-        mat.alpha = 0.3;
+
+        // Increase to see the floor under the City
+        mat.alpha = 0;
+
         this.floor.material = mat;
     }
-
 }

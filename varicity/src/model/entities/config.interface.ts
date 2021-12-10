@@ -1,5 +1,5 @@
-import { Building3D } from '../../view/common/3Delements/building3D';
-import { Orientation } from "../entitiesImplems/orientation.enum";
+import {Building3D} from '../../view/common/3Delements/building3D';
+import {Orientation} from "../entitiesImplems/orientation.enum";
 
 export interface Color {
     name: string;
@@ -8,9 +8,9 @@ export interface Color {
 
 export interface ConfigColor {
     // colors: {
-        edges: Color[], // HEX color string
-        faces: Color[],
-        outlines: Color[]
+    edges: Color[], // HEX color string
+    faces: Color[],
+    outlines: Color[]
     // }
 }
 
@@ -27,6 +27,8 @@ export interface ConfigClones {
 }
 
 export interface ConfigInterface {
+    id?: string; //for persistence
+    projectId?: string; //for persistence
     building: D3Config;
     // building: ConfigColor;
     district: D3Config;
@@ -46,7 +48,7 @@ export interface ConfigInterface {
     hierarchy_links: string[];
 
     blacklist: string[]; //all classes that must not appear
-    api_classes: Map<string, string[]>;
+    api_classes: string[];
 
     clones: ConfigClones;
 
@@ -61,3 +63,4 @@ export interface ConfigInterface {
 
     default_level: number;
 }
+

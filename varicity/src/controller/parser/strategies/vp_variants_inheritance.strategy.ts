@@ -1,5 +1,5 @@
 import {EntitiesList} from "../../../model/entitiesList";
-import {NodeElement} from "../symfinder_elements/nodes/node.element";
+import {NodeElement, VariabilityMetricsName} from "../symfinder_elements/nodes/node.element";
 import {ClassImplem} from "../../../model/entitiesImplems/classImplem.model";
 import {LinkElement} from "../symfinder_elements/links/link.element";
 import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
@@ -10,32 +10,35 @@ import {Config} from "../../../model/entitiesImplems/config.model";
 
 // DEPRECATED
 export class VPVariantsInheritanceStrategy implements ParsingStrategy {
-    public parse(data: JsonInputInterface, config: Config, project: string) : EntitiesList {
+    public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
         // console.log('Analyzing with VP and variants strategy: ', data);
 
         let nodesList: NodeElement[] = [];
         const apiList: NodeElement[] = [];
         data.nodes.forEach(n => {
             let node = new NodeElement(n.name);
-            node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+
+            node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
             const attr = n.attributes;
             let nbAttributes = 0;
             attr.forEach(a => {
                 nbAttributes += a.number;
             })
-            const cVar = (n.constructorVariants === undefined) ? 0 : n.constructorVariants;
-            node.nbAttributes = nbAttributes;
-            node.nbConstructorVariants = cVar;
+
+            node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+            node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
 
             node.types = Object.assign([], n.types);
-            if (config.api_classes[project] !== undefined) {
-                if (config.api_classes[project].includes(node.name)) {
+            if (config.api_classes !== undefined) {
+                if (config.api_classes.includes(node.name)) {
                     console.log("API class: " + n.name);
                     node.types.push("API");
                     apiList.push(node);
                 }
             }
+
+            node.fillMetricsFromNodeInterface(n);
             nodesList.push(node);
         });
 
@@ -44,7 +47,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         const compositionLinks = data.alllinks.map(l => new LinkElement(l.source, l.target, l.type));
 
         nodesList.forEach(n => {
-            n.nbVariants = this.getLinkedNodesFromSource(n, nodesList, linkElements).length;
+            n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
         });
 
         this.buildComposition(data.alllinks, nodesList, apiList, 0);
@@ -56,25 +59,28 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         let result = new EntitiesList();
         result.district = d;
 
-        if (config.api_classes[project] !== undefined){
+        if (config.api_classes !== undefined) {
             data.allnodes.filter(
-                nod => config.api_classes[project].includes(nod.name)
+                nod => config.api_classes.includes(nod.name)
                     && !nodesList.map(no => no.name).includes(nod.name)
             ).forEach(n => {
                 let node = new NodeElement(n.name);
-                node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+                node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
                 const attr = n.attributes;
                 let nbAttributes = 0;
                 attr.forEach(a => {
                     nbAttributes += a.number;
                 })
-                const cVar = (n.constructorVariants === undefined) ? 0 : n.constructorVariants;
-                node.nbAttributes = nbAttributes;
-                node.nbConstructorVariants = cVar;
+
+                node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+                node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
 
                 node.types = n.types;
                 node.types.push("API");
+
+                node.fillMetricsFromNodeInterface(n);
+
                 let c = new ClassImplem(
                     node,
                     node.compositionLevel
@@ -86,7 +92,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         compositionLinks.forEach(le => {
             const source = result.getBuildingFromName(le.source);
             const target = result.getBuildingFromName(le.target);
-            if (source !== undefined && target !== undefined){
+            if (source !== undefined && target !== undefined) {
                 result.links.push(new LinkImplem(source, target, le.type));
             }
         });
@@ -99,8 +105,8 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         return result;
     }
 
-    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number) : void {
-        const newSrcNodes : NodeElement[] = [];
+    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number): void {
+        const newSrcNodes: NodeElement[] = [];
         const nodeNames = srcNodes.map(sn => sn.name);
         nodes.forEach(n => {
             if (nodeNames.includes(n.name)) {
@@ -127,24 +133,24 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
             }
         });
         if (newSrcNodes.length > 0) {
-            this.buildComposition(alllinks, nodes, newSrcNodes, level+1);
+            this.buildComposition(alllinks, nodes, newSrcNodes, level + 1);
         }
     }
 
-    private buildDistricts(nodes: NodeElement[], links: LinkElement[]) : VPVariantsImplem {
-        const trace : VPVariantsImplem[] = [];
-        const roots : VPVariantsImplem[] = [];
+    private buildDistricts(nodes: NodeElement[], links: LinkElement[]): VPVariantsImplem {
+        const trace: VPVariantsImplem[] = [];
+        const roots: VPVariantsImplem[] = [];
         nodes.forEach(n => {
             this.buildDistrict(n, trace, nodes, links, roots);
         });
-        const res : VPVariantsImplem = new VPVariantsImplem();
+        const res: VPVariantsImplem = new VPVariantsImplem();
         roots.forEach(r => {
             res.addDistrict(r);
         })
         return res;
     }
 
-    private buildDistrict(nodeElement: NodeElement, trace: VPVariantsImplem[], nodes: NodeElement[], links: LinkElement[], roots: VPVariantsImplem[]) : VPVariantsImplem {
+    private buildDistrict(nodeElement: NodeElement, trace: VPVariantsImplem[], nodes: NodeElement[], links: LinkElement[], roots: VPVariantsImplem[]): VPVariantsImplem {
         if (nodeElement.types.includes("VP")) { // if n is a vp
             if (!nodeElement.analyzed) { // if n has not been analyzed yet
                 // create a new district with n
@@ -209,7 +215,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
     //     }
     // }
 
-    private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]) : NodeElement[]{
+    private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
 
@@ -222,7 +228,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         return res;
     }
 
-    private getLinkedNodesToTarget(n: NodeElement, nodes: NodeElement[], links: LinkElement[]) : NodeElement[]{
+    private getLinkedNodesToTarget(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
 
@@ -235,7 +241,7 @@ export class VPVariantsInheritanceStrategy implements ParsingStrategy {
         return res;
     }
 
-    private findNodeByName(name: string, nodes: NodeElement[]) : NodeElement {
+    private findNodeByName(name: string, nodes: NodeElement[]): NodeElement {
         for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].name === name) {
                 return nodes[i];

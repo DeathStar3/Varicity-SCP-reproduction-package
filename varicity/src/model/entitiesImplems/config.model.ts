@@ -1,5 +1,6 @@
-import { Color, ConfigClones, ConfigColor, ConfigInterface, D3Config } from "../entities/config.interface";
-import { Orientation } from "./orientation.enum";
+import {Color, ConfigClones, ConfigColor, ConfigInterface, D3Config} from "../entities/config.interface";
+import {Orientation} from "./orientation.enum";
+import {Vector3} from "@babylonjs/core";
 
 export enum CriticalLevel {
     LOW_IMPACT = 0,
@@ -7,7 +8,24 @@ export enum CriticalLevel {
     REPARSE_DATA = 2
 }
 
+export class MetricSpec {
+    min: number;
+    max: number;
+    higherIsBetter: boolean;
+
+    constructor() {
+        this.min = 0
+        this.max = 100
+        this.higherIsBetter = false;
+    }
+}
+
 export class Config implements ConfigInterface {
+
+    id?: string; //for persistence
+    projectId?: string; //for persistence
+    name?: string;
+    description: string;
     building: D3Config;
     // building: ConfigColor;
     // district: ConfigColor;
@@ -26,16 +44,25 @@ export class Config implements ConfigInterface {
     blacklist: string[];
     clones: ConfigClones;
     force_color: string; // HEX color string
-    api_classes: Map<string, string[]>;
+    api_classes: string[];
     variables: {
         width: string;
         height: string;
+        intensity: string;
+        fade: string;
+        crack: string;
     };
+
+    camera_data: CameraData;
+
     parsing_mode: string;
     orientation: Orientation;
     default_level: number;
 
-    constructor() { }
+    metrics: Map<string, MetricSpec>;
+
+    constructor() {
+    }
 
     public static instanceOfColor(object: any): object is Color {
         return object &&
@@ -77,6 +104,28 @@ export class Config implements ConfigInterface {
                 return CriticalLevel.RERENDER_SCENE;
             }
         }
+        if (fields.includes("metrics")) {
+            console.log(fields);
+            console.log(value);
+            if (Array.isArray(value)) {
+                if (fields[2] === "higherIsBetter") {
+                    config.metrics.get(fields[1])[fields[2]] = (value[1].toLowerCase() === 'true');
+                } else {
+                    config.metrics.get(fields[1])[fields[2]] = +value[1];
+                }
+                return CriticalLevel.RERENDER_SCENE;
+            }
+        }
+        if (fields.includes("camera_data")) {
+            if (Array.isArray(value)) {
+                if (fields.length == 2) {
+                    config[fields[0]][fields[1]] = +value[1];
+                } else {
+                    config[fields[0]][fields[1]][fields[2]] = +value[1];
+                }
+                return CriticalLevel.RERENDER_SCENE;
+            }
+        }
         for (let key of fields) {
             cur = cur[key]; // we go deeper
         }
@@ -90,16 +139,78 @@ export class Config implements ConfigInterface {
                     let index = cur.findIndex(v => v == value[0])
                     if (value[1] == "") { // prev value was defined, current wasn't, therefore we delete entry
                         cur.splice(index, 1);
-                    }
-                    else { // prev and current are defined, therefore we change value
+                    } else { // prev and current are defined, therefore we change value
                         cur[index] = value[1];
                     }
                 } else { // doesn't exist, so we push the new value
                     cur.push(value[1]);
                 }
-                if(fields.includes("api_classes") || fields.includes("hierarchy_links")) return CriticalLevel.REPARSE_DATA;
+                if (fields.includes("api_classes") || fields.includes("hierarchy_links")) return CriticalLevel.REPARSE_DATA;
             }
             return CriticalLevel.RERENDER_SCENE;
         }
+        if (fields.includes("description")) {
+            if (Array.isArray(value)) {
+                config.description = value[1];
+                return CriticalLevel.LOW_IMPACT;
+            }
+        }
+        return CriticalLevel.RERENDER_SCENE;
     }
+}
+
+// TODO move to new file
+export class CameraData {
+    alpha: number;
+    beta: number;
+    radius: number;
+    target: Vector3_Local;
+
+    constructor(alpha: number, beta: number, radius: number, position: Vector3_Local) {
+        this.alpha = alpha;
+        this.beta = beta;
+        this.radius = radius;
+        this.target = position;
+    }
+
+}
+
+export class Vector3_Local {
+    x: number;
+    y: number;
+    z: number;
+
+    constructor(x?: number, y?: number, z?: number) {
+        this.x = x || 0;
+        this.y = y || 0;
+        this.z = z || 0;
+    }
+
+    public static toVector3(v: Vector3_Local): Vector3 {
+        return new Vector3(v.x, v.y, v.z);
+    }
+
+    public static fromVector3(v: Vector3): Vector3_Local {
+        return new Vector3_Local(v.x, v.y, v.z);
+    }
+}
+
+export class ConfigName {
+    name: string;
+    filename: string;
+
+    constructor(name: string, filename: string) {
+        this.name = name;
+        this.filename = filename;
+    }
+}
+
+export class SaveResponseConfig {
+    config: Config;
+    filename: string;
+}
+
+export enum BackgroundColor {
+    LIGHT="LIGHT",
+    DARK="DARK",
 }

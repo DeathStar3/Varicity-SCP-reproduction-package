@@ -27,3 +27,14 @@ hs_err_pid*
 target
 /resources
 /generated_visualizations
+testadd
+.classpath
+.factorypath
+.project
+.settings/
+*.vscode
+/data
+*node_modules*
+dockervolume
+varicity-backend/dockervolume
+private-tools

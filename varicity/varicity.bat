@@ -19,8 +19,6 @@ rem Copyright 2018-2021 Johann Mortara <johann.mortara@univ-cotedazur.fr>
 rem Copyright 2018-2021 Xhevahire Tërnava <t.xheva@gmail.com>
 rem Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 
-SET TAG=vissoft2021
+SET TAG=local
 
-docker-compose -f varicity.yaml up
-docker-compose -f varicity.yaml down
-
+docker run --rm -p 8080:80 deathstar3/varicity:${TAG}

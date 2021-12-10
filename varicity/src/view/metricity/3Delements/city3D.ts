@@ -1,11 +1,11 @@
-import { Link3DFactory } from './../../common/3Dfactory/link3D.factory';
-import { Config } from './../../../model/entitiesImplems/config.model';
-import { Link } from '../../../model/entities/link.interface';
-import { Scene } from '@babylonjs/core';
-import { Element3D } from '../../common/3Dinterfaces/element3D.interface';
-import { Building3D } from '../../common/3Delements/building3D';
-import { District3D } from './district3D';
-import { EntitiesList } from '../../../model/entitiesList';
+import {Link3DFactory} from './../../common/3Dfactory/link3D.factory';
+import {Config} from './../../../model/entitiesImplems/config.model';
+import {Link} from '../../../model/entities/link.interface';
+import {Scene} from '@babylonjs/core';
+import {Element3D} from '../../common/3Dinterfaces/element3D.interface';
+import {Building3D} from '../../common/3Delements/building3D';
+import {District3D} from './district3D';
+import {EntitiesList} from '../../../model/entitiesList';
 
 export class City3D {
 

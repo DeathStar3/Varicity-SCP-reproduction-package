@@ -1,0 +1,121 @@
+description: basic config with default colors and building representation
+name: default config
+building:
+  padding: 0.2
+  colors:
+    faces: # ordered by importance, descending : in case of conflict, the first color to match will be displayed
+      - name: "!HOTSPOT"
+        color: "#555555"
+      - name: "VP"
+        color: "#FF6F33"
+      - name: "STRATEGY"
+        color: "#17202a" # black
+      - name: "FACTORY"
+        color: "#7d3c98" # purple
+      - name: "INTERFACE"
+        color: "#e67e22" # orange
+      - name: "ABSTRACT"
+        color: "#2c3e50" # dark blue
+      - name: "CLASS"
+        color: "#335DFF"
+      - name: "API"
+      - name: "VARIANT"
+      - name: "TEMPLATE"
+      - name: "DECORATOR"
+      - name: "COMPOSITION_STRATEGY"
+      - name: "METHOD_LEVEL_VP"
+      - name: "DENSE"
+      - name: "PUBLIC"
+      - name: "PRIVATE"
+    edges:
+      - name: "API"
+        color: "#000000"
+district:
+  padding: 0
+  colors:
+    faces:
+      - name: PACKAGE
+        color: "#801A2E"
+      - name: VP
+        color: "#1A8039"
+link:
+  colors:
+    - name: IMPLEMENTS
+      color: "#ef2222"
+    - name: EXTENDS
+      color: "#3f97ff"
+    - name: DUPLICATES
+      color: "#2B914A"
+    - name: USAGE
+      color: "#1A8039"
+  display:
+    air_traffic:
+      - IMPLEMENTS
+      - EXTENDS
+    underground_road:
+      - USAGE
+hierarchy_links:
+  - USAGE
+  - IMPLEMENTS
+  - EXTENDS
+blacklist:
+  - org.jfree.chart.util.PublicCloneable
+  - org.jfree.chart.event
+  - org.jfree.data.general
+api_classes:
+  - org.jfree.chart.JFreeChart
+  - org.jfree.chart.plot.Plot
+variables:
+  width: nbConstructorVariants
+  height: nbMethodVariants
+  intensity: ""
+  fade: ""
+  crack: ""
+orientation: OUT
+default_level: 4
+camera_data:
+  alpha: 2.330259248666026
+  beta: 1.0519142108927133
+  radius: 33.7402750744389
+  target:
+    x: 13.6295212946051
+    y: 7.440399882565056
+    z: 13.05737020700024
+metrics:
+  complexity:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  cognitive_complexity:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  duplicated_lines:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  duplicated_lines_density:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  coverage:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbMethodVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbAttributes:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbConstructorVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+projectId: jfreechart-v1.5.0

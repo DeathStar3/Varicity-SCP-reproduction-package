@@ -1,5 +1,5 @@
 import {EntitiesList} from "../../../model/entitiesList";
-import {NodeElement} from "../symfinder_elements/nodes/node.element";
+import {NodeElement, VariabilityMetricsName} from "../symfinder_elements/nodes/node.element";
 import {ClassImplem} from "../../../model/entitiesImplems/classImplem.model";
 import {LinkElement} from "../symfinder_elements/links/link.element";
 import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
@@ -8,35 +8,55 @@ import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInp
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
+import {SearchbarController} from "../../ui/searchbar.controller";
 
 export class VPVariantsStrategy implements ParsingStrategy {
-    public parse(data: JsonInputInterface, config: Config, project: string) : EntitiesList {
-        // console.log('Analyzing with VP and variants strategy: ', data);
+
+    public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
+        console.log('Analyzing with VP and variants strategy: ', data);
+        console.log('Config used: ', config);
 
         let nodesList: NodeElement[] = [];
         const apiList: NodeElement[] = [];
+
+        let datalist = document.createElement("datalist"); //Data list used for Blacklist and API entry points
+        datalist.id = "datalist-classes"
+
+        document.getElementById("main").appendChild(datalist)
+
+        SearchbarController.emptyClassList()
+
         data.nodes.forEach(n => {
+
+            SearchbarController.addEntryToClassList(n.name)
+
             let node = new NodeElement(n.name);
-            node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+
+            node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
+            // TODO check if nbFunctions is missing or not
+            //node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
             const attr = n.attributes;
             let nbAttributes = 0;
             attr.forEach(a => {
                 nbAttributes += a.number;
             })
-            const cVar = (n.constructorVariants === undefined) ? 0 : n.constructorVariants;
-            node.nbAttributes = nbAttributes;
-            node.nbConstructorVariants = cVar;
+
+            node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+            node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
 
             node.types = Object.assign([], n.types);
 
-            if (config.api_classes[project] !== undefined) {
-                if (config.api_classes[project].includes(node.name)) {
+            if (config.api_classes !== undefined) {
+                if (config.api_classes.includes(node.name)) {
                     console.log("API class: " + n.name);
                     node.types.push("API");
                     apiList.push(node);
                 }
             }
+
+            node.fillMetricsFromNodeInterface(n);
+
             nodesList.push(node);
         });
 
@@ -45,7 +65,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         const hierarchyLinks = allLinks.filter(l => config.hierarchy_links.includes(l.type));
 
         nodesList.forEach(n => {
-            n.nbVariants = this.getLinkedNodesFromSource(n, nodesList, linkElements).length;
+            n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
         });
 
         this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation);
@@ -57,25 +77,29 @@ export class VPVariantsStrategy implements ParsingStrategy {
         let result = new EntitiesList();
         result.district = d;
 
-        if (config.api_classes[project] !== undefined){
+        if (config.api_classes !== undefined) {
             data.allnodes.filter(
-                nod => config.api_classes[project].includes(nod.name)
+                nod => config.api_classes.includes(nod.name)
                     && !nodesList.map(no => no.name).includes(nod.name)
             ).forEach(n => {
                 let node = new NodeElement(n.name);
-                node.nbMethodVariants = (n.methodVariants === undefined) ? 0 : n.methodVariants;
+
+                node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
                 const attr = n.attributes;
                 let nbAttributes = 0;
                 attr.forEach(a => {
                     nbAttributes += a.number;
                 })
-                const cVar = (n.constructorVariants === undefined) ? 0 : n.constructorVariants;
-                node.nbAttributes = nbAttributes;
-                node.nbConstructorVariants = cVar;
+
+                node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+                node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
 
                 node.types = n.types;
                 node.types.push("API");
+
+                node.fillMetricsFromNodeInterface(n);
+
                 let c = new ClassImplem(
                     node,
                     node.compositionLevel
@@ -88,7 +112,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         allLinks.forEach(le => {
             const source = result.getBuildingFromName(le.source);
             const target = result.getBuildingFromName(le.target);
-            if (source !== undefined && target !== undefined){
+            if (source !== undefined && target !== undefined) {
                 result.links.push(new LinkImplem(source, target, le.type));
             }
         });
@@ -101,8 +125,8 @@ export class VPVariantsStrategy implements ParsingStrategy {
         return result;
     }
 
-    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number, orientation: Orientation) : void {
-        const newSrcNodes : NodeElement[] = [];
+    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number, orientation: Orientation): void {
+        const newSrcNodes: NodeElement[] = [];
         const nodeNames = srcNodes.map(sn => sn.name);
         nodes.forEach(n => {
             if (nodeNames.includes(n.name)) {
@@ -129,11 +153,11 @@ export class VPVariantsStrategy implements ParsingStrategy {
             }
         });
         if (newSrcNodes.length > 0) {
-            this.buildComposition(alllinks, nodes, newSrcNodes, level+1, orientation);
+            this.buildComposition(alllinks, nodes, newSrcNodes, level + 1, orientation);
         }
     }
 
-    private buildDistricts(nodes: NodeElement[], links: LinkElement[], orientation: Orientation) : VPVariantsImplem {
+    private buildDistricts(nodes: NodeElement[], links: LinkElement[], orientation: Orientation): VPVariantsImplem {
         const roots = nodes.filter(n => n.compositionLevel === 0);
         const rootElems = roots.map(r => {
             return this.buildDistrict(r, nodes, links, 0, orientation);
@@ -149,10 +173,10 @@ export class VPVariantsStrategy implements ParsingStrategy {
         return res;
     }
 
-    private buildDistrict(nodeElement: NodeElement, nodes: NodeElement[], links: LinkElement[], level: number, orientation: Orientation) : VPVariantsImplem | ClassImplem {
+    private buildDistrict(nodeElement: NodeElement, nodes: NodeElement[], links: LinkElement[], level: number, orientation: Orientation): VPVariantsImplem | ClassImplem {
         const outLinks = this.getLinkedNodesFromSource(nodeElement, nodes, links); // OUT
         const inLinks = this.getLinkedNodesToTarget(nodeElement, nodes, links); // IN
-        const linked : NodeElement[] = [];
+        const linked: NodeElement[] = [];
         if (orientation === Orientation.OUT || orientation === Orientation.IN_OUT) {
             linked.push(...outLinks);
         }
@@ -160,14 +184,14 @@ export class VPVariantsStrategy implements ParsingStrategy {
             linked.push(...inLinks);
         }
 
-        const children = linked.filter(ln => ln.compositionLevel === level+1);
+        const children = linked.filter(ln => ln.compositionLevel === level + 1);
         if (children.length > 0) {
             let result = new VPVariantsImplem(new ClassImplem(
                 nodeElement,
                 nodeElement.compositionLevel
             ));
             children.forEach(c => {
-                const r = this.buildDistrict(c, nodes, links, level+1, orientation);
+                const r = this.buildDistrict(c, nodes, links, level + 1, orientation);
                 if (r instanceof VPVariantsImplem) {
                     result.districts.push(r);
                 } else {
@@ -198,7 +222,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
     //     }
     // }
 
-    private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]) : NodeElement[]{
+    private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
 
@@ -213,7 +237,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         return res;
     }
 
-    private getLinkedNodesToTarget(n: NodeElement, nodes: NodeElement[], links: LinkElement[]) : NodeElement[]{
+    private getLinkedNodesToTarget(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
 
@@ -228,7 +252,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         return res;
     }
 
-    private findNodeByName(name: string, nodes: NodeElement[]) : NodeElement {
+    private findNodeByName(name: string, nodes: NodeElement[]): NodeElement {
         for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].name === name) {
                 return nodes[i];

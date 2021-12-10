@@ -1,9 +1,8 @@
-import { Config } from './../../../model/entitiesImplems/config.model';
-import { ActionManager, Color3, Color4, ExecuteCodeAction, MeshBuilder, StandardMaterial, Vector3 } from '@babylonjs/core';
-import { Element3D } from '../../common/3Dinterfaces/element3D.interface';
-import { Building3D } from '../../common/3Delements/building3D';
-import { Scene } from '@babylonjs/core';
-import { VPVariantsImplem } from "../../../model/entitiesImplems/vpVariantsImplem.model";
+import {Config} from './../../../model/entitiesImplems/config.model';
+import {ActionManager, Color3, ExecuteCodeAction, MeshBuilder, Scene, StandardMaterial, Vector3} from '@babylonjs/core';
+import {Element3D} from '../../common/3Dinterfaces/element3D.interface';
+import {Building3D} from '../../common/3Delements/building3D';
+import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.model";
 
 export class Road3D extends Element3D {
     padding: number = 0;
@@ -88,9 +87,9 @@ export class Road3D extends Element3D {
     }
 
     /**
-     * 
+     *
      * @param right right side = true, left side = false
-     * 
+     *
      * @returns the width of the side
      */
     getSideWidth(right: boolean): number {
@@ -176,7 +175,7 @@ export class Road3D extends Element3D {
                             config.clones.map.get(b.name).clones.push(this.vp);
                         } else {
                             let d3 = new Building3D(this.scene, b, 0, config);
-                            config.clones.map.set(b.name, { original: d3, clones: [] });
+                            config.clones.map.set(b.name, {original: d3, clones: []});
                             d3.build();
                             buildings3D.push(d3);
                         }
@@ -198,7 +197,7 @@ export class Road3D extends Element3D {
                             config.clones.map.get(v.vp.name).clones.push(this.vp);
                         } else {
                             let d3 = new Road3D(this.scene, v, config);
-                            config.clones.map.set(v.vp.name, { original: d3.vp, clones: [] });
+                            config.clones.map.set(v.vp.name, {original: d3.vp, clones: []});
                             d3.build(config);
                             roads3D.push(d3);
                         }
@@ -248,14 +247,16 @@ export class Road3D extends Element3D {
                 /* horizontal case: */ (e.getSideWidth(true) + offsetVR) * orientationX +
                 /* vertical case:   */ (e.getVpWidth() / 2 - e.vp.padding / 2 + this.roadWidth / 2) * orientationZ;
             let vZ =
-                /* horizontal case: */ - (e.getVpWidth() / 2 - e.vp.padding / 2 + this.roadWidth / 2) * orientationX +
+                /* horizontal case: */ -(e.getVpWidth() / 2 - e.vp.padding / 2 + this.roadWidth / 2) * orientationX +
                 /* vertical case:   */ (e.getSideWidth(true) + offsetVR) * orientationZ;
             e.place(vX + x, vZ + z, orientationZ, -orientationX);
             offsetVR += e.getWidth();
         });
 
-        let offsetL = Math.max(offsetVL, offsetVR);;
-        let offsetR = Math.max(offsetVL, offsetVR);;
+        let offsetL = Math.max(offsetVL, offsetVR);
+        ;
+        let offsetR = Math.max(offsetVL, offsetVR);
+        ;
 
         this.leftVariants.forEach(e => {
             let vX =
@@ -273,7 +274,7 @@ export class Road3D extends Element3D {
                 /* horizontal case: */ ((e.getWidth() / 2) + offsetR) * orientationX -
                 /* vertical case:   */ (e.getWidth() / 2 - e.padding / 2 + this.roadWidth / 2) * -orientationZ;
             let vZ =
-                /* horizontal case: */ - (e.getWidth() / 2 - e.padding / 2 + this.roadWidth / 2) * orientationX +
+                /* horizontal case: */ -(e.getWidth() / 2 - e.padding / 2 + this.roadWidth / 2) * orientationX +
                 /* vertical case:   */ ((e.getWidth()) / 2 + offsetR) * orientationZ
             e.place(vX + x, vZ + z);
             offsetR += e.getWidth();
