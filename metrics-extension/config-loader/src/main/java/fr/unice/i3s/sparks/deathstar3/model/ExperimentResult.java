@@ -1,24 +1,28 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.result.SymfinderResult;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ExperimentResult {
-    private final String projectName;
-    private final SymfinderResult symfinderResult;
-    private final Map<String, List<Node>> externalMetric;
+    private String projectName;
+    private SymfinderResult symfinderResult;
+    private Map<String, List<Node>> externalMetric;
 
-    public ExperimentResult(String projectName, SymfinderResult symfinderResult,
-                            Map<String, List<Node>> externalMetric) {
-        this.projectName = projectName;
-        this.symfinderResult = symfinderResult;
-        this.externalMetric = externalMetric;
-    }
 
     public String projectName() {
         return projectName;
@@ -46,14 +50,4 @@ public final class ExperimentResult {
     public int hashCode() {
         return Objects.hash(projectName, symfinderResult, externalMetric);
     }
-
-    @Override
-    public String toString() {
-        return "ExperimentResult[" +
-                "projectName=" + projectName + ", " +
-                "symfinderResult=" + symfinderResult + ", " +
-                "externalMetric=" + externalMetric + ']';
-    }
-
-
 }

@@ -1,19 +1,24 @@
 package fr.unice.i3s.sparks.deathstar3.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Objects;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class SonarQubeToken {
-    private final String login;
-    private final String name;
-    private final String token;
-    private final String createdAt;
-
-    public SonarQubeToken(String login, String name, String token, String createdAt) {
-        this.login = login;
-        this.name = name;
-        this.token = token;
-        this.createdAt = createdAt;
-    }
+    private String login;
+    private String name;
+    private String token;
+    private String createdAt;
 
     public String login() {
         return login;
@@ -46,14 +51,4 @@ public final class SonarQubeToken {
     public int hashCode() {
         return Objects.hash(login, name, token, createdAt);
     }
-
-    @Override
-    public String toString() {
-        return "SonarQubeToken[" +
-                "login=" + login + ", " +
-                "name=" + name + ", " +
-                "token=" + token + ", " +
-                "createdAt=" + createdAt + ']';
-    }
-
 }

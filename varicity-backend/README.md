@@ -1,7 +1,8 @@
 # VariCity-backend
 
-The Varicity-Backend is a REST stores and pre-parse the results extracted by Symfinder. It also stores the Visualization Configurations.
+The Varicity-Backend is a REST service that stores and pre-parse the results extracted by Symfinder. It also stores the Visualization Configurations.
 
+Here is a list of the available routes.
 <p align="center">
   <img src="images/rest-routes.png" alt="Available REST routes" />
 </p>
@@ -12,10 +13,11 @@ To use Varicity-backend just run `build-docker-image.(sh|bat)` depending on your
 
 
 ### Develop and modify VariCity-backend
-[!Requirements]
-If you want to develop the backend, you will need the following
-- Node 16
-- NPM 7.10
+
+>If you want to develop the backend, you will need the following
+>- Node 16
+>- NPM 7.10
+
 
 __Installation__
 

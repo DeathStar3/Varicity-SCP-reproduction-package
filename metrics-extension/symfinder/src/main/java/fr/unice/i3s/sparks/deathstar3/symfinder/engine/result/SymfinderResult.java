@@ -1,15 +1,23 @@
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.result;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class SymfinderResult {
-    private final String vpJsonGraph;
-    private final String statisticJson;
-
-    public SymfinderResult(String vpJsonGraph, String statisticJson) {
-        this.vpJsonGraph = vpJsonGraph;
-        this.statisticJson = statisticJson;
-    }
+    private String vpJsonGraph;
+    private String statisticJson;
 
     public String vpJsonGraph() {
         return vpJsonGraph;
@@ -32,13 +40,4 @@ public final class SymfinderResult {
     public int hashCode() {
         return Objects.hash(vpJsonGraph, statisticJson);
     }
-
-    @Override
-    public String toString() {
-        return "SymfinderResult[" +
-                "vpJsonGraph=" + vpJsonGraph + ", " +
-                "statisticJson=" + statisticJson + ']';
-    }
-
-
 }
