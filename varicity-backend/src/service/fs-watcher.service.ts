@@ -81,7 +81,7 @@ export class FsWatcherService {
    * Index a config file
    */
   public indexConfigFile(configFilePath: string) {
-    console.log('IndexConfigFile ', configFilePath);
+    configFilePath = configFilePath.replace(/\\/g, '/');
 
     if (!this.varicityConfigService.checkIfConfigIsIndexed(configFilePath)) {
       //we read the file to get the human readable name of the config but it is ok because we only do it once at startup

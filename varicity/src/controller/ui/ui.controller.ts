@@ -11,6 +11,7 @@ import {SaveController} from "./save.controller";
 import {ProjectService} from "../../services/project.service";
 import {MenuController} from "./menu/menu.controller";
 import {ProjectConfigMenuController} from "./menu/project-config-menu.controller";
+import {SettingsController} from "./menu/settings.controller";
 
 export class UIController {
 
@@ -25,6 +26,10 @@ export class UIController {
 
     public static initSearchbar(): void {
         SearchbarController.initMap();
+    }
+
+    public static setBackgroundColorSameAsCanvas(): void {
+        SettingsController.setBackgroundColorSameAsCanvas();
     }
 
     public static addEntry(k: string, v: Building3D): void {

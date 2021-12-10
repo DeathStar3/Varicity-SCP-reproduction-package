@@ -87,8 +87,10 @@ export class SettingsController implements SubMenuInterface {
         console.log(backgroundColor)
         if(backgroundColor === BackgroundColor.LIGHT){
             UIController.scene.scene.clearColor = Color4.FromColor3(Color3.FromHexString(SettingsController.LIGHT_COLOR), 1);
+            document.getElementsByTagName("body")[0].style.backgroundColor = SettingsController.LIGHT_COLOR;
         }else{
             UIController.scene.scene.clearColor = Color4.FromColor3(Color3.FromHexString(SettingsController.DARK_COLOR), 1);
+            document.getElementsByTagName("body")[0].style.backgroundColor = SettingsController.DARK_COLOR;
         }
     }
 
@@ -98,5 +100,15 @@ export class SettingsController implements SubMenuInterface {
 
     private static getBackgroundColorCookie() {
         return Cookies.get(SettingsController.BACKGROUND_COLOR_COOKIE_NAME);
+    }
+
+    public static setBackgroundColorSameAsCanvas(){
+        const isBackgroundLight = SettingsController.getBackgroundColorCookie() == BackgroundColor.LIGHT;
+
+        if(isBackgroundLight){
+            document.getElementsByTagName("body")[0].style.backgroundColor = SettingsController.LIGHT_COLOR;
+        }else{
+            document.getElementsByTagName("body")[0].style.backgroundColor = SettingsController.DARK_COLOR;
+        }
     }
 }

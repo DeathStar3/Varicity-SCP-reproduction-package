@@ -112,9 +112,12 @@ export class VaricityConfigService {
     if (!fs.existsSync(parentDir)) {
       fs.mkdirSync(parentDir, { recursive: true });
     }
-    fs.writeFileSync(path.join(parentDir, filename + '.yaml'), doc.toString());
+    let filePath = path.join(parentDir, filename + '.yaml')
+    fs.writeFileSync(filePath, doc.toString());
 
-    this.dbFacade.db.push('/configs[]', new ConfigEntry(filename, path.join(parentDir, filename + '.yaml'), config.projectId));
+    filePath = filePath.replace(/\\/g, '/');
+
+    this.dbFacade.db.push('/configs[]', new ConfigEntry(filename, filePath, config.projectId));
     //file written successfully
     return { config, filename: filename };
   }
@@ -156,6 +159,17 @@ export class VaricityConfigService {
     }
 
     return this.getDefaultConfigPaths();
+    // return this.createAndGetDefaultConfigPathsForProject(projectName);
+  }
+
+
+  private createAndGetDefaultConfigPathsForProject(projectName: string) {
+    // get default config file path
+
+
+    // copy that config to the project folder
+
+    return [];
   }
 
   /**
@@ -266,4 +280,5 @@ export class VaricityConfigService {
     }
     return false;
   }
+
 }

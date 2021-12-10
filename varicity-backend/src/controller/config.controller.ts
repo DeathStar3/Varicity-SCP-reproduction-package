@@ -9,13 +9,13 @@ export class ConfigController {
 
   @Post('/projects/configs')
   saveConfig(@Body() config: VaricityConfig): any {
-    console.log('/projects/configs - saveConfig, ');
+    console.log('/projects/configs - saveConfig');
     return this.configService.saveConfig(config);
   }
 
   @Post('/projects/configs/:configFile')
   updateConfig(@Param('configFile') configFile: string, @Body() config: VaricityConfig,): any {
-    console.log('/projects/configs/' + configFile + ' - updateConfig, ', config);
+    console.log('/projects/configs/' + configFile + ' - updateConfig, ');
     return this.configService.updateConfig(configFile, config);
   }
 
