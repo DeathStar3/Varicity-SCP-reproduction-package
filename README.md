@@ -39,7 +39,6 @@ The following demo will use the JUnit project with a custom ``pom.xml`` to build
 - JDK 11 (if you want to develop the `metrics-extension` project)
   - The JAVA_HOME environment variable must be defined and pointing to a JDK >= 11 (if you want to run Symfinder directly on the host)
 - Maven
-  - Under Ubuntu, you need to manually install Maven 3.8.4+ to be compatible with JDK 17
 - Internet connexion
   - To pull docker images
 - Free disk space over 15 GB (To download the images and also because Sonarqube exits when disk space is low)
