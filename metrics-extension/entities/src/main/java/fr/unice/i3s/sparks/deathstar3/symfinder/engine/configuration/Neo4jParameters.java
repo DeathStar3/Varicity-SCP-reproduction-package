@@ -21,6 +21,53 @@
 
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration;
 
-public record Neo4jParameters(String boltAddress, String user, String password) {
+import java.util.Objects;
+
+public final class Neo4jParameters {
+    private final String boltAddress;
+    private final String user;
+    private final String password;
+
+    public Neo4jParameters(String boltAddress, String user, String password) {
+        this.boltAddress = boltAddress;
+        this.user = user;
+        this.password = password;
+    }
+
+    public String boltAddress() {
+        return boltAddress;
+    }
+
+    public String user() {
+        return user;
+    }
+
+    public String password() {
+        return password;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Neo4jParameters) obj;
+        return Objects.equals(this.boltAddress, that.boltAddress) &&
+                Objects.equals(this.user, that.user) &&
+                Objects.equals(this.password, that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boltAddress, user, password);
+    }
+
+    @Override
+    public String toString() {
+        return "Neo4jParameters[" +
+                "boltAddress=" + boltAddress + ", " +
+                "user=" + user + ", " +
+                "password=" + password + ']';
+    }
+
 
 }

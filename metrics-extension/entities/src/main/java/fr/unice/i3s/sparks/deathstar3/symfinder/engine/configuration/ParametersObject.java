@@ -21,8 +21,55 @@
 
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration;
 
-public record ParametersObject(Neo4jParameters neo4j,
-                               HotspotsParameters hotspots,
-                               String experimentsFile) {
+import java.util.Objects;
+
+public final class ParametersObject {
+    private final Neo4jParameters neo4j;
+    private final HotspotsParameters hotspots;
+    private final String experimentsFile;
+
+    public ParametersObject(Neo4jParameters neo4j,
+                            HotspotsParameters hotspots,
+                            String experimentsFile) {
+        this.neo4j = neo4j;
+        this.hotspots = hotspots;
+        this.experimentsFile = experimentsFile;
+    }
+
+    public Neo4jParameters neo4j() {
+        return neo4j;
+    }
+
+    public HotspotsParameters hotspots() {
+        return hotspots;
+    }
+
+    public String experimentsFile() {
+        return experimentsFile;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (ParametersObject) obj;
+        return Objects.equals(this.neo4j, that.neo4j) &&
+                Objects.equals(this.hotspots, that.hotspots) &&
+                Objects.equals(this.experimentsFile, that.experimentsFile);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(neo4j, hotspots, experimentsFile);
+    }
+
+    @Override
+    public String toString() {
+        return "ParametersObject[" +
+                "neo4j=" + neo4j + ", " +
+                "hotspots=" + hotspots + ", " +
+                "experimentsFile=" + experimentsFile + ']';
+    }
+
 
 }

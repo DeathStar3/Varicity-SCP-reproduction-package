@@ -82,9 +82,7 @@ public final class App {
     private void run() {
 
         if (help) {
-            System.out.println("""
-                    Symfinder version ....
-                    """);
+            System.out.println("      Symfinder version ....\n");
             System.exit(0);
         }
 

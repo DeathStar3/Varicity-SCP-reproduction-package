@@ -250,10 +250,9 @@ public class NeoGraph {
     }
 
     public Object getPropertyValue(Node node, String property) {
-        return submitRequest(String.format("""
-                MATCH(a)
-                WHERE ID(a)=$aId
-                RETURN a.%s""", property), "aId", node.id())
+        return submitRequest(String.format("MATCH(a)\n" +
+                                           "WHERE ID(a)=$aId\n" +
+                                           "RETURN a.%s", property), "aId", node.id())
                 .get(0).get(0).asObject();
     }
 
@@ -289,15 +288,13 @@ public class NeoGraph {
      * If no method is overloaded, the property is set to 0.
      */
     public void setMethodVPs() {
-        submitRequest("""
-                MATCH (c:CLASS)-->(a:METHOD) MATCH (c:CLASS)-->(b:METHOD)
-                WHERE a.name = b.name AND ID(a) <> ID(b)
-                WITH count(DISTINCT a.name) AS cnt, c
-                SET c.methodVPs = cnt""");
-        submitRequest("""
-                MATCH (c:CLASS)
-                WHERE NOT EXISTS(c.methodVPs)
-                SET c.methodVPs = 0""");
+        submitRequest("MATCH (c:CLASS)-->(a:METHOD) MATCH (c:CLASS)-->(b:METHOD)\n" +
+                      "WHERE a.name = b.name AND ID(a) <> ID(b)\n" +
+                      "WITH count(DISTINCT a.name) AS cnt, c\n" +
+                      "SET c.methodVPs = cnt");
+        submitRequest("MATCH (c:CLASS)\n" +
+                      "WHERE NOT EXISTS(c.methodVPs)\n" +
+                      "SET c.methodVPs = 0");
     }
 
     /**

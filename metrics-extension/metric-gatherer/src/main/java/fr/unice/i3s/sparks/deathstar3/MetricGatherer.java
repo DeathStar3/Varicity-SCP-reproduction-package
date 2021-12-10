@@ -38,10 +38,15 @@ public class MetricGatherer {
      * Select the Strategy to run using the sourceName
      */
     public MetricGathering strategySelection(String sourceName) {
-        return switch (sourceName.toLowerCase()) {
-            case "sonar-qube", "sonarqube" -> new MetricGathering(new SonarQubeStrategy());
-            case "sonar-cloud", "sonarcloud" -> new MetricGathering(new SonarCloudStrategy());
-            default -> null;
-        };
+        switch (sourceName.toLowerCase()) {
+            case "sonar-qube":
+            case "sonarqube":
+                return new MetricGathering(new SonarQubeStrategy());
+            case "sonar-cloud":
+            case "sonarcloud":
+                return new MetricGathering(new SonarCloudStrategy());
+            default:
+                return null;
+        }
     }
 }

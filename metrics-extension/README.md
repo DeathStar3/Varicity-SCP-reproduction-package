@@ -7,7 +7,7 @@ from a project you are analyzing. One of its module is `symfindercli`. It is the
 ## Technical Requirements
 For development:
 - Maven  version >= 3.8.3
-- JDK 17
+- JDK 11
 For building:
 - Docker
 ## Using Metrics-extension
