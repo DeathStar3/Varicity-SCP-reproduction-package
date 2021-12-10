@@ -91,15 +91,15 @@ export default class NeoGraph{
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
-    async linkTwoNodesWithCodeDuplicated(node1: Node, node2: Node, type: RelationType, codeDuplicated: string, percent: string): Promise<void> {
+    async linkTwoNodesWithCodeDuplicated(node1: Node, node2: Node, type: RelationType, zfragment: string, percent: string, lines: string): Promise<void> {
         const request = "MATCH(a)\n" +
         "WHERE ID(a)=$aId\n" +
         "WITH a\n" +
         "MATCH (b)\n" +
         "WITH a,b\n" +
         "WHERE ID(b)=$bId\n" +
-        "CREATE (a)-[r:"+type+" {fragment: $codeDuplicated, codePercent: $percent}]->(b)";
-        await this.submitRequest(request, {aId: node1.identity, bId: node2.identity, percent:percent, codeDuplicated:codeDuplicated});
+        "CREATE (a)-[r:"+type+" {zfragment: $zfragment, codePercent: $percent, lines: $lines}]->(b)";
+        await this.submitRequest(request, {aId: node1.identity, bId: node2.identity, percent:percent, zfragment:zfragment, lines: lines});
     }
 
     async updateLinkTwoNode(node1: Node, node2: Node, oldType: RelationType, newType: RelationType): Promise<void> {

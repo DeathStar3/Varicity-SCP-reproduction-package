@@ -122,11 +122,14 @@ export class Symfinder{
                 silent: true
             })
             for(let clone of clones){
-                var node1: Node = value.find((node: Node) => node.properties.path == clone.duplicationA.sourceId);
-                var node2: Node = value.find((node: Node) => node.properties.path == clone.duplicationB.sourceId);
-                var data = readFileSync(node2.properties.path, 'utf-8');
-                var percent = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / data.length) * 100).toFixed(0);
-                await this.neoGraph.linkTwoNodesWithCodeDuplicated(node1, node2, RelationType.CODE_DUPLICATED, clone.duplicationA.fragment, percent);
+                var nodeA: Node = value.find((node: Node) => node.properties.path == clone.duplicationA.sourceId);
+                var nodeB: Node = value.find((node: Node) => node.properties.path == clone.duplicationB.sourceId);
+                var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
+                var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
+                await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CODE_DUPLICATED,
+                    clone.duplicationA.fragment, percentA, clone.duplicationA.start.line +":"+ clone.duplicationA.end.line);
+                await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CODE_DUPLICATED,
+                    clone.duplicationA.fragment, percentB, clone.duplicationB.start.line +":"+ clone.duplicationB.end.line);
             }            
         }
         if(i > 0)
