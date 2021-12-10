@@ -28,8 +28,10 @@ The following demo will use the JUnit project with a custom ``pom.xml`` to build
 5. Using the VariCity UI you will be able to visualize the city of JUnit.
 
 
-### Requirements
+### General Requirements
 
+- Node 16.0
+- NPM 7.10
 - Docker (CLI and deamon)
   - Instructions to install Docker are available [here](https://docs.docker.com/get-docker/).
 - Docker-compose
