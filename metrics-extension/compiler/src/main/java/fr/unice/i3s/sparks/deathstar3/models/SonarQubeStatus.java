@@ -1,17 +1,23 @@
 package fr.unice.i3s.sparks.deathstar3.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Objects;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class SonarQubeStatus {
-    private final String id;
-    private final String version;
-    private final String status;
-
-    public SonarQubeStatus(String id, String version, String status) {
-        this.id = id;
-        this.version = version;
-        this.status = status;
-    }
+    private String id;
+    private String version;
+    private String status;
 
     public String id() {
         return id;
@@ -39,14 +45,4 @@ public final class SonarQubeStatus {
     public int hashCode() {
         return Objects.hash(id, version, status);
     }
-
-    @Override
-    public String toString() {
-        return "SonarQubeStatus[" +
-                "id=" + id + ", " +
-                "version=" + version + ", " +
-                "status=" + status + ']';
-    }
-
-
 }

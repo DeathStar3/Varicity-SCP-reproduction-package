@@ -1,15 +1,22 @@
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Objects;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class HotspotsParameters {
-    private final int nbVariantsThreshold;
-    private final int nbAggregationsThreshold;
-
-    public HotspotsParameters(int nbVariantsThreshold, int nbAggregationsThreshold) {
-        this.nbVariantsThreshold = nbVariantsThreshold;
-        this.nbAggregationsThreshold = nbAggregationsThreshold;
-    }
+    private  int nbVariantsThreshold;
+    private int nbAggregationsThreshold;
 
     public int nbVariantsThreshold() {
         return nbVariantsThreshold;
@@ -32,13 +39,5 @@ public final class HotspotsParameters {
     public int hashCode() {
         return Objects.hash(nbVariantsThreshold, nbAggregationsThreshold);
     }
-
-    @Override
-    public String toString() {
-        return "HotspotsParameters[" +
-                "nbVariantsThreshold=" + nbVariantsThreshold + ", " +
-                "nbAggregationsThreshold=" + nbAggregationsThreshold + ']';
-    }
-
 
 }

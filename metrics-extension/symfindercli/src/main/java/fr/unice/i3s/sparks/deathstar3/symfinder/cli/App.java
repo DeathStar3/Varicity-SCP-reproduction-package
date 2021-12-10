@@ -7,6 +7,7 @@ import fr.unice.i3s.sparks.deathstar3.deserializer.SymfinderConfigParser;
 import fr.unice.i3s.sparks.deathstar3.entrypoint.MetricExtensionEntrypoint;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
+import fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriter;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterHttp;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson;
@@ -59,6 +60,10 @@ public final class App {
         app.run();
     }
 
+    private void printVersion(){
+        System.out.println("Symfinder version "+ Constants.getSymfinderVersion());
+    }
+
     private void setLogLevel() {
         String envLogLevel = System.getenv("SYMFINDER_LOG_LEVEL");
         Level level = Level.OFF;
@@ -82,7 +87,7 @@ public final class App {
     private void run() {
 
         if (help) {
-            System.out.println("      Symfinder version ....\n");
+            this.printVersion();
             System.exit(0);
         }
 

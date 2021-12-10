@@ -21,20 +21,25 @@
 
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Objects;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ParametersObject {
-    private final Neo4jParameters neo4j;
-    private final HotspotsParameters hotspots;
-    private final String experimentsFile;
+    private Neo4jParameters neo4j;
+    private HotspotsParameters hotspots;
+    private String experimentsFile;
 
-    public ParametersObject(Neo4jParameters neo4j,
-                            HotspotsParameters hotspots,
-                            String experimentsFile) {
-        this.neo4j = neo4j;
-        this.hotspots = hotspots;
-        this.experimentsFile = experimentsFile;
-    }
 
     public Neo4jParameters neo4j() {
         return neo4j;
@@ -63,13 +68,6 @@ public final class ParametersObject {
         return Objects.hash(neo4j, hotspots, experimentsFile);
     }
 
-    @Override
-    public String toString() {
-        return "ParametersObject[" +
-                "neo4j=" + neo4j + ", " +
-                "hotspots=" + hotspots + ", " +
-                "experimentsFile=" + experimentsFile + ']';
-    }
 
 
 }

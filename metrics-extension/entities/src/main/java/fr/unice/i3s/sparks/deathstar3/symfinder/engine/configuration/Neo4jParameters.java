@@ -21,18 +21,24 @@
 
 package fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Objects;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Neo4jParameters {
-    private final String boltAddress;
-    private final String user;
-    private final String password;
-
-    public Neo4jParameters(String boltAddress, String user, String password) {
-        this.boltAddress = boltAddress;
-        this.user = user;
-        this.password = password;
-    }
+    private  String boltAddress;
+    private  String user;
+    private String password;
 
     public String boltAddress() {
         return boltAddress;
@@ -60,14 +66,5 @@ public final class Neo4jParameters {
     public int hashCode() {
         return Objects.hash(boltAddress, user, password);
     }
-
-    @Override
-    public String toString() {
-        return "Neo4jParameters[" +
-                "boltAddress=" + boltAddress + ", " +
-                "user=" + user + ", " +
-                "password=" + password + ']';
-    }
-
 
 }

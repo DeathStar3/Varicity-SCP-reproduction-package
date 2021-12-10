@@ -23,6 +23,9 @@ public final class Constants {
     public static final String SONAR_SCANNER_IMAGE_TAG = "4";
     public static String SYMFINDER_NEO4J_IMAGE;
     public static String SYMFINDER_NEO4J_TAG;
+    private static String SYMFINDER_VERSION ;
+
+    private static String JAVA_PATH;
     /**
      * The Symfinder Neo4J container name.
      */
@@ -47,6 +50,12 @@ public final class Constants {
 
     static {
         log.info("Initializing constants based on environment variables...");
+
+        if(System.getenv("SYMFINDER_VERSION") != null  ){
+            SYMFINDER_VERSION = System.getenv("SYMFINDER_VERSION");
+        }
+
+        JAVA_PATH = Optional.ofNullable(System.getProperty("SYMFINDER_JAVA_CLASSPATH")).or(()-> Optional.ofNullable(System.getenv("JAVA_HOME"))).or(()-> Optional.of( "/usr/lib/jvm/java-11-openjdk-amd64")).get();
 
         if (System.getenv("IMAGE_DOWNLOAD_TIMEOUT") != null && NumberUtils.isParsable(System.getenv("IMAGE_DOWNLOAD_TIMEOUT"))) {
             IMAGE_DOWNLOAD_TIMEOUT = Integer.parseInt(System.getenv("IMAGE_DOWNLOAD_TIMEOUT"));
@@ -84,5 +93,13 @@ public final class Constants {
 
     public static int getNeo4jTimeout() {
         return NEO4J_TIMEOUT;
+    }
+
+    public static String getSymfinderVersion() {
+        return SYMFINDER_VERSION;
+    }
+
+    public static String getJavaPath() {
+        return JAVA_PATH;
     }
 }

@@ -19,6 +19,7 @@ package fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint;/*
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
+import fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Configuration;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.result.SymfinderResult;
@@ -58,7 +59,7 @@ public class Symfinder {
     private static final Logger logger = LogManager.getLogger(Symfinder.class);
 
     private NeoGraph neoGraph;
-    private String sourcePackage;
+    private final String sourcePackage;
     private Configuration configuration;
 
     public Symfinder(String sourcePackage) {
@@ -67,7 +68,6 @@ public class Symfinder {
         this.neoGraph = new NeoGraph(this.configuration);
 
     }
-
 
     public Symfinder(String sourcePackage, Configuration configuration) {
         this.sourcePackage = sourcePackage;
@@ -87,15 +87,7 @@ public class Symfinder {
 
     public SymfinderResult run() throws IOException {
         long symfinderStartTime = System.currentTimeMillis();
-        logger.log(Level.getLevel("MY_LEVEL"), "Symfinder version: " + System.getenv("SYMFINDER_VERSION"));
-        String classpathPath;
-
-        classpathPath = System.getenv("JAVA_HOME");
-        if (classpathPath == null) { // default to linux openJDK 11 path
-            System.out.println("Using default");
-            classpathPath = "/usr/lib/jvm/java-11-openjdk-amd64";
-        }
-
+        String classpathPath = Constants.getJavaPath();
         List<File> files = Files.walk(Paths.get(sourcePackage))
                 .filter(Files::isRegularFile)
                 .filter(path -> !isTestPath(path))
