@@ -57,6 +57,9 @@ export class ConfigService {
      * @return the return value is a config with a filename attribute
      */
     public static async updateConfig(fileName: string, config: Config): Promise<SaveResponseConfig> {
+
+        if (!fileName) { fileName = "default"}
+
         return new Promise<SaveResponseConfig>((resolve, reject) => {
             axios.post<SaveResponseConfig>(`${backendUrl}/projects/configs/` + fileName, {
                 ...config,
