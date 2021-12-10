@@ -26,6 +26,8 @@ export class ConfigSelectorController {
         let node = document.createElement("option") as HTMLOptionElement;
         node.textContent = " ---Select a Config --- ";
         node.value = "";
+        node.selected = (!UIController.config.name);
+        node.disabled = true;
         parent.appendChild(node);
 
         // create all the options from the configs names
@@ -50,6 +52,7 @@ export class ConfigSelectorController {
                 }
 
                 UIController.configFileName = configName;
+                console.log("change config to '" + configName + "'");
                 await ConfigSelectorController.defineConfig(configName);
                 ConfigSelectorController.reParse(true);
             }

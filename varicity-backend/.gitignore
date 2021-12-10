@@ -34,7 +34,3 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-/index-db.json
-/data
-/config
-varicitydb.json

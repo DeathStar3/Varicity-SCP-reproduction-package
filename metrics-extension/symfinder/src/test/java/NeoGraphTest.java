@@ -19,14 +19,19 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.DesignPatternType;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityAttribute;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.RelationType;
-import fr.unice.i3s.sparks.deathstar3.engine.neograph.NeoGraph;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.DesignPatternType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neograph.NeoGraph;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.ResourceIterable;
+import org.neo4j.graphdb.Transaction;
 
 import java.util.List;
 import java.util.Optional;

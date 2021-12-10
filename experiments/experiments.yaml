@@ -1,3 +1,8 @@
+vertx:
+  repositoryUrl: https://github.com/eclipse-vertx/vert.x.git
+  sourcePackage: .
+  commitIds:
+    - 87004b74a05ad3db89fb8897cbf38431755f4aed
 jmeter:
   repositoryUrl: https://github.com/apache/jmeter
   sourcePackage: .

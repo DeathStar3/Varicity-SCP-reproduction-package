@@ -8,7 +8,7 @@ iutas201_vehicule: #Project name
   #can be useful if the user has already done the build
   outputPath: ""
   sources:
-    - name: "sonarqube"
+    - name: "sonarcloud"
       enabled: true
       componentName: "iutas201_vehicule"
       rootUrl: "https://sonarqube.inria.fr/sonarqube"

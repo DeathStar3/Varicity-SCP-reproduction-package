@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Set;
 
 public class SourceFetcherTest {
 
@@ -20,8 +20,8 @@ public class SourceFetcherTest {
         Path path = Files.createTempDirectory("varicity-test-dir");
         ExperimentConfig config = new ExperimentConfig();
         config.setRepositoryUrl("https://github.com/DeathStar3-projects/4A_ISA_TheCookieFactory.git");
-        config.setTagIds(List.of("v2.2", "persistent"));
-        config.setCommitIds(List.of("fbe48191a64051ea0d3463c9175084c45a4bfe1b"));
+        config.setTagIds(Set.of("v2.2", "persistent"));
+        config.setCommitIds(Set.of("fbe48191a64051ea0d3463c9175084c45a4bfe1b"));
 
         config.setPath(path.toString());
 

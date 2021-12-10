@@ -9,11 +9,12 @@ import {InputKeyController} from "./controller/ui/input-key.controller";
 class Main {
 
     constructor() {
-        document.addEventListener('DOMContentLoaded', async (_ev) => {
-            UIController.createSaveSection();
-            UIController.createLogs();
+        UIController.setBackgroundColorSameAsCanvas();
+        UIController.createSaveSection();
+        UIController.createLogs();
 
-            let projects = (await ProjectService.findAllProjectsName()).data;
+        ProjectService.findAllProjectsName().then((response) => {
+            const projects = response.data;
             console.log("projects", projects);
 
             UIController.createProjectSelector(projects);

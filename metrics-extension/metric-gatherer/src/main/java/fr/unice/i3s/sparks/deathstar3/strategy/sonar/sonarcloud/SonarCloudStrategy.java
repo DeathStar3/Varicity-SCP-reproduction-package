@@ -34,7 +34,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
 
         int numElementsPerPage = 500;
 
-        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + componentName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not find by sonar
+        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + componentName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not found by sonar
 
         SonarResults sonarResults = new SonarResults();
         sonarResults.setComponents(new ArrayList<>());
@@ -49,11 +49,11 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
                 e.printStackTrace();
 
                 if (e.getCode() == HttpStatus.SC_NOT_FOUND) {
+                    //TODO make the distinction between the fact that a metrics is not found and the fact that the project is not found
                     //Display the available metrics for the project
                     displayAvailableMetrics(rootUrl, componentName);
                 }
-                Thread.currentThread().stop(); // Kill thread: an error occur
-                //TODO fix above
+                throw new RuntimeException(e);
             }
 
             SonarResults sonarResultsTemp = objectMapper.readValue(json, SonarResults.class);

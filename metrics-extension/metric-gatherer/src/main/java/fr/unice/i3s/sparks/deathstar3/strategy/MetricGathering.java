@@ -1,10 +1,8 @@
 package fr.unice.i3s.sparks.deathstar3.strategy;
 
-import fr.unice.i3s.sparks.deathstar3.serializer.JsonSerializer;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,14 +18,11 @@ public class MetricGathering {
     /**
      * Gather the metrics for a given source and save them in a Json file
      */
-    public List<Node> gatherAndSaveMetrics(String sourceUrl, String componentName, List<String> metrics, String outputPath) {
+    public List<Node> gatherAndSaveMetrics(String sourceUrl, String componentName, List<String> metrics) {
 
         try {
             List<Node> nodes = strategy.getMetrics(sourceUrl, componentName, metrics);
             log.debug("Metrics gathered: " + nodes.stream().limit(500).collect(Collectors.toList()));
-
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.generateAndSaveJson(nodes, outputPath + "-" + new Date().getTime() + ".json");
             return nodes;
         } catch (Exception e) {
             e.printStackTrace();

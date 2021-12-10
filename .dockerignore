@@ -1,1 +1,8 @@
 resources/
+.git
+.github
+.vscode
+.classpath
+.project
+.factorypath
+*node_modules*

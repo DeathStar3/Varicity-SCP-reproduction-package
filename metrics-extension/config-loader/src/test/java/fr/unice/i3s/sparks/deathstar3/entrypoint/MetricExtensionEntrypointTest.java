@@ -2,15 +2,17 @@ package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
 
 import fr.unice.i3s.sparks.deathstar3.deserializer.ConfigLoader;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.HotspotsParameters;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.Neo4jParameters;
-import fr.unice.i3s.sparks.deathstar3.engine.configuration.ParametersObject;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
+import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.HotspotsParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Neo4jParameters;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.ParametersObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MetricExtensionEntrypointTest {
 
@@ -35,7 +37,7 @@ public class MetricExtensionEntrypointTest {
 
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(cfclient, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runSimpleExperiment(cfclient, parametersObject.hotspots());
             System.out.println(experimentResult);
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
@@ -56,7 +58,7 @@ public class MetricExtensionEntrypointTest {
         System.out.println(cfclient);
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(cfclient, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runSimpleExperiment(cfclient, parametersObject.hotspots());
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
             System.out.println(experimentResult);
@@ -79,7 +81,7 @@ public class MetricExtensionEntrypointTest {
         System.out.println(iutas201);
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(iutas201, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runSimpleExperiment(iutas201, parametersObject.hotspots());
 
             System.out.println(experimentResult);
             Assertions.assertNotNull(experimentResult);
@@ -89,9 +91,9 @@ public class MetricExtensionEntrypointTest {
 
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
 
-            Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
+            Assertions.assertNotNull(experimentResult.externalMetric().get("sonarcloud"));
 
-            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());
+            Assertions.assertFalse(experimentResult.externalMetric().get("sonarcloud").isEmpty());
 
         });
 
@@ -109,7 +111,7 @@ public class MetricExtensionEntrypointTest {
         System.out.println(regatta);
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runSimpleExperiment(regatta, parametersObject.hotspots());
 
             System.out.println(experimentResult);
 
@@ -131,28 +133,46 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-
         ExperimentConfig regatta = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("regatta-with-symfinder.yaml").readAllBytes())).get(0);
 
         System.out.println(regatta);
 
         Assertions.assertDoesNotThrow(() -> {
-            ExperimentResult experimentResult = this.entrypoint.runExperiment(regatta, parametersObject);
+            ExperimentResult experimentResult = this.entrypoint.runSimpleExperiment(regatta, parametersObject.hotspots());
 
             System.out.println(experimentResult);
 
-            /*Assertions.assertNotNull(experimentResult);
+            Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.symfinderResult());
-            Assertions.assertEquals("", experimentResult.symfinderResult().vpJsonGraph(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
-            Assertions.assertEquals("", experimentResult.symfinderResult().statisticJson(),"Symfinder n'est pas executé donc son résultat devrait être vide ");
-            
-            
+
+
             Assertions.assertFalse(experimentResult.externalMetric().isEmpty());
             Assertions.assertNotNull(experimentResult.externalMetric().get("sonarqube"));
-            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());*/
+            Assertions.assertFalse(experimentResult.externalMetric().get("sonarqube").isEmpty());
 
         });
+    }
+
+    @Test
+    void runExperimentWithMultipleTagsAndCommits() throws IOException {
+        HotspotsParameters hotspotsParameters = new HotspotsParameters(20, 5);
+
+        ExperimentConfig cf = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+                getResourceAsStream("experiment-cookie-factory-config-multiple-tags.yaml").readAllBytes())).get(0);
+
+        List<ExperimentResult> experimentResultList = this.entrypoint.runExperiment(cf, hotspotsParameters);
+        Assertions.assertEquals(4, experimentResultList.size());
+
+        ExperimentResultWriterJson experimentResultWriterJson = new ExperimentResultWriterJson(cf);
+
+        for (ExperimentResult result : experimentResultList) {
+            try {
+                experimentResultWriterJson.writeResult(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

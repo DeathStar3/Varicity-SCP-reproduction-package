@@ -291,7 +291,7 @@ export class Building3D extends Element3D {
                     mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "level" + 7 + ".png", this.scene);
                 }
             } else {
-                mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "cross.png", this.scene);
+                mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "cross_3.png", this.scene);
             }
         }
 

@@ -19,9 +19,9 @@
  * Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
  */
 
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityAttribute;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityAttribute;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.RelationType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
@@ -44,7 +44,7 @@ public class NbCompositionsTest extends Neo4jTest {
         runTest(graph -> {
             Node shapeClass = graph.createNode("Shape", EntityType.CLASS, EntityAttribute.ABSTRACT);
             Node circleClass = graph.createNode("Circle", EntityType.CLASS);
-            graph.linkTwoNodes(shapeClass, circleClass, RelationType.INSTANTIATE);
+            graph.linkTwoNodes(shapeClass, circleClass, RelationType.USAGE);
             graph.setNbCompositions();
             Assertions.assertEquals(1L, graph.getPropertyValue(shapeClass, propertyName));
         });
@@ -57,9 +57,9 @@ public class NbCompositionsTest extends Neo4jTest {
             Node circleClass = graph.createNode("Circle", EntityType.CLASS);
             Node rectangleClass = graph.createNode("Rectangle", EntityType.CLASS);
             Node triangleClass = graph.createNode("Triangle", EntityType.CLASS);
-            graph.linkTwoNodes(shapeClass, circleClass, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(shapeClass, rectangleClass, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(shapeClass, triangleClass, RelationType.INSTANTIATE);
+            graph.linkTwoNodes(shapeClass, circleClass, RelationType.USAGE);
+            graph.linkTwoNodes(shapeClass, rectangleClass, RelationType.USAGE);
+            graph.linkTwoNodes(shapeClass, triangleClass, RelationType.USAGE);
             graph.setNbCompositions();
             Assertions.assertEquals(3L, graph.getPropertyValue(shapeClass, propertyName));
         });
@@ -73,8 +73,8 @@ public class NbCompositionsTest extends Neo4jTest {
             Node circleClass = graph.createNode("Circle", EntityType.CLASS);
             Node rectangleClass = graph.createNode("Rectangle", EntityType.CLASS);
             graph.linkTwoNodes(shapeClass, polygonClass, RelationType.EXTENDS);
-            graph.linkTwoNodes(shapeClass, circleClass, RelationType.INSTANTIATE);
-            graph.linkTwoNodes(polygonClass, rectangleClass, RelationType.INSTANTIATE);
+            graph.linkTwoNodes(shapeClass, circleClass, RelationType.USAGE);
+            graph.linkTwoNodes(polygonClass, rectangleClass, RelationType.USAGE);
             graph.setNbCompositions();
             Assertions.assertEquals(1L, graph.getPropertyValue(shapeClass, propertyName));
             Assertions.assertEquals(1L, graph.getPropertyValue(polygonClass, propertyName));

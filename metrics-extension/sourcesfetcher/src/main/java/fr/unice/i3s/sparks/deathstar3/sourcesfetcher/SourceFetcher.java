@@ -1,6 +1,8 @@
 package fr.unice.i3s.sparks.deathstar3.sourcesfetcher;
 
+
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -9,12 +11,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.Set;
 
+@Slf4j
 public class SourceFetcher {
-
-    private Logger logger = Logger.getLogger(SourceFetcher.class.getName());
 
     public String normalizeRepositoryUrl(String repositoryUrl) {
         repositoryUrl = repositoryUrl.strip();
@@ -38,7 +40,7 @@ public class SourceFetcher {
                 gitRepo = Git.open(originalDestinationPath.toFile());
             }
 
-            List<String> allVersions = new ArrayList<>();
+            Set<String> allVersions = new HashSet<>();
 
             if (config.getTagIds() != null && !config.getTagIds().isEmpty()) {
                 allVersions.addAll(config.getTagIds());
@@ -54,8 +56,9 @@ public class SourceFetcher {
                         getRepositoryNameFromUrl(config.getRepositoryUrl()) + "-" + version);
                 FileUtils.copyDirectory(originalDestinationPath.toFile(), specificTagPath.toFile());
                 destinations.add(specificTagPath.toString());
-                logger.info(destinations.toString());
+                log.info(destinations.toString());
             }
+            FileUtils.deleteDirectory(originalDestinationPath.toFile());
         }
         return destinations;
     }

@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.CreateNetworkResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
-import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
@@ -26,10 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
-import java.util.List;
 import java.util.Set;
 
-import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Compiler.NETWORK_NAME;
+import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants.NETWORK_NAME;
 
 @Slf4j
 public class SonarQubeStarter {
@@ -59,9 +56,8 @@ public class SonarQubeStarter {
         return container.getState().getStatus().strip().equals("exited");
     }
 
-    public boolean startSonarqube() {
+    public synchronized boolean startSonarqube() {
 
-        // TODO check if varicity-sonarqube is already running or existing ...
         utils.removeOldExitedContainer(SONARQUBE_CONTAINER_NAME);
         if (existingSonarqube()) {
             return true;
@@ -69,7 +65,7 @@ public class SonarQubeStarter {
 
         prepareVaricitySonarqube();
 
-        createNetwork();
+        utils.createNetwork();
 
         CreateContainerResponse container = dockerClient.createContainerCmd("varicity-sonarqube")
                 .withName(SONARQUBE_CONTAINER_NAME).withExposedPorts(ExposedPort.parse("9000"))
@@ -86,7 +82,7 @@ public class SonarQubeStarter {
                     return false;
                 }
 
-                var sonarqubeStatusResponse = this.restTemplate.getForEntity("http://localhost:9000/api/system/status",
+                var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.getSonarqubeLocalUrl() + "/api/system/status",
                         String.class);
                 var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
                         SonarQubeStatus.class);
@@ -98,6 +94,7 @@ public class SonarQubeStarter {
                 log.info("Sonarqube is not ready yet " + e.getClass().getName());
             }
             try {
+
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -107,19 +104,10 @@ public class SonarQubeStarter {
         return true;
     }
 
-    private void createNetwork() {
-        List<Network> networks = dockerClient.listNetworksCmd().withNameFilter(NETWORK_NAME).exec();
-        if (networks.isEmpty()) {
-            CreateNetworkResponse networkResponse = dockerClient.createNetworkCmd().withName(NETWORK_NAME)
-                    .withAttachable(true).withDriver("bridge").exec();
-            log.info(String.format("Network %s created...\n", networkResponse.getId()));
-        }
-    }
-
     private void sonarqubeStartingWaitForSonarqubeUp() {
         while (true) {
             try {
-                var sonarqubeStatusResponse = this.restTemplate.getForEntity("http://localhost:9000/api/system/status",
+                var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.getSonarqubeLocalUrl() + "/api/system/status",
                         String.class);
                 var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
                         SonarQubeStatus.class);
@@ -137,7 +125,8 @@ public class SonarQubeStarter {
 
     private boolean existingSonarqube() {
         try {
-            var sonarqubeStatusResponse = this.restTemplate.getForEntity("http://localhost:9000/api/system/status",
+
+            var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.getSonarqubeLocalUrl() + "/api/system/status",
                     String.class);
             var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
                     SonarQubeStatus.class);
@@ -169,7 +158,7 @@ public class SonarQubeStarter {
 
             Files.copy(SonarQubeStarter.class.getClassLoader().getResourceAsStream("varicity-sonarqube.dockerfile"),
                     dockerFilePath, StandardCopyOption.REPLACE_EXISTING);
-            String imageId = dockerClient.buildImageCmd()
+            dockerClient.buildImageCmd()
                     .withDockerfile(dockerFilePath.toFile())
                     .withPull(true).withNoCache(true).withTags(Set.of("varicity-sonarqube:latest"))
                     .exec(new BuildImageResultCallback()).awaitImageId();

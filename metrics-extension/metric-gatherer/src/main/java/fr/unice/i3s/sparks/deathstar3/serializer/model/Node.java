@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -11,13 +12,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Node {
-
     private String name; // Class name
     private List<Metric> metrics; // Class metrics
-
-    @Override
-    public String toString() {
-        return "Node{" + "name='" + name + '\'' + ", metrics=" + metrics + '}';
-    }
 }

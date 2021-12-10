@@ -1,6 +1,6 @@
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.DesignPatternType;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.EntityType;
-import fr.unice.i3s.sparks.deathstar3.engine.neo4j_types.RelationType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.DesignPatternType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.EntityType;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.neo4j_types.RelationType;
 import org.junit.jupiter.api.Test;
 import org.neo4j.driver.types.Node;
 
@@ -20,7 +20,7 @@ public class CompositionStrategiesTest extends Neo4jTest {
             Node main = neoGraph.createNode("Main", EntityType.CLASS);
             neoGraph.linkTwoNodes(shape, rectangle, RelationType.EXTENDS);
             neoGraph.linkTwoNodes(shape, circle, RelationType.EXTENDS);
-            neoGraph.linkTwoNodes(main, shape, RelationType.INSTANTIATE);
+            neoGraph.linkTwoNodes(main, shape, RelationType.USAGE);
             neoGraph.setNbVariantsProperty();
             neoGraph.detectStrategiesWithComposition();
             assertTrue(neoGraph.getNode("Shape").get().hasLabel(cs));
@@ -36,7 +36,7 @@ public class CompositionStrategiesTest extends Neo4jTest {
             Node rectangle = neoGraph.createNode("Rectangle", EntityType.CLASS);
             Node main = neoGraph.createNode("Main", EntityType.CLASS);
             neoGraph.linkTwoNodes(shape, rectangle, RelationType.EXTENDS);
-            neoGraph.linkTwoNodes(main, shape, RelationType.INSTANTIATE);
+            neoGraph.linkTwoNodes(main, shape, RelationType.USAGE);
             neoGraph.setNbVariantsProperty();
             neoGraph.detectStrategiesWithComposition();
             assertFalse(neoGraph.getNode("Shape").get().hasLabel(cs));
