@@ -45,7 +45,7 @@ export class ConfigSelectorController {
             const configName = (event.target as HTMLInputElement).value;
             if (configName !== undefined) {
                 document.getElementById("submenu").style.display = "none"; // When changing project we close all menus
-                document.getElementById("loading-frame").style.display = 'inline-block'; // TODO can be remove if it's too much
+                document.getElementById("loading-frame").style.display = 'inline-block';
                 if (MenuController.selectedTab) {
                     MenuController.changeImage(MenuController.selectedTab);
                     MenuController.selectedTab = undefined;

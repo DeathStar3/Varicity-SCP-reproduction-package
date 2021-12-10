@@ -272,7 +272,9 @@ export class Building3D extends Element3D {
         if (this.config.variables.crack && this.config.variables.crack !== "") {
             console.log("this.config.variables.crack", this.config.variables.crack);
 
-            let color = "" //(rgbToYIQ(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b) >= 128) ? "" : "w_" //TODO White color is absorbed find how to fix it
+            //TODO White color is absorbed find how to fix it:
+            // See Spike #81 https://github.com/DeathStar3-projects/varicity-config/issues/81
+            let color = "" //(rgbToYIQ(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b) >= 128) ? "" : "w_"
 
             if (this.elementModel.metrics.metrics.has(this.config.variables.crack)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.crack).value;

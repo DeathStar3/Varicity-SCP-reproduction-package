@@ -90,7 +90,6 @@ export class UIController {
                     LogsController.updateLogs(this.scene.entitiesList);
                     break;
                 case CriticalLevel.REPARSE_DATA: // Changed variables that modify the parsing method, need to reparse the entire file and rebuild
-                    // TODO fix issue when adding a new Entrypoint, the scene is only loading the new entry point class and not all the others, but it works after clicking on the config again
                     ConfigSelectorController.reParse(false);
                     break;
                 default:
@@ -111,7 +110,7 @@ export class UIController {
             }
         })
 
-        // TODO set default values for the rest
+        // Here can set default values for the rest of the config
     }
 
     public static parseQueryParameters() {

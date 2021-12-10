@@ -1,6 +1,7 @@
 import {UIController} from "./ui.controller";
 import Cookies from "js-cookie";
 import {SaveController} from "./save.controller";
+import {MenuController} from "./menu/menu.controller";
 
 export class InputKeyController {
 
@@ -31,6 +32,11 @@ export class InputKeyController {
                     console.log("(CTRL + P) Update camera for: " + UIController.configFileName)
                     SaveController.saveCamera();
                     SaveController.updateConfiguration();
+                }
+            } else if (e.key.toLowerCase() === "escape") { // Escape
+                console.log("(ESCAPE) Closing menu if open")
+                if (MenuController.selectedTab) {
+                    MenuController.closeMenu();
                 }
             }
         });
