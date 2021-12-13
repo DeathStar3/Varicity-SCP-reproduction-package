@@ -1,6 +1,7 @@
 import {Node} from './../parser/symfinder_elements/nodes/node.element';
 import {Building3D} from './../../view/common/3Delements/building3D';
 import {Metrics} from "../../model/entitiesImplems/metrics.model";
+import {NodeInterface} from "../../model/entities/jsonInput.interface";
 
 export class SearchbarController {
     public static map: Map<string, Building3D>;
@@ -142,5 +143,18 @@ export class SearchbarController {
     public static focusOn(className: string): void {
         SearchbarController.searchbar.value = className;
         SearchbarController.searchbar.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter"}))
+    }
+
+    public static fillSearchBar(nodes: NodeInterface[]) {
+        let datalist = document.createElement("datalist"); //Data list used for Blacklist and API entry points
+        datalist.id = "datalist-classes"
+
+        document.getElementById("main").appendChild(datalist)
+
+        SearchbarController.emptyClassList()
+
+        nodes.forEach(n => {
+            SearchbarController.addEntryToClassList(n.name)
+        });
     }
 }

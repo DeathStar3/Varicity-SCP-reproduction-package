@@ -9,6 +9,7 @@ import {UIController} from "./ui.controller";
 import {MetricController} from "./menu/metric.controller";
 import {MenuController} from "./menu/menu.controller";
 import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
+import {SearchbarController} from "./searchbar.controller";
 
 export class ProjectController {
 
@@ -62,6 +63,7 @@ export class ProjectController {
             await ProjectService.fetchVisualizationData(projectName).then(async (response) => {
                 const config = await ConfigService.loadDataFile(projectName);
                 this.el = this.previousParser.parse(response.data, config, projectName);
+                SearchbarController.fillSearchBar(response.data.nodes);
 
                 // set the min & max usage level
                 const maxLvl = this.el.getMaxCompLevel();

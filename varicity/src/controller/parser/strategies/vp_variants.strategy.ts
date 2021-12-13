@@ -4,7 +4,7 @@ import {ClassImplem} from "../../../model/entitiesImplems/classImplem.model";
 import {LinkElement} from "../symfinder_elements/links/link.element";
 import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
 import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.model";
-import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInput.interface";
+import {JsonInputInterface, LinkInterface, NodeInterface} from "../../../model/entities/jsonInput.interface";
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
@@ -19,16 +19,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         let nodesList: NodeElement[] = [];
         const apiList: NodeElement[] = [];
 
-        let datalist = document.createElement("datalist"); //Data list used for Blacklist and API entry points
-        datalist.id = "datalist-classes"
-
-        document.getElementById("main").appendChild(datalist)
-
-        SearchbarController.emptyClassList()
-
         data.nodes.forEach(n => {
-
-            SearchbarController.addEntryToClassList(n.name)
 
             let node = new NodeElement(n.name);
 
