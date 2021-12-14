@@ -47,7 +47,7 @@ describe('parsing all tests projects with vp strategy', function () {
 
     it('parse composition_levels_inheritance', async function () {
 
-        // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+        config.api_classes = ["Composed2"]
 
         await ProjectService.fetchVisualizationData('composition_levels_inheritance').then(async (response) => {
             let entities = new VPVariantsStrategy().parse(response.data, config, 'composition_levels_inheritance');
@@ -59,13 +59,19 @@ describe('parsing all tests projects with vp strategy', function () {
         });
     });
 
-    // it('parse composition_levels_mixed', function() {
-    //   let entities = new ClassesPackagesStrategy().parse('composition_levels_mixed');
-    //   let numberOfBuiildings = entities.buildings.length;
-    //   expect(numberOfBuiildings).equal(1);
-    //   let numberOfLinks = entities.links.length;
-    //   expect(numberOfLinks).equal(0);
-    // });
+    it('parse composition_levels_mixed', async function () {
+
+        config.api_classes = ["Composed2"]
+
+        await ProjectService.fetchVisualizationData('composition_levels_mixed').then(async (response) => {
+            let entities = new VPVariantsStrategy().parse(response.data, config, "composition_levels_mixed");
+            let dis = entities.district.districts
+            let numberOfBuiildings = countBuilding(dis) + countDistricts(dis)
+            expect(numberOfBuiildings).equal(0);
+            let numberOfLinks = entities.links.length;
+            expect(numberOfLinks).equal(0);
+        });
+    });
 
     it('parse decorator', async function () {
 
@@ -125,7 +131,7 @@ describe('parsing all tests projects with vp strategy', function () {
 
     it('parse attribute_composition', async function () {
 
-        // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+        config.api_classes = ["C"]
 
         await ProjectService.fetchVisualizationData('attribute_composition').then(async (response) => {
             let entities = new VPVariantsStrategy().parse(response.data, config, "attribute_composition");
@@ -179,25 +185,37 @@ describe('parsing all tests projects with vp strategy', function () {
         });
     });
 
-    // it('parse import_from_different_package', function() {
-    //   let entities = new ClassesPackagesStrategy().parse('import_from_different_package');
-    //   let numberOfBuiildings = entities.buildings.length;
-    //   expect(numberOfBuiildings).equal(2);
-    //   let numberOfLinks = entities.links.length;
-    //   expect(numberOfLinks).equal(1);
-    // });
+    it('parse import_from_different_package', async function () {
 
-    // it('parse import_from_different_package_all_package_imported', function() {
-    //   let entities = new ClassesPackagesStrategy().parse('import_from_different_package_all_package_imported');
-    //   let numberOfBuiildings = entities.buildings.length;
-    //   expect(numberOfBuiildings).equal(2);
-    //   let numberOfLinks = entities.links.length;
-    //   expect(numberOfLinks).equal(1);
-    // });
+        config.api_classes = ["abs.AbstractAlgo"]
+
+        await ProjectService.fetchVisualizationData('import_from_different_package').then(async (response) => {
+            let entities = new VPVariantsStrategy().parse(response.data, config, "import_from_different_package");
+            let dis = entities.district.districts
+            let numberOfBuiildings = countBuilding(dis) + countDistricts(dis)
+            expect(numberOfBuiildings).equal(2);
+            let numberOfLinks = entities.links.length;
+            expect(numberOfLinks).equal(1);
+        });
+    });
+
+    it('parse import_from_different_package_all_package_imported', async function () {
+
+        config.api_classes = ["abs.AbstractAlgo"]
+
+        await ProjectService.fetchVisualizationData('import_from_different_package_all_package_imported').then(async (response) => {
+            let entities = new VPVariantsStrategy().parse(response.data, config, "import_from_different_package_all_package_imported");
+            let dis = entities.district.districts
+            let numberOfBuiildings = countBuilding(dis) + countDistricts(dis)
+            expect(numberOfBuiildings).equal(2);
+            let numberOfLinks = entities.links.length;
+            expect(numberOfLinks).equal(1);
+        });
+    });
 
     it('parse inner_class', async function () {
 
-        // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+        // config.api_classes = ["???"] // No entry point can be found
 
         await ProjectService.fetchVisualizationData('inner_class').then(async (response) => {
             let entities = new VPVariantsStrategy().parse(response.data, config, "inner_class");
@@ -211,7 +229,7 @@ describe('parsing all tests projects with vp strategy', function () {
 
     it('parse inner_class_before_fields', async function () {
 
-        // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+        // config.api_classes = ["???"] // No entry point can be found
 
         await ProjectService.fetchVisualizationData('inner_class_before_fields').then(async (response) => {
             let entities = new VPVariantsStrategy().parse(response.data, config, "inner_class_before_fields");
@@ -225,7 +243,7 @@ describe('parsing all tests projects with vp strategy', function () {
 
     it('parse metrics', async function () {
 
-        // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+        config.api_classes = ["OneMethodOverload", "TwoConstructorOverloads", "TwoMethodOverloads", "OneConstructorOverload"]
 
         await ProjectService.fetchVisualizationData('metrics').then(async (response) => {
             let entities = new VPVariantsStrategy().parse(response.data, config, "metrics");
@@ -253,7 +271,7 @@ describe('parsing all tests projects with vp strategy', function () {
 
     it('parse multiple_vp', async function () {
 
-        // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+        config.api_classes = ["MultipleVPClass"]
 
         await ProjectService.fetchVisualizationData('multiple_vp').then(async (response) => {
             let entities = new VPVariantsStrategy().parse(response.data, config, "multiple_vp");
@@ -295,7 +313,7 @@ describe('parsing all tests projects with vp strategy', function () {
 
     it('parse structures', async function () {
 
-        // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+        config.api_classes = ["Interface", "NormalClassVP", "AbstractClass"]
 
         await ProjectService.fetchVisualizationData('structures').then(async (response) => {
             let entities = new VPVariantsStrategy().parse(response.data, config, "structures");
@@ -323,7 +341,7 @@ describe('parsing all tests projects with vp strategy', function () {
 
     it('parse vps_and_variants', async function () {
 
-        // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+        config.api_classes = ["NoConstructorTwoMethods", "OneConstructorOneMethod", "OneConstructorTwoMethods", "TwoConstructorsNoMethod", "TwoConstructorsOneMethod", "TwoConstructorsTwoMethods"]
 
         await ProjectService.fetchVisualizationData('vps_and_variants').then(async (response) => {
             let entities = new VPVariantsStrategy().parse(response.data, config, "vps_and_variants");
@@ -335,18 +353,18 @@ describe('parsing all tests projects with vp strategy', function () {
         });
     });
 
-    // it('parse vps_in_different_packages', function() {
-    //   let entities = new ClassesPackagesStrategy().parse('vps_in_different_packages');
-    //   let districts = entities.district[0].districts
-    //   let numberOfDistricts = districts.length;
-    //   expect(numberOfDistricts).equal(2);
-    //   let numberOfBuiildings = 0;
-    //   districts.forEach(d => {
-    //     numberOfBuiildings += d.buildings.length
-    //   })
-    //   numberOfBuiildings+= entities.buildings.length
-    //   // expect(numberOfBuiildings).equal(6);
-    //   let numberOfLinks = entities.links.length;
-    //   expect(numberOfLinks).equal(1);
-    // });
+    it('parse vps_in_different_packages', async function () {
+
+        config.api_classes = ["abs.AbstractAlgo"]
+
+        await ProjectService.fetchVisualizationData('vps_in_different_packages').then(async (response) => {
+            let entities = new VPVariantsStrategy().parse(response.data, config, "vps_in_different_packages");
+            let dis = entities.district.districts
+            let numberOfBuiildings = countBuilding(dis) + countDistricts(dis)
+            expect(numberOfBuiildings).equal(2);
+            let numberOfLinks = entities.links.length;
+            expect(numberOfLinks).equal(1);
+        });
+    });
+
 });

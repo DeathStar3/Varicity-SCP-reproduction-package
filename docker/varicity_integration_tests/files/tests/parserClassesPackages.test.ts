@@ -45,7 +45,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse composition_levels_inheritance', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    config.api_classes = ["Composed2"]
 
     await ProjectService.fetchVisualizationData('composition_levels_inheritance').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -58,7 +58,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse composition_levels_mixed', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    config.api_classes = ["Composed2"]
 
     await ProjectService.fetchVisualizationData('composition_levels_mixed').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -124,7 +124,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse attribute_composition', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    config.api_classes = ["C"]
 
     await ProjectService.fetchVisualizationData('attribute_composition').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -174,18 +174,35 @@ describe('parsing all tests projects with classe packages strategy', function ()
     });
   });
 
-  // it('parse import_from_different_package_all_package_imported', function() {
-  //   let entities = new ClassesPackagesStrategy().parse('import_from_different_package_all_package_imported');
-  //   let districts = entities.district.districts[0].districts
-  //   let numberOfBuiildings = countBuilding(districts)
-  //   expect(numberOfBuiildings).equal(2);
-  //   let numberOfLinks = entities.links.length;
-  //   expect(numberOfLinks).equal(1);
-  // });
+  it('parse import_from_different_package', async function () {
+
+    config.api_classes = ["abs.AbstractAlgo"]
+
+    await ProjectService.fetchVisualizationData('import_from_different_package').then(async (response) => {
+      let entities = new ClassesPackagesStrategy().parse(response.data, config);
+      let numberOfBuiildings = entities.buildings.length;
+      expect(numberOfBuiildings).equal(1);
+      let numberOfLinks = entities.links.length;
+      expect(numberOfLinks).equal(1);
+    });
+  });
+
+  it('parse import_from_different_package_all_package_imported', async function () {
+
+    config.api_classes = ["abs.AbstractAlgo"]
+
+    await ProjectService.fetchVisualizationData('import_from_different_package_all_package_imported').then(async (response) => {
+      let entities = new ClassesPackagesStrategy().parse(response.data, config);
+      let numberOfBuiildings = entities.buildings.length;
+      expect(numberOfBuiildings).equal(1);
+      let numberOfLinks = entities.links.length;
+      expect(numberOfLinks).equal(1);
+    });
+  });
 
   it('parse inner_class', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    // config.api_classes = ["???"] // No entry point can be found
 
     await ProjectService.fetchVisualizationData('inner_class').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -198,7 +215,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse inner_class_before_fields', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    // config.api_classes = ["???"] // No entry point can be found
 
     await ProjectService.fetchVisualizationData('inner_class_before_fields').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -211,7 +228,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse metrics', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    config.api_classes = ["OneMethodOverload", "TwoConstructorOverloads", "TwoMethodOverloads", "OneConstructorOverload"]
 
     await ProjectService.fetchVisualizationData('metrics').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -232,20 +249,6 @@ describe('parsing all tests projects with classe packages strategy', function ()
       expect(numberOfBuiildings).equal(6);
       let numberOfLinks = entities.links.length;
       expect(numberOfLinks).equal(4);
-    });
-  });
-
-  it('parse import_from_different_package', async function () {
-
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
-
-    await ProjectService.fetchVisualizationData('import_from_different_package').then(async (response) => {
-      let entities = new ClassesPackagesStrategy().parse(response.data, config);
-      let districts = entities.district.districts[0]
-      let numberOfBuiildings = districts.buildings.length
-      expect(numberOfBuiildings).equal(1); // je ne sais pas pourquoi c'est 2 il ne trouve pas le dis de impl
-      let numberOfLinks = entities.links.length;
-      expect(numberOfLinks).equal(1);
     });
   });
 
@@ -277,7 +280,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse strategy_with_method_parameter', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    config.api_classes = ["Strategy"]
 
     await ProjectService.fetchVisualizationData('strategy_with_method_parameter').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -303,7 +306,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse template', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    config.api_classes = ["Algorithm"]
 
     await ProjectService.fetchVisualizationData('template').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -316,7 +319,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse vps_and_variants', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    config.api_classes = ["NoConstructorTwoMethods", "OneConstructorOneMethod", "OneConstructorTwoMethods", "TwoConstructorsNoMethod", "TwoConstructorsOneMethod", "TwoConstructorsTwoMethods"]
 
     await ProjectService.fetchVisualizationData('vps_and_variants').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
@@ -329,7 +332,7 @@ describe('parsing all tests projects with classe packages strategy', function ()
 
   it('parse vps_in_different_packages', async function () {
 
-    // config.api_classes = ["???"] //TODO TEST NEED TO BE FIXED : DEFINE ENTRYPOINT
+    config.api_classes = ["abs.AbstractAlgo"]
 
     await ProjectService.fetchVisualizationData('vps_in_different_packages').then(async (response) => {
       let entities = new ClassesPackagesStrategy().parse(response.data, config);
