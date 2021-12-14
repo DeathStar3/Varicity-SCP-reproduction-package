@@ -1,0 +1,81 @@
+abstract_decorator:
+  path: /data/projects/abstract_decorator
+  sourcePackage: .
+composition_levels_inheritance:
+  path: /data/projects/composition_levels_inheritance
+  sourcePackage: .
+composition_levels_mixed:
+  path: /data/projects/composition_levels_mixed
+  sourcePackage: .
+cross_check_1:
+  path: /data/projects/cross_check_1
+  sourcePackage: .
+decorator:
+  path: /data/projects/decorator
+  sourcePackage: .
+density:
+  path: /data/projects/density
+  sourcePackage: .
+factory:
+  path: /data/projects/factory
+  sourcePackage: .
+generic_decorator:
+  path: /data/projects/generic_decorator
+  sourcePackage: .
+attribute_composition:
+  path: /data/projects/attribute_composition
+  sourcePackage: .
+attribute_composition_factory:
+  path: /data/projects/attribute_composition_factory
+  sourcePackage: .
+generics:
+  path: /data/projects/generics
+  sourcePackage: .
+inheritance:
+  path: /data/projects/inheritance
+  sourcePackage: .
+import_from_different_package:
+  path: /data/projects/import_from_different_package
+  sourcePackage: .
+import_from_different_package_all_package_imported:
+  path: /data/projects/import_from_different_package_all_package_imported
+  sourcePackage: .
+inner_class:
+  path: /data/projects/inner_class
+  sourcePackage: .
+inner_class_before_fields:
+  path: /data/projects/inner_class_before_fields
+  sourcePackage: .
+metrics:
+  path: /data/projects/metrics
+  sourcePackage: .
+multiple_patterns:
+  path: /data/projects/multiple_patterns
+  sourcePackage: .
+multiple_vp:
+  path: /data/projects/multiple_vp
+  sourcePackage: .
+strategy:
+  path: /data/projects/strategy
+  sourcePackage: .
+strategy_with_method_parameter:
+  path: /data/projects/strategy_with_method_parameter
+  sourcePackage: .
+structures:
+  path: /data/projects/structures
+  sourcePackage: .
+template:
+  path: /data/projects/template
+  sourcePackage: .
+vps_and_variants:
+  path: /data/projects/vps_and_variants
+  sourcePackage: .
+vps_in_different_packages:
+  path: /data/projects/vps_in_different_packages
+  sourcePackage: .
+visibilityTest:
+  path: /data/projects/visibilityTest
+  sourcePackage: .
+  compositionLevel: 4
+  compositionType: IN
+

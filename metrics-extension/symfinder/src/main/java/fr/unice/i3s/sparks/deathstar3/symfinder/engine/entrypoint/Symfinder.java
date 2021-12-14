@@ -128,7 +128,7 @@ public class Symfinder {
         logger.log(Level.getLevel("MY_LEVEL"), "Number of corrected inheritance relationships: " + GraphBuilderVisitor.getNbCorrectedInheritanceLinks() + "/" + neoGraph.getNbInheritanceRelationships());
 
         SymfinderResult result = new SymfinderResult(neoGraph.generateVPJsonGraph(), neoGraph.generateStatisticsJson());
-        neoGraph.deleteGraph();
+        neoGraph.deleteAll();
         neoGraph.closeDriver();
         long symfinderExecutionTime = System.currentTimeMillis() - symfinderStartTime;
         logger.printf(Level.getLevel("MY_LEVEL"), "Total execution time: %s", formatExecutionTime(symfinderExecutionTime));
