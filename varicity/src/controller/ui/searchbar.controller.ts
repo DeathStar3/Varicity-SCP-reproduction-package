@@ -1,5 +1,5 @@
-import {Node} from './../parser/symfinder_elements/nodes/node.element';
-import {Building3D} from './../../view/common/3Delements/building3D';
+import {Node} from '../parser/symfinder_elements/nodes/node.element';
+import {Building3D} from '../../view/common/3Delements/building3D';
 import {Metrics} from "../../model/entitiesImplems/metrics.model";
 import {NodeInterface} from "../../model/entities/jsonInput.interface";
 
@@ -99,12 +99,13 @@ export class SearchbarController {
     }
 
     public static emptyMap() {
-        this.map.clear();
+        if (this.map) {
+            this.map.clear();
 
-        let datalist = document.getElementById("datalist");
-
-        while (datalist.firstChild) {
-            datalist.removeChild(datalist.lastChild);
+            let datalist = document.getElementById("datalist");
+            while (datalist.firstChild) {
+                datalist.removeChild(datalist.lastChild);
+            }
         }
     }
 
@@ -121,12 +122,13 @@ export class SearchbarController {
     }
 
     public static emptyClassList() {
-        this.classSet.clear();
+        if (this.classSet) {
+            this.classSet.clear();
 
-        let datalist = document.getElementById("datalist-classes");
-
-        while (datalist.firstChild) {
-            datalist.removeChild(datalist.lastChild);
+            let datalist = document.getElementById("datalist-classes");
+            while (datalist.firstChild) {
+                datalist.removeChild(datalist.lastChild);
+            }
         }
     }
 
@@ -140,9 +142,11 @@ export class SearchbarController {
         datalist.appendChild(option);
     }
 
-    public static focusOn(className: string): void {
-        SearchbarController.searchbar.value = className;
-        SearchbarController.searchbar.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter"}))
+    public static focusOn(name: string): void {
+        if (this.map && this.map.has(name)) {
+            this.searchbar.value = name;
+            this.map.get(name).focus(false);
+        }
     }
 
     public static fillSearchBar(nodes: NodeInterface[]) {
