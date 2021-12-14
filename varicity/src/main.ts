@@ -6,8 +6,10 @@ import {UIController} from './controller/ui/ui.controller';
 import {ProjectService} from './services/project.service';
 import {InputKeyController} from "./controller/ui/input-key.controller";
 import {ProjectController} from "./controller/ui/project-selector.controller";
+import {SearchbarController} from "./controller/ui/searchbar.controller";
 
 class Main {
+
     constructor() {
         UIController.setBackgroundColorSameAsCanvas();
         UIController.createSaveSection();
@@ -17,19 +19,29 @@ class Main {
             const projects: string[] = response.data;
             console.log("projects", projects);
 
+            // Select a project.
             const selectedProject = this.getQueryParam('project');
             if (selectedProject && projects.indexOf(selectedProject) != -1) {
                 console.log("selected project:", selectedProject)
                 ProjectController.loadProject(selectedProject);
-            } else {
+            }
+
+            // Open the project selector.
+            else {
                 UIController.createProjectSelector(projects);
                 UIController.createProjectSelectorStayOpen();
             }
 
             UIController.createMenu();
-
             UIController.initSearchbar();
-            InputKeyController.createInputKeyListener()
+            InputKeyController.createInputKeyListener();
+
+            // Select a class.
+            const selectedClass = this.getQueryParam('class');
+            if (selectedClass) {
+                console.log("selected class:", selectedClass)
+                SearchbarController.focusOn(selectedClass);
+            }
         })
     }
 
@@ -38,6 +50,7 @@ class Main {
         const urlParams = new URLSearchParams(queryString);
         return urlParams.get(name);
     }
+
 }
 
 new Main();

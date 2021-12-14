@@ -101,10 +101,8 @@ export class SearchbarController {
     public static emptyMap() {
         if (this.map) {
             this.map.clear();
-        }
 
-        let datalist = document.getElementById("datalist");
-        if (datalist) {
+            let datalist = document.getElementById("datalist");
             while (datalist.firstChild) {
                 datalist.removeChild(datalist.lastChild);
             }
@@ -124,12 +122,13 @@ export class SearchbarController {
     }
 
     public static emptyClassList() {
-        this.classSet.clear();
+        if (this.classSet) {
+            this.classSet.clear();
 
-        let datalist = document.getElementById("datalist-classes");
-
-        while (datalist.firstChild) {
-            datalist.removeChild(datalist.lastChild);
+            let datalist = document.getElementById("datalist-classes");
+            while (datalist.firstChild) {
+                datalist.removeChild(datalist.lastChild);
+            }
         }
     }
 
@@ -143,9 +142,13 @@ export class SearchbarController {
         datalist.appendChild(option);
     }
 
-    public static focusOn(className: string): void {
-        SearchbarController.searchbar.value = className;
-        SearchbarController.searchbar.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter"}))
+    public static focusOn(name: string): void {
+        if (this.map && this.map.has(name)) {
+            this.searchbar.value = name;
+            const selectedBuilding: Building3D = this.map.get(name);
+            selectedBuilding.focus()
+            selectedBuilding.highlight(true);
+        }
     }
 
     public static fillSearchBar(nodes: NodeInterface[]) {
