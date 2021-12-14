@@ -9,6 +9,7 @@ import {UIController} from "./ui.controller";
 import {MenuController} from "./menu/menu.controller";
 import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
 import {SearchbarController} from "./searchbar.controller";
+import {QueryService} from "../../services/query.service";
 
 export class ProjectController {
     static el: EntitiesList;
@@ -72,6 +73,13 @@ export class ProjectController {
             })
 
             this.projectListener.projectChange(projectName);
+
+            // Select a class.
+            const selectedClass = QueryService.getQueryParam('class');
+            if (selectedClass) {
+                console.log("selected class:", selectedClass);
+                SearchbarController.focusOn(selectedClass);
+            }
         }
         run().then();
     }

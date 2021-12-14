@@ -1,5 +1,5 @@
-import {Node} from './../parser/symfinder_elements/nodes/node.element';
-import {Building3D} from './../../view/common/3Delements/building3D';
+import {Node} from '../parser/symfinder_elements/nodes/node.element';
+import {Building3D} from '../../view/common/3Delements/building3D';
 import {Metrics} from "../../model/entitiesImplems/metrics.model";
 import {NodeInterface} from "../../model/entities/jsonInput.interface";
 
@@ -145,9 +145,7 @@ export class SearchbarController {
     public static focusOn(name: string): void {
         if (this.map && this.map.has(name)) {
             this.searchbar.value = name;
-            const selectedBuilding: Building3D = this.map.get(name);
-            selectedBuilding.focus()
-            selectedBuilding.highlight(true);
+            this.map.get(name).focus(false);
         }
     }
 
