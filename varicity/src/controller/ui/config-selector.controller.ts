@@ -8,6 +8,7 @@ import {UIController} from "./ui.controller";
 import {ConfigName} from "../../model/entitiesImplems/config.model";
 import {MenuController} from "./menu/menu.controller";
 import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
+import {SearchbarController} from "./searchbar.controller";
 
 export class ConfigSelectorController {
 
@@ -79,6 +80,7 @@ export class ConfigSelectorController {
         // update the city
         ProjectService.fetchVisualizationData(this.filename).then((response) => {
             this.el = this.previousParser.parse(response.data, UIController.config, this.filename);
+            SearchbarController.fillSearchBar(response.data.nodes);
 
             // set max usage level
             const maxLvl = this.el.getMaxCompLevel();

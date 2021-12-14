@@ -112,15 +112,4 @@ export class UIController {
 
         // Here can set default values for the rest of the config
     }
-
-    public static parseQueryParameters() {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const project = urlParams.get('project');
-        const clazz = urlParams.get('class');
-        if (project) {
-            ProjectController.selectProject(project);
-            if (clazz) SearchbarController.focusOn(clazz);
-        }
-    }
 }
