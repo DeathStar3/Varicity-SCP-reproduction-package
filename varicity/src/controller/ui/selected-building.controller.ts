@@ -1,17 +1,20 @@
+import Cookies from "js-cookie";
 import { Building } from "../../model/entities/building.interface";
 
 export const SelectedBuildingController = {
     selected: [],
     selectABuilding: function(building: Building) {
-        this.selected.push(building);
+        if (!this.selected.includes(building.name)) {
+            this.selected.push(building.name);
+        }
         this.display();
     },
     unselectABuilding: function (building: Building) {
-        const idx = this.selected.indexOf(building);
-        this.selected.splice(idx, 1);
+        const index = this.selected.indexOf(building.name);
+        this.selected.splice(index, 1);
         this.display();
     },
     display: function () {
-        document.cookie = 'selectedBuildings=' + JSON.stringify(this.selected) + ';path=/';
+        Cookies.set('selected-buildings', this.selected.join(','), {sameSite: 'strict'});
     }
 }
