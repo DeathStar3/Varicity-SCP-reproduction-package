@@ -4,7 +4,7 @@ export class LogsController {
 
     static logs: Map<string, number> = new Map();
 
-    //TODO Code commented because trowing errors often
+    // Code commented because trowing errors often
 
     static createLogsDisplay() {
         // this.logs.set("Number of buildings", 0);

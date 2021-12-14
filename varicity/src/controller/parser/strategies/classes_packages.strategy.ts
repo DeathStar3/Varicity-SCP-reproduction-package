@@ -12,59 +12,61 @@ import {ParsingStrategy} from "./parsing.strategy.interface";
 export class ClassesPackagesStrategy implements ParsingStrategy {
     public parse(data: JsonInputInterface, config: Config): EntitiesList {
         console.log('Analyzing with classes and packages strategy: ', data);
+        if (data) {
+            const nodesList: NodeElement[] = [];
+            data.nodes.forEach(n => {
+                let node = new NodeElement(n.name);
 
-        const nodesList: NodeElement[] = [];
-        data.nodes.forEach(n => {
-            let node = new NodeElement(n.name);
+                node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
+                node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
-            node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
-            node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
+                const attr = n.attributes;
+                let nbAttributes = 0;
+                attr.forEach(a => {
+                    nbAttributes += a.number;
+                })
 
-            const attr = n.attributes;
-            let nbAttributes = 0;
-            attr.forEach(a => {
-                nbAttributes += a.number;
+                node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+                node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
+
+                node.types = n.types;
+
+                node.fillMetricsFromNodeInterface(n);
+                nodesList.push(node);
+            });
+
+            const packagesList: PackageImplem[] = [];
+            const classesList: ClassImplem[] = [];
+
+            nodesList.forEach(n => {
+                this.addToLists(n.name.split('.'), n, packagesList, classesList);
+            });
+
+            let result = new EntitiesList();
+            result.buildings = classesList;
+
+            let root = new PackageImplem("");
+            root.districts = packagesList;
+            result.district = root;
+
+            const linkElements: LinkElement[] = [];
+            data.links.forEach(l => {
+                linkElements.push(new LinkElement(l.source, l.target, l.type));
             })
 
-            node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
-            node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
+            const inheritancesList: LinkImplem[] = [];
+            linkElements.forEach(le => {
+                const source = result.getBuildingFromName(le.source);
+                const target = result.getBuildingFromName(le.target);
+                inheritancesList.push(new LinkImplem(source, target, le.type));
+            })
+            result.links = inheritancesList;
 
-            node.types = n.types;
+            console.log(result);
 
-            node.fillMetricsFromNodeInterface(n);
-            nodesList.push(node);
-        });
-
-        const packagesList: PackageImplem[] = [];
-        const classesList: ClassImplem[] = [];
-
-        nodesList.forEach(n => {
-            this.addToLists(n.name.split('.'), n, packagesList, classesList);
-        });
-
-        let result = new EntitiesList();
-        result.buildings = classesList;
-
-        let root = new PackageImplem("");
-        root.districts = packagesList;
-        result.district = root;
-
-        const linkElements: LinkElement[] = [];
-        data.links.forEach(l => {
-            linkElements.push(new LinkElement(l.source, l.target, l.type));
-        })
-
-        const inheritancesList: LinkImplem[] = [];
-        linkElements.forEach(le => {
-            const source = result.getBuildingFromName(le.source);
-            const target = result.getBuildingFromName(le.target);
-            inheritancesList.push(new LinkImplem(source, target, le.type));
-        })
-        result.links = inheritancesList;
-
-        console.log(result);
-
-        return result;
+            return result;
+        }
+        throw 'Data is undefined';
     }
 
     private addToLists(splitName: string[], node: Node, packagesList: PackageImplem[], classesList: ClassImplem[]) {

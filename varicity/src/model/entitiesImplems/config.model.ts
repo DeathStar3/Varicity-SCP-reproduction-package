@@ -77,86 +77,6 @@ export class Config implements ConfigInterface {
             object.faces && Array.isArray(object.faces) && object.faces.every((v: any) => this.instanceOfColor(v)) &&
             object.outlines && Array.isArray(object.outlines) && object.outlines.every((v: any) => this.instanceOfColor(v));
     }
-
-    public static alterField(config: Config, fields: string[], value: [string, string] | Color): CriticalLevel { // for the tuple : [prev value, cur value]
-        let cur = config;
-        if (fields.includes("variables")) {
-            if (Array.isArray(value)) {
-                config.variables[fields[1]] = value[1];
-                return CriticalLevel.RERENDER_SCENE;
-            }
-        }
-        if (fields.includes("parsing_mode")) {
-            if (Array.isArray(value)) {
-                config.parsing_mode = value[1];
-                return CriticalLevel.REPARSE_DATA;
-            }
-        }
-        if (fields.includes("orientation")) {
-            if (Array.isArray(value)) {
-                config.orientation = Orientation[value[1]];
-                return CriticalLevel.REPARSE_DATA;
-            }
-        }
-        if (fields.includes("padding")) {
-            if (Array.isArray(value)) {
-                config[fields[0]].padding = +value[1];
-                return CriticalLevel.RERENDER_SCENE;
-            }
-        }
-        if (fields.includes("metrics")) {
-            console.log(fields);
-            console.log(value);
-            if (Array.isArray(value)) {
-                if (fields[2] === "higherIsBetter") {
-                    config.metrics.get(fields[1])[fields[2]] = (value[1].toLowerCase() === 'true');
-                } else {
-                    config.metrics.get(fields[1])[fields[2]] = +value[1];
-                }
-                return CriticalLevel.RERENDER_SCENE;
-            }
-        }
-        if (fields.includes("camera_data")) {
-            if (Array.isArray(value)) {
-                if (fields.length == 2) {
-                    config[fields[0]][fields[1]] = +value[1];
-                } else {
-                    config[fields[0]][fields[1]][fields[2]] = +value[1];
-                }
-                return CriticalLevel.RERENDER_SCENE;
-            }
-        }
-        for (let key of fields) {
-            cur = cur[key]; // we go deeper
-        }
-        if (Array.isArray(cur)) { // cur is an array of values
-            if (cur.every(v => Config.instanceOfColor(v)) && Config.instanceOfColor(value)) {
-                let obj = cur.find(v => v.name == value.name);
-                obj.color = value.color;
-                return CriticalLevel.LOW_IMPACT;
-            } else { // value is prob a string
-                if (cur.some(v => v == value[0])) { // already exists
-                    let index = cur.findIndex(v => v == value[0])
-                    if (value[1] == "") { // prev value was defined, current wasn't, therefore we delete entry
-                        cur.splice(index, 1);
-                    } else { // prev and current are defined, therefore we change value
-                        cur[index] = value[1];
-                    }
-                } else { // doesn't exist, so we push the new value
-                    cur.push(value[1]);
-                }
-                if (fields.includes("api_classes") || fields.includes("hierarchy_links")) return CriticalLevel.REPARSE_DATA;
-            }
-            return CriticalLevel.RERENDER_SCENE;
-        }
-        if (fields.includes("description")) {
-            if (Array.isArray(value)) {
-                config.description = value[1];
-                return CriticalLevel.LOW_IMPACT;
-            }
-        }
-        return CriticalLevel.RERENDER_SCENE;
-    }
 }
 
 // TODO move to new file
@@ -198,6 +118,7 @@ export class Vector3_Local {
 export class ConfigName {
     name: string;
     filename: string;
+    isDefault?: boolean;
 
     constructor(name: string, filename: string) {
         this.name = name;

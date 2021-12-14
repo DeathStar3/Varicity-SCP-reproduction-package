@@ -182,7 +182,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
                     }
                 } else {
                     input.style.border = "1px solid #ced4da";
-                    document.getElementById("loading-frame").style.display = 'inline-block'; //TODO issue: is not displayed before the following code
+                    document.getElementById("loading-frame").style.display = 'inline-block';
 
                     // Update the config and scene depending on the position in the list of the input box
                     if (!isInputLastInTheList) {

@@ -5,6 +5,7 @@ import {Closeable} from "../../model/entities/closeable.interface";
 import {ConfigService} from "../../services/config.service";
 import {ToastController, ToastType} from "./toast.controller";
 import {SceneRenderer} from "../../view/sceneRenderer";
+import {InputKeyController} from "./input-key.controller";
 
 export class SaveController {
 
@@ -37,6 +38,7 @@ export class SaveController {
         });
 
         document.querySelector('#save-config-confirm-btn').addEventListener('click', _clickev => {
+            console.log("before before before configs names", UIController.configsName);
             const configName = (document.querySelector('#text-field-configname') as HTMLInputElement).value;
             this.saveConfiguration(configName);
 
@@ -55,8 +57,8 @@ export class SaveController {
     }
 
     public static saveConfiguration(configName: string) {
-        this.saveCamera()
-        UIController.config.name = configName
+        this.saveCamera();
+        UIController.config.name = configName;
 
         console.log("Metrics: ", UIController.config.metrics);
         console.log("Saving config modified", {
@@ -69,8 +71,18 @@ export class SaveController {
             console.log('Config saved successfully', saveResponseConfig);
             ToastController.addToast("Configuration '" + UIController.config.name + "' saved successfully", ToastType.SUCESS);
             UIController.config = saveResponseConfig.config;
-            UIController.configsName.push(new ConfigName(UIController.config.name, saveResponseConfig.filename));
-            UIController.configFileName = saveResponseConfig.filename;
+
+            // Delete default global config if the previous one was a default config
+            if(UIController.configFileName.isDefault){
+                const indexInList = UIController.configsName.indexOf(UIController.configFileName);
+                UIController.configsName.splice(indexInList, 1);
+            }
+
+            // Add the created config to the list of configs
+            const configName = new ConfigName(UIController.config.name, saveResponseConfig.filename);
+            UIController.configsName.push(configName);
+            UIController.configFileName = configName;
+
             UIController.createConfigSelector(UIController.configsName, UIController.config.projectId);
         }).catch(err => {
             console.log('Cannot save config to database');
@@ -80,7 +92,10 @@ export class SaveController {
     }
 
     public static updateConfiguration() {
-        ConfigService.updateConfig(UIController.configFileName, UIController.config).then((saveResponseConfig) => {
+        if(UIController.configFileName.isDefault){ // force to create a new save
+            this.saveNewConfig();
+        }else{
+            ConfigService.updateConfig(UIController.configFileName.filename, UIController.config).then((saveResponseConfig) => {
             console.log('Config updated successfully', saveResponseConfig);
             ToastController.addToast("Configuration '" + UIController.config.name + "' updated successfully", ToastType.SUCESS);
             UIController.config = saveResponseConfig.config;
@@ -90,5 +105,12 @@ export class SaveController {
             ToastController.addToast("Configuration '" + UIController.config.name + "' could not be updated", ToastType.DANGER, true);
             console.error(err);
         });
+        }
+    }
+
+    public static saveNewConfig() {
+        document.querySelector('#save-dialog').setAttribute('open', 'true');
+        UIController.config.projectId = Cookies.get('varicity-current-project');
+        (document.querySelector('#text-field-configname') as HTMLInputElement).value = UIController.config.name || "";
     }
 }

@@ -17,7 +17,7 @@ export class UIController {
 
     public static scene: SceneRenderer;
     public static configsName: ConfigName[];
-    public static configFileName: string;
+    public static configFileName: ConfigName;
     public static config: Config;
 
     public static createMenu() {
@@ -90,7 +90,6 @@ export class UIController {
                     LogsController.updateLogs(this.scene.entitiesList);
                     break;
                 case CriticalLevel.REPARSE_DATA: // Changed variables that modify the parsing method, need to reparse the entire file and rebuild
-                    // TODO fix issue when adding a new Entrypoint, the scene is only loading the new entry point class and not all the others, but it works after clicking on the config again
                     ConfigSelectorController.reParse(false);
                     break;
                 default:
@@ -111,17 +110,6 @@ export class UIController {
             }
         })
 
-        // TODO set default values for the rest
-    }
-
-    public static parseQueryParameters() {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const project = urlParams.get('project');
-        const clazz = urlParams.get('class');
-        if (project) {
-            ProjectController.selectProject(project);
-            if (clazz) SearchbarController.focusOn(clazz);
-        }
+        // Here can set default values for the rest of the config
     }
 }

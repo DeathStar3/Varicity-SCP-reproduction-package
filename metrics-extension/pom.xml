@@ -1,300 +1,210 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-        
-  
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>fr.unice.i3s.sparks.deathstar3</groupId>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>metrics-extension</artifactId>
+    <groupId>fr.unice.i3s.sparks.deathstar3</groupId>
+    <artifactId>metrics-extension</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-  <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <modules>
-    <module>config-loader</module>
-    
-    <module>metric-gatherer</module>
-                
-    
-    <module>entities</module>
-                
-    
-    <module>command-runner</module>
-                
-    
-    <module>sourcesfetcher</module>
-                
-    
-    <module>symfinder</module>
-                
-    
-    <module>compiler</module>
-          
-    
-    <module>symfindercli</module>
-      
-  </modules>
-        
-  
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-                
-    
-    <!-- Testing dependencies -->
-    <versions.junit>4.13.2</versions.junit>
-    <versions.mockito>4.0.0</versions.mockito>
+    <name>Symfinder</name>
+    <url>https://deathstar3.github.io/symfinder-demo</url>
 
-    <!-- Codding tool dependencies -->
-    <versions.lombok>1.18.22</versions.lombok>
-    <versions.logback>1.2.6</versions.logback>
+    <modules>
+        <module>config-loader</module>
+        <module>metric-gatherer</module>
+        <module>entities</module>
+        <module>command-runner</module>
+        <module>sourcesfetcher</module>
+        <module>symfinder</module>
+        <module>compiler</module>
+        <module>symfindercli</module>
+    </modules>
 
-    <!-- Serialization dependencies -->
-    <versions.jackson>2.13.0</versions.jackson>
-            
-  
-  </properties>
-        
-  
-  <dependencies>
-                
-    
-    <!-- Internal dependency-->
-                
-    
-    <dependency>
-                        
-      
-      <groupId>fr.unice.i3s.sparks.deathstar3</groupId>
-                        
-      
-      <artifactId>entities</artifactId>
-                        
-      
-      <version>1.0-SNAPSHOT</version>
-                        
-      
-      <scope>compile</scope>
-                    
-    
-    </dependency>
-        
-    <!-- Codding tools -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
-    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.32</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.32</version>
-      <scope>compile</scope>
-    </dependency>
-  <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-nop</artifactId>
-    <version>1.7.25</version>
-    <scope>provided</scope>
-  </dependency>
+        <!-- Development tools -->
+        <versions.lombok>1.18.22</versions.lombok>
+        <versions.logback>1.2.6</versions.logback>
 
+        <!-- Serialization dependencies -->
+        <versions.jackson>2.13.0</versions.jackson>
 
+        <!-- Testing dependencies -->
+        <versions.junit>4.13.2</versions.junit>
+        <versions.mockito>4.0.0</versions.mockito>
+    </properties>
 
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${versions.lombok}</version>
-      <optional>true</optional>
-    </dependency>
-    
-    <!-- Dependencies for serialization -->
-                
-    
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${versions.jackson}</version>
-    </dependency>
-                
-    
-    <dependency>
-      <groupId>com.fasterxml.jackson.dataformat</groupId>
-      <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>${versions.jackson}</version>
-    </dependency>
-                
-    
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>2.0.1.Final</version>
-    </dependency>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/deathstar3-projects/varicity-config</url>
+        </repository>
+    </distributionManagement>
 
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>7.0.1.Final</version>
-    </dependency>
+    <dependencies>
+        <!-- Internal dependencies -->
+        <dependency>
+            <groupId>fr.unice.i3s.sparks.deathstar3</groupId>
+            <artifactId>entities</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.12.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <!-- Dependencies for the testing frameworks (Junit, Mockito) (tests only) -->
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>${versions.mockito}</version>
-      <scope>test</scope>
-    </dependency>
+        <!-- Development tools -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${versions.lombok}</version>
+            <optional>true</optional>
+        </dependency>
 
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.8.2</version>
-    </dependency>
-                
-    
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-runner</artifactId>
-      <version>1.8.2</version>
-      <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
+        </dependency>
 
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-launcher</artifactId>
-      <version>1.8.2</version>
-      <scope>test</scope>
-    </dependency>
-            
-  
-  </dependencies>
-        
-  
-  <build>
-                
-    
-    <pluginManagement>
-                        
-      
-      <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-                        
-      
-      <plugins>
-                                
-        
-        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
-                                
-        
-        <plugin>
-                                        
-          
-          <artifactId>maven-clean-plugin</artifactId>
-                                        
-          
-          <version>3.1.0</version>
-                                    
-        
-        </plugin>
-                                
-        
-        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-                                
-        
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-                                
-        
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-        </plugin>
-                                
-        
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
-        </plugin>
-                                
-        
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-                                
-        
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
-                                
-        
-        <plugin>
-                                        
-          
-          <artifactId>maven-deploy-plugin</artifactId>
-                                        
-          
-          <version>2.8.2</version>
-                                    
-        
-        </plugin>
-                                
-        
-        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-                                
-        
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.7.1</version>
-        </plugin>
-                                
-        
-        <plugin>
-          <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-                            
-      
-      </plugins>
-                    
-    
-    </pluginManagement>
-                
-    
-    <plugins>
-                        
-      
-      <plugin>
-                                
-        
-        <groupId>org.apache.maven.plugins</groupId>
-                                
-        
-        <artifactId>maven-compiler-plugin</artifactId>
-                                
-        
-        <version>3.8.1</version>
-        <configuration>
-          <source>11</source>
-          <target>11</target>
-        </configuration>
-      </plugin>
-                    
-    
-    </plugins>
-            
-  
-  </build>
-    
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.32</version>
+            <scope>compile</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.25</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Serialization dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${versions.jackson}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>${versions.jackson}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>7.0.1.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Testing dependencies -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${versions.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>1.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.8.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Lock down plugins versions to avoid using Maven defaults. -->
+        <pluginManagement>
+            <plugins>
+                <!-- Clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+
+                <!-- Default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+
+                <!-- Site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -117,7 +117,7 @@ export class VaricityConfigService {
 
     filePath = filePath.replace(/\\/g, '/');
 
-    this.dbFacade.db.push('/configs[]', new ConfigEntry(filename, filePath, config.projectId));
+    this.dbFacade.db.push('/configs[]', new ConfigEntry(config.name, filePath, config.projectId));
     //file written successfully
     return { config, filename: filename };
   }
@@ -211,8 +211,11 @@ export class VaricityConfigService {
       }
     }
 
-    //TODO
-    return [new ConfigEntry('default global config',path.join(this.pathToDefaultConfigs, 'config.yaml'),'')];
+    return [new ConfigEntry('default config', path.join(this.pathToDefaultConfigs, 'config.yaml'),'')]
+        .map((el) => {
+          el.isDefault = true;
+          return el;
+        });
   }
 
   /**

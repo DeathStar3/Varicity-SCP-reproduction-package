@@ -144,7 +144,6 @@ export class ProjectService {
     return symfinderObj;
   }
 
-  //TODO
   addProject(project: ExperimentResult) {
     let index = 0;
 

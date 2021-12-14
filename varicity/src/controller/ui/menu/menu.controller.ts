@@ -70,6 +70,14 @@ export class MenuController {
         }
     }
 
+    public static closeMenu(){
+        if(MenuController.selectedTab){
+            document.getElementById("submenu").style.display = "none";
+            this.changeImage(this.selectedTab);
+            MenuController.selectedTab = undefined;
+        }
+    }
+
     private static createSubMenu(selectedTab: Element) {
         // clear the sub-menu
         const subMenuParent = SubMenuController.getParentContentSubMenu();
