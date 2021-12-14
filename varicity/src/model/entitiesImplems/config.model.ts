@@ -118,6 +118,7 @@ export class Vector3_Local {
 export class ConfigName {
     name: string;
     filename: string;
+    isDefault?: boolean;
 
     constructor(name: string, filename: string) {
         this.name = name;

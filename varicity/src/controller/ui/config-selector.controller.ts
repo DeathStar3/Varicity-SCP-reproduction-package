@@ -36,10 +36,14 @@ export class ConfigSelectorController {
             let node = document.createElement("option") as HTMLOptionElement;
             node.textContent = config.name;
             node.value = config.filename;
-            node.selected = (UIController.config.name == config.name) // TODO problem in case multiple same config names
+            node.selected = (UIController.config.name === config.name) // TODO problem in case multiple same config names
+
+            if(node.selected){
+                UIController.configFileName = config;
+            }
+
             parent.appendChild(node);
         }
-        UIController.configFileName = (configs[configs.length - 1]).filename;
 
         // update the view & config in case of a change
         parent.addEventListener('change', async function (event) {
@@ -52,7 +56,8 @@ export class ConfigSelectorController {
                     MenuController.selectedTab = undefined;
                 }
 
-                UIController.configFileName = configName;
+                UIController.configFileName = UIController.configsName.find(conf => conf.filename === configName);
+
                 console.log("change config to '" + configName + "'");
                 await ConfigSelectorController.defineConfig(configName);
                 ConfigSelectorController.reParse(true);
