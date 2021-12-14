@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "start": "export NODE_OPTIONS=\"--max-old-space-size=4096\" && webpack serve",
-    "test": "webpack && mocha dist/*Test.bundle.js"
+    "test-old": "webpack && mocha dist/*Test.bundle.js",
+    "test": " mocha --require ts-node/register tests/*.test.ts"
   },
   "author": "",
   "license": "ISC",
