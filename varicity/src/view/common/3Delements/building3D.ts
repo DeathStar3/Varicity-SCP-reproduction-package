@@ -138,6 +138,8 @@ export class Building3D extends Element3D {
                 MenuController.changeImage(infoTab) // Set Information tab icon to selected
             }
             MenuController.selectedTab = infoTab;
+        }else {
+            MenuController.closeMenu();
         }
 
         // Update the object information.
@@ -495,7 +497,7 @@ export class Building3D extends Element3D {
                     },
                     () => {
                         this.flag = !this.flag;
-                        this.selectAndDisplayDetails(this.flag);
+                        this.selectAndDisplayDetails(this.flag, this.flag);
                     }
                 )
             );
