@@ -20,7 +20,6 @@ import {MenuController} from "../../../controller/ui/menu/menu.controller";
 import {SceneRenderer} from "../../sceneRenderer";
 import {DetailsController} from "../../../controller/ui/menu/details.controller";
 import {SelectedBuildingController} from "../../../controller/ui/selected-building.controller";
-import highlight = Mocha.utils.highlight;
 
 export class Building3D extends Element3D {
     elementModel: Building;
@@ -101,37 +100,49 @@ export class Building3D extends Element3D {
         }
     }
 
-    focus() {
+    focus(openInfo: boolean = true) {
         let cam = SceneRenderer.camera;
         cam.focusOn([this.d3Model], true);
         cam.radius = 20;
 
         this.flag = true;
-        this.selectAndDisplayDetails(this.flag);
+        this.selectAndDisplayDetails(this.flag, openInfo);
     }
 
-    private selectAndDisplayDetails(flag) {
-        if(flag) {
+    private selectAndDisplayDetails(flag, openInfo: boolean = true) {
+        if (flag) {
             SelectedBuildingController.selectABuilding(this.elementModel);
         } else {
             SelectedBuildingController.unselectABuilding(this.elementModel);
         }
+
+        // Highlight the building.
         this.highlight(flag, true);
+
+        // Display the links.
         this.links.forEach(l => l.display(flag, flag));
 
-        document.getElementById("submenu").style.display = "block"; //Display submenu
+        if (openInfo) {
+            // Display the submenu.
+            document.getElementById("submenu").style.display = "block";
 
-        const infoTab = DetailsController.getInformationTab();
-        if (MenuController.selectedTab && MenuController.selectedTab !== infoTab) {
-            const currentTab = document.getElementById(MenuController.selectedTab.id)
-            MenuController.changeImage(currentTab) // Remove tab icon except if Information tab
+            // Deselect the current tab.
+            const infoTab = DetailsController.getInformationTab();
+            if (MenuController.selectedTab && MenuController.selectedTab !== infoTab) {
+                const currentTab = document.getElementById(MenuController.selectedTab.id)
+                MenuController.changeImage(currentTab) // Remove tab icon except if Information tab
+            }
+
+            // Select the information tab.
+            if (!MenuController.selectedTab || MenuController.selectedTab !== infoTab) {
+                MenuController.changeImage(infoTab) // Set Information tab icon to selected
+            }
+            MenuController.selectedTab = infoTab;
+        }else {
+            MenuController.closeMenu();
         }
 
-        if (!MenuController.selectedTab || MenuController.selectedTab !== infoTab) {
-            MenuController.changeImage(infoTab) // Set Information tab icon to selected
-        }
-        MenuController.selectedTab = infoTab;
-
+        // Update the object information.
         UIController.displayObjectInfo(this, flag ? flag : undefined);
     }
 
@@ -486,7 +497,7 @@ export class Building3D extends Element3D {
                     },
                     () => {
                         this.flag = !this.flag;
-                        this.selectAndDisplayDetails(this.flag);
+                        this.selectAndDisplayDetails(this.flag, this.flag);
                     }
                 )
             );

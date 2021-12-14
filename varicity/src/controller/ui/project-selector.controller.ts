@@ -6,13 +6,12 @@ import {ConfigService} from "../../services/config.service";
 import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
 import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
 import {UIController} from "./ui.controller";
-import {MetricController} from "./menu/metric.controller";
 import {MenuController} from "./menu/menu.controller";
 import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
 import {SearchbarController} from "./searchbar.controller";
+import {QueryService} from "../../services/query.service";
 
 export class ProjectController {
-
     static el: EntitiesList;
     private static previousParser: ParsingStrategy;
     private static projectListener: CurrentProjectListener = new CurrentProjectListener();
@@ -74,12 +73,14 @@ export class ProjectController {
             })
 
             this.projectListener.projectChange(projectName);
+
+            // Select a class.
+            const selectedClass = QueryService.getQueryParam('class');
+            if (selectedClass) {
+                console.log("selected class:", selectedClass);
+                SearchbarController.focusOn(selectedClass);
+            }
         }
         run().then();
-    }
-
-    public static selectProject(projectName: string) {
-        const node = ProjectController.nodes[projectName];
-        if (node) node.dispatchEvent(new Event("click"));
     }
 }
