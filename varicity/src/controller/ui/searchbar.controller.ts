@@ -99,12 +99,15 @@ export class SearchbarController {
     }
 
     public static emptyMap() {
-        this.map.clear();
+        if (this.map) {
+            this.map.clear();
+        }
 
         let datalist = document.getElementById("datalist");
-
-        while (datalist.firstChild) {
-            datalist.removeChild(datalist.lastChild);
+        if (datalist) {
+            while (datalist.firstChild) {
+                datalist.removeChild(datalist.lastChild);
+            }
         }
     }
 
