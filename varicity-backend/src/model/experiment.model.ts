@@ -1,6 +1,7 @@
 import { MetricClassInterface } from './jsonInput.interface';
 
 const pathLib = require('path');
+
 export class ExperimentResult {
   projectName: string;
   symfinderResult: SymfinderResult;
@@ -30,12 +31,13 @@ export class ConfigEntry {
   username?: string;
   path?: string;
   filename?: string;
+  isDefault?: boolean;
 
   constructor(name: string, path: string, projectId: string) {
     this.name = name;
     this.path = path;
     this.projectId = projectId;
 
-    this.filename = pathLib.parse(this.path).basename;
+    this.filename = pathLib.parse(this.path).name;
   }
 }

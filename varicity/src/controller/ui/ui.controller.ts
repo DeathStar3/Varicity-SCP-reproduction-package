@@ -17,7 +17,7 @@ export class UIController {
 
     public static scene: SceneRenderer;
     public static configsName: ConfigName[];
-    public static configFileName: string;
+    public static configFileName: ConfigName;
     public static config: Config;
 
     public static createMenu() {
