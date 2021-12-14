@@ -4,78 +4,27 @@ import {ClassImplem} from "../../../model/entitiesImplems/classImplem.model";
 import {LinkElement} from "../symfinder_elements/links/link.element";
 import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
 import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.model";
-import {JsonInputInterface, LinkInterface, NodeInterface} from "../../../model/entities/jsonInput.interface";
+import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInput.interface";
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
-import {SearchbarController} from "../../ui/searchbar.controller";
 
 export class VPVariantsStrategy implements ParsingStrategy {
 
     public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
         console.log('Analyzing with VP and variants strategy: ', data);
         console.log('Config used: ', config);
+        if (data) {
+            let nodesList: NodeElement[] = [];
+            const apiList: NodeElement[] = [];
 
-        let nodesList: NodeElement[] = [];
-        const apiList: NodeElement[] = [];
+            data.nodes.forEach(n => {
 
-        data.nodes.forEach(n => {
-
-            let node = new NodeElement(n.name);
-
-            node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
-            // TODO check if nbFunctions is missing or not
-            //node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
-
-            const attr = n.attributes;
-            let nbAttributes = 0;
-            attr.forEach(a => {
-                nbAttributes += a.number;
-            })
-
-            node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
-            node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
-
-            node.types = Object.assign([], n.types);
-
-            if (config.api_classes !== undefined) {
-                if (config.api_classes.includes(node.name)) {
-                    console.log("API class: " + n.name);
-                    node.types.push("API");
-                    apiList.push(node);
-                }
-            }
-
-            node.fillMetricsFromNodeInterface(n);
-
-            nodesList.push(node);
-        });
-
-        const linkElements = data.links.map(l => new LinkElement(l.source, l.target, l.type));
-        const allLinks = data.alllinks.map(l => new LinkElement(l.source, l.target, l.type));
-        const hierarchyLinks = allLinks.filter(l => config.hierarchy_links.includes(l.type));
-
-        nodesList.forEach(n => {
-            n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
-        });
-
-        this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation);
-        //console.log(nodesList.sort((a, b) => a.compositionLevel - b.compositionLevel));
-        console.log(nodesList.sort((a, b) => a.name.localeCompare(b.name)));
-
-        const d = this.buildDistricts(nodesList, hierarchyLinks, config.orientation);
-
-        let result = new EntitiesList();
-        result.district = d;
-
-        if (config.api_classes !== undefined) {
-            data.allnodes.filter(
-                nod => config.api_classes.includes(nod.name)
-                    && !nodesList.map(no => no.name).includes(nod.name)
-            ).forEach(n => {
                 let node = new NodeElement(n.name);
 
                 node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
+                // TODO check if nbFunctions is missing or not
+                //node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
 
                 const attr = n.attributes;
                 let nbAttributes = 0;
@@ -86,34 +35,86 @@ export class VPVariantsStrategy implements ParsingStrategy {
                 node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
                 node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
 
-                node.types = n.types;
-                node.types.push("API");
+                node.types = Object.assign([], n.types);
+
+                if (config.api_classes !== undefined) {
+                    if (config.api_classes.includes(node.name)) {
+                        console.log("API class: " + n.name);
+                        node.types.push("API");
+                        apiList.push(node);
+                    }
+                }
 
                 node.fillMetricsFromNodeInterface(n);
 
-                let c = new ClassImplem(
-                    node,
-                    node.compositionLevel
-                );
-
-                result.district.addBuilding(c);
+                nodesList.push(node);
             });
-        }
 
-        allLinks.forEach(le => {
-            const source = result.getBuildingFromName(le.source);
-            const target = result.getBuildingFromName(le.target);
-            if (source !== undefined && target !== undefined) {
-                result.links.push(new LinkImplem(source, target, le.type));
+            const linkElements = data.links.map(l => new LinkElement(l.source, l.target, l.type));
+            const allLinks = data.alllinks.map(l => new LinkElement(l.source, l.target, l.type));
+            const hierarchyLinks = allLinks.filter(l => config.hierarchy_links.includes(l.type));
+
+            nodesList.forEach(n => {
+                n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
+            });
+
+            this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation);
+            //console.log(nodesList.sort((a, b) => a.compositionLevel - b.compositionLevel));
+            console.log(nodesList.sort((a, b) => a.name.localeCompare(b.name)));
+
+            const d = this.buildDistricts(nodesList, hierarchyLinks, config.orientation);
+
+            let result = new EntitiesList();
+            result.district = d;
+
+            if (config.api_classes !== undefined) {
+                data.allnodes.filter(
+                    nod => config.api_classes.includes(nod.name)
+                        && !nodesList.map(no => no.name).includes(nod.name)
+                ).forEach(n => {
+                    let node = new NodeElement(n.name);
+
+                    node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
+
+                    const attr = n.attributes;
+                    let nbAttributes = 0;
+                    attr.forEach(a => {
+                        nbAttributes += a.number;
+                    })
+
+                    node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+                    node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
+
+                    node.types = n.types;
+                    node.types.push("API");
+
+                    node.fillMetricsFromNodeInterface(n);
+
+                    let c = new ClassImplem(
+                        node,
+                        node.compositionLevel
+                    );
+
+                    result.district.addBuilding(c);
+                });
             }
-        });
 
-        // log for non-vp non-variant ndoes
-        //console.log(data.allnodes.filter(nod => !nodesList.map(no => no.name).includes(nod.name)).map(n => n.name));
+            allLinks.forEach(le => {
+                const source = result.getBuildingFromName(le.source);
+                const target = result.getBuildingFromName(le.target);
+                if (source !== undefined && target !== undefined) {
+                    result.links.push(new LinkImplem(source, target, le.type));
+                }
+            });
 
-        console.log("Result of parsing: ", result);
+            // log for non-vp non-variant ndoes
+            //console.log(data.allnodes.filter(nod => !nodesList.map(no => no.name).includes(nod.name)).map(n => n.name));
 
-        return result;
+            console.log("Result of parsing: ", result);
+
+            return result;
+        }
+        throw 'Data is undefined';
     }
 
     private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number, orientation: Orientation): void {
