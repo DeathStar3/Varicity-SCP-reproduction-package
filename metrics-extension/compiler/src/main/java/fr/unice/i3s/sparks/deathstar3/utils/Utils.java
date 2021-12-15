@@ -29,6 +29,7 @@ import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
@@ -66,8 +67,13 @@ public class Utils {
     }
 
     public boolean checkIfImageExists(String image, String tag) {
-        return dockerClient.listImagesCmd().exec().stream()
-                .anyMatch(img -> Arrays.stream(img.getRepoTags()).anyMatch(name -> name.equals(image + ":" + tag)));
+        return dockerClient.listImagesCmd()
+            .exec()
+            .stream()
+            .anyMatch(img ->
+                img.getRepoTags() != null &&
+                Arrays.stream(img.getRepoTags()).anyMatch(name -> name.equals(image + ":" + tag))
+            );
     }
 
     public boolean checkIfContainerHasExited(String containerId) {
