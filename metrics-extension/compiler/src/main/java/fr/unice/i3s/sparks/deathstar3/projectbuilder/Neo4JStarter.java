@@ -93,7 +93,7 @@ public class Neo4JStarter {
                                 .withNetworkMode(Constants.NETWORK_NAME)
                 )
                 .withEnv(List.of(
-                        "NEO4J_AUTH=none"
+                        "NEO4J_AUTH=none","NEO4J_dbms_security_procedures_unrestricted=apoc.*"
                 ))
                 .exec();
 

@@ -92,6 +92,7 @@ public class Symfinder {
                 .filter(file -> file.getName().endsWith(".java"))
                 .collect(Collectors.toList());
 
+        neoGraph.deleteAll();
         neoGraph.createClassesIndex();
         neoGraph.createInterfacesIndex();
 

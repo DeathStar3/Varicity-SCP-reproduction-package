@@ -759,10 +759,13 @@ public class NeoGraph {
         submitRequest("MATCH (n) DETACH DELETE (n)");
     }
 
+    /**
+     * Delete all nodes/relationships/indexes/constraints
+     * https://stackoverflow.com/questions/23310114/how-to-reset-clear-delete-neo4j-database#233103200
+     */
     public void deleteAll() {
         submitRequest("MATCH (n) DETACH DELETE (n)");
-        submitRequest("DROP INDEX ON :CLASS(name)");
-        submitRequest("DROP INDEX ON :INTERFACE(name)");
+        submitRequest("CALL apoc.schema.assert({},{},true) YIELD label, key RETURN *");
     }
 
 

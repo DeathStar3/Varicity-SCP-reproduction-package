@@ -28,5 +28,6 @@ RUN apk add --no-cache wget && \
     apk del wget
 
 FROM neo4j:4.0.3
+ENV NEO4J_dbms_security_procedures_unrestricted=apoc.*
 COPY --from=building /target/original-symfinder-neo4j-procedures-1.0-SNAPSHOT.jar /plugins/procedures.jar
 COPY --from=building /apoc-4.0.0.15-all.jar /plugins/apoc.jar
