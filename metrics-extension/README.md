@@ -42,11 +42,10 @@ You can use environment variables to control the behavior of Symfinder. Most env
 have a default value that is appropriate for most use cases. One of the most important environment variables is
 `RUNTIME_MODE`. It allows you to define whether or not you are running Symfinder in docker or on the host. By default it is assumed to be running directly on the host.
 
-### Metrics-extension config file
+## Experiment configuration documentation
 
 To run a project with Varicity you need to prepare an experiment configuration file. 
 
-## Experiment configuration documentation
 | Attribute         | Type    | Description |
 |--------------|-----------|------------|
 | path | string      | If the project is already on the disk, it should be the path of project eg: **/home/username/myProjects/thisProject** , if is not on the disk and must be cloned then the path provided must be the path of the parent directory where the project must be cloned, eg: /home/username/myProjects. If it is not provided then a temporay directory is used      |
