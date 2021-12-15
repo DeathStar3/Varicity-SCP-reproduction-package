@@ -57,9 +57,8 @@ import java.util.stream.Stream;
 public class Symfinder {
 
     private static final Logger logger = LogManager.getLogger(Symfinder.class);
-
-    private NeoGraph neoGraph;
     private final String sourcePackage;
+    private NeoGraph neoGraph;
     private Configuration configuration;
 
     public Symfinder(String sourcePackage) {

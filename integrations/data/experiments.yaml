@@ -1,81 +1,107 @@
 abstract_decorator:
   path: /data/projects/abstract_decorator
   sourcePackage: .
+  skipClone: true
 composition_levels_inheritance:
   path: /data/projects/composition_levels_inheritance
   sourcePackage: .
+  skipClone: true
 composition_levels_mixed:
   path: /data/projects/composition_levels_mixed
   sourcePackage: .
+  skipClone: true
 cross_check_1:
   path: /data/projects/cross_check_1
   sourcePackage: .
+  skipClone: true
 decorator:
   path: /data/projects/decorator
   sourcePackage: .
+  skipClone: true
 density:
   path: /data/projects/density
   sourcePackage: .
+  skipClone: true
 factory:
   path: /data/projects/factory
   sourcePackage: .
+  skipClone: true
 generic_decorator:
   path: /data/projects/generic_decorator
   sourcePackage: .
+  skipClone: true
 attribute_composition:
   path: /data/projects/attribute_composition
   sourcePackage: .
+  skipClone: true
 attribute_composition_factory:
   path: /data/projects/attribute_composition_factory
   sourcePackage: .
+  skipClone: true
 generics:
   path: /data/projects/generics
   sourcePackage: .
+  skipClone: true
 inheritance:
   path: /data/projects/inheritance
   sourcePackage: .
+  skipClone: true
 import_from_different_package:
   path: /data/projects/import_from_different_package
   sourcePackage: .
+  skipClone: true
 import_from_different_package_all_package_imported:
   path: /data/projects/import_from_different_package_all_package_imported
   sourcePackage: .
+  skipClone: true
 inner_class:
   path: /data/projects/inner_class
   sourcePackage: .
+  skipClone: true
 inner_class_before_fields:
   path: /data/projects/inner_class_before_fields
   sourcePackage: .
+  skipClone: true
 metrics:
   path: /data/projects/metrics
   sourcePackage: .
+  skipClone: true
 multiple_patterns:
   path: /data/projects/multiple_patterns
   sourcePackage: .
+  skipClone: true
 multiple_vp:
   path: /data/projects/multiple_vp
   sourcePackage: .
+  skipClone: true
 strategy:
   path: /data/projects/strategy
   sourcePackage: .
+  skipClone: true
 strategy_with_method_parameter:
   path: /data/projects/strategy_with_method_parameter
   sourcePackage: .
+  skipClone: true
 structures:
   path: /data/projects/structures
   sourcePackage: .
+  skipClone: true
 template:
   path: /data/projects/template
   sourcePackage: .
+  skipClone: true
 vps_and_variants:
   path: /data/projects/vps_and_variants
   sourcePackage: .
+  skipClone: true
 vps_in_different_packages:
   path: /data/projects/vps_in_different_packages
   sourcePackage: .
+  skipClone: true
 visibilityTest:
   path: /data/projects/visibilityTest
   sourcePackage: .
+  skipClone: true
   compositionLevel: 4
   compositionType: IN
 

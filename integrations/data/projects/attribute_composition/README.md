@@ -1,1 +1,0 @@
-Le résulat doit être 3 liens de compositions sur attributs 
