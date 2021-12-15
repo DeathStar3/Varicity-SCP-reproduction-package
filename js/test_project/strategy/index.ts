@@ -3,10 +3,14 @@
  */
 class Context {
     
-    private strategy: Strategy;
+    private strategy: any;
 
     constructor(strategy: Strategy) {
         this.strategy = strategy;
+    }
+
+    public do(){
+        this.strategy.run();
     }
 }
 
@@ -18,10 +22,14 @@ class OneStrategy implements Strategy {
     public action(): number {
         return 0;
     }
+
+    public run(): void{}
 }
 
 class TwoStrategy implements Strategy {
     public action(): number {
         return 1;
     }
+
+    public run(): void{}
 }

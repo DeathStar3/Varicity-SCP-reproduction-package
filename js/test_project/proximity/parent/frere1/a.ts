@@ -1,6 +1,6 @@
 console.log("hello")
 
-function detectCodeClone(): void{
+export function detectCodeClone(): void{
     var nodes: any[] = this.neoGraph.getVariantFiles();
     var groupedNode: any[] = [];
     for(let node of nodes){
@@ -16,6 +16,11 @@ function detectCodeClone(): void{
         console.log(value[0].properties.path)
     }
 
+    
+}
+
+
+export function hello(): void{
     
 }
 

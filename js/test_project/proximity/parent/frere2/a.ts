@@ -1,4 +1,4 @@
-function detectCodeClone(): void{
+export function detectCodeClone(): void{
     var nodes: any[] = this.neoGraph.getVariantFiles();
     var groupedNode: any[] = [];
     for(let node of nodes){

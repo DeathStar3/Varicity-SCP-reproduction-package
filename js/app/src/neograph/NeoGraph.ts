@@ -150,7 +150,6 @@ export default class NeoGraph{
         await this.detectDensity();
         //await this.setModuleVP();
         //await this.setModuleVariant();
-        await this.setProximityFolder()
     }
 
     async setMethodVPs(): Promise<void>{
@@ -269,9 +268,9 @@ export default class NeoGraph{
         "AND f1.name <> $index\n"+
         "AND f1.name <> $utils\n"+
         "AND f1.name <> $types\n"+
-        "SET n:"+EntityAttribut.FOLDER_VP+"\n"+
-        "SET d1:"+EntityAttribut.FOLDER_VARIANT+"\n"+
-        "SET f1:"+EntityAttribut.FILE_VARIANT+"\n";
+        "SET n:"+EntityAttribut.VP_FOLDER+"\n"+
+        "SET d1:"+EntityAttribut.VARIANT_FOLDER+"\n"+
+        "SET f1:"+EntityAttribut.VARIANT_FILE+"\n";
         await this.submitRequest(request, {index:"index.ts",utils:"utils.ts",types:'types.ts'}); 
     }
 
@@ -351,8 +350,57 @@ export default class NeoGraph{
         });
     }
 
-    async getVariantFiles(): Promise<Node[]>{
-        return this.submitRequest("MATCH (n:"+EntityAttribut.FILE_VARIANT+") RETURN n", {}).then((results: Record[]) =>{
+    async getAllVariantFiles(): Promise<Node[]>{
+        return this.submitRequest("MATCH (n:"+EntityAttribut.VARIANT_FILE+") RETURN n", {}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getAllVPFoldersPath(): Promise<string[]>{
+        return this.submitRequest("MATCH (n:"+EntityAttribut.VP_FOLDER+") RETURN n.path", {}).then((results: Record[]) =>{
+            return <string[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getFoldersPathForVPFolderPath(vpFolderPath: string): Promise<string[]>{
+        return this.submitRequest("MATCH (n:"+EntityAttribut.VP_FOLDER+")-[:"+RelationType.CHILD+"]->(d:"+EntityType.DIRECTORY+")\n"+
+        "WHERE n.path = $path RETURN d.path", {path:vpFolderPath}).then((results: Record[]) =>{
+            return <string[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getVariantFilesNameForVPFolderPath(vpFolderPath: string): Promise<string[]>{
+        return this.submitRequest("MATCH (n:"+EntityAttribut.VP_FOLDER+")-[:"+RelationType.CHILD+"]->(d:"+EntityAttribut.VARIANT_FOLDER+")-[:"+RelationType.CHILD+"]->(f:"+EntityAttribut.VARIANT_FILE+")\n" +
+        "WHERE n.path = $path\n" +
+        "RETURN DISTINCT f.name", {path:vpFolderPath}).then((results: Record[]) =>{
+            return <string[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getVariantFilesForVPFolderPath(vpFolderPath: string, variantFileName: string): Promise<Node[]>{
+        return this.submitRequest("MATCH (n:"+EntityAttribut.VP_FOLDER+")-[:"+RelationType.CHILD+"]->(d:"+EntityAttribut.VARIANT_FOLDER+")-[:"+RelationType.CHILD+"]->(f:"+EntityAttribut.VARIANT_FILE+")\n" +
+        "WHERE n.path = $path\n" +
+        "AND f.name = $name\n" +
+        "RETURN f", {path:vpFolderPath, name:variantFileName}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getVariantFileForFolderPath(folderPath: string, variantFileName: string): Promise<Node | undefined>{
+        return this.submitRequest("MATCH (d:"+EntityType.DIRECTORY+")-[:"+RelationType.CHILD+"]->(f:"+EntityAttribut.VARIANT_FILE+")\n"+
+        "WHERE d.path = $folderPath AND f.name = $variantFileName RETURN f", {folderPath:folderPath, variantFileName:variantFileName})
+        .then((results: Record[]) =>{
+            return results[0] ? <Node>(results[0].get(0)) : undefined;
+        });
+    }
+
+    async getVariantEntityNodeForFileNode(fileNode: Node): Promise<Node[]>{
+        const request = "MATCH (f:FILE)-[r:EXPORT]->(e)\n" +
+        "WHERE (e:CLASS or e:FUNCTION)\n" +
+        "AND ID(f) = $id\n" +
+        "RETURN e";
+
+        return this.submitRequest(request, {id:fileNode.identity}).then((results: Record[]) =>{
             return <Node[]> (results.map((result: Record) => result.get(0)));
         });
     }

@@ -7,7 +7,7 @@ import NeoGraph from "./neograph/NeoGraph";
 import { config } from "./configuration/Configuration";
 import { join } from "path";
 import { readdirSync, statSync } from "fs";
-import { EntityType, RelationType } from "./neograph/NodeType";
+import { EntityAttribut, EntityType, RelationType } from "./neograph/NodeType";
 import { Node } from "neo4j-driver-core";
 import { detectClones } from "jscpd";
 import { readFileSync } from "fs";
@@ -33,7 +33,8 @@ export class Symfinder{
         await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies");
         
         await this.neoGraph.detectVPsAndVariants();
-        await this.detectCodeClone();
+        await this.proximityFolderDetection();
+        await this.detectCommonEntityProximity();
 
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
@@ -100,8 +101,46 @@ export class Symfinder{
         return files;
     }
 
+    async proximityFolderDetection(): Promise<void>{
+
+        await this.neoGraph.setProximityFolder();
+        var vpFoldersPath: string[] = await this.neoGraph.getAllVPFoldersPath();
+
+        let i = 0;
+        let len = vpFoldersPath.length;
+        for(let vpFolderPath of vpFoldersPath){
+            i++;
+            process.stdout.write("\rSearch SUPER variant files: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
+            var variantFilesNameSet: string[] = await this.neoGraph.getVariantFilesNameForVPFolderPath(vpFolderPath);
+            var foldersPath: string[] = await this.neoGraph.getFoldersPathForVPFolderPath(vpFolderPath);
+
+            var isSuperVariantFile = true;
+            for(let variantFileName of variantFilesNameSet){
+
+                var superVariantFilesNode: Node[] = [];
+                for(let folderPath of foldersPath){
+
+                    let currentFile: Node | undefined = await this.neoGraph.getVariantFileForFolderPath(folderPath, variantFileName);
+                    if(currentFile === undefined){
+                        isSuperVariantFile = false;
+                        break;
+                    }
+                    else superVariantFilesNode.push(currentFile)
+                }
+                if(isSuperVariantFile){
+                    for(let superVariantFileNode of superVariantFilesNode){
+                        await this.neoGraph.addLabelToNode(superVariantFileNode, EntityAttribut.SUPER_VARIANT_FILE)
+                    }
+                }
+            }
+        }
+        if(i > 0)
+            process.stdout.write("\rSearch SUPER variant files: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
+        await this.detectCodeClone();
+    }
+
     async detectCodeClone(): Promise<void>{
-        var nodes: Node[] = await this.neoGraph.getVariantFiles();
+        var nodes: Node[] = await this.neoGraph.getAllVariantFiles();
         var groupedNode: any[] = [];
         for(let node of nodes){
             if(groupedNode[node.properties.name] === undefined){
@@ -115,7 +154,7 @@ export class Symfinder{
         let len = Object.entries(groupedNode).length
         for(let [key, value] of Object.entries(groupedNode)){
             i++;
-            process.stdout.write("\rCheck duplication code : "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
+            process.stdout.write("\rCheck duplication code: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
 
             var clones: any[] = await detectClones({
                 path: value.map((node: Node) => node.properties.path),
@@ -133,6 +172,46 @@ export class Symfinder{
             }            
         }
         if(i > 0)
-            process.stdout.write("\rCheck duplication code : "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")\n");
+            process.stdout.write("\rCheck duplication code: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
+    }
+
+
+    async detectCommonEntityProximity(): Promise<void>{
+
+        var vpFoldersPath: string[] = await this.neoGraph.getAllVPFoldersPath();
+
+        let i = 0;
+        let len = vpFoldersPath.length;
+        for(let vpFolderPath of vpFoldersPath){
+            i++;
+            process.stdout.write("\rDetect common entities: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
+            var variantFilesNameSet: string[] = await this.neoGraph.getVariantFilesNameForVPFolderPath(vpFolderPath);
+            
+            for(let variantFileName of variantFilesNameSet){
+
+                var variantFileNodes: Node[] = await this.neoGraph.getVariantFilesForVPFolderPath(vpFolderPath, variantFileName);                
+                var entitiesOcc: any[] = [];
+
+                for(let variantFileNode of variantFileNodes){
+                    
+                    for(let entityNode of await this.neoGraph.getVariantEntityNodeForFileNode(variantFileNode)){
+                        if(entitiesOcc[entityNode.properties.name] === undefined){
+                            entitiesOcc[entityNode.properties.name] = [entityNode]
+                        }
+                        else{
+                            entitiesOcc[entityNode.properties.name].push(entityNode)
+                        }
+                    }
+                }
+
+                for(let [key, value] of Object.entries(entitiesOcc)){
+                    if(value.length == variantFileNodes.length){
+                        for(let entityNode of value){
+                            await this.neoGraph.addLabelToNode(entityNode, EntityAttribut.PROXIMITY_ENTITY);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

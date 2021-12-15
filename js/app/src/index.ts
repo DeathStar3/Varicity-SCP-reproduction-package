@@ -3,7 +3,9 @@ import { Symfinder } from "./symfinder";
 let symfinder = new Symfinder();
 //symfinder.run('../test_project/strategy');
 //symfinder.run('../experiments/n8n/packages');
-//symfinder.run('../experiments/grafana');
+symfinder.run('../experiments/grafana');
 //symfinder.run('../test_project/modules');
-symfinder.run('../test_project/proximity');
+//symfinder.run('../test_project/proximity');
 //symfinder.run('../experiments/satellizer');
+
+// MATCH (n:VP_FOLDER)-[:CHILD]->(d:VARIANT_FOLDER)-[:CHILD]->(f:SUPER_VARIANT_FILE) RETURN n, d, f
