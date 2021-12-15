@@ -28,7 +28,6 @@ import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisit
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.FactoryVisitor;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.GraphBuilderVisitor;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.StrategyTemplateDecoratorVisitor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,13 +52,12 @@ import java.util.stream.Stream;
 /**
  * Inspired by https://www.programcreek.com/2014/01/how-to-resolve-bindings-when-using-eclipse-jdt-astparser/
  */
-@Slf4j
 public class Symfinder {
 
     private static final Logger logger = LogManager.getLogger(Symfinder.class);
     private final String sourcePackage;
-    private NeoGraph neoGraph;
-    private Configuration configuration;
+    private final NeoGraph neoGraph;
+    private final Configuration configuration;
 
     public Symfinder(String sourcePackage) {
         this.configuration = new Configuration();
@@ -169,7 +167,7 @@ public class Symfinder {
     private boolean isTestPath(Path path) {
         for (int i = 0; i < path.getNameCount(); i++) {
             int finalI = i;
-            if (List.of("test", "tests").stream().anyMatch(s -> path.getName(finalI).toString().equals(s))) {
+            if (Stream.of("test", "tests").anyMatch(s -> path.getName(finalI).toString().equals(s))) {
                 return true;
             }
         }
