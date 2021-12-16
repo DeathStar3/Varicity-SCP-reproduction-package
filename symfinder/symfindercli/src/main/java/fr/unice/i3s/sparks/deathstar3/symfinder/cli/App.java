@@ -30,6 +30,7 @@ import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriter;
+import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterHtml;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterHttp;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,9 @@ public final class App {
 
     @Parameter(names = "--help", help = true)
     private boolean help;
+
+    @Parameter(names = "-visupath")
+    private String visuPath = null;
 
     private App() {
     }
@@ -123,6 +127,7 @@ public final class App {
                 symfinderConfigParser.parseSymfinderConfigurationFromFile(symfinderConfiguration).hotspots());
 
             ExperimentResultWriter experimentResultWriter;
+            ExperimentResultWriter experimentResultWriterHtml = null;
             if (this.serverUrl != null && !this.serverUrl.isBlank()) {
                 experimentResultWriter = new ExperimentResultWriterHttp(this.serverUrl);
 
@@ -130,9 +135,18 @@ public final class App {
                 experimentResultWriter = new ExperimentResultWriterJson(firstConfig);
             }
 
+            if (this.visuPath != null) {
+                experimentResultWriterHtml = new ExperimentResultWriterHtml(this.visuPath);
+
+            }
+
             for (ExperimentResult result : results) {
                 try {
                     experimentResultWriter.writeResult(result);
+                    if (experimentResultWriterHtml != null) {
+                        experimentResultWriterHtml.writeResult(result);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

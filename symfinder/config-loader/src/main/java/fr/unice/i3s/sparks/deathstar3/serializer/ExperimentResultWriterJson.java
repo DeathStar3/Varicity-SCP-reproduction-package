@@ -26,9 +26,7 @@ import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,12 +65,12 @@ public class ExperimentResultWriterJson implements ExperimentResultWriter {
             file.getParentFile().mkdirs();
 
             //writing the result
-            writeToFile(file.toPath(), experimentResult.getSymfinderResult().vpJsonGraph());
+            ExperimentResultWriter.writeToFile(file.toPath(), experimentResult.getSymfinderResult().vpJsonGraph());
 
             file = Paths.get(experimentConfig.getOutputPath(), "/symfinder_files/", experimentResult.getProjectName() + "-stats" + ".json").toFile();
 
             //writing the statistics of the analysis
-            writeToFile(file.toPath(), experimentResult.getSymfinderResult().statisticJson());
+            ExperimentResultWriter.writeToFile(file.toPath(), experimentResult.getSymfinderResult().statisticJson());
         }
 
         //write quality metrics result
@@ -89,17 +87,4 @@ public class ExperimentResultWriterJson implements ExperimentResultWriter {
         }
     }
 
-    private void writeToFile(Path path, String content) {
-        try {
-            if (path.toFile().getParentFile().exists() || (path.toFile().getParentFile().mkdirs() && path.toFile().createNewFile())) {
-                try (BufferedWriter bw = Files.newBufferedWriter(path)) {
-                    bw.write(content);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

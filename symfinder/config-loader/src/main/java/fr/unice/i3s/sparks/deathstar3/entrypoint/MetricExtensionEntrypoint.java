@@ -202,7 +202,7 @@ public class MetricExtensionEntrypoint {
 
         }
 
-        return new ExperimentResult(config.getProjectName(), futureSymfinderResult.get(), metricsResult,config);
+        return new ExperimentResult(config.getProjectName(), futureSymfinderResult.get(), metricsResult, config);
     }
 
 

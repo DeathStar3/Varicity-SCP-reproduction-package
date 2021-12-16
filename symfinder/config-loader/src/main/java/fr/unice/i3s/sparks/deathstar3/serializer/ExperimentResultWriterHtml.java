@@ -22,42 +22,145 @@
 package fr.unice.i3s.sparks.deathstar3.serializer;
 
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
+import fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class ExperimentResultWriterHtml implements ExperimentResultWriter{
+@Slf4j
+public class ExperimentResultWriterHtml implements ExperimentResultWriter {
 
     private String destinationPath;
 
-    public ExperimentResultWriterHtml(String destinationPath){
+    public ExperimentResultWriterHtml(String destinationPath) {
 
         this.destinationPath = destinationPath;
 
         Path.of(destinationPath).toFile().mkdirs();
     }
 
-    @Override
-    public void writeResult(ExperimentResult experimentResult) throws Exception {
-        //use stringsubstitutor here
+    private static File[] getResourceFolderFiles(String folder) {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        URL url = loader.getResource(folder);
+        String path = url.getPath();
+        return new File(path).listFiles();
     }
 
+    @Override
+    public void writeResult(ExperimentResult experimentResult) throws Exception {
 
-    private void insertInIndex() throws IOException {
+        //copy the files from the resources directory
+        for (File f : getResourceFolderFiles("d3/scripts")) {
+            log.debug(f.toString());
+            System.out.println(f.toString());
+            if (!Files.exists(Path.of(destinationPath, "scripts"))) {
+                FileUtils.copyFileToDirectory(f, Path.of(destinationPath, "scripts").toFile());
+            }
+        }
+
+        if (!Files.exists(Path.of(this.destinationPath, "index.html"))) {
+            FileUtils.copyInputStreamToFile(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/index.html"), Path.of(this.destinationPath, "index.html").toFile());
+        }
+        if (!Files.exists(Path.of(this.destinationPath, "style.css"))) {
+            FileUtils.copyInputStreamToFile(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/style.css"), Path.of(this.destinationPath, "style.css").toFile());
+        }
+        if (!Files.exists(Path.of(this.destinationPath, "symfinder-icon.png"))) {
+            FileUtils.copyInputStreamToFile(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/symfinder-icon.png"), Path.of(this.destinationPath, "symfinder-icon.png").toFile());
+        }
+        if (!Files.exists(Path.of(this.destinationPath, "symfinder-legend.svg"))) {
+            FileUtils.copyInputStreamToFile(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/symfinder-legend.svg"), Path.of(this.destinationPath, "symfinder-legend.svg").toFile());
+        }
+        //generate the html from the template
+        StringSubstitutor sub = new StringSubstitutor(this.valuesToReplace(experimentResult));
+        String resolvedString = sub.replace(new String(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/template.html").readAllBytes()));
+        String templateComposition = sub.replace(new String(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/templatecomposition.html").readAllBytes()));
+
+        //write the html files generated from the template
+        ExperimentResultWriter.writeToFile(Path.of(this.destinationPath, String.format("%s.html", experimentResult.getProjectName())), resolvedString);
+        ExperimentResultWriter.writeToFile(Path.of(this.destinationPath, String.format("%s-composition.html", experimentResult.getProjectName())), templateComposition);
+
+        //create the data directory if not exists
+        File dataDirectory = Path.of(this.destinationPath, "data").toFile();
+        if (!dataDirectory.exists()) {
+            dataDirectory.mkdirs();
+        }
+        //write the result of symfinder
+        if (experimentResult.getSymfinderResult() != null && experimentResult.getSymfinderResult().getVpJsonGraph() != null) {
+            ExperimentResultWriter.writeToFile(Path.of(this.destinationPath, "data", String.format("%s.json", experimentResult.getProjectName())),
+                    experimentResult.getSymfinderResult().getVpJsonGraph());
+
+        }
+        //write the stats of symfinder
+        if (experimentResult.getSymfinderResult() != null && experimentResult.getSymfinderResult().getStatisticJson() != null) {
+            ExperimentResultWriter.writeToFile(Path.of(this.destinationPath, "data", String.format("%s-stats.json", experimentResult.getProjectName())),
+                    experimentResult.getSymfinderResult().getStatisticJson());
+
+        }
+
+        this.insertInIndex(experimentResult);
+
+    }
+
+    private void insertInIndex(ExperimentResult experimentResult) throws IOException {
         File indexFile = Path.of(this.destinationPath, "index.html").toFile();
-        Document doc = Jsoup.parse(indexFile,"UTF-8","");
+        Document doc = Jsoup.parse(indexFile, "UTF-8", "");
 
         Element projects = doc.select("#list-tab").first();
 
-        projects.append(" <a href=\"${path}\" class=\"list-group-item list-group-item-action\">${name}</a>");
+        projects.append(String.format("<a href=\"%s\" class=\"list-group-item list-group-item-action\">%s</a>", experimentResult.getProjectName() + ".html", experimentResult.getProjectName()));
 
         FileUtils.writeStringToFile(indexFile, doc.outerHtml(), "UTF-8");
     }
+
+    private Map<String, String> valuesToReplace(ExperimentResult experimentResult) {
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("title", experimentResult.getProjectName());
+        valuesMap.put("identifier", String.format("%s generated by symfinder version %s", experimentResult.getProjectName(), Constants.getSymfinderVersion()));
+        valuesMap.put("jsScriptFile", "symfinder.js");
+
+        var filters = experimentResult.getExperimentConfig().getFilters();
+
+        if (filters == null) {
+            filters = List.of();
+        }
+
+        valuesMap.put("filters", experimentResult.getExperimentConfig().getFilters().stream().map(v -> "\"" + v + "\"").collect(Collectors.joining(",")));
+        System.out.println(valuesMap.get("filters"));
+
+        var apiFilters = experimentResult.getExperimentConfig().getApiFilters();
+
+        if (apiFilters == null) {
+            apiFilters = List.of();
+        }
+        valuesMap.put("apiFilters", apiFilters.stream().map(v -> "\"" + v + "\"").collect(Collectors.joining(",")));
+
+        valuesMap.put("compositionLevel", String.valueOf(experimentResult.getExperimentConfig().getCompositionLevel() > 0 ? experimentResult.getExperimentConfig().getCompositionLevel() : 1));
+
+        valuesMap.put("compositionType", experimentResult.getExperimentConfig().getCompositionType() != null ? experimentResult.getExperimentConfig().getCompositionType() : "IN");
+
+        valuesMap.put("jsonFile", Paths.get("data", String.format("%s.json", experimentResult.getProjectName())).toString());
+        valuesMap.put("jsonStatsFile", Paths.get("data", String.format("%s-stats.json", experimentResult.getProjectName())).toString());
+        valuesMap.put("jsonMetricsFile", Paths.get("data", String.format("%s-metrics.json.json", experimentResult.getProjectName())).toString());
+
+        // valuesMap.put("jsonTracesFile", Paths.get("data",String.format("%s-traces.json", experimentResult.getProjectName())).toString());
+
+        // =os.path.join("data", "" % xp_codename) if xp_config.get("traces", "") else "")
+
+        return valuesMap;
+    }
+
 }

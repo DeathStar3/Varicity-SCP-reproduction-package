@@ -78,7 +78,8 @@ def generate_visualization_file(xp_codename, xp_config):
             compositionType=compositionType2,
             jsonFile=os.path.join("data", "%s.json" % xp_codename),
             jsonStatsFile=os.path.join("data", "%s-stats.json" % xp_codename),
-            jsonMetricsFile=os.path.join("data", "%s-metrics.json" % xp_codename))
+            jsonMetricsFile=os.path.join("data", "%s-metrics.json" % xp_codename)
+            )
         )
 
 def generate_visualization_file_composition(xp_codename, xp_config):

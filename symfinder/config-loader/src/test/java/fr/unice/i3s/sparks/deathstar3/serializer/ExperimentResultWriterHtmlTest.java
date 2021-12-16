@@ -21,31 +21,23 @@
 
 package fr.unice.i3s.sparks.deathstar3.serializer;
 
+import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
+import org.junit.jupiter.api.Test;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.List;
 
-public interface ExperimentResultWriter {
-    static void writeToFile(Path path, String content) {
-        try {
-            if (path.toFile().getParentFile().exists() || (path.toFile().getParentFile().mkdirs() && path.toFile().createNewFile())) {
-                try (BufferedWriter bw = Files.newBufferedWriter(path)) {
-                    bw.write(content);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+public class ExperimentResultWriterHtmlTest {
+    private ExperimentResultWriterHtml experimentResultWriterHtml = new ExperimentResultWriterHtml("old-visu");
+
+    @Test
+    void writeResultTest() throws Exception {
+        var experimentResult = new ExperimentResult();
+        experimentResult.setProjectName("junit");
+        var config = new ExperimentConfig();
+        config.setFilters(List.of("org.jfree.chart.util.PublicCloneable", "org.jfree.chart.event"));
+        experimentResult.setExperimentConfig(config);
+        experimentResultWriterHtml.writeResult(experimentResult);
     }
 
-    /**
-     * @param experimentResult The result of an experiment (contains at least one of symfinder variability information and metrics information)
-     * @throws Exception The implementation might throw an implementation
-     */
-    void writeResult(ExperimentResult experimentResult) throws Exception;
 }

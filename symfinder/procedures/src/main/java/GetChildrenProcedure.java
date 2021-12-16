@@ -25,7 +25,7 @@ public class GetChildrenProcedure {
     @Procedure(value = "symfinder.count")
     @Description("Counts for the node of given ID the number of its children having a given label. " +
             "Returns a map with the number of occurrences for nodes having the same name.")
-    public Stream <Output> count(@Name("nodeId") long nodeId, @Name("label") String label) {
+    public Stream<Output> count(@Name("nodeId") long nodeId, @Name("label") String label) {
         final Output output = db.executeTransactionally(String.format("MATCH (c) WHERE ID(c) = $idNode " +
                 "OPTIONAL MATCH (c)-->(m1:%s) OPTIONAL MATCH (c)-->(m2:%s) " +
                 "WHERE m1.name = m2.name AND ID(m1) <> ID(m2) " +
@@ -40,7 +40,7 @@ public class GetChildrenProcedure {
         public Output(Result result) {
             result.stream()
                     .findFirst().flatMap(stringObjectMap -> stringObjectMap.entrySet().stream()
-                    .findFirst()).ifPresent(stringObjectEntry -> this.result = stringObjectEntry.getValue());
+                            .findFirst()).ifPresent(stringObjectEntry -> this.result = stringObjectEntry.getValue());
         }
 
         @Override

@@ -146,7 +146,6 @@ public class MetricExtensionEntrypointTest {
             Assertions.assertNotNull(experimentResult);
             Assertions.assertNotNull(experimentResult.getSymfinderResult());
 
-
             Assertions.assertFalse(experimentResult.getExternalMetric().isEmpty());
             Assertions.assertNotNull(experimentResult.getExternalMetric().get("sonarqube"));
             Assertions.assertFalse(experimentResult.getExternalMetric().get("sonarqube").isEmpty());

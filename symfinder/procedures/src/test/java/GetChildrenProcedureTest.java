@@ -2,7 +2,11 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.neo4j.driver.*;
+import org.neo4j.driver.Config;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Session;
 import org.neo4j.driver.types.MapAccessor;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.harness.Neo4j;
@@ -17,8 +21,8 @@ import static org.neo4j.driver.Values.parameters;
 
 public class GetChildrenProcedureTest {
     private static final Config driverConfig = Config.defaultConfig();
-    private static Neo4j embeddedDatabaseServer;
     protected static GraphDatabaseService graphDatabaseService;
+    private static Neo4j embeddedDatabaseServer;
 
     @BeforeAll
     static void setUp() {
@@ -26,20 +30,20 @@ public class GetChildrenProcedureTest {
         graphDatabaseService = embeddedDatabaseServer.defaultDatabaseService();
     }
 
-    @AfterEach
-    public void tearDown() {
-        graphDatabaseService.executeTransactionally("MATCH (n) DETACH DELETE (n)");
-    }
-
     @AfterAll
     public static void tearAll() {
         embeddedDatabaseServer.close();
     }
 
+    @AfterEach
+    public void tearDown() {
+        graphDatabaseService.executeTransactionally("MATCH (n) DETACH DELETE (n)");
+    }
+
     @Test
     public void twoMethods() {
 
-        try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), driverConfig) ;
+        try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), driverConfig);
              Session session = driver.session()) {
             long nodeId = session.run("CREATE (n:CLASS {name:'Class1'}) RETURN ID(n)")
                     .single().get(0).asLong();
@@ -49,11 +53,11 @@ public class GetChildrenProcedureTest {
 
             Result result = session.run("CALL symfinder.count($idNode, $label) YIELD result as res", parameters("idNode", nodeId, "label", "METHOD"));
 
-            List <Map <String, Object>> x = result.single().get("res").asList(MapAccessor::asMap);
+            List<Map<String, Object>> x = result.single().get("res").asList(MapAccessor::asMap);
             assertEquals(2, x.size());
-            final Map <String, Object> method1 = x.stream().filter(stringObjectMap -> stringObjectMap.containsValue("method1")).findFirst().get();
+            final Map<String, Object> method1 = x.stream().filter(stringObjectMap -> stringObjectMap.containsValue("method1")).findFirst().get();
             assertEquals(1L, method1.get("number"));
-            final Map <String, Object> method2 = x.stream().filter(stringObjectMap -> stringObjectMap.containsValue("method2")).findFirst().get();
+            final Map<String, Object> method2 = x.stream().filter(stringObjectMap -> stringObjectMap.containsValue("method2")).findFirst().get();
             assertEquals(1L, method2.get("number"));
 
         }
@@ -62,7 +66,7 @@ public class GetChildrenProcedureTest {
     @Test
     public void oneMethod() {
 
-        try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), driverConfig) ;
+        try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), driverConfig);
              Session session = driver.session()) {
             long nodeId = session.run("CREATE (n:CLASS {name:'Class1'}) RETURN ID(n)")
                     .single().get(0).asLong();
@@ -72,7 +76,7 @@ public class GetChildrenProcedureTest {
 
             Result result = session.run("CALL symfinder.count($idNode, $label) YIELD result as res", parameters("idNode", nodeId, "label", "METHOD"));
 
-            List <Map <String, Object>> x = result.single().get("res").asList(MapAccessor::asMap);
+            List<Map<String, Object>> x = result.single().get("res").asList(MapAccessor::asMap);
             assertEquals(1, x.size());
             assertEquals(2L, x.get(0).get("number"));
         }
@@ -81,7 +85,7 @@ public class GetChildrenProcedureTest {
     @Test
     public void oneMethodThreeVariants() {
 
-        try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), driverConfig) ;
+        try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), driverConfig);
              Session session = driver.session()) {
             long nodeId = session.run("CREATE (n:CLASS {name:'Class1'}) RETURN ID(n)")
                     .single().get(0).asLong();
@@ -92,7 +96,7 @@ public class GetChildrenProcedureTest {
 
             Result result = session.run("CALL symfinder.count($idNode, $label) YIELD result as res", parameters("idNode", nodeId, "label", "METHOD"));
 
-            List <Object> x = result.single().get("res").asList();
+            List<Object> x = result.single().get("res").asList();
             assertEquals(1, x.size());
             assertEquals(3L, ((Map<String, Object>) x.get(0)).get("number"));
         }
@@ -101,7 +105,7 @@ public class GetChildrenProcedureTest {
     @Test
     public void realUseCase() {
 
-        try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), driverConfig) ;
+        try (Driver driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI(), driverConfig);
              Session session = driver.session()) {
 
             long node1Id = session.run("CREATE (n:CLASS {name:'Class1'}) RETURN ID(n)").single().get(0).asLong();
@@ -115,30 +119,30 @@ public class GetChildrenProcedureTest {
 
             Result result = session.run(
                     "MATCH (c) WHERE c:CLASS " +
-                    "CALL symfinder.count(ID(c), \"METHOD\") YIELD result as methods " +
-                    "CALL symfinder.count(ID(c), \"CONSTRUCTOR\") YIELD result as constructors " +
+                            "CALL symfinder.count(ID(c), \"METHOD\") YIELD result as methods " +
+                            "CALL symfinder.count(ID(c), \"CONSTRUCTOR\") YIELD result as constructors " +
                             "RETURN collect(c {.name, methods, constructors})", parameters());
 
-            List <Map <String, Object>> finalResult = result.list().get(0).get(0).asList(MapAccessor::asMap);
+            List<Map<String, Object>> finalResult = result.list().get(0).get(0).asList(MapAccessor::asMap);
             assertEquals(2, finalResult.size());  // Two classes have been visited
 
             // Class1
 
-            final Map <String, Object> class1 = finalResult.stream().filter(stringObjectMap -> stringObjectMap.containsValue("Class1")).findFirst().get();
+            final Map<String, Object> class1 = finalResult.stream().filter(stringObjectMap -> stringObjectMap.containsValue("Class1")).findFirst().get();
             assertTrue(((List<Map<String, Object>>) class1.get("constructors")).isEmpty());
-            final List <Map <String, Object>> methods = (List <Map <String, Object>>) class1.get("methods");
+            final List<Map<String, Object>> methods = (List<Map<String, Object>>) class1.get("methods");
             assertEquals(1, methods.size());
             assertEquals("method1", methods.get(0).get("name"));
             assertEquals(2L, methods.get(0).get("number"));
 
             // Class2
 
-            final Map <String, Object> class2 = finalResult.stream().filter(stringObjectMap -> stringObjectMap.containsValue("Class2")).findFirst().get();
-            final List <Map <String, Object>> constructors2 = (List <Map <String, Object>>) class2.get("constructors");
+            final Map<String, Object> class2 = finalResult.stream().filter(stringObjectMap -> stringObjectMap.containsValue("Class2")).findFirst().get();
+            final List<Map<String, Object>> constructors2 = (List<Map<String, Object>>) class2.get("constructors");
             assertEquals(1, constructors2.size());
             assertEquals("Class2", constructors2.get(0).get("name"));
             assertEquals(2L, constructors2.get(0).get("number"));
-            final List <Map <String, Object>> methods2 = (List <Map <String, Object>>) class2.get("methods");
+            final List<Map<String, Object>> methods2 = (List<Map<String, Object>>) class2.get("methods");
             assertEquals(1, methods2.size());
             assertEquals("method1", methods2.get(0).get("name"));
             assertEquals(1L, methods2.get(0).get("number"));

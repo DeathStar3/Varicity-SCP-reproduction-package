@@ -46,6 +46,15 @@ public class ExperimentConfig {
     @NotBlank()
     private String projectName;//
     private String repositoryUrl;
+    private String path;
+    private String buildEnv;
+    private String buildEnvTag;
+    private String buildCmd;
+    private String outputPath; // Optional
+    /**
+     * The directory containing the classes to be analyzed by Symfinder
+     */
+    private String sourcePackage;
     /**
      * If skip clone is true then the attributes repositoryUrl, tagIds are ignored
      * and the path must be the path to the project
@@ -56,26 +65,23 @@ public class ExperimentConfig {
      */
     private boolean skipClone = false;
     private boolean skipSymfinder = false;
-    private String path;
-    /**
-     * The directory containing the classes to be analyzed by Symfinder
-     */
-    private String sourcePackage;
-
-    private Set<String> tagIds;//
-    private Set<String> commitIds;//
-    private String buildEnv;
-    private String buildEnvTag;
-    private String buildCmd;
     /**
      * whether the build command contains a sonar; eg: mvn clean package
      * sonar:sonar
      */
     private boolean buildCmdIncludeSonar;
     private boolean sonarqubeNeeded = false;
-    private String outputPath; // Optional
+
+    private Set<String> tagIds;//
+    private Set<String> commitIds;//
+
+    private List<String> filters;
+    private List<String> apiFilters;
 
     private List<MetricSource> sources;
+
+    private int compositionLevel;
+    private String compositionType;
 
     public ExperimentConfig(String projectName, String path, String buildEnv, String buildEnvTag,
                             String buildCmd, boolean buildCmdIncludeSonar) {
