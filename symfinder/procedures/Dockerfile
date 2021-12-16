@@ -21,7 +21,7 @@
 
 FROM maven:3.6.1-jdk-13-alpine as building
 ARG BUILD_PARAMS
-ADD procedures/ /
+ADD . /
 RUN mvn --no-transfer-progress clean install $BUILD_PARAMS
 RUN apk add --no-cache wget && \
     wget -q https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.0.0.15/apoc-4.0.0.15-all.jar && \

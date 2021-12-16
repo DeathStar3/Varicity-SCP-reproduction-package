@@ -25,6 +25,6 @@ services:
   varicity_unit_tests:
     build:
       context: .
-      dockerfile: docker/varicity_unit_tests/Dockerfile
+      dockerfile: varicity_unit_tests/Dockerfile
     image: varicity_unit_tests
     container_name: varicity_unit_tests

@@ -70,7 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Varicity unit tests
-        run: chmod +x ./run_varicity_unit_tests.sh && ./run_varicity_unit_tests.sh
+        run: chmod +x ./tests/run_varicity_unit_tests.sh && ./run_varicity_unit_tests.sh
 #      - name: Varicity integration tests
 #        run: chmod +x ./run_varicity_integration_tests.sh && ./run_varicity_integration_tests.sh
         

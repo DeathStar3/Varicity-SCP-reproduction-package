@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - develop
-#      - old-visu
+      - old-visu
   workflow_dispatch:
 jobs:
   sourcesfetchertest:
