@@ -68,7 +68,7 @@ public final class App {
     }
 
     /**
-     * Says hello to the world.
+     * The main method
      *
      * @param args The arguments of the program.
      */
@@ -124,7 +124,7 @@ public final class App {
 
         for (ExperimentConfig firstConfig : configs) {
             List<ExperimentResult> results = metricExtension.runExperiment(firstConfig,
-                symfinderConfigParser.parseSymfinderConfigurationFromFile(symfinderConfiguration).hotspots());
+                symfinderConfigParser.parseSymfinderConfigurationFromFile(symfinderConfiguration));
 
             ExperimentResultWriter experimentResultWriter;
             ExperimentResultWriter experimentResultWriterHtml = null;

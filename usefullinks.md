@@ -8,3 +8,11 @@ https://stackoverflow.com/questions/29282457/equivalent-to-files-readalllines-fo
 https://coderanch.com/t/568837/java/Reading-directory-files-InputStream
 https://stackoverflow.com/questions/8797909/how-to-read-files-in-an-folder-inputstream#8797972
 https://stackoverflow.com/questions/24696766/how-to-save-a-jsoup-document-to-an-html-file#28605640
+
+https://stackoverflow.com/questions/3655424/string-replacement-in-java-similar-to-a-velocity-template#3655963
+
+https://stackoverflow.com/questions/1386809/copy-directory-from-a-jar-file#3348150
+
+https://stackoverflow.com/questions/6628066/default-values-to-a-unix-shell-script
+
+https://stackoverflow.com/questions/3672480/cp-command-should-ignore-some-files

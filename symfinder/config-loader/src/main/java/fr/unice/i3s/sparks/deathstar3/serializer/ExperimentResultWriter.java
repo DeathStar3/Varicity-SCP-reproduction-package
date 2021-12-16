@@ -44,8 +44,9 @@ public interface ExperimentResultWriter {
     }
 
     /**
+     * @author ANAGONOU Patrick
      * @param experimentResult The result of an experiment (contains at least one of symfinder variability information and metrics information)
-     * @throws Exception The implementation might throw an implementation
+     * @throws Exception The implementation might throw an exception
      */
     void writeResult(ExperimentResult experimentResult) throws Exception;
 }

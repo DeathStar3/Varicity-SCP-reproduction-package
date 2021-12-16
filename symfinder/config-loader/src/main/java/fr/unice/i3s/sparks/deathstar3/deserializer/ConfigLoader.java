@@ -42,9 +42,11 @@ public class ConfigLoader {
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     /**
-     * Parse the config file
+     *
+     * @param source a YAML string that contains configurations for experiments
+     * @return the configurations parsed into Java objects
      */
-    public List<ExperimentConfig> deserializeConfigFile(String source) {
+    public List<ExperimentConfig> deserializeConfigsFromString(String source) {
         try {
             Map<String, ExperimentConfig> configsMap = mapper.readValue(source, new TypeReference<HashMap<String, ExperimentConfig>>() {
             });
@@ -69,12 +71,14 @@ public class ConfigLoader {
     }
 
     /**
-     * Load the config file
+     *
+     * @param fileName path of a YAML file that contains configurations for experiments
+     * @return the configurations parsed into Java objects
      */
     public List<ExperimentConfig> loadConfigFile(String fileName) {
 
         try {
-            return deserializeConfigFile(Files.readString(Path.of(fileName)));
+            return deserializeConfigsFromString(Files.readString(Path.of(fileName)));
         } catch (IOException e) {
             e.printStackTrace();
         }

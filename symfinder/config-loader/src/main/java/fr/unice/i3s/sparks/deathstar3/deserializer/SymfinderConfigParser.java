@@ -28,6 +28,7 @@ package fr.unice.i3s.sparks.deathstar3.deserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.HotspotsParameters;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.ParametersObject;
 
 import java.io.IOException;
@@ -36,17 +37,27 @@ import java.nio.file.Path;
 
 public class SymfinderConfigParser {
 
-    public ParametersObject parseSymfinderConfigurationFromString(String yamlString) {
+    /**
+     *
+     * @param yamlString a Yaml String containing the hotspots configurations
+     * @return the hotspots configuration parsed as a Java object
+     */
+    public HotspotsParameters parseSymfinderConfigurationFromString(String yamlString) {
 
         ObjectMapper objectMapperYaml = new ObjectMapper(new YAMLFactory());
         try {
-            return objectMapperYaml.readValue(yamlString, ParametersObject.class);
+            return objectMapperYaml.readValue(yamlString, ParametersObject.class).hotspots();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ParametersObject parseSymfinderConfigurationFromFile(String pathOfYaml) {
+    /**
+     *
+     * @param pathOfYaml a path to a YAML file containing the hotspots configurations of Symfinder
+     * @return the hotspots configuration parsed as a Java object
+     */
+    public HotspotsParameters parseSymfinderConfigurationFromFile(String pathOfYaml) {
         try {
             return this.parseSymfinderConfigurationFromString(Files.readString(Path.of(pathOfYaml)));
         } catch (IOException e) {

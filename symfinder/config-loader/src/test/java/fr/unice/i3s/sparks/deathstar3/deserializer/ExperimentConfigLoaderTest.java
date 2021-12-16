@@ -13,7 +13,7 @@ public class ExperimentConfigLoaderTest {
     public void loadConfigFromStringTest() throws IOException {
         var source = new String(
                 ExperimentConfigLoaderTest.class.getClassLoader().getResourceAsStream("config.yaml").readAllBytes());
-        var config = this.configLoader.deserializeConfigFile(source);
+        var config = this.configLoader.deserializeConfigsFromString(source);
 
         Assert.assertEquals(config.get(0).getProjectName(), "jfreechart");
     }

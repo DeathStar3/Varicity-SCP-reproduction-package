@@ -30,7 +30,7 @@ public class MetricExtensionEntrypointTest {
                 new HotspotsParameters(20, 5), "");
 
 
-        ExperimentConfig cfclient = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+        ExperimentConfig cfclient = this.configLoader.deserializeConfigsFromString(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("legacy-experiments-non-regression.yaml").readAllBytes())).get(0);
 
         System.out.println(cfclient);
@@ -52,7 +52,7 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-        ExperimentConfig cfclient = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+        ExperimentConfig cfclient = this.configLoader.deserializeConfigsFromString(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("experiment-cookie-factory-config.yaml").readAllBytes())).get(0);
 
         System.out.println(cfclient);
@@ -75,7 +75,7 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-        ExperimentConfig iutas201 = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+        ExperimentConfig iutas201 = this.configLoader.deserializeConfigsFromString(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("iutas201_vehicule.yaml").readAllBytes())).get(0);
 
         System.out.println(iutas201);
@@ -105,7 +105,7 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-        ExperimentConfig regatta = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+        ExperimentConfig regatta = this.configLoader.deserializeConfigsFromString(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("regatta.yaml").readAllBytes())).get(0);
 
         System.out.println(regatta);
@@ -133,7 +133,7 @@ public class MetricExtensionEntrypointTest {
         ParametersObject parametersObject = new ParametersObject(new Neo4jParameters("bolt://localhost:7687", "", ""),
                 new HotspotsParameters(20, 5), "");
 
-        ExperimentConfig regatta = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+        ExperimentConfig regatta = this.configLoader.deserializeConfigsFromString(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("regatta-with-symfinder.yaml").readAllBytes())).get(0);
 
         System.out.println(regatta);
@@ -157,7 +157,7 @@ public class MetricExtensionEntrypointTest {
     void runExperimentWithMultipleTagsAndCommits() throws IOException {
         HotspotsParameters hotspotsParameters = new HotspotsParameters(20, 5);
 
-        ExperimentConfig cf = this.configLoader.deserializeConfigFile(new String(MetricExtensionEntrypointTest.class.getClassLoader().
+        ExperimentConfig cf = this.configLoader.deserializeConfigsFromString(new String(MetricExtensionEntrypointTest.class.getClassLoader().
                 getResourceAsStream("experiment-cookie-factory-config-multiple-tags.yaml").readAllBytes())).get(0);
 
         List<ExperimentResult> experimentResultList = this.entrypoint.runExperiment(cf, hotspotsParameters);

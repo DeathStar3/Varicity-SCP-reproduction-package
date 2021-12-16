@@ -73,6 +73,11 @@ public class Compiler {
         this.dockerClient = DockerClientBuilder.getInstance().withDockerHttpClient(httpClient).build();
     }
 
+    /**
+     * Compile and Scan a Java project to generate the metrics of SonarQube
+     * @param projectConfig
+     * @return true if it was successful false if there was an error at some level
+     */
     public synchronized boolean executeProject(ExperimentConfig projectConfig) {
         projectConfig = projectConfig.cloneSelfExact();
 
@@ -150,9 +155,9 @@ public class Compiler {
     }
 
     /**
-     * Compile and scan the project in the same step if
+     * Compile and scan the project in the same step
      *
-     * @param projectConfig
+     * @param projectConfig the Experiment Configuration
      * @return the containerId
      */
     String compileAndScanProject(ExperimentConfig projectConfig) throws JsonProcessingException {
