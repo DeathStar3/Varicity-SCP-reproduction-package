@@ -1,4 +1,4 @@
-FROM openjdk:17-bullseye
+FROM openjdk:11-jdk-slim
 
 WORKDIR /usr/src
 # copy only the artifacts we need from the first stage and discard the rest

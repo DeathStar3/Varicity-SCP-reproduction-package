@@ -1,5 +1,5 @@
 # the first stage of our build will use a maven parent image
-FROM maven:3.8.3-openjdk-17 AS MAVEN_BUILD
+FROM maven:3.8.4-openjdk-11-slim AS MAVEN_BUILD
 
 WORKDIR /home
 # copy the pom and src code to the container
@@ -9,7 +9,7 @@ COPY ./ ./
 RUN mvn clean install -DskipTests=true
 
 # the second stage of our build
-FROM openjdk:17-bullseye
+FROM openjdk:11-jdk-slim
 
 WORKDIR /usr/src
 # copy only the artifacts we need from the first stage and discard the rest
