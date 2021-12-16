@@ -12,10 +12,8 @@ grouping every class linked to the street's starting building.
 
 **SymFinder** is a toolchain parsing a single Java codebase to identify potential variability implementations.
 The output of SymFinder consists in JSON files containing information on the presence of variability implementations in the analysed codebase (e.g. if a class has been identified as a variation point or a variant, number of variants of an identified variation point…).
-
-**Metrics-extension** is a tool allowing you to retrieve additional metrics from external sources. It can be configured to retrieve quality metrics from SonarCloud given a URL, or can automatically pull a local SonarQube image to scan the given project.
-
-**SymFinder-CLI** orchestrate the gathering of variability & quality metrics by running the Metric-Extension and Symfinder tools. They are called depending on configuration files and parameters given by the user.
+It also allows you to retrieve additional metrics from external sources. It can be configured to retrieve quality metrics from SonarCloud given a URL, or can automatically pull a local SonarQube image to scan the given project.
+orchestrate the gathering of variability & quality metrics by running the Metric-Extension and Symfinder tools. They are called depending on configuration files and parameters given by the user.
 
 ## How to run the demo
 
@@ -36,7 +34,7 @@ The following demo will use the JUnit project with a custom ``pom.xml`` to build
   - Instructions to install Docker are available [here](https://docs.docker.com/get-docker/).
 - Docker-compose
   - Instructions to install Docker Compose are available [here](https://docs.docker.com/compose/install/#install-compose).
-- JDK 11 (if you want to develop the `metrics-extension` project)
+- JDK 11 (if you want to develop the `symfinder` project)
   - The JAVA_HOME environment variable must be defined and pointing to a JDK >= 11 (if you want to run Symfinder directly on the host)
 - Maven
 - Internet connexion
@@ -89,16 +87,15 @@ No worries if no city is displayed, go to the "APIs and Blacklist" menu on the r
 </p>
 
 ## Documentation
-- [Go to symfinder's documentation](./metrics-extension/symfinder/README.md)
-- [Go to metrics-extension's documentation](./metrics-extension/README.md)
+- [Go to symfinder's documentation](./symfinder/README.md)
 - [Go to varicity-backend's documentation](./varicity-backend/README.md)
 - [Go to varicity's documentation](./varicity/README.md)
 
 ## Authors
 
-Authors | Contact
------------------------------------------------------------ | ----------------------------------------------------------
-[Patrick Anagonou](https://github.com/anagonousourou)       | [sourou-patrick.anagonou@etu.univ-cotedazur.fr](mailto:sourou-patrick.anagonou@etu.univ-cotedazur.fr)
-[Guillaume Savornin](https://github.com/GuillaumeSavornin)  | [guillaume.savornin@etu.univ-cotedazur.fr](mailto:guillaume.savornin@etu.univ-cotedazur.fr)
-[Anton van der Tuijn](https://github.com/Anton-vanderTuijn) | [anton.van-der-tuijn@etu.univ-cotedazur.fr](mailto:anton.van-der-tuijn@etu.univ-cotedazur.fr)
+ | Authors                                                     | Contact|
+|-------------------------------------------------------------| ----------------------------------------------------------|
+ | [Patrick Anagonou](https://github.com/anagonousourou)       | [sourou-patrick.anagonou@etu.univ-cotedazur.fr](mailto:sourou-patrick.anagonou@etu.univ-cotedazur.fr)|
+ | [Guillaume Savornin](https://github.com/GuillaumeSavornin)  | [guillaume.savornin@etu.univ-cotedazur.fr](mailto:guillaume.savornin@etu.univ-cotedazur.fr)|
+ | [Anton van der Tuijn](https://github.com/Anton-vanderTuijn) | [anton.van-der-tuijn@etu.univ-cotedazur.fr](mailto:anton.van-der-tuijn@etu.univ-cotedazur.fr)|
 

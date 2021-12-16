@@ -45,13 +45,13 @@ jobs:
         with:
           python-version: '3.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
       - name: Install all modules
-        working-directory: ./metrics-extension
+        working-directory: ./symfinder
         run: mvn clean install -DskipTests
       - name: Unit tests on symfinder-engine
-        working-directory: ./metrics-extension/symfinder
+        working-directory: ./symfinder/symfinder
         run: mvn clean install
       - name: Test with symfinder-cli and varicity-backend (front is not used)
-        working-directory: ./integrations
+        working-directory: ./tests
         run: bash start.sh
 
 #  integration_tests:

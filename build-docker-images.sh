@@ -21,8 +21,11 @@
 #
 #This script build the images to be used with docker
 set -e
-cd metrics-extension
+cd symfinder
 docker build -f Dockerfile -t deathstar3/symfinder-cli:local .
+cd procedures/
+docker build -t deathstar3/symfinder-neo4j:local .
+cd ..
 cd ../varicity
 echo "Building the front"
 docker build -t deathstar3/varicity:local .
