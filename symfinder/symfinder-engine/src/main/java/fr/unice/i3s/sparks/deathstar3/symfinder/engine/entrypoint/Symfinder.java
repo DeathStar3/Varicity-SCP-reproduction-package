@@ -85,7 +85,7 @@ public class Symfinder {
 
     public SymfinderResult run() throws IOException {
         long symfinderStartTime = System.currentTimeMillis();
-        String classpathPath = Constants.getJavaPath();
+        String classpathPath = Constants.JAVA_PATH;
         List<File> files = Files.walk(Paths.get(sourcePackage))
                 .filter(Files::isRegularFile)
                 .filter(path -> !isTestPath(path))

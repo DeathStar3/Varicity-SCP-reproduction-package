@@ -78,7 +78,7 @@ public class Neo4JStarter {
 
         if (existingNeo4J()) {
             log.info("An instance of neo4j seems to be already running ");
-            return new Neo4jParameters("bolt://" + Constants.getNeo4jLocalHostname() + ":7687", "", "");
+            return new Neo4jParameters("bolt://" + Constants.NEO4J_LOCAL_HOSTNAME + ":7687", "", "");
         }
 
         // Create the container.
@@ -99,9 +99,9 @@ public class Neo4JStarter {
 
         dockerClient.startContainerCmd(createContainerResponse.getId()).exec();
 
-        WaitFor.waitForPort(Constants.getNeo4jLocalHostname(), 7474, Constants.getNeo4jTimeout() * 60_000L);
+        WaitFor.waitForPort(Constants.NEO4J_LOCAL_HOSTNAME, 7474, Constants.NEO4J_TIMEOUT * 60_000L);
 
-        return new Neo4jParameters("bolt://" + Constants.getNeo4jLocalHostname() + ":7687", "", "");
+        return new Neo4jParameters("bolt://" + Constants.NEO4J_LOCAL_HOSTNAME + ":7687", "", "");
 
     }
 

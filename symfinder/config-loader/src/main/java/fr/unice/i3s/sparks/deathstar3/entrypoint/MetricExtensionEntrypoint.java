@@ -187,7 +187,7 @@ public class MetricExtensionEntrypoint {
             for (MetricSource source : config.getSources()) {
 
                 if (source.getName().equals("sonarqube")) {
-                    source.setRootUrl(Constants.getSonarqubeLocalUrl());
+                    source.setRootUrl(Constants.SONARQUBE_LOCAL_URL);
                 }
 
                 if (source.getName().equals("sonarqube") && !localSonarqubeIsReady) {

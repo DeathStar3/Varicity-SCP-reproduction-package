@@ -86,7 +86,7 @@ public final class App {
     }
 
     private void printVersion() {
-        System.out.println("Symfinder version " + Constants.getSymfinderVersion());
+        System.out.println("Symfinder version " + Constants.SYMFINDER_VERSION);
     }
 
     private void setLogLevel() {

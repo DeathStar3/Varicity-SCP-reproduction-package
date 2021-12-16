@@ -285,7 +285,8 @@ export class Building3D extends Element3D {
 
             //TODO White color is absorbed find how to fix it:
             // See Spike #81 https://github.com/DeathStar3-projects/varicity-config/issues/81
-            let color = "" //(rgbToYIQ(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b) >= 128) ? "" : "w_"
+            let isWhiteColor = (rgbToYIQ(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b) <= 0.2);
+            let color = isWhiteColor ? "w_" : ""; //(rgbToYIQ(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b) >= 128) ? "" : "w_"
 
             if (this.elementModel.metrics.metrics.has(this.config.variables.crack)) { //Check if the metric wanted exist
                 const metricValue = this.elementModel.metrics.metrics.get(this.config.variables.crack).value;
@@ -300,11 +301,21 @@ export class Building3D extends Element3D {
                 const level = Math.floor(crack * numberOfLevels);
                 if (level > 0 && level < 8) {
                     mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "level" + level + ".png", this.scene);
+                    if(isWhiteColor){
+                        mat.emissiveTexture = new Texture("./images/visualization-texture/crack/" + color + "level" + level + "_black.png", this.scene);
+                    }
+
                 } else if (level >= 8) {
                     mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "level" + 7 + ".png", this.scene);
+                    if(isWhiteColor){
+                        mat.emissiveTexture = new Texture("./images/visualization-texture/crack/" + color + "level" + 7 + "_black.png", this.scene);
+                    }
                 }
             } else {
                 mat.diffuseTexture = new Texture("./images/visualization-texture/crack/" + color + "cross_3.png", this.scene);
+                if(isWhiteColor){
+                    mat.emissiveTexture = new Texture("./images/visualization-texture/crack/" + color + "cross_3_black.png", this.scene);
+                }
             }
         }
 
