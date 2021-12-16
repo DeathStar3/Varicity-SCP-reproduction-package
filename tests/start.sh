@@ -9,7 +9,7 @@ mvn clean compile clean
 cd ../../../
 
 ./run-compose-detach.sh
-cd integrations
+cd tests
 ./run-docker-cli.sh -i /data/experiments.yaml -s /data/symfinder.yaml -verbosity ALL -http http://varicityback:3000/projects
 python3 -m pip install requests
 python3 main.py
