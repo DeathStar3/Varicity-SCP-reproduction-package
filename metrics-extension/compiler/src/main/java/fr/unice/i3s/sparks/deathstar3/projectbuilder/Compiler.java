@@ -108,7 +108,7 @@ public class Compiler {
 
             try {
                 String tokenName = RandomStringUtils.randomAlphabetic(8, 10).toUpperCase(Locale.ENGLISH);
-                SonarQubeToken result = this.getToken(tokenName, Constants.getSonarqubeLocalUrl());
+                SonarQubeToken result = this.getToken(tokenName, Constants.SONARQUBE_LOCAL_URL);
                 String scannerContainerId = this.runSonarScannerCli(projectConfig, result);
                 InspectContainerResponse.ContainerState scannerContainerState = waitForContainerCorrectExit(
                         scannerContainerId);
@@ -167,7 +167,7 @@ public class Compiler {
         }
 
         String tokenName = RandomStringUtils.randomAlphabetic(8, 10).toUpperCase(Locale.ENGLISH);
-        SonarQubeToken result = this.getToken(tokenName, Constants.getSonarqubeLocalUrl());
+        SonarQubeToken result = this.getToken(tokenName, Constants.SONARQUBE_LOCAL_URL);
         Volume volume = new Volume("/project");
 
         var command = dockerClient

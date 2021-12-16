@@ -28,98 +28,174 @@ import java.util.Optional;
 
 /**
  * We will initialize everything that will be environment specific or
- * configuration input to make the programm run inside docker as well as outside
+ * configuration input to make the program run inside docker as well as outside
  *
  * @author VaricityConfig Team : Patrick
  */
 @Slf4j
 public final class Constants {
+    //================================================================================
+    // GENERAL
+    //================================================================================
 
-    public static final String NETWORK_NAME = "varicity-config";
-    public static final String COMPILER_SCANNER_NAME = "varicity-compiler-scanner-container";
-    public static final String COMPILER_NAME = "varicity-compiler-container";
-    public static final String SCANNER_NAME = "varicity-scanner-container";
-    public static final String SONARQUBE_DOCKER_URL = "http://sonarqubehost:9000";
-    public static final String SONAR_SCANNER_IMAGE = "sonarsource/sonar-scanner-cli";
-    public static final String SONAR_SCANNER_IMAGE_TAG = "4";
-    public static String SYMFINDER_NEO4J_IMAGE;
-    public static String SYMFINDER_NEO4J_TAG;
+    /**
+     * The Symfinder version.
+     */
+    public static final String SYMFINDER_VERSION = Optional.ofNullable(System.getenv("SYMFINDER_VERSION"))
+        .orElse("undefined");
+
+    /**
+     * The path to the Java binaries.
+     */
+    public static final String JAVA_PATH = Optional.ofNullable(System.getProperty("SYMFINDER_JAVA_CLASSPATH"))
+        .or(()-> Optional.ofNullable(System.getenv("JAVA_HOME")))
+        .or(()-> Optional.of( "/usr/lib/jvm/java-11-openjdk-amd64"))
+        .get();
+
+    //================================================================================
+    // DOCKER
+    //================================================================================
+
+    /**
+     * The name of the network shared by the Docker containers.
+     */
+    public static final String NETWORK_NAME = Optional.ofNullable(System.getenv("NETWORK_NAME"))
+        .orElse("varicity-config");
+
+    /**
+     * The maximum time to wait for a Docker image download (in minutes).
+     */
+    public static final int IMAGE_DOWNLOAD_TIMEOUT;
+
+    //================================================================================
+    // COMPILER
+    //================================================================================
+
+    /**
+     * The Symfinder compiler container name.
+     */
+    public static final String COMPILER_NAME = Optional.ofNullable(System.getenv("COMPILER_NAME"))
+        .orElse("varicity-compiler-container");
+
+    /**
+     * The Symfinder scanner container name.
+     */
+    public static final String SCANNER_NAME = Optional.ofNullable(System.getenv("SCANNER_NAME"))
+        .orElse("varicity-scanner-container");
+
+    /**
+     * The Symfinder compiler scanner container name.
+     */
+    public static final String COMPILER_SCANNER_NAME = Optional.ofNullable(System.getenv("COMPILER_SCANNER_NAME"))
+        .orElse("varicity-compiler-scanner-container");
+
+    //================================================================================
+    // NEO4J
+    //================================================================================
+
+    /**
+     * The Symfinder Neo4J image name.
+     */
+    public static final String SYMFINDER_NEO4J_IMAGE = Optional.ofNullable(System.getenv("SYMFINDER_NEO4J_IMAGE"))
+        .orElse("deathstar3/symfinder-neo4j");
+
+    /**
+     * The Symfinder Neo4J image tag.
+     */
+    public static final String SYMFINDER_NEO4J_TAG = Optional.ofNullable(System.getenv("SYMFINDER_NEO4J_TAG"))
+        .orElse("vissoft2021");
+
     /**
      * The Symfinder Neo4J container name.
      */
-    public static String NEO4J_CONTAINER_NAME = "symfinder-neo4j";
+    public static final String NEO4J_CONTAINER_NAME = Optional.ofNullable(System.getenv("NEO4J_CONTAINER_NAME"))
+        .orElse("symfinder-neo4j");
+
     /**
-     * Host name provided to the docker deamon to build for the neo4j container
+     * The Symfinder Neo4J host name.
      */
-    public static String NEO4J_HOSTNAME = "symfinder-neo4j";
-    private static String SYMFINDER_VERSION;
-    private static String JAVA_PATH;
-    private static String SONARQUBE_LOCAL_URL = "http://localhost:9000";
+    public static final String NEO4J_HOSTNAME = Optional.ofNullable(System.getenv("NEO4J_HOSTNAME"))
+        .orElse("symfinder-neo4j");
+
     /**
-     * This is the hostname part of the url that can be used to contact neo4j from
-     * within a container
-     * or from the host depending on where Symfinder is running
+     * This is the hostname part of the URL that can be used to contact Neo4J from within a container
+     * or from the host depending on where Symfinder is running.
      */
-    private static String NEO4J_LOCAL_HOSTNAME = "localhost";
+    public static final String NEO4J_LOCAL_HOSTNAME;
 
-    private static int IMAGE_DOWNLOAD_TIMEOUT = 20;
+    /**
+     * The maximum time to wait for the Neo4J container (in minutes).
+     */
+    public static final int NEO4J_TIMEOUT;
 
-    private static int NEO4J_TIMEOUT = 3;
+    //================================================================================
+    // SONARQUBE
+    //================================================================================
 
-    private static int NEO4J_MAX_RETRIES = 20;
+    /**
+     * The SonarQube image name.
+     */
+    public static final String SONAR_SCANNER_IMAGE = Optional.ofNullable(System.getenv("SONAR_SCANNER_IMAGE"))
+        .orElse("sonarsource/sonar-scanner-cli");
+
+    /**
+     * The SonarQube image tag.
+     */
+    public static final String SONAR_SCANNER_IMAGE_TAG = Optional.ofNullable(System.getenv("SONAR_SCANNER_IMAGE_TAG"))
+        .orElse("4");
+
+    /**
+     * The SonarQube container name;
+     */
+    public static final String SONARQUBE_CONTAINER_NAME = Optional.ofNullable(System.getenv("SONARQUBE_CONTAINER_NAME"))
+        .orElse("sonarqubehost");
+
+    /**
+     * The SonarQube URL (from outside the network).
+     */
+    public static final String SONARQUBE_LOCAL_URL;
+
+    /**
+     * The SonarQube URL (from within the network).
+     */
+    public static final String SONARQUBE_DOCKER_URL = Optional.ofNullable(System.getenv("SONARQUBE_DOCKER_URL"))
+        .orElse("http://" + SONARQUBE_CONTAINER_NAME + ":9000");
 
     static {
         log.info("Initializing constants based on environment variables...");
 
-        if (System.getenv("SYMFINDER_VERSION") != null) {
-            SYMFINDER_VERSION = System.getenv("SYMFINDER_VERSION");
+        // Runtime mode.
+        if (System.getenv("RUNTIME_MODE") != null && System.getenv("RUNTIME_MODE").equals("DOCKER")) {
+            log.info("Running inside Docker.");
+            NEO4J_LOCAL_HOSTNAME = NEO4J_HOSTNAME;
+            SONARQUBE_LOCAL_URL = SONARQUBE_DOCKER_URL;
+
+        } else {
+            NEO4J_LOCAL_HOSTNAME = "localhost";
+            SONARQUBE_LOCAL_URL = "http://localhost:9000";
         }
 
-        JAVA_PATH = Optional.ofNullable(System.getProperty("SYMFINDER_JAVA_CLASSPATH")).or(() -> Optional.ofNullable(System.getenv("JAVA_HOME"))).or(() -> Optional.of("/usr/lib/jvm/java-11-openjdk-amd64")).get();
-
+        // Image download timeout.
         if (System.getenv("IMAGE_DOWNLOAD_TIMEOUT") != null && NumberUtils.isParsable(System.getenv("IMAGE_DOWNLOAD_TIMEOUT"))) {
             IMAGE_DOWNLOAD_TIMEOUT = Integer.parseInt(System.getenv("IMAGE_DOWNLOAD_TIMEOUT"));
             log.info("IMAGE_DOWNLOAD_TIMEOUT is set to " + IMAGE_DOWNLOAD_TIMEOUT);
+        } else {
+            IMAGE_DOWNLOAD_TIMEOUT = 20;
         }
 
-        if (System.getenv("RUNTIME_MODE") != null && System.getenv("RUNTIME_MODE").equals("DOCKER")) {
-            log.info("We are INSIDE DOCKER");
-            SONARQUBE_LOCAL_URL = "http://sonarqubehost:9000";
-            NEO4J_LOCAL_HOSTNAME = "symfinder-neo4j";
-        }
-
-        SYMFINDER_NEO4J_IMAGE = Optional.ofNullable(System.getenv("SYMFINDER_NEO4J_IMAGE"))
-                .orElse("deathstar3/symfinder-neo4j");
-        SYMFINDER_NEO4J_TAG = Optional.ofNullable(System.getenv("SYMFINDER_NEO4J_TAG")).orElse("vissoft2021");
-
+        // Symfinder Neo4J.
         log.info("Using Neo4j {}:{}", SYMFINDER_NEO4J_IMAGE, SYMFINDER_NEO4J_TAG);
+        if (System.getenv("NEO4J_TIMEOUT") != null && NumberUtils.isParsable(System.getenv("NEO4J_TIMEOUT"))) {
+            NEO4J_TIMEOUT = Integer.parseInt(System.getenv("NEO4J_TIMEOUT"));
+        } else {
+            NEO4J_TIMEOUT = 3;
+        }
     }
 
+    /**
+     * Prevents the instantiation of this class.
+     */
     private Constants() {
-
-    }
-
-    public static String getSonarqubeLocalUrl() {
-        return SONARQUBE_LOCAL_URL;
-    }
-
-    public static String getNeo4jLocalHostname() {
-        return NEO4J_LOCAL_HOSTNAME;
-    }
-
-    public static int getImageDownloadTimeout() {
-        return IMAGE_DOWNLOAD_TIMEOUT;
-    }
-
-    public static int getNeo4jTimeout() {
-        return NEO4J_TIMEOUT;
-    }
-
-    public static String getSymfinderVersion() {
-        return SYMFINDER_VERSION;
-    }
-
-    public static String getJavaPath() {
-        return JAVA_PATH;
+        throw new IllegalStateException("Constants should not be instantiated.");
     }
 }
