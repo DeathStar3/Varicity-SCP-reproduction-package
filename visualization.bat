@@ -19,7 +19,7 @@ rem Copyright 2018-2021 Johann Mortara <johann.mortara@univ-cotedazur.fr>
 rem Copyright 2018-2021 Xhevahire Tërnava <t.xheva@gmail.com>
 rem Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 
-
+rem using nginx alpine which is lighter than python
 if %1.==. (set path="%cd%"\generated_visualizations) else (set path="%cd%"\%1)
 
 docker run -v %path%:/usr/share/nginx/html -p 8181:80 nginx:1.20-alpine
