@@ -20,7 +20,7 @@
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
 
-
+cp -r ../varicity varicity
 docker-compose -f varicity-unit-tests.yaml build
 docker-compose -f varicity-unit-tests.yaml up
 docker-compose -f varicity-unit-tests.yaml down

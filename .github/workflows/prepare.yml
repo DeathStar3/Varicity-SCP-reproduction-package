@@ -49,7 +49,7 @@ jobs:
         working-directory: ./symfinder
         run: mvn clean install -DskipTests
       - name: Unit tests on symfinder-engine
-        working-directory: ./symfinder/symfinder
+        working-directory: ./symfinder/symfinder-engine
         run: mvn clean install
       - name: Test with symfinder-cli and varicity-backend (front is not used)
         working-directory: ./tests
@@ -70,7 +70,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Varicity unit tests
-        run: chmod +x ./tests/run_varicity_unit_tests.sh && ./run_varicity_unit_tests.sh
+        working-directory: ./tests
+        run: chmod +x ./run_varicity_unit_tests.sh && ./run_varicity_unit_tests.sh
 #      - name: Varicity integration tests
 #        run: chmod +x ./run_varicity_integration_tests.sh && ./run_varicity_integration_tests.sh
         
