@@ -3,11 +3,11 @@ junit-r4.13.2:
   buildEnv: "maven"
   buildEnvTag: "3.8.3-openjdk-17"
   sourcePackage: src
-  sonarqubeNeeded: false
+  sonarqubeNeeded: true
   commitIds:
     - fc5898cf163674c6ef381f5d018fd96e2d516cc4
   skipClone: false
-  path: "data/projects"
+  path: "/data/projects"
   buildCmdIncludeSonar: true
   buildCmd: "mvn clean package -Pcoverage sonar:sonar -f /project/pom.xml -Dsonar.scm.disabled=true"
   sources:

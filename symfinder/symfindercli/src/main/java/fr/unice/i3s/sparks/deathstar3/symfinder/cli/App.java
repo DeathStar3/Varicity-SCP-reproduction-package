@@ -61,7 +61,7 @@ public final class App {
     @Parameter(names = "--help", help = true)
     private boolean help;
 
-    @Parameter(names = "-visupath")
+    @Parameter(names = "-visupath", description = "Path of where to generate the files necessary for the 'old' symfinder visualization")
     private String visuPath = null;
 
     private App() {

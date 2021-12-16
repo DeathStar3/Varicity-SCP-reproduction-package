@@ -20,5 +20,6 @@
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
 
-docker-compose -f visualization-compose.yaml up
-docker-compose -f visualization-compose.yaml down
+
+MY_PARAM=${1:-generated_visualizations}
+docker run -v $(pwd)/$MY_PARAM:/usr/share/nginx/html -p 8181:80 nginx:1.20-alpine

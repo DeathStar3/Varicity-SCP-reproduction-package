@@ -30,9 +30,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -60,17 +63,25 @@ public class ExperimentResultWriterHtml implements ExperimentResultWriter {
         return new File(path).listFiles();
     }
 
+    /**
+     * This implementation of ExperimentResultWriter generates the files neccessary for the Symfinder Visualization (without varicity)
+     * @param experimentResult The result of an experiment (contains at least one of symfinder variability information and metrics information)
+     * @throws Exception
+     */
     @Override
     public void writeResult(ExperimentResult experimentResult) throws Exception {
 
         //copy the files from the resources directory
-        //
-        var listofscripts=Files.createTempFile("listofscripts","txt");
-        //reading the directory inside the resources folder as a stream return the list of files it contain
-        FileUtils.copyInputStreamToFile( ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/scripts"),listofscripts.toFile());
+        //we use the resources directory a self contained solution
 
-        for (String scriptName : Files.readAllLines(listofscripts)) {
-            System.out.println(scriptName);
+        //we can't copy a directory (and its contents) that is inside the resources folder at least not with a simple way that
+        //would work when we are executing outside of a jar or inside of a jar ; see https://stackoverflow.com/questions/8797909/how-to-read-files-in-an-folder-inputstream#8797972
+        //the solution we use here is the 'table of contents solution' ; there is a list of all files inside the folder
+
+        var listofscripts = new BufferedReader(new InputStreamReader(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/scripts/scripts-list.txt"),
+                StandardCharsets.UTF_8)).lines().filter(line -> !line.isBlank()).collect(Collectors.toList());
+
+        for (String scriptName :listofscripts) {
             if (!Files.exists(Path.of(destinationPath, "scripts",scriptName))) {
                 FileUtils.copyInputStreamToFile(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/scripts/"+scriptName), Path.of(destinationPath, "scripts",scriptName).toFile());
             }
@@ -142,7 +153,7 @@ public class ExperimentResultWriterHtml implements ExperimentResultWriter {
             filters = List.of();
         }
 
-        valuesMap.put("filters", experimentResult.getExperimentConfig().getFilters().stream().map(v -> "\"" + v + "\"").collect(Collectors.joining(",")));
+        valuesMap.put("filters", filters.stream().map(v -> "\"" + v + "\"").collect(Collectors.joining(",")));
         System.out.println(valuesMap.get("filters"));
 
         var apiFilters = experimentResult.getExperimentConfig().getApiFilters();

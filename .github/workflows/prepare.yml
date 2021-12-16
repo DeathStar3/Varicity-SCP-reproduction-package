@@ -26,6 +26,7 @@ on:
     branches:
       - main
       - develop
+      - old-visu
   workflow_dispatch:
 
 jobs:
@@ -64,12 +65,12 @@ jobs:
 #      - name: Acceptance tests on a pilot project
 #        run: ./run_acceptance_tests.sh sat4j
 
-#  varicity_project:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - name: Varicity unit tests
-#        run: chmod +x ./run_varicity_unit_tests.sh && ./run_varicity_unit_tests.sh
+  varicity_project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Varicity unit tests
+        run: chmod +x ./run_varicity_unit_tests.sh && ./run_varicity_unit_tests.sh
 #      - name: Varicity integration tests
 #        run: chmod +x ./run_varicity_integration_tests.sh && ./run_varicity_integration_tests.sh
         

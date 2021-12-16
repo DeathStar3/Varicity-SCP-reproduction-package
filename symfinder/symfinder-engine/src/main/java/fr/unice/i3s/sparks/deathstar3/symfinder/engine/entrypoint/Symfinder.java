@@ -94,6 +94,7 @@ public class Symfinder {
                 .collect(Collectors.toList());
 
         neoGraph.deleteAll();
+        System.out.println("Hello after delete");
         try {
             neoGraph.createClassesIndex();
             neoGraph.createInterfacesIndex();
