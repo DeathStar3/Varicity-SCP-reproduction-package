@@ -29,6 +29,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -67,7 +68,6 @@ public final class ParametersObject {
     public int hashCode() {
         return Objects.hash(neo4j, hotspots, experimentsFile);
     }
-
 
 
 }

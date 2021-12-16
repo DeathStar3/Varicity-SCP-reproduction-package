@@ -28,7 +28,6 @@ import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisit
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.FactoryVisitor;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.GraphBuilderVisitor;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.StrategyTemplateDecoratorVisitor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,14 +52,12 @@ import java.util.stream.Stream;
 /**
  * Inspired by https://www.programcreek.com/2014/01/how-to-resolve-bindings-when-using-eclipse-jdt-astparser/
  */
-@Slf4j
 public class Symfinder {
 
     private static final Logger logger = LogManager.getLogger(Symfinder.class);
-
-    private NeoGraph neoGraph;
     private final String sourcePackage;
-    private Configuration configuration;
+    private final NeoGraph neoGraph;
+    private final Configuration configuration;
 
     public Symfinder(String sourcePackage) {
         this.configuration = new Configuration();
@@ -95,6 +92,7 @@ public class Symfinder {
                 .filter(file -> file.getName().endsWith(".java"))
                 .collect(Collectors.toList());
 
+        neoGraph.deleteAll();
         neoGraph.createClassesIndex();
         neoGraph.createInterfacesIndex();
 
@@ -128,7 +126,7 @@ public class Symfinder {
         logger.log(Level.getLevel("MY_LEVEL"), "Number of corrected inheritance relationships: " + GraphBuilderVisitor.getNbCorrectedInheritanceLinks() + "/" + neoGraph.getNbInheritanceRelationships());
 
         SymfinderResult result = new SymfinderResult(neoGraph.generateVPJsonGraph(), neoGraph.generateStatisticsJson());
-        neoGraph.deleteGraph();
+        neoGraph.deleteAll();
         neoGraph.closeDriver();
         long symfinderExecutionTime = System.currentTimeMillis() - symfinderStartTime;
         logger.printf(Level.getLevel("MY_LEVEL"), "Total execution time: %s", formatExecutionTime(symfinderExecutionTime));
@@ -170,7 +168,7 @@ public class Symfinder {
     private boolean isTestPath(Path path) {
         for (int i = 0; i < path.getNameCount(); i++) {
             int finalI = i;
-            if (List.of("test", "tests").stream().anyMatch(s -> path.getName(finalI).toString().equals(s))) {
+            if (Stream.of("test", "tests").anyMatch(s -> path.getName(finalI).toString().equals(s))) {
                 return true;
             }
         }

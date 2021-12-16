@@ -29,6 +29,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,8 +37,8 @@ import java.util.Objects;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class Neo4jParameters {
-    private  String boltAddress;
-    private  String user;
+    private String boltAddress;
+    private String user;
     private String password;
 
     public String boltAddress() {
