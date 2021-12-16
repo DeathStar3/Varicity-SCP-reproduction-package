@@ -95,3 +95,40 @@ camera_data:
     x: 11.684349326346426
     y: 8.721032203281815
     z: 10.633651660390944
+metrics:
+  complexity:
+    min: 0
+    max: 25
+    higherIsBetter: false
+  cognitive_complexity:
+    min: 0
+    max: 150
+    higherIsBetter: false
+  duplicated_lines:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  duplicated_lines_density:
+    min: 0
+    max: 30
+    higherIsBetter: false
+  coverage:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbMethodVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbAttributes:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbConstructorVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  nbVariants:
+    min: 0
+    max: 100
+    higherIsBetter: false
