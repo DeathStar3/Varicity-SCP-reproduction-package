@@ -64,11 +64,15 @@ public class ExperimentResultWriterHtml implements ExperimentResultWriter {
     public void writeResult(ExperimentResult experimentResult) throws Exception {
 
         //copy the files from the resources directory
-        for (File f : getResourceFolderFiles("d3/scripts")) {
-            log.debug(f.toString());
-            System.out.println(f.toString());
-            if (!Files.exists(Path.of(destinationPath, "scripts"))) {
-                FileUtils.copyFileToDirectory(f, Path.of(destinationPath, "scripts").toFile());
+        //
+        var listofscripts=Files.createTempFile("listofscripts","txt");
+        //reading the directory inside the resources folder as a stream return the list of files it contain
+        FileUtils.copyInputStreamToFile( ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/scripts"),listofscripts.toFile());
+
+        for (String scriptName : Files.readAllLines(listofscripts)) {
+            System.out.println(scriptName);
+            if (!Files.exists(Path.of(destinationPath, "scripts",scriptName))) {
+                FileUtils.copyInputStreamToFile(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/scripts/"+scriptName), Path.of(destinationPath, "scripts",scriptName).toFile());
             }
         }
 

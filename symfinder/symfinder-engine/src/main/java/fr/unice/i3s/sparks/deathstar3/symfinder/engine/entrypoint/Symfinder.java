@@ -36,6 +36,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.neo4j.driver.exceptions.ClientException;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,8 +94,13 @@ public class Symfinder {
                 .collect(Collectors.toList());
 
         neoGraph.deleteAll();
-        neoGraph.createClassesIndex();
-        neoGraph.createInterfacesIndex();
+        try {
+            neoGraph.createClassesIndex();
+            neoGraph.createInterfacesIndex();
+        }catch (ClientException exception){
+            //ignorer
+        }
+
 
         logger.log(Level.getLevel("MY_LEVEL"), "ClassesVisitor");
         visitPackage(classpathPath, files, new ClassesVisitor(neoGraph));
