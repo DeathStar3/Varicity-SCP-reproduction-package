@@ -1,3 +1,24 @@
+/*
+ * This file is part of symfinder.
+ *
+ *  symfinder is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  symfinder is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with symfinder. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2018-2021 Johann Mortara <johann.mortara@univ-cotedazur.fr>
+ *  Copyright 2018-2021 Xhevahire Tërnava <t.xheva@gmail.com>
+ *  Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
+ */
+
 package fr.unice.i3s.sparks.deathstar3.projectbuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,12 +47,9 @@ import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.Set;
 
-import static fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants.NETWORK_NAME;
-
 @Slf4j
 public class SonarQubeStarter {
 
-    public static final String SONARQUBE_CONTAINER_NAME = "sonarqubehost";
     private static final Utils utils = new Utils();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DockerClient dockerClient;
@@ -58,7 +76,7 @@ public class SonarQubeStarter {
 
     public synchronized boolean startSonarqube() {
 
-        utils.removeOldExitedContainer(SONARQUBE_CONTAINER_NAME);
+        utils.removeOldExitedContainer(Constants.SONARQUBE_CONTAINER_NAME);
         if (existingSonarqube()) {
             return true;
         }
@@ -68,9 +86,9 @@ public class SonarQubeStarter {
         utils.createNetwork();
 
         CreateContainerResponse container = dockerClient.createContainerCmd("varicity-sonarqube")
-                .withName(SONARQUBE_CONTAINER_NAME).withExposedPorts(ExposedPort.parse("9000"))
+                .withName(Constants.SONARQUBE_CONTAINER_NAME).withExposedPorts(ExposedPort.parse("9000"))
                 .withHostConfig(HostConfig.newHostConfig().withPortBindings(PortBinding.parse("9000:9000"))
-                        .withNetworkMode(NETWORK_NAME))
+                        .withNetworkMode(Constants.NETWORK_NAME))
                 .exec();
 
         dockerClient.startContainerCmd(container.getId()).exec();
@@ -82,7 +100,7 @@ public class SonarQubeStarter {
                     return false;
                 }
 
-                var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.getSonarqubeLocalUrl() + "/api/system/status",
+                var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.SONARQUBE_LOCAL_URL + "/api/system/status",
                         String.class);
                 var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
                         SonarQubeStatus.class);
@@ -107,7 +125,7 @@ public class SonarQubeStarter {
     private void sonarqubeStartingWaitForSonarqubeUp() {
         while (true) {
             try {
-                var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.getSonarqubeLocalUrl() + "/api/system/status",
+                var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.SONARQUBE_LOCAL_URL + "/api/system/status",
                         String.class);
                 var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
                         SonarQubeStatus.class);
@@ -126,7 +144,7 @@ public class SonarQubeStarter {
     private boolean existingSonarqube() {
         try {
 
-            var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.getSonarqubeLocalUrl() + "/api/system/status",
+            var sonarqubeStatusResponse = this.restTemplate.getForEntity(Constants.SONARQUBE_LOCAL_URL + "/api/system/status",
                     String.class);
             var sonarqubeStatus = this.objectMapper.readValue(sonarqubeStatusResponse.getBody(),
                     SonarQubeStatus.class);

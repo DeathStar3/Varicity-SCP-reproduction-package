@@ -104,6 +104,11 @@ export class UIController {
         // set default values for metrics spec if doesn't exist
         const metricsNames = (await ProjectService.getProjectMetrics(projectName)).data;
         console.log("metric names", metricsNames)
+        config.metrics.forEach((value, key, map) => {
+            if (!metricsNames.includes(key)){
+                config.metrics.delete(key);
+            }
+        })
         metricsNames.forEach(metric => {
             if (!config.metrics.has(metric)) {
                 config.metrics.set(metric, new MetricSpec())

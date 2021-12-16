@@ -251,8 +251,8 @@ public class NeoGraph {
 
     public Object getPropertyValue(Node node, String property) {
         return submitRequest(String.format("MATCH(a)\n" +
-                                           "WHERE ID(a)=$aId\n" +
-                                           "RETURN a.%s", property), "aId", node.id())
+                "WHERE ID(a)=$aId\n" +
+                "RETURN a.%s", property), "aId", node.id())
                 .get(0).get(0).asObject();
     }
 
@@ -289,12 +289,12 @@ public class NeoGraph {
      */
     public void setMethodVPs() {
         submitRequest("MATCH (c:CLASS)-->(a:METHOD) MATCH (c:CLASS)-->(b:METHOD)\n" +
-                      "WHERE a.name = b.name AND ID(a) <> ID(b)\n" +
-                      "WITH count(DISTINCT a.name) AS cnt, c\n" +
-                      "SET c.methodVPs = cnt");
+                "WHERE a.name = b.name AND ID(a) <> ID(b)\n" +
+                "WITH count(DISTINCT a.name) AS cnt, c\n" +
+                "SET c.methodVPs = cnt");
         submitRequest("MATCH (c:CLASS)\n" +
-                      "WHERE NOT EXISTS(c.methodVPs)\n" +
-                      "SET c.methodVPs = 0");
+                "WHERE NOT EXISTS(c.methodVPs)\n" +
+                "SET c.methodVPs = 0");
     }
 
     /**
@@ -757,9 +757,17 @@ public class NeoGraph {
      */
     public void deleteGraph() {
         submitRequest("MATCH (n) DETACH DELETE (n)");
-        submitRequest("DROP INDEX ON :CLASS(name)");
-        submitRequest("DROP INDEX ON :INTERFACE(name)");
     }
+
+    /**
+     * Delete all nodes/relationships/indexes/constraints
+     * https://stackoverflow.com/questions/23310114/how-to-reset-clear-delete-neo4j-database#233103200
+     */
+    public void deleteAll() {
+        submitRequest("MATCH (n) DETACH DELETE (n)");
+        submitRequest("CALL apoc.schema.assert({},{},true) YIELD label, key RETURN *");
+    }
+
 
     private List<org.neo4j.driver.Record> submitRequest(String request, Object... parameters) {
         int count = 0;
