@@ -30,7 +30,7 @@ The following demo will use the JUnit project with a custom ``pom.xml`` to build
 
 ### General Requirements
 
-- Node 16.0
+- Node 14.x
 - NPM 7.10
 - Docker (CLI and deamon)
   - Instructions to install Docker are available [here](https://docs.docker.com/get-docker/).
@@ -81,6 +81,12 @@ Run the analysis
 
 Open your browser and go to [http://localhost:8000](http://localhost:8000) and select jour project. 
 No worries if no city is displayed, go to the "APIs and Blacklist" menu on the right to define your entry points.
+
+## Varicity UI Overview
+
+<p align="center">
+<img src="readme_files/varicity/Varicity_Demo.png" width="800" alt="Varicity UI"/>
+</p>
 
 ## Documentation
 - [Go to symfinder's documentation](./metrics-extension/symfinder/README.md)
