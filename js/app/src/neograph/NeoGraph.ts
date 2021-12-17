@@ -406,8 +406,8 @@ export default class NeoGraph{
     }
 
     async getVariantEntityNodeForFileNode(fileNode: Node): Promise<Node[]>{
-        const request = "MATCH (f:FILE)-[r:EXPORT]->(e)\n" +
-        "WHERE (e:CLASS or e:FUNCTION or e:VARIABLE)\n" +
+        const request = "MATCH (f:"+EntityType.FILE+")-[r:"+RelationType.EXPORT+"]->(e)\n" +
+        "WHERE (e:"+EntityType.CLASS+" or e:"+EntityType.FUNCTION+" or e:"+EntityType.VARIABLE+")\n" +
         "AND ID(f) = $id\n" +
         "RETURN e";
 
@@ -417,8 +417,8 @@ export default class NeoGraph{
     }
 
     async getMotherEntitiesNode(): Promise<Node[]>{
-        const request = "MATCH (e)-[r:EXTENDS|IMPLEMENTS]->(c:CLASS)\n"+
-        "WHERE e:CLASS or e:INTERFACE\n" +
+        const request = "MATCH (e)-[r:"+RelationType.EXTENDS+"|"+RelationType.IMPLEMENTS+"]->(c:CLASS)\n"+
+        "WHERE e:"+EntityType.CLASS+" or e:"+EntityType.INTERFACE+"\n" +
         "RETURN DISTINCT e";
 
         return this.submitRequest(request, {}).then((results: Record[]) =>{
@@ -427,7 +427,7 @@ export default class NeoGraph{
     }
 
     async getImplementedClassesFromEntity(entity: Node): Promise<Node[]>{
-        const request = "MATCH (n)-[r:IMPLEMENTS|EXTENDS]->(c) WHERE ID(n) = $id RETURN c";
+        const request = "MATCH (n)-[r:"+RelationType.EXTENDS+"|"+RelationType.IMPLEMENTS+"]->(c) WHERE ID(n) = $id RETURN c";
 
         return this.submitRequest(request, {id:entity.identity}).then((results: Record[]) =>{
             return <Node[]> (results.map((result: Record) => result.get(0)));
@@ -435,7 +435,7 @@ export default class NeoGraph{
     }
 
     async getMethods(entity: Node){
-        const request = "MATCH (e)-[r:METHOD]->(m:METHOD) WHERE ID(e) = $id RETURN m";
+        const request = "MATCH (e)-[r:"+RelationType.METHOD+"]->(m:"+EntityType.METHOD+") WHERE ID(e) = $id RETURN m";
 
         return this.submitRequest(request, {id:entity.identity}).then((results: Record[]) =>{
             return <Node[]> (results.map((result: Record) => result.get(0)));

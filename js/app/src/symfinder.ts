@@ -216,6 +216,8 @@ export class Symfinder{
         }
         if(i > 0)
             process.stdout.write("\rDetect common entities: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
+
+        return;
     }
 
     async detectCommonMethodImplemented(): Promise<void>{
@@ -229,7 +231,7 @@ export class Symfinder{
             process.stdout.write("\rDetect common method: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
             
             var implementedClasses: Node[] = await this.neoGraph.getImplementedClassesFromEntity(motherEntityNode);
-            var occurenceMethod: any[] = []
+            var occurenceMethod: any = {};
             var motherMethod: string[] = (await this.neoGraph.getMethods(motherEntityNode)).map((n) => n.properties.name);
             for(let implemetedClass of implementedClasses){
                 
@@ -244,8 +246,10 @@ export class Symfinder{
                 }
             }
             for(let [key, value] of Object.entries(occurenceMethod)){
-                if(value.length > 1 && value.length == implementedClasses.length && !motherMethod.includes(key)){
-                    for(let method of value){
+                
+                let methods = <Node[]> value;
+                if(methods.length > 1 && methods.length == implementedClasses.length && !motherMethod.includes(key)){
+                    for(let method of methods){
                         await this.neoGraph.addLabelToNode(method, EntityAttribut.COMMON_METHOD);
                     }
                 }
@@ -253,6 +257,8 @@ export class Symfinder{
 
         }
         if(i > 0)
-            process.stdout.write("\rDetect common entities: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
+            process.stdout.write("\rDetect common method: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
+
+        return;
     }
 }

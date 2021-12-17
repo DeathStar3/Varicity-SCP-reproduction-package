@@ -1,7 +1,7 @@
 import SymfinderVisitor from "./SymfinderVisitor";
 import { EntityType, EntityAttribut, EntityVisibility, NodeType, RelationType } from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
-import { ClassDeclaration, ConstructorDeclaration, FunctionDeclaration, InterfaceDeclaration, isClassDeclaration, isConstructorDeclaration, isFunctionDeclaration, isInterfaceDeclaration, isMethodDeclaration, isMethodSignature, isSourceFile, isVariableStatement, MethodDeclaration, MethodSignature, Node, SourceFile, SyntaxKind, VariableDeclaration, VariableStatement } from "typescript";
+import { ClassDeclaration, ClassExpression, ConstructorDeclaration, FunctionDeclaration, InterfaceDeclaration, isClassDeclaration, isClassExpression, isConstructorDeclaration, isFunctionDeclaration, isInterfaceDeclaration, isMethodDeclaration, isMethodSignature, isSourceFile, isVariableStatement, MethodDeclaration, MethodSignature, Node, SourceFile, SyntaxKind, VariableDeclaration, VariableStatement } from "typescript";
 import { filname_from_filepath } from "../utils/path";
 export default class ClassesVisitor extends SymfinderVisitor{
 
@@ -10,7 +10,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
     }
 
     async visit(node: InterfaceDeclaration): Promise<void>;
-    async visit(node: ClassDeclaration): Promise<void>;
+    async visit(node: ClassDeclaration | ClassExpression): Promise<void>;
     async visit(node: MethodDeclaration): Promise<void>;
     async visit(node: MethodSignature): Promise<void>;
     async visit(node: ConstructorDeclaration): Promise<void>;
@@ -22,10 +22,10 @@ export default class ClassesVisitor extends SymfinderVisitor{
      * @param node AST node
      * @returns ...
      */
-    async visit(node: InterfaceDeclaration | ClassDeclaration | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement): Promise<void> {
+    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement): Promise<void> {
 
         if(isInterfaceDeclaration(node)) await this.visitInterface(node);
-        else if(isClassDeclaration(node)) await this.visitClass(node);
+        else if(isClassDeclaration(node) || isClassExpression(node)) await this.visitClass(node);
         else if(isMethodDeclaration(node) || isMethodSignature(node) || isConstructorDeclaration(node)) await this.visitMethod(node);
         else if(isFunctionDeclaration(node)) await this.visitFunction(node);
         else if(isVariableStatement(node)) await this.visitVariable(node);
@@ -53,7 +53,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
         return;
     }
 
-    async visitClass(node: ClassDeclaration): Promise<void>{
+    async visitClass(node: ClassDeclaration | ClassExpression): Promise<void>{
 
         var name = node.name?.getText();
         if(name === undefined) return;

@@ -66,10 +66,10 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
                     if(classNode !== undefined)
                         await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
                     else 
-                        console.log("Error to link nodes "+className+" and "+superClassesName+"...");
+                        console.log("Cannot get "+className+" with file "+fileName+"...");
                 }
                 else
-                    console.log("Error to link nodes "+className+" and "+superClassesName+"...");                
+                    console.log("Cannot get "+scn+"...");                
         };
         return;
     }

@@ -19,6 +19,8 @@ export default class StrategyTemplateDecoratorVisitor extends SymfinderVisitor{
     async visit(node: PropertyDeclaration): Promise<void> {
 
         if(!isPropertyDeclaration(node) || node.type === undefined) return;
+
+        
         
         var propertyTypeName = node.type.getText();
         var propertyTypeNode = await this.neoGraph.getNode(propertyTypeName);

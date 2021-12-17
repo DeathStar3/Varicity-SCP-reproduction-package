@@ -3,14 +3,14 @@
  */
 class Context{
     
-    private strategy: any;
+    private strategy: Strategy;
 
     constructor(strategy: Strategy) {
         this.strategy = strategy;
     }
 
     public do(){
-        this.strategy.run();
+        this.strategy.action();
     }
 }
 
