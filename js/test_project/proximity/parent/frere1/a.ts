@@ -24,5 +24,7 @@ export function hello(): void{
     
 }
 
+export const aVar = 0;
+
 
 console.log("hello")

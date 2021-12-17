@@ -116,6 +116,17 @@ export default class NeoGraph{
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
+    async updateNodeName(node: Node, name: string): Promise<Node | undefined>{
+        const request = "MATCH (n)\n" +
+        "WHERE ID(n) = $id\n" +
+        "SET n.name = $name\n" +
+        "RETURN n";
+
+        return await this.submitRequest(request, {id: node.identity, name: name}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
     async getNbVariant(node: Node): Promise<number>{
         const request = "MATCH (c)-[:EXTENDS|IMPLEMENTS]->(c2:CLASS) " +
         "WHERE ID(c) = $id " +
@@ -396,11 +407,37 @@ export default class NeoGraph{
 
     async getVariantEntityNodeForFileNode(fileNode: Node): Promise<Node[]>{
         const request = "MATCH (f:FILE)-[r:EXPORT]->(e)\n" +
-        "WHERE (e:CLASS or e:FUNCTION)\n" +
+        "WHERE (e:CLASS or e:FUNCTION or e:VARIABLE)\n" +
         "AND ID(f) = $id\n" +
         "RETURN e";
 
         return this.submitRequest(request, {id:fileNode.identity}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getMotherEntitiesNode(): Promise<Node[]>{
+        const request = "MATCH (e)-[r:EXTENDS|IMPLEMENTS]->(c:CLASS)\n"+
+        "WHERE e:CLASS or e:INTERFACE\n" +
+        "RETURN DISTINCT e";
+
+        return this.submitRequest(request, {}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getImplementedClassesFromEntity(entity: Node): Promise<Node[]>{
+        const request = "MATCH (n)-[r:IMPLEMENTS|EXTENDS]->(c) WHERE ID(n) = $id RETURN c";
+
+        return this.submitRequest(request, {id:entity.identity}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getMethods(entity: Node){
+        const request = "MATCH (e)-[r:METHOD]->(m:METHOD) WHERE ID(e) = $id RETURN m";
+
+        return this.submitRequest(request, {id:entity.identity}).then((results: Record[]) =>{
             return <Node[]> (results.map((result: Record) => result.get(0)));
         });
     }

@@ -1,7 +1,7 @@
 /**
  * A simple strategy implementation inspired by https://refactoring.guru/design-patterns/strategy/typescript/example 
  */
-class Context {
+class Context{
     
     private strategy: any;
 

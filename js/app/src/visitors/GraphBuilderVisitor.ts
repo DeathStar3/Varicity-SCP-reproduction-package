@@ -131,9 +131,15 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         
         var filePath = node.getSourceFile().fileName;
         var fileName = filname_from_filepath(filePath);
-        var exportedElementName = node.getText();
-
+        var exportedElementName: string = node.propertyName ? node.propertyName.getText() : node.name.getText();
         var exportedElementNode = await this.neoGraph.getNodeWithFile(exportedElementName, filePath);
+        if(node.propertyName !== undefined){
+            if(exportedElementNode === undefined) return;
+            exportedElementName = node.name.getText();
+            var exportedElementNode = await this.neoGraph.updateNodeName(exportedElementNode, exportedElementName);
+        }
+
+        
         if(exportedElementNode !== undefined){
             var fileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
             if(fileNode !== undefined){

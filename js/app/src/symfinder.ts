@@ -35,6 +35,7 @@ export class Symfinder{
         await this.neoGraph.detectVPsAndVariants();
         await this.proximityFolderDetection();
         await this.detectCommonEntityProximity();
+        await this.detectCommonMethodImplemented();
 
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
@@ -196,16 +197,16 @@ export class Symfinder{
                     
                     for(let entityNode of await this.neoGraph.getVariantEntityNodeForFileNode(variantFileNode)){
                         if(entitiesOcc[entityNode.properties.name] === undefined){
-                            entitiesOcc[entityNode.properties.name] = [entityNode]
+                            entitiesOcc[entityNode.properties.name] = [entityNode];
                         }
                         else{
-                            entitiesOcc[entityNode.properties.name].push(entityNode)
+                            entitiesOcc[entityNode.properties.name].push(entityNode);
                         }
                     }
                 }
 
                 for(let [key, value] of Object.entries(entitiesOcc)){
-                    if(value.length == variantFileNodes.length){
+                    if(value.lenght > 2 && value.length == variantFileNodes.length){
                         for(let entityNode of value){
                             await this.neoGraph.addLabelToNode(entityNode, EntityAttribut.PROXIMITY_ENTITY);
                         }
@@ -213,5 +214,45 @@ export class Symfinder{
                 }
             }
         }
+        if(i > 0)
+            process.stdout.write("\rDetect common entities: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
+    }
+
+    async detectCommonMethodImplemented(): Promise<void>{
+
+        var motherEntitiesNode: Node[] = await this.neoGraph.getMotherEntitiesNode();
+        let i = 0;
+        let len = motherEntitiesNode.length;
+
+        for(let motherEntityNode of motherEntitiesNode){
+            i++;
+            process.stdout.write("\rDetect common method: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
+            
+            var implementedClasses: Node[] = await this.neoGraph.getImplementedClassesFromEntity(motherEntityNode);
+            var occurenceMethod: any[] = []
+            var motherMethod: string[] = (await this.neoGraph.getMethods(motherEntityNode)).map((n) => n.properties.name);
+            for(let implemetedClass of implementedClasses){
+                
+                var implementedClassMethods = await this.neoGraph.getMethods(implemetedClass);
+                for(let implementedClassMethod of implementedClassMethods){
+                    if(occurenceMethod[implementedClassMethod.properties.name] === undefined){
+                        occurenceMethod[implementedClassMethod.properties.name] = [implementedClassMethod];
+                    }
+                    else{
+                        occurenceMethod[implementedClassMethod.properties.name].push(implementedClassMethod);
+                    }
+                }
+            }
+            for(let [key, value] of Object.entries(occurenceMethod)){
+                if(value.length > 1 && value.length == implementedClasses.length && !motherMethod.includes(key)){
+                    for(let method of value){
+                        await this.neoGraph.addLabelToNode(method, EntityAttribut.COMMON_METHOD);
+                    }
+                }
+            }
+
+        }
+        if(i > 0)
+            process.stdout.write("\rDetect common entities: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
     }
 }

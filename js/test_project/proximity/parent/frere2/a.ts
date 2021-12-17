@@ -16,3 +16,10 @@ export function detectCodeClone(): void{
 
     
 }
+
+
+const bVar = 0;
+
+export{
+    bVar as aVar
+}

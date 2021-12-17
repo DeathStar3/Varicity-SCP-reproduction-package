@@ -9,3 +9,4 @@ symfinder.run('../experiments/grafana');
 //symfinder.run('../experiments/satellizer');
 
 // MATCH (n:VP_FOLDER)-[:CHILD]->(d:VARIANT_FOLDER)-[:CHILD]->(f:SUPER_VARIANT_FILE) RETURN n, d, f
+// MATCH (n1:FILE_VARIANT)-[r:CODE_DUPLICATED]->(n2:FILE_VARIANT) RETURN n1, n2
