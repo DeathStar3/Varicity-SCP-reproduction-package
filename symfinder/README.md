@@ -65,7 +65,7 @@ Click on the desired project to view its visualization.
 
 Here is an example of visualization window:
 
-![visualization.png](readme_files/visualization.png)
+![visualization.png](../readme_files/visualization.png)
 
 The window is made of several parts:
 
