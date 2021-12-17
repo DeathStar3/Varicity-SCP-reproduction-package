@@ -65,6 +65,7 @@ public class ExperimentResultWriterHtml implements ExperimentResultWriter {
 
     /**
      * This implementation of ExperimentResultWriter generates the files neccessary for the Symfinder Visualization (without varicity)
+     *
      * @param experimentResult The result of an experiment (contains at least one of symfinder variability information and metrics information)
      * @throws Exception
      */
@@ -81,9 +82,9 @@ public class ExperimentResultWriterHtml implements ExperimentResultWriter {
         var listofscripts = new BufferedReader(new InputStreamReader(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/scripts/scripts-list.txt"),
                 StandardCharsets.UTF_8)).lines().filter(line -> !line.isBlank()).collect(Collectors.toList());
 
-        for (String scriptName :listofscripts) {
-            if (!Files.exists(Path.of(destinationPath, "scripts",scriptName))) {
-                FileUtils.copyInputStreamToFile(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/scripts/"+scriptName), Path.of(destinationPath, "scripts",scriptName).toFile());
+        for (String scriptName : listofscripts) {
+            if (!Files.exists(Path.of(destinationPath, "scripts", scriptName))) {
+                FileUtils.copyInputStreamToFile(ExperimentResultWriterHtml.class.getClassLoader().getResourceAsStream("d3/scripts/" + scriptName), Path.of(destinationPath, "scripts", scriptName).toFile());
             }
         }
 
@@ -171,9 +172,13 @@ public class ExperimentResultWriterHtml implements ExperimentResultWriter {
         valuesMap.put("jsonStatsFile", Paths.get("data", String.format("%s-stats.json", experimentResult.getProjectName())).toString());
         valuesMap.put("jsonMetricsFile", Paths.get("data", String.format("%s-metrics.json.json", experimentResult.getProjectName())).toString());
 
-        // valuesMap.put("jsonTracesFile", Paths.get("data",String.format("%s-traces.json", experimentResult.getProjectName())).toString());
+        var traces = experimentResult.getExperimentConfig().getTraces();
 
-        // =os.path.join("data", "" % xp_codename) if xp_config.get("traces", "") else "")
+        if (traces != null && !traces.isBlank()) {
+            valuesMap.put("jsonTracesFile", Paths.get("data", String.format("%s-traces.json", experimentResult.getProjectName())).toString());
+        } else {
+            valuesMap.put("jsonTracesFile", "");
+        }
 
         return valuesMap;
     }

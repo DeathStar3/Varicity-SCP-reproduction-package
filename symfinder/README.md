@@ -3,9 +3,13 @@
 Symfinder is a modular Java project that contains all you need to use Symfinder directly or to place it in your own project.
 
 __Modules of Symfinder__
- 
+
+## Procedures
+It is a module that contains an user defined procedure `symfinder.count` that is exported into the Neo4J docker image used by Symfinder Engine.
+
+[See Readme](procedures/README.md)
 ## Entities
-It contains classes that are reused by many modules
+It contains classes that are reused by other modules
 
 ## Sourcesfetcher
 It contains the class that clone the repositories.
@@ -104,23 +108,27 @@ have a default value that is appropriate for most use cases. One of the most imp
 
 To run a project with Varicity you need to prepare an experiment configuration file. 
 
-| Attribute         | Type    | Description |
-|--------------|-----------|------------|
-| path | string      | If the project is already on the disk, it should be the path of project eg: **/home/username/myProjects/thisProject** , if is not on the disk and must be cloned then the path provided must be the path of the parent directory where the project must be cloned, eg: /home/username/myProjects. If it is not provided then a temporay directory is used      |
-|  outputPath     |  string | It is where the programm will put the results of the run of Symfinder and/or MetricsExtension       |
-| repositoryUrl | string | The git url of the project, it can end or not with .git The repository must be public|
-| skipClone | boolean | Whether to clone the project or not, default is `false`. If it is true then `repositoryUrl` is not considered, and `path` must be the path leading to the project eg : **/home/username/myProjects/thisProject**|
-| skipSymfinder | boolean | default is `false`, whether to use the Symfinder Engine to analyse variability or not|
-| buildCmdIncludeSonar | boolean | default is `false`, if the project is in JDK 11 or above, and the `buildCmd` command already include to use sonar then it can be set to `true`. This means that the compilation of the project and it analysis are done in one step by the build tools eg: `mvn clean install sonar:sonar -f /project/pom.xml`, |
-| sonarqubeNeeded |boolean  | whether to start SonarQube or not for the project, default is `false`. If you want to get the quality metrics and don't have an external source like Sonarcloud  for the metrics then it must be set to true|
-| buildEnv | string | a docker image that contains the runtime necessary to build your project, if the image is not on your computer it will be downloaded |
-| buildEnvTag | string | the tag of the image of your build environment, not optional if you provided a buildEnv and you want a local analysis|
-| buildCmd | string | a single command to compile the project before a sonar scan. Your project is mounted under the volume `/project` inside the docker container of your `buildEnv` so you must take that into account when writing your command. Search on [Docker Hub](https://hub.docker.com/) to find an appropriate image or build it yourself from a base image and add your requirements. Your docker image must be compatible with the development/production environment you the project you want to analyse|
-| tagIds | string[] | list of tags that will be cloned, see also `tagIds`|
-| commitIds | string [] | IDs of the commits to analyse, in the current version of the extension all the commits and tags will be cloned and checked-out but only one of the commits/tags will be analyse by Symfinder and MetricsExtension|
-| sourcePackage | string | relative path of the package containing the sources of the project to analyse. `.` corresponds to the root of the project to be analysed,used by Symfinder|
-| sources | MetricSource[] | See MetricSource section |
-
+| Attribute            | Type    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+|----------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| path                 | string      | If the project is already on the disk, it should be the path of project eg: **/home/username/myProjects/thisProject** , if is not on the disk and must be cloned then the path provided must be the path of the parent directory where the project must be cloned, eg: /home/username/myProjects. If it is not provided then a temporay directory is used                                                                                                                                         |
+| outputPath           |  string | It is where the programm will put the results of the run of Symfinder and/or MetricsExtension                                                                                                                                                                                                                                                                                                                                                                                                     |
+| repositoryUrl        | string | The git url of the project, it can end or not with .git The repository must be public                                                                                                                                                                                                                                                                                                                                                                                                             |
+| skipClone            | boolean | Whether to clone the project or not, default is `false`. If it is true then `repositoryUrl` is not considered, and `path` must be the path leading to the project eg : **/home/username/myProjects/thisProject**                                                                                                                                                                                                                                                                                  |
+| skipSymfinder        | boolean | default is `false`, whether to use the Symfinder Engine to analyse variability or not                                                                                                                                                                                                                                                                                                                                                                                                             |
+| buildCmdIncludeSonar | boolean | default is `false`, if the project is in JDK 11 or above, and the `buildCmd` command already include to use sonar then it can be set to `true`. This means that the compilation of the project and it analysis are done in one step by the build tools eg: `mvn clean install sonar:sonar -f /project/pom.xml`,                                                                                                                                                                                   |
+| sonarqubeNeeded      |boolean  | whether to start SonarQube or not for the project, default is `false`. If you want to get the quality metrics and don't have an external source like Sonarcloud  for the metrics then it must be set to true                                                                                                                                                                                                                                                                                      |
+| buildEnv             | string | a docker image that contains the runtime necessary to build your project, if the image is not on your computer it will be downloaded                                                                                                                                                                                                                                                                                                                                                              |
+| buildEnvTag          | string | the tag of the image of your build environment, not optional if you provided a buildEnv and you want a local analysis                                                                                                                                                                                                                                                                                                                                                                             |
+| buildCmd             | string | a single command to compile the project before a sonar scan. Your project is mounted under the volume `/project` inside the docker container of your `buildEnv` so you must take that into account when writing your command. Search on [Docker Hub](https://hub.docker.com/) to find an appropriate image or build it yourself from a base image and add your requirements. Your docker image must be compatible with the development/production environment you the project you want to analyse |
+| tagIds               | string[] | list of tags that will be cloned, see also `tagIds`                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| commitIds            | string [] | IDs of the commits to analyse, in the current version of the extension all the commits and tags will be cloned and checked-out but only one of the commits/tags will be analyse by Symfinder and MetricsExtension                                                                                                                                                                                                                                                                                 |
+| sourcePackage        | string | relative path of the package containing the sources of the project to analyse. `.` corresponds to the root of the project to be analysed,used by Symfinder                                                                                                                                                                                                                                                                                                                                        |
+| sources              | MetricSource[] | See MetricSource section                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| compositionLevel     | int| -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| compositionType      | string| -|
+|filters| string[]|-|
+| apiFilters| string[]|-|
+| traces| string|-|
 - MetricSource
 
 | Attribute         | Type    | Description |
@@ -135,6 +143,7 @@ To run a project with Varicity you need to prepare an experiment configuration f
 
 
 ## Examples of configutations file:
+(may not work **as is**)
 
 Junit4 
 ``` yaml

@@ -58,6 +58,9 @@ public class Neo4JStarter {
         dockerClient = DockerClientBuilder.getInstance().withDockerHttpClient(httpClient).build();
     }
 
+    /**
+     * @return the bolt address and authentication that can be used to access Neo4J
+     */
     public synchronized Neo4jParameters startNeo4J() {
 
         utils.createNetwork();

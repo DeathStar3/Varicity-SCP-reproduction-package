@@ -1,4 +1,5 @@
-#Config Loader
+# Config Loader
+
 If you are interested in using the fonctionnalities of Symfinder in your own project as a dependency, then install it in your
 local Maven repository with
 ```shell

@@ -98,7 +98,7 @@ public class Symfinder {
         try {
             neoGraph.createClassesIndex();
             neoGraph.createInterfacesIndex();
-        }catch (ClientException exception){
+        } catch (ClientException exception) {
             //ignorer
         }
 

@@ -77,7 +77,7 @@ Run the analysis
 
 
 
-Open your browser and go to [http://localhost:8000](http://localhost:8000) and select jour project. 
+Open your browser and go to [http://localhost:8000](http://localhost:8000) and select your project. 
 No worries if no city is displayed, go to the "APIs and Blacklist" menu on the right to define your entry points.
 
 ## Varicity UI Overview

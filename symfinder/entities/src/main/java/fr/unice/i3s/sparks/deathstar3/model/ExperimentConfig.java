@@ -22,6 +22,8 @@
 package fr.unice.i3s.sparks.deathstar3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +31,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,6 +55,7 @@ public class ExperimentConfig {
      * The directory containing the classes to be analyzed by Symfinder
      */
     private String sourcePackage;
+    private String traces;
     /**
      * If skip clone is true then the attributes repositoryUrl, tagIds are ignored
      * and the path must be the path to the project
@@ -93,50 +94,18 @@ public class ExperimentConfig {
         this.buildCmdIncludeSonar = buildCmdIncludeSonar;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this)
-            return true;
-        if (obj == null || obj.getClass() != this.getClass())
-            return false;
-        ExperimentConfig that = (ExperimentConfig) obj;
-        return Objects.equals(this.projectName, that.projectName)
-                && Objects.equals(this.repositoryUrl, that.repositoryUrl)
-                && Objects.equals(this.sourcePackage, that.sourcePackage) && Objects.equals(this.tagIds, that.tagIds);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(projectName, repositoryUrl, sourcePackage, tagIds);
-    }
-
-
+    /**
+     * @return an exact deep copy of this object, null if the deep copy failed
+     */
     public ExperimentConfig cloneSelfExact() {
-        ExperimentConfig other = new ExperimentConfig(this.projectName, this.path, this.buildEnv, this.buildEnvTag, this.buildCmd, this.buildCmdIncludeSonar);
-
-        if (this.commitIds != null) {
-            other.setCommitIds(new HashSet<>(this.commitIds));
-        } else {
-            other.setCommitIds(Set.of());
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper
+                    .readValue(objectMapper.writeValueAsString(this), ExperimentConfig.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
         }
-        if (this.tagIds != null) {
-            other.setTagIds(new HashSet<>(this.tagIds));
-        } else {
-            other.setTagIds(Set.of());
-        }
-
-        other.setRepositoryUrl(this.repositoryUrl);
-        other.setOutputPath(this.outputPath);
-        other.setSkipClone(this.skipClone);
-        if (this.sources != null) {
-            other.setSources(this.sources.stream().map(MetricSource::cloneSelfExact).collect(Collectors.toList()));
-        }
-
-        other.setSourcePackage(this.sourcePackage);
-        other.setSkipSymfinder(this.skipSymfinder);
-        other.setSonarqubeNeeded(this.sonarqubeNeeded);
-
-        return other;
     }
 
     /**

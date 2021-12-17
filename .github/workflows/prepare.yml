@@ -33,8 +33,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Building the docker images
-        run: bash build-docker-images.sh
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -44,12 +42,29 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+      - name: Building the docker images
+        run: bash build-docker-images.sh
+      - name: Test source fetcher clone method
+        working-directory: ./symfinder
+        run: mvn clean package -Dtest=SourceFetcherTest#cloneRepositoryTest -DfailIfNoTests=false
       - name: Install all modules
         working-directory: ./symfinder
         run: mvn clean install -DskipTests
       - name: Unit tests on symfinder-engine
         working-directory: ./symfinder/symfinder-engine
         run: mvn clean install
+      - name: Test Whole Chain on Cookie Factory
+        working-directory: ./symfinder/integration-tests/test-cookie-factory
+        run: bash runtest.sh
+      - name: Non Regression Test on Cookie Factory
+        working-directory: ./symfinder/integration-tests/test-non-regression-cf
+        run: bash runtest.sh
+      - name: Test Possibility to Skip Symfinder #58
+        working-directory: ./symfinder/integration-tests/test-skip-symfinder-engine
+        run: bash runtest.sh
+      - name: Test Symfinder CLi works in command line mode  #58
+        working-directory: ./symfinder/integration-tests/test-symfinder-cli
+        run: bash runtest.sh
       - name: Test with symfinder-cli and varicity-backend (front is not used)
         working-directory: ./tests
         run: bash start.sh

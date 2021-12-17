@@ -42,15 +42,15 @@ public final class Constants {
      * The Symfinder version.
      */
     public static final String SYMFINDER_VERSION = Optional.ofNullable(System.getenv("SYMFINDER_VERSION"))
-        .orElse("undefined");
+            .orElse("undefined");
 
     /**
      * The path to the Java binaries.
      */
     public static final String JAVA_PATH = Optional.ofNullable(System.getProperty("SYMFINDER_JAVA_CLASSPATH"))
-        .or(()-> Optional.ofNullable(System.getenv("JAVA_HOME")))
-        .or(()-> Optional.of( "/usr/lib/jvm/java-11-openjdk-amd64"))
-        .get();
+            .or(() -> Optional.ofNullable(System.getenv("JAVA_HOME")))
+            .or(() -> Optional.of("/usr/lib/jvm/java-11-openjdk-amd64"))
+            .get();
 
     //================================================================================
     // DOCKER
@@ -60,7 +60,7 @@ public final class Constants {
      * The name of the network shared by the Docker containers.
      */
     public static final String NETWORK_NAME = Optional.ofNullable(System.getenv("NETWORK_NAME"))
-        .orElse("varicity-config");
+            .orElse("varicity-config");
 
     /**
      * The maximum time to wait for a Docker image download (in minutes).
@@ -75,19 +75,19 @@ public final class Constants {
      * The Symfinder compiler container name.
      */
     public static final String COMPILER_NAME = Optional.ofNullable(System.getenv("COMPILER_NAME"))
-        .orElse("varicity-compiler-container");
+            .orElse("varicity-compiler-container");
 
     /**
      * The Symfinder scanner container name.
      */
     public static final String SCANNER_NAME = Optional.ofNullable(System.getenv("SCANNER_NAME"))
-        .orElse("varicity-scanner-container");
+            .orElse("varicity-scanner-container");
 
     /**
      * The Symfinder compiler scanner container name.
      */
     public static final String COMPILER_SCANNER_NAME = Optional.ofNullable(System.getenv("COMPILER_SCANNER_NAME"))
-        .orElse("varicity-compiler-scanner-container");
+            .orElse("varicity-compiler-scanner-container");
 
     //================================================================================
     // NEO4J
@@ -97,25 +97,25 @@ public final class Constants {
      * The Symfinder Neo4J image name.
      */
     public static final String SYMFINDER_NEO4J_IMAGE = Optional.ofNullable(System.getenv("SYMFINDER_NEO4J_IMAGE"))
-        .orElse("deathstar3/symfinder-neo4j");
+            .orElse("deathstar3/symfinder-neo4j");
 
     /**
      * The Symfinder Neo4J image tag.
      */
     public static final String SYMFINDER_NEO4J_TAG = Optional.ofNullable(System.getenv("SYMFINDER_NEO4J_TAG"))
-        .orElse("vissoft2021");
+            .orElse("vissoft2021");
 
     /**
      * The Symfinder Neo4J container name.
      */
     public static final String NEO4J_CONTAINER_NAME = Optional.ofNullable(System.getenv("NEO4J_CONTAINER_NAME"))
-        .orElse("symfinder-neo4j");
+            .orElse("symfinder-neo4j");
 
     /**
      * The Symfinder Neo4J host name.
      */
     public static final String NEO4J_HOSTNAME = Optional.ofNullable(System.getenv("NEO4J_HOSTNAME"))
-        .orElse("symfinder-neo4j");
+            .orElse("symfinder-neo4j");
 
     /**
      * This is the hostname part of the URL that can be used to contact Neo4J from within a container
@@ -136,19 +136,19 @@ public final class Constants {
      * The SonarQube image name.
      */
     public static final String SONAR_SCANNER_IMAGE = Optional.ofNullable(System.getenv("SONAR_SCANNER_IMAGE"))
-        .orElse("sonarsource/sonar-scanner-cli");
+            .orElse("sonarsource/sonar-scanner-cli");
 
     /**
      * The SonarQube image tag.
      */
     public static final String SONAR_SCANNER_IMAGE_TAG = Optional.ofNullable(System.getenv("SONAR_SCANNER_IMAGE_TAG"))
-        .orElse("4");
+            .orElse("4");
 
     /**
      * The SonarQube container name;
      */
     public static final String SONARQUBE_CONTAINER_NAME = Optional.ofNullable(System.getenv("SONARQUBE_CONTAINER_NAME"))
-        .orElse("sonarqubehost");
+            .orElse("sonarqubehost");
 
     /**
      * The SonarQube URL (from outside the network).
@@ -159,7 +159,7 @@ public final class Constants {
      * The SonarQube URL (from within the network).
      */
     public static final String SONARQUBE_DOCKER_URL = Optional.ofNullable(System.getenv("SONARQUBE_DOCKER_URL"))
-        .orElse("http://" + SONARQUBE_CONTAINER_NAME + ":9000");
+            .orElse("http://" + SONARQUBE_CONTAINER_NAME + ":9000");
 
     static {
         log.info("Initializing constants based on environment variables...");

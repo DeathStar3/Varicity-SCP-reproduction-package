@@ -105,7 +105,7 @@ junit:
 | -s | string | the absolute or relative path of the file containing your hotspot configuration. See [Documentation](Wiki.md) for the format of the file.|
 | LOG_LEVEL | string | the verbosity of the program possible values are `"OFF", "FINEST", "FINER", "FINE", "CONFIG", "INFO", "WARNING", "SEVERE", "ALL"`.|
 | -http | string | An url where you want the result of the analysis to be posted using `HTTP/POST`. Eg `http://localhost:3000/projects`. Nothing will be written on disk if you use that option|
-
+| -visupath| string | Path of the generated_visualizations|
 Create a  directory `data` as a subdirectory of where you will be running the command. Then put your experimentations file and the hotspots configurations
 The script mount that directory to the docker container under `/data`.
 So for the path of the files you need to take that into account.

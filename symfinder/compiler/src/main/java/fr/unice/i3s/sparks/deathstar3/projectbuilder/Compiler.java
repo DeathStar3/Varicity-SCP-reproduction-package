@@ -75,6 +75,7 @@ public class Compiler {
 
     /**
      * Compile and Scan a Java project to generate the metrics of SonarQube
+     *
      * @param projectConfig
      * @return true if it was successful false if there was an error at some level
      */

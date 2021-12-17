@@ -38,7 +38,6 @@ import java.nio.file.Path;
 public class SymfinderConfigParser {
 
     /**
-     *
      * @param yamlString a Yaml String containing the hotspots configurations
      * @return the hotspots configuration parsed as a Java object
      */
@@ -53,7 +52,6 @@ public class SymfinderConfigParser {
     }
 
     /**
-     *
      * @param pathOfYaml a path to a YAML file containing the hotspots configurations of Symfinder
      * @return the hotspots configuration parsed as a Java object
      */

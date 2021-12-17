@@ -31,7 +31,7 @@ export class VaricityConfigService {
       const defaultConfigs = this.getDefaultConfigPaths();
       return this.getConfigsFromPath(defaultConfigs[0]);
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
   }
 
@@ -51,7 +51,7 @@ export class VaricityConfigService {
    * @private
    */
   public static getYamlFromDisk(pathToYamlOnDisk: string): any {
-    console.log('pathToYamlOnDisk', pathToYamlOnDisk);
+    //console.log('pathToYamlOnDisk', pathToYamlOnDisk);
     return yaml.load(fs.readFileSync(pathToYamlOnDisk, 'utf8'));
   }
 
@@ -61,7 +61,7 @@ export class VaricityConfigService {
    */
   public getConfigsFromProjectName(projectName: string): VaricityConfig[] {
     const configsPaths = this.getConfigsPathsWithDefaultConfigsFallback(projectName);
-    console.log('configsPaths', configsPaths);
+    //console.log('configsPaths', configsPaths);
     const configs = [];
     configsPaths.forEach((configPath) => {
       configs.push(this.getConfigsFromPath(configPath));

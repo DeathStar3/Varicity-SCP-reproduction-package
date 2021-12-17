@@ -42,7 +42,6 @@ public class ConfigLoader {
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     /**
-     *
      * @param source a YAML string that contains configurations for experiments
      * @return the configurations parsed into Java objects
      */
@@ -71,7 +70,6 @@ public class ConfigLoader {
     }
 
     /**
-     *
      * @param fileName path of a YAML file that contains configurations for experiments
      * @return the configurations parsed into Java objects
      */
