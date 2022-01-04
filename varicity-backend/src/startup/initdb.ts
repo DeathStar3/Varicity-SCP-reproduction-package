@@ -50,7 +50,7 @@ export class InitDBService implements OnApplicationBootstrap {
   }
 
   onApplicationBootstrap() {
-    console.log('Application has started');
+    //console.log('Application has started');
     this.createFoldersIfNotExists();
     this.findProjects();
     this.findConfigs();
@@ -60,29 +60,29 @@ export class InitDBService implements OnApplicationBootstrap {
 
   createFoldersIfNotExists() {
     if (!fs.existsSync(this.pathToSymfinderJsons)) {
-      console.log('The path to the symfinder Jsons does not exist yet, creating it');
+      //console.log('The path to the symfinder Jsons does not exist yet, creating it');
       fs.mkdirSync(this.pathToSymfinderJsons, { recursive: true });
     }
 
     if (!fs.existsSync(this.pathToMetricsJsons)) {
-      console.log('The path to the metrics Jsons does not exist yet, creating it');
+      //console.log('The path to the metrics Jsons does not exist yet, creating it');
       fs.mkdirSync(this.pathToMetricsJsons, { recursive: true });
     }
 
     if (!fs.existsSync(this.pathToVisualizationConfigs)) {
-      console.log('The path to the configsdoes not exist yet, creating it');
+      //console.log('The path to the configsdoes not exist yet, creating it');
       fs.mkdirSync(this.pathToVisualizationConfigs, { recursive: true });
     }
 
     if (this.watchDirectories != 0) {
       ///
       if (!fs.existsSync(this.pathToWatchedSymfinderJsons)) {
-        console.log('The path to the Watched symfinder Jsons does not exist yet, creating it');
+        //console.log('The path to the Watched symfinder Jsons does not exist yet, creating it');
         fs.mkdirSync(this.pathToWatchedSymfinderJsons, { recursive: true });
       }
 
       if (!fs.existsSync(this.pathToWatchedConfigsDir)) {
-        console.log('The path to the watched configs does not exist yet, creating it');
+        //console.log('The path to the watched configs does not exist yet, creating it');
         fs.mkdirSync(this.pathToWatchedConfigsDir, { recursive: true });
       }
     }
@@ -124,7 +124,7 @@ export class InitDBService implements OnApplicationBootstrap {
     files.filter((f) => f.isFile() && path.extname(f.name).toLowerCase() === InitDBService.EXTENSION,)
       .filter((projectSymfinderFile) => !this.projectService.checkIfParsed(path.parse(projectSymfinderFile.name).name))
       .forEach((projectSymfinderFile) => {
-        console.log(projectSymfinderFile.name);
+        //console.log(projectSymfinderFile.name);
         const fullPath = path.resolve(path.join(this.pathToSymfinderJsons, projectSymfinderFile.name));
         const projectName = path.parse(projectSymfinderFile.name).name;
         this.watcherService.parseSymfinderJsons(fullPath, projectName);
@@ -133,7 +133,7 @@ export class InitDBService implements OnApplicationBootstrap {
 
   handleWatcher() {
     if (this.watchDirectories != 0 && this.pathToWatchedConfigsDir !== this.pathToVisualizationConfigs && this.pathToSymfinderJsons !== this.pathToWatchedSymfinderJsons) {
-      console.log('Watch directory is set to true');
+      //console.log('Watch directory is set to true');
       this.watcherService.instantiateWatcher();
     }
   }

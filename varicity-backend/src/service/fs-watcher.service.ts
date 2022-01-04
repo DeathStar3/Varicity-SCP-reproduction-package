@@ -53,7 +53,7 @@ export class FsWatcherService {
     const chokidar = require('chokidar');
 
     chokidar.watch(this.pathToWatchedConfigsDir).on('all', (event, _path) => {
-      console.log(event, _path);
+      //console.log(event, _path);
       switch (event) {
         case 'add':
           this.indexConfigFile(_path);
@@ -66,15 +66,15 @@ export class FsWatcherService {
     chokidar
       .watch(this.pathToWatchedSymfinderJsons)
       .on('all', (event, _path) => {
-        console.log(event, _path);
+        //console.log(event, _path);
         if (event === 'add') {
           this.indexDataFile(_path);
         }
       });
 
-    console.log('Watching directories:');
-    console.log(' - ' + this.pathToWatchedConfigsDir);
-    console.log(' - ' + this.pathToWatchedSymfinderJsons);
+    //console.log('Watching directories:');
+    //console.log(' - ' + this.pathToWatchedConfigsDir);
+    //console.log(' - ' + this.pathToWatchedSymfinderJsons);
   }
 
   /**
@@ -94,7 +94,7 @@ export class FsWatcherService {
    * DeIndex a deleted config file
    */
   public deIndexConfigFile(configFilePath: string) {
-    console.log('DeIndexConfigFile', configFilePath);
+    //console.log('DeIndexConfigFile', configFilePath);
     if (this.varicityConfigService.checkIfConfigIsIndexed(configFilePath)) {
       this.dbFacade.db.delete(`/configs[${this.dbFacade.db.getIndex('/configs', configFilePath, 'path')}]`,
       );
@@ -106,7 +106,7 @@ export class FsWatcherService {
    */
   public indexDataFile(dataFilePath: string) {
     const projectName = path.parse(dataFilePath).name;
-    console.log('indexDataFile', projectName);
+    //console.log('indexDataFile', projectName);
     if (!this.projectService.checkIfParsed(projectName)) {
       this.parseSymfinderJsons(dataFilePath, projectName);
     }
@@ -151,7 +151,7 @@ export class FsWatcherService {
       });
     }
 
-    console.log(this.dbFacade.db.getData('/'));
+    //console.log(this.dbFacade.db.getData('/'));
     const parsedInputPath = path.join(this.pathToParsedJsons, projectName);
     fs.mkdirSync(this.pathToParsedJsons, { recursive: true });
     fsextra.writeJsonSync(`${parsedInputPath}.json`, symfinderObj, {
