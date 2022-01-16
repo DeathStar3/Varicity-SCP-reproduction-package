@@ -1,6 +1,6 @@
 
 @echo off
-cd metrics-extension
+cd symfinder
 docker build -f Dockerfile -t deathstar3/symfinder-cli:local .
 cd ../varicity
 echo "Building the front"

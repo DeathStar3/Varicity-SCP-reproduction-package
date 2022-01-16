@@ -1,0 +1,3 @@
+hotspots:
+  nbAggregationsThreshold: 5
+  nbVariantsThreshold: 20
