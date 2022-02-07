@@ -1,3 +1,21 @@
+/*
+ * This file is part of symfinder.
+ *
+ * symfinder is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * symfinder is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with symfinder. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
+ */
 import ClassesVisitor from "./visitors/ClassesVisitor"
 import SymfinderVisitor from "./visitors/SymfinderVisitor";
 import GraphBuilderVisitor from "./visitors/GraphBuilderVisitor";
@@ -21,6 +39,10 @@ export class Symfinder{
         this.neoGraph = new NeoGraph(config);
     }
 
+    /**
+     * run symfinder for the specific project
+     * @param src path to the root directory
+     */
     async run(src: string){
         await this.neoGraph.clearNodes();
 
@@ -56,6 +78,12 @@ export class Symfinder{
         
     }
 
+    /**
+     * Visit all source code files with the given visitor (visitor pattern)
+     * @param files to visit
+     * @param visitor class wich contain analysis
+     * @param label logger label
+     */
     async visitPackage(files: string[], visitor: SymfinderVisitor, label: string){
         var nbFiles = files.length;
         var currentFile = 0;
@@ -68,6 +96,11 @@ export class Symfinder{
         process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")" + ", done.\n");
     }
 
+    /**
+     * Visit all files of the selected project and annoted them in the neo4j graph
+     * @param path to the root directory
+     * @returns source code files to analyse
+     */
     async visitAllFiles(path: string): Promise<string[]>{
         var folderName = path.split('/').pop();
         if(folderName === undefined) return [];
@@ -75,6 +108,12 @@ export class Symfinder{
         return await this.visitFiles(path, []);
     }
 
+    /**
+     * Visit file recursively at the specific path
+     * @param path to the current directory which is visited
+     * @param files all files already visited
+     * @returns all files visited
+     */
     async visitFiles(path: string, files: string[]): Promise<string[]>{
 
         var parentFolderName = path.split('/').slice(-1)[0];
@@ -91,6 +130,7 @@ export class Symfinder{
                 files.concat(newFiles);
             }
             else{
+                //filter typescript files
                 if(fileName.endsWith(".ts") && !fileName.endsWith(".test.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
                     process.stdout.write("\rDetecting files ("+files.length+"): '"+fileName + "'\x1b[K");
                     files.push(absolute_path);
@@ -102,6 +142,14 @@ export class Symfinder{
         return files;
     }
 
+    /**
+     * Detect folder with the proximity analyse describe in scientific TER article
+     * This method annoted folder and files with :
+     * VP_FOLDER
+     * VARIANT_FOLDER
+     * VARIANT_FILE
+     * SUPER_VARIANT_FILE 
+     */
     async proximityFolderDetection(): Promise<void>{
 
         await this.neoGraph.setProximityFolder();
@@ -140,6 +188,9 @@ export class Symfinder{
         await this.detectCodeClone();
     }
 
+    /**
+     * Detect clones beetween all VARIANT_FILE of a VP_FOLDER
+     */
     async detectCodeClone(): Promise<void>{
         var nodes: Node[] = await this.neoGraph.getAllVariantFiles();
         var groupedNode: any[] = [];
@@ -176,7 +227,10 @@ export class Symfinder{
             process.stdout.write("\rCheck duplication code: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
     }
 
-
+    /**
+     * Detect common entities between all VARIANT_FILE of a VP_FOLDER
+     * @returns 
+     */
     async detectCommonEntityProximity(): Promise<void>{
 
         var vpFoldersPath: string[] = await this.neoGraph.getAllVPFoldersPath();
@@ -220,6 +274,10 @@ export class Symfinder{
         return;
     }
 
+    /**
+     * Detect common methods between all VARIANT_FILE of a VP_FOLDER
+     * @returns 
+     */
     async detectCommonMethodImplemented(): Promise<void>{
 
         var motherEntitiesNode: Node[] = await this.neoGraph.getMotherEntitiesNode();

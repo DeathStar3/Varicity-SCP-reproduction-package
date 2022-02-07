@@ -1,3 +1,21 @@
+/*
+ * This file is part of symfinder.
+ *
+ * symfinder is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * symfinder is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with symfinder. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
+ */
 import SymfinderVisitor from "./SymfinderVisitor";
 import { EntityType, EntityAttribut, RelationType } from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
@@ -15,7 +33,7 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
     async visit(node: ExportSpecifier): Promise<void>;
 
     /**
-     * Visit heritage clause
+     * Visit HeritageClause | ImportDeclaration | ExportSpecifier
      * @param node AST node
      * @returns ...
      */
@@ -27,6 +45,11 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         return;        
     }
 
+    /**
+     * Visit HeritageClause to link classes and super class or interface in neo4j
+     * @param node AST node
+     * @returns 
+     */
     async visitHeritageClause(node: HeritageClause): Promise<void>{
         
         if(node.parent.name === undefined) return;
@@ -74,7 +97,11 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         return;
     }
 
-
+    /**
+     * Visit ImportedDeclaration to link entities between 2 files in neo4j
+     * @param node AST node
+     * @returns 
+     */
     async visitImportDeclaration(node: ImportDeclaration): Promise<void>{
         
         var filePath = node.getSourceFile().fileName;
@@ -127,6 +154,11 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         }
     }
 
+    /**
+     * Visit ExportSpecifier to specifie an exported member in neo4j
+     * @param node AST node
+     * @returns 
+     */
     async visitExportSpecifier(node: ExportSpecifier): Promise<void>{
         
         var filePath = node.getSourceFile().fileName;
