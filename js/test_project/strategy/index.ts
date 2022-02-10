@@ -13,11 +13,9 @@ class Context{
         this.strategy.action();
     }
 }
-
 interface Strategy {
     action(): number;
 }
-
 class OneStrategy implements Strategy {
     public action(): number {
         return 0;
@@ -25,7 +23,6 @@ class OneStrategy implements Strategy {
 
     public run(): void{}
 }
-
 class TwoStrategy implements Strategy {
     public action(): number {
         return 1;
