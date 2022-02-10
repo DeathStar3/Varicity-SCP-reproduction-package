@@ -69,6 +69,10 @@ export class Symfinder{
         console.log("Number of constructors variants: " + await this.neoGraph.getNbConstructorVariants());
         console.log("Number of method level variants: " + await this.neoGraph.getNbMethodLevelVariants());
         console.log("Number of class level variants: " + await this.neoGraph.getNbClassLevelVariants());
+        console.log("Number of variant files: " + await this.neoGraph.getNbVariantFiles());
+        console.log("Number of variant folder: " + await this.neoGraph.getNbVariantFolders());
+        console.log("Number of vp folder: " + await this.neoGraph.getNbVPFolders());
+        console.log("Number of proximity entities: " + await this.neoGraph.getNbProximityEntity());
         console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
         console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
         
@@ -124,10 +128,14 @@ export class Symfinder{
         for(let fileName of readdirSync(path)){
             const absolute_path = join(path, fileName);
             if (statSync(absolute_path).isDirectory()){
-                var folderNode: Node = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.DIRECTORY, []);
-                await this.neoGraph.linkTwoNodes(<Node>parentNode, folderNode, RelationType.CHILD);
-                var newFiles = await this.visitFiles(absolute_path, files);
-                files.concat(newFiles);
+                if(!fileName.includes('test') && !fileName.includes('Test')){
+                    var folderNode: Node = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.DIRECTORY, []);
+                    await this.neoGraph.linkTwoNodes(<Node>parentNode, folderNode, RelationType.CHILD);
+                    var newFiles = await this.visitFiles(absolute_path, files);
+                    files.concat(newFiles);
+                }else{
+                    process.stdout.write("\rFolder '"+fileName+"' exclude...                                                            \n");
+                }
             }
             else{
                 //filter typescript files
@@ -250,17 +258,18 @@ export class Symfinder{
                 for(let variantFileNode of variantFileNodes){
                     
                     for(let entityNode of await this.neoGraph.getVariantEntityNodeForFileNode(variantFileNode)){
-                        if(entitiesOcc[entityNode.properties.name] === undefined){
-                            entitiesOcc[entityNode.properties.name] = [entityNode];
+                        let pname :any = entityNode.properties.name + '_reserved';
+                        if(entitiesOcc[pname] === undefined){
+                            entitiesOcc[pname] = [entityNode];
                         }
                         else{
-                            entitiesOcc[entityNode.properties.name].push(entityNode);
+                            entitiesOcc[pname].push(entityNode);
                         }
                     }
                 }
 
                 for(let [key, value] of Object.entries(entitiesOcc)){
-                    if(value.lenght > 2 && value.length == variantFileNodes.length){
+                    if(value.length > 1 && value.length == variantFileNodes.length){               
                         for(let entityNode of value){
                             await this.neoGraph.addLabelToNode(entityNode, EntityAttribut.PROXIMITY_ENTITY);
                         }
@@ -295,11 +304,12 @@ export class Symfinder{
                 
                 var implementedClassMethods = await this.neoGraph.getMethods(implemetedClass);
                 for(let implementedClassMethod of implementedClassMethods){
-                    if(occurenceMethod[implementedClassMethod.properties.name] === undefined){
-                        occurenceMethod[implementedClassMethod.properties.name] = [implementedClassMethod];
+                    let pname :any = implementedClassMethod.properties.name + '_reserved';
+                    if(occurenceMethod[pname] === undefined){
+                        occurenceMethod[pname] = [implementedClassMethod];
                     }
                     else{
-                        occurenceMethod[implementedClassMethod.properties.name].push(implementedClassMethod);
+                        occurenceMethod[pname].push(implementedClassMethod);
                     }
                 }
             }

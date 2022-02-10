@@ -379,6 +379,36 @@ export default class NeoGraph{
         });
     }
 
+    async getNbVPFolders(): Promise<number>{
+        return this.submitRequest("MATCH (d:VP_FOLDER) RETURN (COUNT(DISTINCT d))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        })
+    }
+
+    async getNbVariantFolders(): Promise<number>{
+        return this.submitRequest("MATCH (d:VARIANT_FOLDER) RETURN (COUNT(DISTINCT d))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        })
+    }
+
+    async getNbVariantFiles(): Promise<number>{
+        return this.submitRequest("MATCH (d:VARIANT_FILE) RETURN (COUNT(DISTINCT d))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        })
+    }
+
+    async getNbSuperVariantFiles(): Promise<number>{
+        return this.submitRequest("MATCH (d:SUPER_VARIANT_FILE) RETURN (COUNT(DISTINCT d))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        })
+    }
+
+    async  getNbProximityEntity(): Promise<number>{
+        return this.submitRequest("MATCH (d:PROXIMITY_ENTITY) RETURN (COUNT(DISTINCT d))", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        })
+    }
+
     async getAllVariantFiles(): Promise<Node[]>{
         return this.submitRequest("MATCH (n:"+EntityAttribut.VARIANT_FILE+") RETURN n", {}).then((results: Record[]) =>{
             return <Node[]> (results.map((result: Record) => result.get(0)));
@@ -424,7 +454,7 @@ export default class NeoGraph{
     }
 
     async getVariantEntityNodeForFileNode(fileNode: Node): Promise<Node[]>{
-        const request = "MATCH (f:"+EntityType.FILE+")-[r:"+RelationType.EXPORT+"]->(e)\n" +
+        const request = "MATCH (f:"+EntityType.FILE+")-[]->(e)\n" +
         "WHERE (e:"+EntityType.CLASS+" or e:"+EntityType.FUNCTION+" or e:"+EntityType.VARIABLE+")\n" +
         "AND ID(f) = $id\n" +
         "RETURN e";
