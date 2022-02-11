@@ -1,3 +1,21 @@
+/*
+ * This file is part of symfinder.
+ *
+ * symfinder is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * symfinder is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with symfinder. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
+ */
 import SymfinderVisitor from "./SymfinderVisitor";
 import { EntityType, EntityAttribut, EntityVisibility, NodeType, RelationType } from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
@@ -18,7 +36,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
     async visit(node: VariableStatement): Promise<void>; 
 
     /**
-     * Visit Class and Interface declaration nodes
+     * Visit InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement
      * @param node AST node
      * @returns ...
      */
@@ -32,6 +50,11 @@ export default class ClassesVisitor extends SymfinderVisitor{
         else return;
     }
 
+    /**
+     * Visit InterfaceDeclaration and publish Interface in neo4j
+     * @param node 
+     * @returns 
+     */
     async visitInterface(node: InterfaceDeclaration): Promise<void>{
 
         var nodeType: NodeType = EntityType.INTERFACE;   
@@ -53,6 +76,11 @@ export default class ClassesVisitor extends SymfinderVisitor{
         return;
     }
 
+    /**
+     * Visit ClassDeclaration | ClassExpression and publish Class in neo4j
+     * @param node AST node
+     * @returns 
+     */
     async visitClass(node: ClassDeclaration | ClassExpression): Promise<void>{
 
         var name = node.name?.getText();
@@ -77,6 +105,11 @@ export default class ClassesVisitor extends SymfinderVisitor{
         return;
     }
 
+    /**
+     * Visit MethodDeclaration | MethodSignature | ConstructorDeclaration and publish Method and Constructor in neo4j
+     * @param node AST node
+     * @returns 
+     */
     async visitMethod(node: MethodDeclaration | MethodSignature | ConstructorDeclaration): Promise<void>{
         
         var parentNode = (<ClassDeclaration | InterfaceDeclaration>node.parent)
@@ -105,6 +138,11 @@ export default class ClassesVisitor extends SymfinderVisitor{
         }).catch((reason) => console.log("Error to create node "+name+"..."));
     }
 
+    /**
+     * Visit FunctionDeclaration and publish Function in neo4j
+     * @param node AST node
+     * @returns 
+     */
     async visitFunction(node: FunctionDeclaration): Promise<void>{
 
         var name = node.name?.getText()
@@ -126,6 +164,11 @@ export default class ClassesVisitor extends SymfinderVisitor{
         }).catch((reason) => console.log("Error to create node "+name+"..."));
     }
 
+    /**
+     * Visit VariableStatement and publish variable in neo4j
+     * @param node AST node
+     * @returns 
+     */
     async visitVariable(node: VariableStatement): Promise<void>{
 
         var modifiers = node.modifiers?.map(m => m.kind);

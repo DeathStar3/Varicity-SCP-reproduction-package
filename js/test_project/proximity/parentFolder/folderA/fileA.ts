@@ -25,6 +25,7 @@ export function hello(): void{
 }
 
 export const aVar = 0;
+export const keys = 2
 
 
 console.log("hello")

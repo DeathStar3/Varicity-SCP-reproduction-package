@@ -19,6 +19,7 @@ export function detectCodeClone(): void{
 
 
 const bVar = 0;
+const keys = 3;
 
 export{
     bVar as aVar
