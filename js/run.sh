@@ -1,3 +1,7 @@
+if [ ! -d experiments ]; then
+    mkdir experiments
+fi
+
 if ! docker ps | grep -q neo4j; then
     echo Starting docker
     docker run -d -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/root neo4j
@@ -6,10 +10,10 @@ project=$(basename -- $1)
 path=experiments/$project
 
 if [ ! -d $path ]; then
-    echo Download 
+    echo Download at $1
     mkdir download
     cd download
-    wget -q -O $project.zip $1/archive/master.zip
+    wget -q --show-progress -O $project.zip $1/archive/master.zip
     if [ ! -f $project.zip ]; then
         echo Project \'$project\' not find...
         cd ..
