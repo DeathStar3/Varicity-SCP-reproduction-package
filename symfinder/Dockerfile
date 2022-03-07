@@ -6,7 +6,7 @@ WORKDIR /home
 COPY ./ ./
 
 # Build the executable jar
-RUN mvn clean install -DskipTests=true
+RUN mvn --no-transfer-progress clean install -DskipTests=true
 
 # the second stage of our build
 FROM openjdk:11-jdk-slim

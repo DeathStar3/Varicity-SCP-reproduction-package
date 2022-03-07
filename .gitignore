@@ -33,7 +33,7 @@ testadd
 .project
 .settings/
 *.vscode
-/data
+/data/projects
 *node_modules*
 dockervolume
 varicity-backend/dockervolume

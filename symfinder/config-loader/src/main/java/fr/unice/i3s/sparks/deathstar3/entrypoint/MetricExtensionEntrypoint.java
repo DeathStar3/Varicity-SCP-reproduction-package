@@ -144,6 +144,7 @@ public class MetricExtensionEntrypoint {
 
                     return false;
                 }
+                log.trace("SonarQube started");
                 if (!compiler.executeProject(config)) {
 
                     return false;

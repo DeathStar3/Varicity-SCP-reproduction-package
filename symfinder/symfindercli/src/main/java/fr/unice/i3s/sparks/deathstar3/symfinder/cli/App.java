@@ -34,10 +34,13 @@ import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterHtml;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterHttp;
 import fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
+//import java.util.logging.Level;
 
 /**
  *
@@ -94,19 +97,19 @@ public final class App {
         Level level = Level.OFF;
         if (envLogLevel != null) {
             try {
-                level = Level.parse(envLogLevel);
+                level = Level.toLevel(envLogLevel);
             } catch (IllegalArgumentException ignored) {
             }
         }
         if (logLevel != null) {
             try {
-                level = Level.parse(logLevel);
+                level = Level.toLevel(logLevel);
             } catch (IllegalArgumentException ignored) {
             }
         }
         System.out.println("Log Level is set to " + level + ". The underlying factory being used is "
             + org.slf4j.impl.StaticLoggerBinder.getSingleton().getLoggerFactoryClassStr());
-        java.util.logging.Logger.getLogger("").setLevel(Level.parse(logLevel));
+//        java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.parse(logLevel));
     }
 
     private void run() {
@@ -120,15 +123,15 @@ public final class App {
         MetricExtensionEntrypoint metricExtension = new MetricExtensionEntrypoint();
 
         ConfigLoader configLoader = new ConfigLoader();
-        List<ExperimentConfig> configs = configLoader.loadConfigFile(configFilePath);
+        List <ExperimentConfig> configs = configLoader.loadConfigFile(configFilePath);
 
         for (ExperimentConfig firstConfig : configs) {
-            List<ExperimentResult> results = metricExtension.runExperiment(firstConfig,
+            List <ExperimentResult> results = metricExtension.runExperiment(firstConfig,
                 symfinderConfigParser.parseSymfinderConfigurationFromFile(symfinderConfiguration));
 
             ExperimentResultWriter experimentResultWriter;
             ExperimentResultWriter experimentResultWriterHtml = null;
-            if (this.serverUrl != null && !this.serverUrl.isBlank()) {
+            if (this.serverUrl != null && ! this.serverUrl.isBlank()) {
                 experimentResultWriter = new ExperimentResultWriterHttp(this.serverUrl);
 
             } else {

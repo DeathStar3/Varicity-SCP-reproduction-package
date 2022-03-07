@@ -76,8 +76,10 @@ public class SonarQubeStarter {
 
     public synchronized boolean startSonarqube() {
 
+        log.trace("Removing old exited SonarQube container");
         utils.removeOldExitedContainer(Constants.SONARQUBE_CONTAINER_NAME);
         if (existingSonarqube()) {
+            log.trace("SonarQube container exists");
             return true;
         }
 

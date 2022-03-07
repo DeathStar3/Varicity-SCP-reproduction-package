@@ -39,6 +39,7 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.models.SonarQubeToken;
+import fr.unice.i3s.sparks.deathstar3.utils.LogContainerTestCallback;
 import fr.unice.i3s.sparks.deathstar3.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -80,14 +81,16 @@ public class Compiler {
      * @return true if it was successful false if there was an error at some level
      */
     public synchronized boolean executeProject(ExperimentConfig projectConfig) {
+        log.trace("Cloning project...");
         projectConfig = projectConfig.cloneSelfExact();
+        log.trace("Project cloned.");
 
         try {
             projectConfig.setPath(utils.translatePath(projectConfig.getPath()));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-
+        log.trace("Cleaning old containers...");
         utils.removeOldExitedContainer(Constants.COMPILER_SCANNER_NAME);
         utils.removeOldExitedContainer(Constants.COMPILER_NAME);
         utils.removeOldExitedContainer(Constants.SCANNER_NAME);
@@ -98,6 +101,7 @@ public class Compiler {
                 InspectContainerResponse.ContainerState containerState = waitForContainerCorrectExit(
                         compileAndScanProjectId);
                 if (containerState.getExitCodeLong() != 0) {
+//                    log.error(containerState.getError());
                     return false;
                 }
 
@@ -133,6 +137,7 @@ public class Compiler {
 
     private InspectContainerResponse.ContainerState waitForContainerCorrectExit(String containerId) {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
+        LogContainerTestCallback logCallback = new LogContainerTestCallback();
 
         while (!container.getState().getStatus().strip().equals("exited")) {
             log.trace(container.getState().toString());
@@ -143,11 +148,18 @@ public class Compiler {
                 e.printStackTrace();
             }
             container = dockerClient.inspectContainerCmd(containerId).exec();
-
+            dockerClient.logContainerCmd(containerId)
+                    .withStdErr(true)
+                    .withStdOut(true)
+                    .withFollowStream(true)
+                    .withTailAll()
+                    .exec(logCallback);
         }
 
         if (container.getState().getExitCodeLong() != 0) {
             log.error("Container exited with non-zero code");
+            log.error(container.getLogPath());
+            log.error(logCallback.toString());
             return container.getState();
         }
 
@@ -162,6 +174,7 @@ public class Compiler {
      * @return the containerId
      */
     String compileAndScanProject(ExperimentConfig projectConfig) throws JsonProcessingException {
+        log.trace(String.format("Pulling build image %s:%s...", projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag()));
         if (!utils.checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
             try {
                 utils.downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
@@ -171,7 +184,7 @@ public class Compiler {
             }
 
         }
-
+        log.trace("Build image pulled.");
         String tokenName = RandomStringUtils.randomAlphabetic(8, 10).toUpperCase(Locale.ENGLISH);
         SonarQubeToken result = this.getToken(tokenName, Constants.SONARQUBE_LOCAL_URL);
         Volume volume = new Volume("/project");
@@ -185,9 +198,11 @@ public class Compiler {
             // List.of() result is not mutable so we transform it in mutable through new
             // ArrayList<>()
             List<String> mvnCommmands = new ArrayList<>(List.of(projectConfig.getBuildCmd().strip().split("\\s+")));
+            mvnCommmands.add(1, "--no-transfer-progress");
             mvnCommmands.add("-Dsonar.login=" + result.token());
             mvnCommmands.add("-Dsonar.host.url=" + Constants.SONARQUBE_DOCKER_URL);
             mvnCommmands.add("-Dsonar.projectKey=" + projectConfig.getProjectName());
+            mvnCommmands.add("-Dmaven.test.failure.ignore=true");
             command = command.withEntrypoint(mvnCommmands);
         }
 
@@ -196,14 +211,15 @@ public class Compiler {
                         .withNetworkMode(Constants.NETWORK_NAME))
                 .exec();
 
-        dockerClient.startContainerCmd(container.getId()).exec();
-
-        return container.getId();
+        String containerId = container.getId();
+        dockerClient.startContainerCmd(containerId).exec();
+        log.trace("Starting build container...");
+        return containerId;
 
     }
 
     String compileProject(ExperimentConfig projectConfig) {
-
+        log.trace("Compiling project...");
         if (!this.utils.checkIfImageExists(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag())) {
             try {
                 utils.downloadImage(projectConfig.getBuildEnv(), projectConfig.getBuildEnvTag());
