@@ -112,6 +112,7 @@ export class ProjectService {
   parseExperimentResultToJsonInputInterface(
     project: ExperimentResult,
   ): JsonInputInterface {
+    console.log(project)
     const symfinderObj = JSON.parse(
       project.symfinderResult.vpJsonGraph,
     ) as JsonInputInterface;

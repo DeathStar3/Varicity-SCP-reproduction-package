@@ -22,6 +22,7 @@
 package fr.unice.i3s.sparks.deathstar3.serializer;
 
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
+import fr.unice.i3s.sparks.deathstar3.symfinder.engine.result.SymfinderResult;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -45,6 +46,9 @@ public class ExperimentResultWriterHttp implements ExperimentResultWriter {
 
     @Override
     public void writeResult(ExperimentResult experimentResult) throws Exception {
+//        if(experimentResult.getSymfinderResult().getVpJsonGraph().isEmpty() || experimentResult.getSymfinderResult().getStatisticJson().isEmpty()) {
+//            experimentResult.setSymfinderResult(new SymfinderResult(experimentResult.getProjectName()));
+//        }
         this.restTemplate.postForEntity(this.serverUrl, experimentResult, String.class);
 
     }

@@ -1,0 +1,27 @@
+jdk-17.10:
+  repositoryUrl: "https://github.com/Corpus-2021/jdk"
+#  buildEnv: "maven"
+#  buildEnvTag: "3.8.3-openjdk-17"
+  sourcePackage: src
+  sonarqubeNeeded: false
+  tagIds:
+    - 17-10-AnalysisReady
+  skipClone: false
+  skipSymfinder: false
+  path: "/data/projects"
+  outputPath: ""
+#  buildCmdIncludeSonar: true
+#  buildCmd: "mvn clean package -Pcoverage sonar:sonar -f /project/pom.xml -Dsonar.scm.disabled=true"
+  sources:
+    - name: "sonarcloud"
+      enabled: true
+      rootUrl: "https://sonarcloud.io"
+      componentName: "corpus2021.sonar%3Ajdk"
+      metrics:
+        - "coverage"
+        - "complexity"
+        - "cognitive_complexity"
+        - "bugs"
+        - "ncloc"
+        - "duplicated_lines"
+        - "duplicated_blocks"

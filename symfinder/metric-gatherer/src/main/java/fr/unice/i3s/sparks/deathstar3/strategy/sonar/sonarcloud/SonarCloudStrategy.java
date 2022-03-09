@@ -44,6 +44,9 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
     @Override
     public List<Node> getMetrics(String sourceUrl, String componentName, List<String> metricNames) throws IOException {
 
+        if (! sourceUrl.endsWith("/")) {
+            sourceUrl += "/";
+        }
         SonarResults sonarResults = performHttpRequest(sourceUrl, componentName, metricNames);
         return formatResults(sonarResults);
     }
@@ -55,7 +58,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
 
         int numElementsPerPage = 500;
 
-        String baseUrl = rootUrl + "/api/measures/component_tree?component=" + componentName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not found by sonar
+        String baseUrl = rootUrl + "api/measures/component_tree?component=" + componentName + "&metricKeys=" + String.join(",", metricNames) + "&ps=" + numElementsPerPage; //TODO Manage API errors when the metric asked is not found by sonar
 
         SonarResults sonarResults = new SonarResults();
         sonarResults.setComponents(new ArrayList<>());
@@ -115,7 +118,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
      */
     public void displayAvailableMetrics(String rootUrl, String projectName) {
 
-        String url = rootUrl + "/api/metrics/search?&component=" + projectName;
+        String url = rootUrl + "api/metrics/search?&component=" + projectName;
 
         try {
             String json = httpRequest.get(url);

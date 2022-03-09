@@ -22,6 +22,7 @@
 package fr.unice.i3s.sparks.deathstar3.entrypoint;
 
 import fr.unice.i3s.sparks.deathstar3.MetricGatherer;
+import fr.unice.i3s.sparks.deathstar3.deserializer.ExperimentResultReader;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.model.MetricSource;
@@ -129,6 +130,17 @@ public class MetricExtensionEntrypoint {
             config.setPath(Files.createTempDirectory("varicity-xp-projects").toString());
         }
 
+        // if the output path is not defined a temporary one is created
+        if (config.getOutputPath() == null || config.getOutputPath().isBlank()) {
+            try {
+                Path workingDirectory = Files.createTempDirectory("varicity-work-dir");
+                config.setOutputPath(workingDirectory.toAbsolutePath().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
         String repositoryPath = config.getPath();
         if (!config.isSkipClone()) {
             config.setRepositoryUrl(this.sourceFetcher.normalizeRepositoryUrl(config.getRepositoryUrl()));
@@ -168,7 +180,7 @@ public class MetricExtensionEntrypoint {
         //ignorer l'analyse avec Symfinder si demandé par l'utilisateur
 
         if (config.isSkipSymfinder()) {
-            futureSymfinderResult = CompletableFuture.completedFuture(new SymfinderResult("", ""));
+            futureSymfinderResult = CompletableFuture.completedFuture(new ExperimentResultReader(config, config.getProjectName()).getSymfinderResultFromExistingAnalysis());
         } else {
             futureSymfinderResult = executor.submit(() -> {
                 System.out.println("Starting Neo4J container this may take some time ....");

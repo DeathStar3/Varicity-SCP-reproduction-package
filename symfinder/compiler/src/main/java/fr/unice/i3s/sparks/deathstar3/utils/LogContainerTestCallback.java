@@ -10,7 +10,9 @@ public class LogContainerTestCallback extends ResultCallback.Adapter<Frame> {
 
     @Override
     public void onNext(Frame frame) {
-        log.append(new String(frame.getPayload()));
+        String str = new String(frame.getPayload());
+        System.out.println(str);
+        log.append(str);
     }
 
     @Override

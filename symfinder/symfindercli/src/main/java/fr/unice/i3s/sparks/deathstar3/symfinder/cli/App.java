@@ -145,6 +145,7 @@ public final class App {
 
             for (ExperimentResult result : results) {
                 try {
+                    new ExperimentResultWriterJson(firstConfig).writeResult(result);
                     experimentResultWriter.writeResult(result);
                     if (experimentResultWriterHtml != null) {
                         experimentResultWriterHtml.writeResult(result);

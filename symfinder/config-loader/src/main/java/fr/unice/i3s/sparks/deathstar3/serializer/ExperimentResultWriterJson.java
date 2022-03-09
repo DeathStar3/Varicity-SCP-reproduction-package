@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentConfig;
 import fr.unice.i3s.sparks.deathstar3.model.ExperimentResult;
 import fr.unice.i3s.sparks.deathstar3.serializer.model.Node;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -33,6 +34,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class ExperimentResultWriterJson implements ExperimentResultWriter {
 
     ObjectMapper objectMapperJson = new ObjectMapper();
@@ -41,16 +43,6 @@ public class ExperimentResultWriterJson implements ExperimentResultWriter {
     public ExperimentResultWriterJson(ExperimentConfig experiment) {
         this.experimentConfig = experiment;
 
-        // if the output path is not defined a temporary one is created
-        if (this.experimentConfig.getOutputPath() == null || this.experimentConfig.getOutputPath().isBlank()) {
-            try {
-                Path workingDirectory = Files.createTempDirectory("varicity-work-dir");
-                this.experimentConfig.setOutputPath(workingDirectory.toAbsolutePath().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 
     @Override
@@ -63,11 +55,12 @@ public class ExperimentResultWriterJson implements ExperimentResultWriter {
         if (experimentResult.getSymfinderResult() != null) {
             File file = Paths.get(experimentConfig.getOutputPath(), "/symfinder_files/", experimentResult.getProjectName() + ".json").toFile();
             file.getParentFile().mkdirs();
-
+            log.info("JSON path : " + file.toPath());
             //writing the result
             ExperimentResultWriter.writeToFile(file.toPath(), experimentResult.getSymfinderResult().vpJsonGraph());
 
             file = Paths.get(experimentConfig.getOutputPath(), "/symfinder_files/", experimentResult.getProjectName() + "-stats" + ".json").toFile();
+            log.info("JSON stats path : " + file.toPath());
 
             //writing the statistics of the analysis
             ExperimentResultWriter.writeToFile(file.toPath(), experimentResult.getSymfinderResult().statisticJson());
@@ -85,6 +78,14 @@ public class ExperimentResultWriterJson implements ExperimentResultWriter {
                 }
             }
         }
+    }
+
+    public static Path getSymfinderJSONOutputPath(String outputPath, String projectName) {
+        return Paths.get(outputPath, "/symfinder_files/", projectName + ".json");
+    }
+
+    public static Path getSymfinderStatsJSONOutputPath(String outputPath, String projectName) {
+        return Paths.get(outputPath, "/symfinder_files/", projectName + "-stats" + ".json");
     }
 
 }

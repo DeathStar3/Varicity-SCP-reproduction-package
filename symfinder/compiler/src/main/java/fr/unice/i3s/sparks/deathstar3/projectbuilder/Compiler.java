@@ -138,7 +138,12 @@ public class Compiler {
     private InspectContainerResponse.ContainerState waitForContainerCorrectExit(String containerId) {
         InspectContainerResponse container = dockerClient.inspectContainerCmd(containerId).exec();
         LogContainerTestCallback logCallback = new LogContainerTestCallback();
-
+        dockerClient.logContainerCmd(containerId)
+                .withStdErr(true)
+                .withStdOut(true)
+                .withFollowStream(true)
+                .withTailAll()
+                .exec(logCallback);
         while (!container.getState().getStatus().strip().equals("exited")) {
             log.trace(container.getState().toString());
             log.trace(containerId + " : " + container.getState().getStatus());
@@ -148,12 +153,6 @@ public class Compiler {
                 e.printStackTrace();
             }
             container = dockerClient.inspectContainerCmd(containerId).exec();
-            dockerClient.logContainerCmd(containerId)
-                    .withStdErr(true)
-                    .withStdOut(true)
-                    .withFollowStream(true)
-                    .withTailAll()
-                    .exec(logCallback);
         }
 
         if (container.getState().getExitCodeLong() != 0) {
