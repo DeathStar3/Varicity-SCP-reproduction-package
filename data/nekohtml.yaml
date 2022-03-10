@@ -6,8 +6,8 @@ nekohtml-2.1.1:
   sonarqubeNeeded: false
   tagIds:
     - 2.1.1-AnalysisReady
-  skipClone: true
-  skipSymfinder: true
+  skipClone: false
+  skipSymfinder: false
   path: "/data/projects"
   outputPath: "/data/output"
 #  buildCmdIncludeSonar: true
@@ -23,3 +23,5 @@ nekohtml-2.1.1:
         - "cognitive_complexity"
         - "bugs"
         - "ncloc"
+        - "duplicated_lines"
+        - "duplicated_blocks"

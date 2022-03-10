@@ -7,7 +7,9 @@ jfreechart-1.5.0:
   commitIds:
     - 69999a89fad23d7b36d35814b45246f53c9a2130
   skipClone: false
+  skipSymfinder: false
   path: "/data/projects"
+  outputPath: "/data/output"
   buildCmdIncludeSonar: true
   buildCmd: "mvn clean package -Pcoverage sonar:sonar -f /project/pom.xml -Dsonar.scm.disabled=true"
   sources:
@@ -19,3 +21,7 @@ jfreechart-1.5.0:
         - "coverage"
         - "complexity"
         - "cognitive_complexity"
+        - "bugs"
+        - "ncloc"
+        - "duplicated_lines"
+        - "duplicated_blocks"

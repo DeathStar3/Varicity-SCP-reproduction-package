@@ -9,7 +9,7 @@ jdk-17.10:
   skipClone: false
   skipSymfinder: false
   path: "/data/projects"
-  outputPath: ""
+  outputPath: "/data/output"
 #  buildCmdIncludeSonar: true
 #  buildCmd: "mvn clean package -Pcoverage sonar:sonar -f /project/pom.xml -Dsonar.scm.disabled=true"
   sources:

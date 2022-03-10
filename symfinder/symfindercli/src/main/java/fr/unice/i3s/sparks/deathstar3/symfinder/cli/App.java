@@ -129,28 +129,15 @@ public final class App {
             List <ExperimentResult> results = metricExtension.runExperiment(firstConfig,
                 symfinderConfigParser.parseSymfinderConfigurationFromFile(symfinderConfiguration));
 
-            ExperimentResultWriter experimentResultWriter;
-            ExperimentResultWriter experimentResultWriterHtml = null;
-            if (this.serverUrl != null && ! this.serverUrl.isBlank()) {
-                experimentResultWriter = new ExperimentResultWriterHttp(this.serverUrl);
-
-            } else {
-                experimentResultWriter = new ExperimentResultWriterJson(firstConfig);
-            }
-
-            if (this.visuPath != null) {
-                experimentResultWriterHtml = new ExperimentResultWriterHtml(this.visuPath);
-
-            }
-
             for (ExperimentResult result : results) {
                 try {
                     new ExperimentResultWriterJson(firstConfig).writeResult(result);
-                    experimentResultWriter.writeResult(result);
-                    if (experimentResultWriterHtml != null) {
-                        experimentResultWriterHtml.writeResult(result);
+                    if (this.serverUrl != null && ! this.serverUrl.isBlank()) {
+                        new ExperimentResultWriterHttp(this.serverUrl).writeResult(result);
                     }
-
+                    if (this.visuPath != null) {
+                        new ExperimentResultWriterHtml(this.visuPath).writeResult(result);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
