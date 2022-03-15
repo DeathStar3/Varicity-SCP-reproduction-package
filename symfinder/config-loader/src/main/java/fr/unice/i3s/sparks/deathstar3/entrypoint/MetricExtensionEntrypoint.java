@@ -43,7 +43,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -210,24 +209,16 @@ public class MetricExtensionEntrypoint {
                 }
                 List<Node> nodes1 = metricGatherer.gatherMetrics(config.getProjectName(), source);
                 if (!nodes1.isEmpty()) {
-                    metricsResult.put(source.getName(), nodes1);
+                    List <Node> sanitizedNodes = new SonarFileSanitizer(nodes1, finalRepositoryPath, source.getSubdirectory()).getSanitizedOutput();
+                    metricsResult.put(source.getName(), sanitizedNodes);
                 }
 
             }
 
         }
 
-        sanitizeMetricsResults(metricsResult, finalRepositoryPath);
-
         return new ExperimentResult(config.getProjectName(), futureSymfinderResult.get(), metricsResult, config);
     }
-
-    private void sanitizeMetricsResults(Map <String, List <Node>> metricsResult, String finalRepositoryPath) {
-        for (Map.Entry <String, List <Node>> projectEntry : metricsResult.entrySet()) {
-            projectEntry.setValue(new SonarFileSanitizer(projectEntry.getValue(), finalRepositoryPath).getSanitizedOutput());
-        }
-    }
-
 
     private void makePathAbsoluteIfNotAlready(ExperimentConfig experimentConfig) {
 

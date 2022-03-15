@@ -12,6 +12,7 @@ jdk-17.10:
       enabled: true
       rootUrl: "https://sonarcloud.io"
       componentName: "corpus2021.sonar%3Ajdk"
+      subdirectory: "src"
       metrics:
         - "coverage"
         - "complexity"

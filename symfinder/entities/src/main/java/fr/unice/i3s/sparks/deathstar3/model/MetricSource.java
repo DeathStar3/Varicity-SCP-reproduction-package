@@ -40,12 +40,13 @@ public class MetricSource {
     private boolean enabled = true; // Optional (default to true)
     private String componentName; // Mandatory
     private String rootUrl; // Mandatory
+    private String subdirectory = ""; // Optional (default to "")
     private List<String> metrics;
 
     /**
      * @return a deep exact copy of this instance
      */
     public MetricSource cloneSelfExact() {
-        return new MetricSource(name, enabled, componentName, rootUrl, new ArrayList<>(metrics));
+        return new MetricSource(name, enabled, componentName, rootUrl, subdirectory, new ArrayList<>(metrics));
     }
 }

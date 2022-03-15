@@ -16,6 +16,7 @@ argouml:
       enabled: true
       rootUrl: "https://sonarcloud.io"
       componentName: "corpus2021.sonar%3Aargouml"
+      subdirectory: "src"
       metrics:
         - "coverage"
         - "complexity"

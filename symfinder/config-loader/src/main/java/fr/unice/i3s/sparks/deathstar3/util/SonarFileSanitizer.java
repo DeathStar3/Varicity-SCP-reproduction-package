@@ -23,10 +23,19 @@ public class SonarFileSanitizer {
 
     private List <Node> nodes;
     private String projectSourcesRoot;
+    private Optional <String> sonarDirectory;
 
-    public SonarFileSanitizer(List <Node> nodes, String projectSourcesRoot) {
+    public SonarFileSanitizer(List <Node> nodes, String projectSourcesRoot, String sonarDirectory) {
         this.nodes = nodes;
         this.projectSourcesRoot = projectSourcesRoot;
+        this.sonarDirectory = getSonarDirectory(sonarDirectory);
+    }
+
+    private Optional <String> getSonarDirectory(String sonarDirectory) {
+        if (sonarDirectory.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(sonarDirectory.endsWith("/") ? sonarDirectory : sonarDirectory + "/");
     }
 
     public List <Node> getSanitizedOutput() {
@@ -34,12 +43,12 @@ public class SonarFileSanitizer {
     }
 
     public Node sanitizeNode(Node node) {
-        String nodeName = node.getName().replaceAll("^src/", "");
+        String nodeName = sonarDirectory.map(dir -> node.getName().replaceAll(String.format("^%s", dir), "")).orElseGet(node::getName);
         Path filePath = Paths.get(projectSourcesRoot, nodeName);
         if (filePath.getFileName().toString().endsWith(".java")) {  // we do not care about files that are not Java classes
             String className = filePath.getFileName().toString().replaceAll(".java", "");
             String packageName = getPackageName(filePath);
-            if(!packageName.isEmpty()){
+            if (! packageName.isEmpty()) {
                 String qualifiedName = String.join(".", packageName, className);
                 node.setName(qualifiedName);
             }

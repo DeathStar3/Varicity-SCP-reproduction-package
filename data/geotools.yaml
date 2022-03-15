@@ -12,6 +12,7 @@ geotools:
       enabled: true
       rootUrl: "https://sonarcloud.io"
       componentName: "corpus2021.sonar%3Ageotools"
+      subdirectory: "src"
       metrics:
         - "coverage"
         - "complexity"

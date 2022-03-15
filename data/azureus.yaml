@@ -12,6 +12,7 @@ azureus:
       enabled: true
       rootUrl: "https://sonarcloud.io"
       componentName: "corpus2021.sonar%3Aazureus"
+      subdirectory: "src"
       metrics:
         - "coverage"
         - "complexity"

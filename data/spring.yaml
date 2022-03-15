@@ -12,6 +12,7 @@ spring:
       enabled: true
       rootUrl: "https://sonarcloud.io"
       componentName: "corpus2021.sonar%3Aspringframework"
+      subdirectory: "src"
       metrics:
         - "coverage"
         - "complexity"
