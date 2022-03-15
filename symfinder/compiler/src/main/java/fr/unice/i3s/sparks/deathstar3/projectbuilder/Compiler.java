@@ -201,6 +201,7 @@ public class Compiler {
             mvnCommmands.add("-Dsonar.login=" + result.token());
             mvnCommmands.add("-Dsonar.host.url=" + Constants.SONARQUBE_DOCKER_URL);
             mvnCommmands.add("-Dsonar.projectKey=" + projectConfig.getProjectName());
+            mvnCommmands.add("-Dsonar.projectName=" + projectConfig.getProjectName());
             mvnCommmands.add("-Dmaven.test.failure.ignore=true");
             command = command.withEntrypoint(mvnCommmands);
         }

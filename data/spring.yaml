@@ -1,9 +1,9 @@
-jdk-17.10:
-  repositoryUrl: "https://github.com/Corpus-2021/jdk"
-  sourcePackage: src
+spring:
+  repositoryUrl: "https://github.com/Corpus-2021/spring-framework"
+  sourcePackage: .
   sonarqubeNeeded: false
   tagIds:
-    - 17-10-AnalysisReady
+    - 5.2.13-AnalysisReady
   skipSymfinder: false
   path: "/data/projects"
   outputPath: "/data/output"
@@ -11,7 +11,7 @@ jdk-17.10:
     - name: "sonarcloud"
       enabled: true
       rootUrl: "https://sonarcloud.io"
-      componentName: "corpus2021.sonar%3Ajdk"
+      componentName: "corpus2021.sonar%3Aspringframework"
       metrics:
         - "coverage"
         - "complexity"

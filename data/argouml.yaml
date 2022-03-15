@@ -6,8 +6,7 @@ argouml:
   sonarqubeNeeded: false
   tagIds:
     - 0.35.1
-  skipClone: false
-  skipSymfinder: false
+  skipSymfinder: true
   path: "/data/projects"
   outputPath: "/data/output"
 #  buildCmdIncludeSonar: true
