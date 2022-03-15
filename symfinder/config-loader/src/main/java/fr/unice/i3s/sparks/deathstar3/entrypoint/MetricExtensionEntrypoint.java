@@ -38,10 +38,12 @@ import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.Neo4jParame
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.configuration.ParametersObject;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder;
 import fr.unice.i3s.sparks.deathstar3.symfinder.engine.result.SymfinderResult;
+import fr.unice.i3s.sparks.deathstar3.util.SonarFileSanitizer;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -215,7 +217,15 @@ public class MetricExtensionEntrypoint {
 
         }
 
+        sanitizeMetricsResults(metricsResult, finalRepositoryPath);
+
         return new ExperimentResult(config.getProjectName(), futureSymfinderResult.get(), metricsResult, config);
+    }
+
+    private void sanitizeMetricsResults(Map <String, List <Node>> metricsResult, String finalRepositoryPath) {
+        for (Map.Entry <String, List <Node>> projectEntry : metricsResult.entrySet()) {
+            projectEntry.setValue(new SonarFileSanitizer(projectEntry.getValue(), finalRepositoryPath).getSanitizedOutput());
+        }
     }
 
 

@@ -101,9 +101,7 @@ public class SonarCloudStrategy implements MetricGatheringStrategy {
         for (SonarResults.Component component : sonarResults.getComponents()) {
 
             Node node = new Node();
-            node.setName(((component.getPath().replaceAll("^src/main/java/", "")).replaceAll("\\.java$", "")).replaceAll("/", "."));
-            // ADDED REMOVAL OF SRC PACKAGE HERE
-            node.setName(node.getName().replaceAll("^src.", ""));
+            node.setName(component.getPath());
             node.setMetrics(new ArrayList<>());
 
             for (SonarResults.Metric metric : component.getMeasures()) {
