@@ -124,3 +124,78 @@
 >>> - Number of proximity entities: 142
 >>> - Number of nodes: 37642
 >>> - Number of relationships: 38397
+
+> ### HighCharts:
+
+>>> - Number of VPs: 1528
+>>> - Number of methods VPs: 158
+>>> - Number of constructor VPs: 12
+>>> - Number of method level VPs: 170
+>>> - Number of class level VPs: 1358
+>>> - Number of variants: 487
+>>> - Number of methods variants: 297
+>>> - Number of constructors variants: 25
+>>> - Number of method level variants: 322
+>>> - Number of class level variants: 165
+>>> - Number of variant files: 0
+>>> - Number of variant folder: 0
+>>> - Number of vp folder: 0
+>>> - Number of proximity entities: 0
+>>> - Number of nodes: 24538
+>>> - Number of relationships: 28020
+
+> ### VSCode cpptools:
+
+>>> - Number of VPs: 99
+>>> - Number of methods VPs: 0
+>>> - Number of constructor VPs: 0
+>>> - Number of method level VPs: 0
+>>> - Number of class level VPs: 99
+>>> - Number of variants: 25
+>>> - Number of methods variants: 0
+>>> - Number of constructors variants: 0
+>>> - Number of method level variants: 0
+>>> - Number of class level variants: 25
+>>> - Number of variant files: 4
+>>> - Number of variant folder: 2
+>>> - Number of vp folder: 1
+>>> - Number of proximity entities: 40
+>>> - Number of nodes: 3074
+>>> - Number of relationships: 3656
+
+> ### Play wright:
+
+>>> - Number of VPs: 170
+>>> - Number of methods VPs: 8
+>>> - Number of constructor VPs: 0
+>>> - Number of method level VPs: 8
+>>> - Number of class level VPs: 162
+>>> - Number of variants: 141
+>>> - Number of methods variants: 16
+>>> - Number of constructors variants: 0
+>>> - Number of method level variants: 16
+>>> - Number of class level variants: 125
+>>> - Number of variant files: 40
+>>> - Number of variant folder: 11
+>>> - Number of vp folder: 3
+>>> - Number of proximity entities: 135
+>>> - Number of nodes: 8195
+>>> - Number of relationships: 11031
+> ### Fast:
+
+>>> - Number of VPs: 240
+>>> - Number of methods VPs: 0
+>>> - Number of constructor VPs: 0
+>>> - Number of method level VPs: 0
+>>> - Number of class level VPs: 240
+>>> - Number of variants: 150
+>>> - Number of methods variants: 0
+>>> - Number of constructors variants: 0
+>>> - Number of method level variants: 0
+>>> - Number of class level variants: 150
+>>> - Number of variant files: 4
+>>> - Number of variant folder: 2
+>>> - Number of vp folder: 1
+>>> - Number of proximity entities: 14
+>>> - Number of nodes: 6105
+>>> - Number of relationships: 9714
