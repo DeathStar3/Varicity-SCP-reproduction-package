@@ -1,0 +1,23 @@
+jkube:
+  repositoryUrl: "https://github.com/eclipse/jkube"
+  sourcePackage: .
+  sonarqubeNeeded: false
+  tagIds:
+    - v1.7.0
+  skipSymfinder: false
+  path: "/data/projects"
+  outputPath: "/data/output"
+  sources:
+    - name: "sonarcloud"
+      enabled: true
+      rootUrl: "https://sonarcloud.io"
+      componentName: "jkubeio_jkube"
+      subdirectory: ""
+      metrics:
+        - "coverage"
+        - "complexity"
+        - "cognitive_complexity"
+        - "bugs"
+        - "ncloc"
+        - "duplicated_lines"
+        - "duplicated_blocks"

@@ -485,7 +485,9 @@ export class Building3D extends Element3D {
                     () => {
                         this.highlight(true);
                         this.links.forEach(l => l.display(undefined, true));
-                        UIController.displayObjectInfo(this);
+                        if (SelectedBuildingController.selected.length == 0) {
+                            UIController.displayObjectInfo(this);
+                        }
                         // document.getElementById("nodes_details").innerText = out;
                     }
                 )

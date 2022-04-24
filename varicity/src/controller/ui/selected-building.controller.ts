@@ -4,6 +4,7 @@ import { Building } from "../../model/entities/building.interface";
 export const SelectedBuildingController = {
     selected: [],
     selectABuilding: function(building: Building) {
+        console.log("SELECTED BUILDING: " + building.name);
         if (!this.selected.includes(building.name)) {
             this.selected.push(building.name);
         }
