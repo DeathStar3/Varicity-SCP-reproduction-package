@@ -9,8 +9,14 @@ npm run --silent build
 PROJECT_PATH=$path node lib/index.js
 
 echo "Go check the result on port 7474"
+echo "Corresponding database has been downloaded into $1_db.json"
 
-username=neo4j
-password=root
-query_file="$2"
-command="cat $quey_file | cypher-shell -u $username -p $password --format plain"
+cd ..
+
+echo "running test ..."
+
+npm run test 
+
+echo "running coverage ..."
+
+npm run coverage
