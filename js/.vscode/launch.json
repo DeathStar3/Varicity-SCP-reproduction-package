@@ -12,7 +12,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/node_modules/.bin/jest",
-            "args": ["${relativeFile}"],
+            "args": ["${fileBasename}"],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "windows": {
