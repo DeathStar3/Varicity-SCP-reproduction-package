@@ -59,6 +59,9 @@ export class Symfinder{
         await this.detectCommonEntityProximity();
         await this.detectCommonMethodImplemented();
 
+        await this.neoGraph.exportToJSON();
+        console.log("db fetched");
+
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
         console.log("Number of constructor VPs: " + await this.neoGraph.getNbConstructorVPs());
@@ -75,6 +78,7 @@ export class Symfinder{
         console.log("Number of proximity entities: " + await this.neoGraph.getNbProximityEntity());
         console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
         console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
+
         
 
         await this.neoGraph.driver.close();

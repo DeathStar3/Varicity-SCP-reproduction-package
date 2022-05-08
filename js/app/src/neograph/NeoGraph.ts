@@ -16,6 +16,7 @@
  *
  * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
  */
+import { writeFile } from "fs";
 import { driver, Driver } from "neo4j-driver";
 import { auth, Node, QueryResult, Record, Session, Transaction } from "neo4j-driver-core";
 import { exit } from "process";
@@ -490,6 +491,20 @@ export default class NeoGraph{
         });
     }
 
+    async exportToJSON(): Promise<String[]> {
+        const request = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:VARIANT_FILE OR n:SUPER_VARIANT_FOLDER RETURN collect({types:labels(n), name:n.name})";
+
+        return this.submitRequest(request, {}).then(function(results: Record[]){
+            const data = results.map((result: Record) => result.get(0));
+            let content = JSON.stringify(data);
+            writeFile('db.json', content, (err: any) => {
+                if (err) throw err;
+                process.stdout.write('data written to file');
+            });
+            return <string[]> data;
+        });
+    }
+
     async clearNodes(): Promise<void>{
         const request = "MATCH (n) DETACH DELETE n"
         await this.submitRequest(request, {});
@@ -506,7 +521,7 @@ export default class NeoGraph{
                 await transaction.commit();
                 if(nbTry > 0) process.stdout.write("\rDatabase ready.                                               \n");
                 return result.records;
-            } catch (error) {
+            } catch (Error) {
                 process.stdout.write("\rData base not ready... Retrying in "+waitingTime+" sec (" + nbTry + "/" + maxTry + ")");
                 await new Promise<void>((res) => setTimeout(()=>res(), waitingTime * 1000));
             }
