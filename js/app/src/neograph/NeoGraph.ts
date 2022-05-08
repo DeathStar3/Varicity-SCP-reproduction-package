@@ -492,7 +492,7 @@ export default class NeoGraph{
     }
 
     async exportToJSON(): Promise<String[]> {
-        const request = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:VARIANT_FILE OR n:SUPER_VARIANT_FOLDER RETURN collect({types:labels(n), name:n.name})";
+        const request = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:DIRECTORY OR n:VARIANT_FILE OR n:SUPER_VARIANT_FILE OR n:FILE RETURN collect({types:labels(n), name:n.name})";
 
         return this.submitRequest(request, {}).then(function(results: Record[]){
             const data = results.map((result: Record) => result.get(0));

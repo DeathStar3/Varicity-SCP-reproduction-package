@@ -1,10 +1,12 @@
-describe('in core_file test project', () => {
+
+
+describe('in proximity test project', () => {
 
     let data_file = require('../db.json');
     let size = Object.keys(data_file[0]).length;
 
     describe('concerning vp_folder', () => {
-        it('parentFolder is', () => { 
+        it('parentFolder is', () => {
             let types;
             for (let step = 0; step < size; step++) {
                 if (data_file[0][step].name === 'parentFolder') {
@@ -15,24 +17,13 @@ describe('in core_file test project', () => {
             let result = types.includes('VP_FOLDER');
             expect(result).toBe(true);
         });
-        it('folder 2 is not', () => { 
-            let types;
-            for (let step = 0; step < size; step++) {
-                if (data_file[0][step].name === 'folder2') {
-                    types = data_file[0][step].types;
-                    break;
-                }
-            }
-            let result = types.includes('VP_FOLDER');
-            expect(result).toBe(false);
-        });
     });
 
-    describe('concernign variant_folder', () => {
-        it('folder 1 is', () => { 
+    describe('concerning variant_folder', () => {
+        it ('folderA is', () => {
             let types;
             for (let step = 0; step < size; step++) {
-                if (data_file[0][step].name === 'folder1') {
+                if (data_file[0][step].name === 'folderA') {
                     types = data_file[0][step].types;
                     break;
                 }
@@ -40,10 +31,10 @@ describe('in core_file test project', () => {
             let result = types.includes('VARIANT_FOLDER');
             expect(result).toBe(true);
         });
-        it('folder 2 is', () => { 
+        it ('folderB is', () => {
             let types;
             for (let step = 0; step < size; step++) {
-                if (data_file[0][step].name === 'folder2') {
+                if (data_file[0][step].name === 'folderB') {
                     types = data_file[0][step].types;
                     break;
                 }
@@ -51,10 +42,10 @@ describe('in core_file test project', () => {
             let result = types.includes('VARIANT_FOLDER');
             expect(result).toBe(true);
         });
-        it('folder 3 is', () => { 
+        it ('folderC is', () => {
             let types;
             for (let step = 0; step < size; step++) {
-                if (data_file[0][step].name === 'folder3') {
+                if (data_file[0][step].name === 'folderC') {
                     types = data_file[0][step].types;
                     break;
                 }
@@ -65,7 +56,7 @@ describe('in core_file test project', () => {
     });
 
     describe('concerning variant_file', () => {
-        it('fileA is', () => { 
+        it('fileA is', () => {
             let types;
             for (let step = 0; step < size; step++) {
                 if (data_file[0][step].name === 'fileA.ts') {
@@ -76,7 +67,7 @@ describe('in core_file test project', () => {
             let result = types.includes('VARIANT_FILE');
             expect(result).toBe(true);
         });
-        it('fileB is', () => { 
+        it('fileB is', () => {
             let types;
             for (let step = 0; step < size; step++) {
                 if (data_file[0][step].name === 'fileB.ts') {
@@ -90,7 +81,7 @@ describe('in core_file test project', () => {
     });
     
     describe('concerning super_variant_file', () => {
-        it('fileA is not', () => { 
+        it('fileA is', () => {
             let types;
             for (let step = 0; step < size; step++) {
                 if (data_file[0][step].name === 'fileA.ts') {
@@ -99,9 +90,9 @@ describe('in core_file test project', () => {
                 }
             }
             let result = types.includes('SUPER_VARIANT_FILE');
-            expect(result).toBe(false);
+            expect(result).toBe(true);
         });
-        it('fileB is not', () => { 
+        it('fileB is not', () => {
             let types;
             for (let step = 0; step < size; step++) {
                 if (data_file[0][step].name === 'fileB.ts') {
