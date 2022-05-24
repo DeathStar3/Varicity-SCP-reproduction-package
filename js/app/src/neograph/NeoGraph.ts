@@ -398,8 +398,8 @@ export default class NeoGraph{
         })
     }
 
-    async getNbSuperVariantFiles(): Promise<number>{
-        return this.submitRequest("MATCH (d:SUPER_VARIANT_FILE) RETURN (COUNT(DISTINCT d))", {}).then((result: Record[]) =>{
+    async getNbCoreFiles(): Promise<number>{
+        return this.submitRequest("MATCH (d:CORE_FILE) RETURN (COUNT(DISTINCT d))", {}).then((result: Record[]) =>{
             return +(result[0].get(0));
         })
     }
@@ -412,6 +412,12 @@ export default class NeoGraph{
 
     async getAllVariantFiles(): Promise<Node[]>{
         return this.submitRequest("MATCH (n:"+EntityAttribut.VARIANT_FILE+") RETURN n", {}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getAllFiles(): Promise<Node[]> {
+        return this.submitRequest("MATCH (n:"+EntityType.FILE+") RETURN n", {}).then((results: Record[]) =>{
             return <Node[]> (results.map((result: Record) => result.get(0)));
         });
     }
@@ -492,7 +498,7 @@ export default class NeoGraph{
     }
 
     async exportToJSON(): Promise<String[]> {
-        const request = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:DIRECTORY OR n:VARIANT_FILE OR n:SUPER_VARIANT_FILE OR n:FILE RETURN collect({types:labels(n), name:n.name})";
+        const request = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:DIRECTORY OR n:VARIANT_FILE OR n:CORE_FILE OR n:FILE RETURN collect({types:labels(n), name:n.name})";
 
         return this.submitRequest(request, {}).then(function(results: Record[]){
             const data = results.map((result: Record) => result.get(0));

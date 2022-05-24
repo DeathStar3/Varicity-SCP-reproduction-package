@@ -190,10 +190,11 @@ export class Symfinder{
                 }
                 if(isSuperVariantFile){
                     for(let superVariantFileNode of superVariantFilesNode){
-                        await this.neoGraph.addLabelToNode(superVariantFileNode, EntityAttribut.SUPER_VARIANT_FILE)
+                        await this.neoGraph.addLabelToNode(superVariantFileNode, EntityAttribut.CORE_FILE)
                     }
                 }
             }
+            await this.detectCodeDuplication(vpFolderPath);
         }
         if(i > 0)
             process.stdout.write("\rSearch SUPER variant files: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
@@ -229,14 +230,32 @@ export class Symfinder{
                 var nodeB: Node = value.find((node: Node) => node.properties.path == clone.duplicationB.sourceId);
                 var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
                 var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
-                await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CODE_DUPLICATED,
+                await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CORE_CONTENT,
                     clone.duplicationA.fragment, percentA, clone.duplicationA.start.line +":"+ clone.duplicationA.end.line);
-                await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CODE_DUPLICATED,
+                await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CORE_CONTENT,
                     clone.duplicationA.fragment, percentB, clone.duplicationB.start.line +":"+ clone.duplicationB.end.line);
             }            
         }
         if(i > 0)
             process.stdout.write("\rCheck duplication code: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
+    }
+
+    async detectCodeDuplication(folderPath: string): Promise<void> {
+        var nodes: Node[] = await this.neoGraph.getAllFiles();
+        var clones: any[] = await detectClones({
+            path: [folderPath],
+            silent: true
+        })
+        for (let clone of clones){
+            var nodeA: any = nodes.find((node: Node) => node.properties.path == clone.duplicationA.sourceId);
+            var nodeB: any = nodes.find((node: Node) => node.properties.path == clone.duplicationB.sourceId);
+            var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
+            var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
+            await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CODE_DUPLICATED,
+                clone.duplicationA.fragment, percentA, clone.duplicationA.start.line +":"+ clone.duplicationA.end.line);
+            await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CODE_DUPLICATED,
+                clone.duplicationA.fragment, percentB, clone.duplicationB.start.line +":"+ clone.duplicationB.end.line);
+        }
     }
 
     /**
