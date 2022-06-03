@@ -161,6 +161,30 @@
             "path": "/persistent/configs/jfreechart-refactored/config-jfreechart-refactored-20.yaml",
             "projectId": "jfreechart-refactored",
             "filename": "config-jfreechart-refactored-20"
+        },
+        {
+            "name": "VariMetrics view - Figure 6a",
+            "path": "/persistent/configs/jfreechart-1.5.0/config-jfreechart-1.5.0-21.yaml",
+            "projectId": "jfreechart-1.5.0",
+            "filename": "config-jfreechart-1.5.0-21"
+        },
+        {
+            "name": "VariMetrics view - Figure 8a",
+            "path": "/persistent/configs/jfreechart-1.5.0/config-jfreechart-1.5.0-22.yaml",
+            "projectId": "jfreechart-1.5.0",
+            "filename": "config-jfreechart-1.5.0-22"
+        },
+        {
+            "name": "VariMetrics view",
+            "path": "/persistent/configs/jfreechart-refactored/config-jfreechart-refactored-23.yaml",
+            "projectId": "jfreechart-refactored",
+            "filename": "config-jfreechart-refactored-23"
+        },
+        {
+            "name": "VariCity view",
+            "path": "/persistent/configs/jfreechart-refactored/config-jfreechart-refactored-24.yaml",
+            "projectId": "jfreechart-refactored",
+            "filename": "config-jfreechart-refactored-24"
         }
     ]
 }

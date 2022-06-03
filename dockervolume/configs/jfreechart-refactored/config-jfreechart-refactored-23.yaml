@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: VariMetrics view - Figure 7b
+name: VariMetrics view
 building:
   padding: 0.2
   colors:
@@ -71,13 +71,13 @@ variables:
 orientation: OUT
 default_level: 4
 camera_data:
-  alpha: -13.647426990933727
-  beta: 1.2493184609208312
-  radius: 5.963423184720121
+  alpha: -15.104866238428741
+  beta: 1.0043562111787987
+  radius: 50.96183912074703
   target:
-    x: 32.13145014928305
-    y: 4.86209939568419
-    z: 7.254003775614487
+    x: 21.039955645068485
+    y: -0.3152183882042855
+    z: -25.47790933476416
 metrics:
   complexity:
     min: 0

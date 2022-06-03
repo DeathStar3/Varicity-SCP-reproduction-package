@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: VariMetrics view - Figure 5a
+name: VariMetrics view - Figure 8a
 building:
   padding: 0.2
   colors:
@@ -75,18 +75,18 @@ variables:
   width: nbConstructorVariants
   height: nbMethodVariants
   intensity: ""
-  fade: coverage
+  fade: cognitive_complexity
   crack: duplicated_blocks
 orientation: OUT
 default_level: 4
 camera_data:
-  alpha: -4.314588301886639
-  beta: 1.3500435113224774
-  radius: 28.940587706507408
+  alpha: -3.652040246315878
+  beta: 1.4307399901171478
+  radius: 5.578300642755477
   target:
-    x: 21.35995145111975
-    y: 6.156663846759718
-    z: 31.593294429389662
+    x: 20.77751475617381
+    y: 2.8886068090313297
+    z: 31.860011817584972
 metrics:
   complexity:
     min: 0

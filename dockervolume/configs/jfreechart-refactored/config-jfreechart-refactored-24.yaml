@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: VariMetrics view - Figure 5b
+name: VariCity view
 building:
   padding: 0.2
   colors:
@@ -19,14 +19,23 @@ building:
       - name: CLASS
         color: "#335DFF"
       - name: API
+        color: "#555555"
       - name: VARIANT
+        color: "#555555"
       - name: TEMPLATE
+        color: "#555555"
       - name: DECORATOR
+        color: "#555555"
       - name: COMPOSITION_STRATEGY
+        color: "#555555"
       - name: METHOD_LEVEL_VP
+        color: "#555555"
       - name: DENSE
+        color: "#555555"
       - name: PUBLIC
+        color: "#555555"
       - name: PRIVATE
+        color: "#555555"
     edges:
       - name: API
         color: "#000000"
@@ -66,18 +75,18 @@ variables:
   width: nbConstructorVariants
   height: nbMethodVariants
   intensity: ""
-  fade: coverage
-  crack: duplicated_blocks
+  fade: ""
+  crack: ""
 orientation: OUT
 default_level: 4
 camera_data:
-  alpha: -19.235874922658315
-  beta: 1.3896190244714275
-  radius: 9.675523225664135
+  alpha: -15.104866238428741
+  beta: 1.0043562111787987
+  radius: 50.96183912074703
   target:
-    x: 17.967490822791206
-    y: 5.444169068621606
-    z: -20.540815857989294
+    x: 21.039955645068485
+    y: -0.3152183882042855
+    z: -25.47790933476416
 metrics:
   complexity:
     min: 0
