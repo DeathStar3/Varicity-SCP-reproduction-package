@@ -35,6 +35,5 @@ testadd
 *.vscode
 /data/projects
 *node_modules*
-dockervolume
 varicity-backend/dockervolume
 private-tools

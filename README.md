@@ -66,7 +66,7 @@ Run visualization
 ./run-compose.bat
 ```
 
-Run the analysis
+Run the analysis (in another terminal)
 ```shell
 ./run-docker-cli.sh -i /data/junit-r4.13.2-config.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
 ```

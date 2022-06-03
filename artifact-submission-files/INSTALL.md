@@ -6,19 +6,19 @@ In this document, we assume that you already have a system with:
 
 See REQUIREMENTS.md file for more details.
 
-## Running VariCity
+## Running VariMetrics
 
 All the scripts in this section are located and executed from the `varicity` directory, located at the root of the project.
 
-*Note:* Before running VariCity, you need to have visualizations files generated in the `generated_visualizations` directory at the root of the project.
+*Note:* Before running VariMetrics, you need to have visualizations files generated in the `generated_visualizations` directory at the root of the project.
 These visualizations are obtained by first executing symfinder (see [Running symfinder](#running-symfinder)), or by unpacking pre-generated visualizations present in the`pre_generated_visualizations.zip` archive at the root of the project. 
 
 ### Reusing the existing Docker image
 
-VariCity is available as a Docker image hosted on the [Docker Hub](https://hub.docker.com/r/deathstar3/varicity),
+VariMetrics is available as a Docker image hosted on the [Docker Hub](https://hub.docker.com/r/deathstar3/varicity),
 allowing to use it without needing to build it.
 
-Run VariCity by running
+Run VariMetrics by running
 
 
 - On GNU/Linux and macOS
@@ -40,14 +40,14 @@ You can also download it manually with:
 docker pull deathstar3/varicity:vissoft2021
 ```
 
-VariCity is a NodeJS application written in TypeScript deployed in a webpack environment.
+VariMetrics is a NodeJS application written in TypeScript deployed in a webpack environment.
 The Docker container exposes the application as a server, which is accessed through your web browser.
 
-### Building VariCity
+### Building VariMetrics
 
-**This step is only needed if you edited VariCity's source code.**
+**This step is only needed if you edited VariMetrics's source code.**
 
-You can build VariCity's Docker images by running
+You can build VariMetrics's Docker images by running
 
 ```
 ./build.sh
@@ -61,7 +61,7 @@ Then, run symfinder using the local images that you just built.
 
 *Note:* Due to end of lines problems on Windows, building the Docker images is only possible if you use a GNU/Linux or macOS system.
 
-### Checking that VariCity works
+### Checking that VariMetrics works
 
 - The script indicates that the `vissoft2021` image is used.
 - The Docker container starts, and runs the `webpack serve` command, which compiles the sources and exposes the project on `localhost:9090`.
@@ -114,7 +114,7 @@ This might be due to limitations in the resources that Docker is allowed to allo
 
 ## Running symfinder
 
-Reproducing the pre-generated visualizations is done by executing symfinder before VariCity.
+Reproducing the pre-generated visualizations is done by executing symfinder before VariMetrics.
 All scripts used in this section are located in the artifact's root directory.
 
 ### Reusing the existing Docker images
