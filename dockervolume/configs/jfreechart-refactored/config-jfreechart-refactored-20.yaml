@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: File - OUT 1
+name: VariMetrics view - Figure 6b
 building:
   padding: 0.2
   colors:
@@ -60,24 +60,41 @@ hierarchy_links:
   - EXTENDS
 blacklist: []
 api_classes:
-  - java.io.File
+  - org.jfree.chart.JFreeChart
+  - org.jfree.chart.plot.Plot
 variables:
   width: nbConstructorVariants
   height: nbMethodVariants
   intensity: ""
-  fade: ""
-  crack: ""
+  fade: coverage
+  crack: duplicated_blocks
 orientation: OUT
-default_level: 1
+default_level: 4
 camera_data:
-  alpha: 7.245114235531122
-  beta: 1.0491091406598168
-  radius: 32.861149314505816
+  alpha: -11.11246462866034
+  beta: 1.5420450789754625
+  radius: 7.7813816430064415
   target:
-    x: 9.114023649647711
-    y: 20.530441341253024
-    z: 26.705249270776502
+    x: 19.20431959660516
+    y: 3.285446562748131
+    z: -20.910561422177377
 metrics:
+  complexity:
+    min: 0
+    max: 25
+    higherIsBetter: false
+  cognitive_complexity:
+    min: 0
+    max: 150
+    higherIsBetter: false
+  duplicated_lines:
+    min: 0
+    max: 100
+    higherIsBetter: false
+  coverage:
+    min: 0
+    max: 100
+    higherIsBetter: true
   nbMethodVariants:
     min: 0
     max: 100
@@ -94,19 +111,7 @@ metrics:
     min: 0
     max: 100
     higherIsBetter: false
-  complexity:
-    min: 0
-    max: 100
-    higherIsBetter: false
   ncloc:
-    min: 0
-    max: 100
-    higherIsBetter: false
-  coverage:
-    min: 0
-    max: 100
-    higherIsBetter: false
-  cognitive_complexity:
     min: 0
     max: 100
     higherIsBetter: false
@@ -114,14 +119,10 @@ metrics:
     min: 0
     max: 100
     higherIsBetter: false
-  duplicated_lines:
-    min: 0
-    max: 100
-    higherIsBetter: false
   duplicated_blocks:
     min: 0
-    max: 100
+    max: 50
     higherIsBetter: false
-projectId: jdk-17.10
+projectId: jfreechart-refactored
 clones:
   map: {}

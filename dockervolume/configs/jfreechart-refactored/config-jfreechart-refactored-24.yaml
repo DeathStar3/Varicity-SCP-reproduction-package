@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: coverage and duplication - duplications view 2
+name: VariMetrics view - Figure 5b
 building:
   padding: 0.2
   colors:
@@ -71,13 +71,13 @@ variables:
 orientation: OUT
 default_level: 4
 camera_data:
-  alpha: -20.003379867584197
-  beta: 1.2947896672296968
-  radius: 22.238530464875893
+  alpha: -19.235874922658315
+  beta: 1.3896190244714275
+  radius: 9.675523225664135
   target:
-    x: 16.98918131767394
-    y: 3.5750918807957093
-    z: -23.854672690058422
+    x: 17.967490822791206
+    y: 5.444169068621606
+    z: -20.540815857989294
 metrics:
   complexity:
     min: 0

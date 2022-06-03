@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: coverage and duplication - code duplication view
+name: VariMetrics view - Figure 8b
 building:
   padding: 0.2
   colors:
@@ -66,18 +66,18 @@ variables:
   width: nbConstructorVariants
   height: nbMethodVariants
   intensity: ""
-  fade: coverage
+  fade: cognitive_complexity
   crack: duplicated_blocks
 orientation: OUT
 default_level: 4
 camera_data:
-  alpha: -15.331885982654438
-  beta: 1.2713179512586843
-  radius: 23.943761034598136
+  alpha: -10.98915859165638
+  beta: 1.4221728320397562
+  radius: 6.544153991549399
   target:
-    x: 15.958207620349546
-    y: 4.193598255977582
-    z: -18.2866372499385
+    x: 20.74887729268785
+    y: 3.096720581931916
+    z: -19.11537908387995
 metrics:
   complexity:
     min: 0
@@ -121,7 +121,7 @@ metrics:
     higherIsBetter: false
   duplicated_blocks:
     min: 0
-    max: 100
+    max: 50
     higherIsBetter: false
 projectId: jfreechart-refactored
 clones:

@@ -55,37 +55,31 @@
             "filename": "config-nekohtml-2.1.1-2"
         },
         {
-            "name": "coverage and duplication",
+            "name": "VariMetrics view",
             "path": "/persistent/configs/jfreechart-1.5.0/config-jfreechart-1.5.0-3.yaml",
             "projectId": "jfreechart-1.5.0",
             "filename": "config-jfreechart-1.5.0-3"
         },
         {
-            "name": "AzureusCoreComponent",
+            "name": "VariCity view",
             "path": "/persistent/configs/azureus/config-azureus-4.yaml",
             "projectId": "azureus",
             "filename": "config-azureus-4"
         },
         {
-            "name": "MapContent - SimpleFeatureSource",
+            "name": "VariCity view",
             "path": "/persistent/configs/geotools/config-geotools-5.yaml",
             "projectId": "geotools",
             "filename": "config-geotools-5"
         },
         {
-            "name": "Tool",
-            "path": "/persistent/configs/jdk-17.10/config-jdk-17.10-6.yaml",
-            "projectId": "jdk-17.10",
-            "filename": "config-jdk-17.10-6"
-        },
-        {
-            "name": "BeanComponentDefinition - AbstractBeanFactory",
+            "name": "VariCity vie<",
             "path": "/persistent/configs/spring/config-spring-7.yaml",
             "projectId": "spring",
             "filename": "config-spring-7"
         },
         {
-            "name": "standard",
+            "name": "VariCity view",
             "path": "/persistent/configs/jfreechart-1.5.0/config-jfreechart-1.5.0-8.yaml",
             "projectId": "jfreechart-1.5.0",
             "filename": "config-jfreechart-1.5.0-8"
@@ -97,16 +91,10 @@
             "filename": "config-jkube-9"
         },
         {
-            "name": "metrics",
+            "name": "VariMetrics view",
             "path": "/persistent/configs/azureus/config-azureus-10.yaml",
             "projectId": "azureus",
             "filename": "config-azureus-10"
-        },
-        {
-            "name": "blocks - complexity",
-            "path": "/persistent/configs/geotools/config-geotools-11.yaml",
-            "projectId": "geotools",
-            "filename": "config-geotools-11"
         },
         {
             "name": "metrics",
@@ -115,76 +103,64 @@
             "filename": "config-openapi-generator-12"
         },
         {
-            "name": "Tool - OUT 2",
-            "path": "/persistent/configs/jdk-17.10/config-jdk-17.10-13.yaml",
-            "projectId": "jdk-17.10",
-            "filename": "config-jdk-17.10-13"
-        },
-        {
-            "name": "metrics",
+            "name": "VariMetrics view",
             "path": "/persistent/configs/geotools/config-geotools-14.yaml",
             "projectId": "geotools",
             "filename": "config-geotools-14"
         },
         {
-            "name": "metrics",
+            "name": "VariMetrics view",
             "path": "/persistent/configs/spring/config-spring-15.yaml",
             "projectId": "spring",
             "filename": "config-spring-15"
         },
         {
-            "name": "File - OUT 1",
-            "path": "/persistent/configs/jdk-17.10/config-jdk-17.10-16.yaml",
-            "projectId": "jdk-17.10",
-            "filename": "config-jdk-17.10-16"
-        },
-        {
-            "name": "coverage and duplication - view figure",
+            "name": "VariMetrics view - Figure 5a",
             "path": "/persistent/configs/jfreechart-1.5.0/config-jfreechart-1.5.0-17.yaml",
             "projectId": "jfreechart-1.5.0",
             "filename": "config-jfreechart-1.5.0-17"
         },
         {
-            "name": "coverage and duplication - view figure 2",
+            "name": "VariMetrics view - Figure 7a",
             "path": "/persistent/configs/jfreechart-1.5.0/config-jfreechart-1.5.0-18.yaml",
             "projectId": "jfreechart-1.5.0",
             "filename": "config-jfreechart-1.5.0-18"
         },
         {
-            "name": "URI - IN 1",
-            "path": "/persistent/configs/jdk-17.10/config-jdk-17.10-19.yaml",
-            "projectId": "jdk-17.10",
-            "filename": "config-jdk-17.10-19"
-        },
-        {
-            "name": "URI + URL - IN 1",
+            "name": "VariCity view",
             "path": "/persistent/configs/jdk-17.10/config-jdk-17.10-20.yaml",
             "projectId": "jdk-17.10",
             "filename": "config-jdk-17.10-20"
         },
         {
-            "name": "URI + URL - IN 1 - metrics",
+            "name": "VariMetrics view",
             "path": "/persistent/configs/jdk-17.10/config-jdk-17.10-21.yaml",
             "projectId": "jdk-17.10",
             "filename": "config-jdk-17.10-21"
         },
         {
-            "name": "coverage and duplication - code duplication view",
+            "name": "VariMetrics view - Figure 8b",
             "path": "/persistent/configs/jfreechart-refactored/config-jfreechart-refactored-22.yaml",
             "projectId": "jfreechart-refactored",
             "filename": "config-jfreechart-refactored-22"
         },
         {
-            "name": "coverage and duplication - tests view",
+            "name": "VariMetrics view - Figure 7b",
             "path": "/persistent/configs/jfreechart-refactored/config-jfreechart-refactored-23.yaml",
             "projectId": "jfreechart-refactored",
             "filename": "config-jfreechart-refactored-23"
         },
         {
-            "name": "coverage and duplication - duplications view 2",
+            "name": "VariMetrics view - Figure 5b",
             "path": "/persistent/configs/jfreechart-refactored/config-jfreechart-refactored-24.yaml",
             "projectId": "jfreechart-refactored",
             "filename": "config-jfreechart-refactored-24"
+        },
+        {
+            "name": "VariMetrics view - Figure 6b",
+            "path": "/persistent/configs/jfreechart-refactored/config-jfreechart-refactored-20.yaml",
+            "projectId": "jfreechart-refactored",
+            "filename": "config-jfreechart-refactored-20"
         }
     ]
 }

@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: coverage and duplication - view figure 2
+name: VariMetrics view - Figure 7a
 building:
   padding: 0.2
   colors:

@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: AzureusCoreComponent
+name: VariCity view
 building:
   padding: 0.2
   colors:

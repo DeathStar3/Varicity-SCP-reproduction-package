@@ -1,5 +1,5 @@
 description: basic config with default colors and building representation
-name: URI + URL - IN 1
+name: VariCity view
 building:
   padding: 0.2
   colors:
