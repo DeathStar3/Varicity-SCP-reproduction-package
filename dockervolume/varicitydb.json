@@ -1,16 +1,8 @@
 {
     "projects": [
         {
-            "path": "/persistent/data/symfinder_files/parsed/nekohtml-2.1.1.json",
-            "projectName": "nekohtml-2.1.1"
-        },
-        {
             "path": "/persistent/data/symfinder_files/parsed/jfreechart-1.5.0.json",
             "projectName": "jfreechart-1.5.0"
-        },
-        {
-            "path": "/persistent/data/symfinder_files/parsed/argouml.json",
-            "projectName": "argouml"
         },
         {
             "path": "/persistent/data/symfinder_files/parsed/azureus.json",
@@ -39,21 +31,13 @@
         {
             "path": "/persistent/data/symfinder_files/parsed/jfreechart-refactored.json",
             "projectName": "jfreechart-refactored"
+        },
+        {
+            "path": "/persistent/data/symfinder_files/parsed/argouml.json",
+            "projectName": "argouml"
         }
     ],
     "configs": [
-        {
-            "name": "cognitive config",
-            "path": "/persistent/configs/nekohtml-2.1.1/config-nekohtml-2.1.1-1.yaml",
-            "projectId": "nekohtml-2.1.1",
-            "filename": "config-nekohtml-2.1.1-1"
-        },
-        {
-            "name": "default config",
-            "path": "/persistent/configs/nekohtml-2.1.1/config-nekohtml-2.1.1-2.yaml",
-            "projectId": "nekohtml-2.1.1",
-            "filename": "config-nekohtml-2.1.1-2"
-        },
         {
             "name": "VariMetrics view",
             "path": "/persistent/configs/jfreechart-1.5.0/config-jfreechart-1.5.0-3.yaml",

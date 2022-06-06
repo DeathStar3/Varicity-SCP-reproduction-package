@@ -94,7 +94,7 @@ public class Symfinder {
                 .collect(Collectors.toList());
 
         neoGraph.deleteAll();
-        System.out.println("Hello after delete");
+//        System.out.println("Hello after delete");
         try {
             neoGraph.createClassesIndex();
             neoGraph.createInterfacesIndex();
@@ -163,7 +163,7 @@ public class Symfinder {
             options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_16);
             parser.setCompilerOptions(options);
 
-            System.out.println(file.toPath());
+//            System.out.println(file.toPath());
 
             CompilationUnit cu = (CompilationUnit) parser.createAST(null);
             cu.accept(visitor);

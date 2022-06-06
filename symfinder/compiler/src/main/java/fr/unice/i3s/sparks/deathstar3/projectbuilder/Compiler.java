@@ -65,6 +65,8 @@ public class Compiler {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private static final Logger logger = LogManager.getLogger(Symfinder.class);
+
     public Compiler() {
 
         DockerClientConfig standard = DefaultDockerClientConfig.createDefaultConfigBuilder().build();

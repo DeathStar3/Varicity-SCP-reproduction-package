@@ -1,11 +1,11 @@
-jfreechart-1.5.0:
-  repositoryUrl: "https://github.com/DeathStar3-projects/jfreechart-config.git"
+jfreechart-refactored:
+  repositoryUrl: "https://github.com/DeathStar3/jfreechart.git"
   buildEnv: "maven"
   buildEnvTag: "3.8.4-openjdk-11"
   sourcePackage: .
   sonarqubeNeeded: true
-  commitIds:
-    - 69999a89fad23d7b36d35814b45246f53c9a2130
+  tagIds:
+    - after-maintenance
   skipClone: false
   skipSymfinder: false
   path: "/data/projects"

@@ -23,15 +23,15 @@
 set -e
 cd symfinder
 docker build -f Dockerfile -t deathstar3/symfinder-cli:local .
-cd procedures/
-docker build -t deathstar3/symfinder-neo4j:local .
-cd ..
-cd ../varicity
-echo "Building the front"
-docker build -t deathstar3/varicity:local .
-
-cd ../varicity-backend
-echo "Building the backend"
-docker build -t deathstar3/varicity-backend:local .
+#cd procedures/
+#docker build -t deathstar3/symfinder-neo4j:local .
+#cd ..
+#cd ../varicity
+#echo "Building the front"
+#docker build -t deathstar3/varicity:local .
+#
+#cd ../varicity-backend
+#echo "Building the backend"
+#docker build -t deathstar3/varicity-backend:local .
 
 echo "Done"

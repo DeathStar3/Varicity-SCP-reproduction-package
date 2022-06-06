@@ -8,10 +8,7 @@ See REQUIREMENTS.md file for more details.
 
 ## Running VariMetrics
 
-All the scripts in this section are located and executed from the `varicity` directory, located at the root of the project.
-
-*Note:* Before running VariMetrics, you need to have visualizations files generated in the `generated_visualizations` directory at the root of the project.
-These visualizations are obtained by first executing symfinder (see [Running symfinder](#running-symfinder)), or by unpacking pre-generated visualizations present in the`pre_generated_visualizations.zip` archive at the root of the project. 
+All the scripts in this section are located and executed from the root of the project.
 
 ### Reusing the existing Docker image
 
@@ -24,20 +21,20 @@ Run VariMetrics by running
 - On GNU/Linux and macOS
 
     ```
-    ./varicity.sh
+    ./run-compose.sh
     ```
 
 - On Windows
 
     ```
-    varicity.bat
+    run-compose.bat
     ```
 
-*Note:* Docker automatically downloads the image with the `vissoft2021` tag if it is not found on the host system.
+*Note:* Docker automatically downloads the image with the `splc2022` tag if it is not found on the host system. TOUPDATE
 
 You can also download it manually with:
 ```
-docker pull deathstar3/varicity:vissoft2021
+docker pull deathstar3/varicity:splc2022
 ```
 
 VariMetrics is a NodeJS application written in TypeScript deployed in a webpack environment.
@@ -47,77 +44,100 @@ The Docker container exposes the application as a server, which is accessed thro
 
 **This step is only needed if you edited VariMetrics's source code.**
 
-You can build VariMetrics's Docker images by running
+You can build VariMetrics's Docker images by going in the `/varicity` directory and running
 
 ```
 ./build.sh
 ```
 
-Then, run symfinder using the local images that you just built.
+Then, run symfinder using the local images that you just built. TOUPDATE
 
 ```
 ./varicity.sh --local
 ```
 
-*Note:* Due to end of lines problems on Windows, building the Docker images is only possible if you use a GNU/Linux or macOS system.
+*Note:* Due to end of lines problems on Windows, building the Docker images is only possible if you use a GNU/Linux or macOS system. TOUPDATE
 
 ### Checking that VariMetrics works
 
-- The script indicates that the `vissoft2021` image is used.
-- The Docker container starts, and runs the `webpack serve` command, which compiles the sources and exposes the project on `localhost:9090`.
+- Two Docker containers start: `varicity` and `varicity-backend`. TOUPDATE
 ```
-$ ./varicity.sh
-Using vissoft2021 VariCity image
-Creating network "varicity_default" with the default driver
-Creating varicity ... done
-Attaching to varicity
-varicity         | 
-varicity         | > varicity@1.0.0 start /usr/src/app
-varicity         | > export NODE_OPTIONS="--max-old-space-size=4096" && webpack serve
-varicity         | 
-varicity         | ℹ ｢wds｣: Project is running at http://0.0.0.0:9090/
-varicity         | ℹ ｢wds｣: webpack output is served from /
-varicity         | ℹ ｢wds｣: Content not from webpack is served from /usr/src/app/public
+$ ./run-compose.sh
+resources directory already exists
+data directory already exists
+dockervolume directory already exists
+[+] Running 2/0
+ ⠿ Container varicity-backend  Created                                                                                                                                                                                                  0.0s
+ ⠿ Container varicity          Created                                                                                                                                                                                                  0.0s
+Attaching to varicity, varicity-backend
+varicity          | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+varicity          | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+varicity          | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+varicity          | 10-listen-on-ipv6-by-default.sh: info: IPv6 listen already enabled
+varicity          | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+varicity          | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+varicity          | /docker-entrypoint.sh: Configuration complete; ready for start up
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: using the "epoll" event method
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: nginx/1.20.2
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: built by gcc 10.3.1 20210424 (Alpine 10.3.1_git20210424) 
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: OS: Linux 5.17.9-arch1-1
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker processes
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 25
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 26
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 27
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 28
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 29
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 30
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 31
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 32
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 33
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 34
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 35
+varicity          | 2022/06/06 14:13:20 [notice] 1#1: start worker process 36
+varicity-backend  | 
+varicity-backend  | > varicity-backjs@0.0.1 start:prod
+varicity-backend  | > node dist/main
+varicity-backend  | 
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [NestFactory] Starting Nest application...
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +28ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [InstanceLoader] AppModule dependencies initialized +2ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RoutesResolver] ProjectController {/}: +167ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/names, GET} route +2ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/json/:name, GET} route +1ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/:name/metrics/external, GET} route +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/:name/metrics/variability, GET} route +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/:name/metrics, GET} route +1ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects, POST} route +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RoutesResolver] ConfigController {/}: +1ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/configs, POST} route +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/configs/:configFile, POST} route +1ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/configs/names, GET} route +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/:projectName/configs, GET} route +1ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/configs/path, GET} route +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/configs, GET} route +1ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/configs/firstOrDefault, GET} route +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/:projectName/configs/filenames-and-names, GET} route +0ms
+varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [NestApplication] Nest application successfully started +16ms
 ```
-- After some seconds (depending on your machine) of compilation, some logs concerning the build appear and a message indicates that the code compiled successfully.
-```
-varicity         | webpack 5.9.0 compiled successfully in 16679 ms
-varicity         | ℹ ｢wdm｣: Compiled successfully.
-```
-It may happen that the container stops before this message is displayed, and that you obtain an output similar to this:
-```
-Attaching to varicity
-varicity         | 
-varicity         | > varicity@1.0.0 start /usr/src/app
-varicity         | > export NODE_OPTIONS="--max-old-space-size=4096" && webpack serve
-varicity         | 
-varicity         | ℹ ｢wds｣: Project is running at http://0.0.0.0:9090/
-varicity         | ℹ ｢wds｣: webpack output is served from /
-varicity         | ℹ ｢wds｣: Content not from webpack is served from /usr/src/app/public
-varicity         | (node:26) [DEP_WEBPACK_COMPILATION_ASSETS] DeprecationWarning: Compilation.assets will be frozen in future, all modifications are deprecated.
-varicity         | BREAKING CHANGE: No more changes should happen to Compilation.assets after sealing the Compilation.
-varicity         | 	Do changes to assets earlier, e. g. in Compilation.hooks.processAssets.
-varicity         | 	Make sure to select an appropriate stage from Compilation.PROCESS_ASSETS_STAGE_*.
-varicity         | (Use `node --trace-deprecation ...` to show where the warning was created)
-varicity exited with code 0
-```
-This might be due to limitations in the resources that Docker is allowed to allocate. See the `REQUIREMENTS.md` file for more details.
-
-- You can now open your web browser and go to `http://localhost:9090`.
-- On the right panel, click on `Project selection`. The list of the available projects appears.
+- Once the `Nest application successfully started` log appears, you can now open your web browser and go to `http://localhost:8000`.
+- A page appears, showing the list of the available projects.
   ![project_selection_panel](images/project_selection_panel.png)
-- By clicking on the desired project's name, the visualization appears on the left, here JFreeChart.
+- By clicking on the desired project's name, you can then select the configuration you want to visualize while a first visualization is loading, here JFreeChart.
   Please note that the visualization may not be centered when appearing. The rendering time of the visualization increases with the number of buildings to display.
   To limit the loading time when switching between projects, we advise to reduce the value of the usage level to limit the number of buildings to render.
 
+  ![visu_selection_panel](images/visu_selection_panel.png)
+- By selecting the `VariMetrics view` configuration, we obtain the following view:
   ![jfreechart_visualization](images/jfreechart_visualization.png)
 
 ## Running symfinder
 
-Reproducing the pre-generated visualizations is done by executing symfinder before VariMetrics.
+Reproducing the pre-generated visualizations is done by executing their analysis before VariMetrics.
 All scripts used in this section are located in the artifact's root directory.
 
-### Reusing the existing Docker images
+### Reusing the existing Docker images TOUPDATE
 
 The following Docker images hosted on the [Docker Hub](https://hub.docker.com/) allow to use symfinder without needing to build it.
 ```
@@ -127,48 +147,43 @@ deathstar3/symfinder-engine
 deathstar3/symfinder-runner
 ```
 
-To run the analyses of all projects, run:
+The configuration files for all 7 projects presented in the paper are available in the `/data` directory.
+- `azureus.yaml` → [Azureus 5.7.6.0](https://github.com/Corpus-2021/Azureus/tree/5.7.6.0)
+- `geotools.yaml` → [GeoTools 23.5](https://github.com/Corpus-2021/geotools/tree/23.5-AnalysisReady)
+- `jdk.yaml` → [JDK 17-10](https://github.com/Corpus-2021/jdk/tree/17-10-AnalysisReady)
+- `jfreechart-1.5.0.yaml` → [JFreeChart 1.5.0](https://github.com/DeathStar3/jfreechart)
+  - `jfreechart-refactored.yaml` → [JFreeChart 1.5.0](https://github.com/DeathStar3/jfreechart/tree/refactor) after the maintenance actions studied in section 5.2
+- `jkube.yaml` → [JKube 1.7.0](https://github.com/eclipse/jkube)
+- `openapi-generator.yaml` → [OpenAPI Generator 5.4.0](https://github.com/OpenAPITools/openapi-generator)
+- `spring.yaml` → [Spring framework 5.2.3](https://github.com/Corpus-2021/spring-framework/tree/5.2.13-AnalysisReady)
 
+Running the analysis of one project is done as follows, here illustrated with the `/data/jfreechart-1.5.0.yaml` file:
 
-- On GNU/Linux and macOS
+- First, run the VariCity backend as detailed in [the section on VariMetrics](#running-varimetrics).
 
-    ```
-    ./run.sh
-    ```
+- Then, in another terminal:
 
-- On Windows
+  - On GNU/Linux and macOS
 
-    ```
-    run.bat
-    ```
+  ```
+  ./run-docker-cli.sh -i /data/jfreechart-1.5.0.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+  ```
 
-This command will analyse the following projects:
-- [Java AWT 8u202-b1532](https://github.com/JetBrains/jdk8u_jdk/tree/jb8u202-b1532/src/share/classes/java/awt)
-- [Apache CXF 3.2.7](https://github.com/apache/cxf/tree/cxf-3.2.7/core/src/main/java/org/apache/cxf)
-- [JUnit 4.12](https://github.com/junit-team/junit4/tree/r4.12/src/main/java)
-- [Apache Maven 3.6.0](https://github.com/apache/maven/tree/maven-3.6.0)
-- [JFreeChart 1.5.0](https://github.com/jfree/jfreechart/tree/v1.5.0/src/main/java/org/jfree)
-- [ArgoUML](https://github.com/marcusvnac/argouml-spl/tree/bcae37308b13b7ee62da0867a77d21a0141a0f18/src)
-- [Cucumber v6.8.0](https://github.com/cucumber/cucumber-jvm/tree/v6.8.0)
-- [Logbook 2.2.1](https://github.com/zalando/logbook/tree/2.2.1)
-- [Riptide 2.11.0](https://github.com/zalando/riptide/tree/2.11.0)
-- [NetBeans 12.2](https://github.com/apache/netbeans/tree/12.2/java)
+  - On Windows
 
-Running symfinder on all projects can take multiple hours.
-You can therefore specify the projects you want to run by passing their names as parameters of the running script, for example
+  ```
+  run-docker-cli.bat -i /data/jfreechart-1.5.0.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+  ```
 
-```
-./run.sh jfreechart
-```
-
+*Notes:*
+- Some analyses, such as the JDK, GeoTools or Azureus can take multiple hours.
 More details about the analyzed projects and their definition are given in the "Using symfinder on your project" section in the README present in the artifact's root directory.
-
-*Note:* The Docker images are automatically downloaded by Docker with the tag `vissoft2021` if they are not found on the host system.
-If an image is not found, you can download it manually with the `docker pull` command
+- The Docker images are automatically downloaded by Docker with the tag `splc2022` if they are not found on the host system.
+If an image is not found, you can download it manually with the `docker pull` command.
 
 Example:
 ```
-docker pull deathstar3/symfinder-fetcher:vissoft2021
+docker pull deathstar3/symfinder-fetcher:splc2022
 ```
 
 ### Building symfinder
@@ -196,7 +211,7 @@ and clones the directory of the analyzed project(s), checking out the desired ta
 $ ./run.sh jfreechart
 resources directory already exists
 generated_visualizations directory already exists
-Using vissoft2021 images
+Using splc2022 images
 Cloning into 'resources/jfreechart'...
 Note: switching to 'tags/v1.5.0'.
 
@@ -347,7 +362,43 @@ For every project `XXX` of tag `YYY` on which you run symfinder, you should obta
 │     ├── XXX-YYY.log
 ```
 
-### Troubleshooting known Windows related issues
+### Troubleshooting known issues
+
+#### Common issues
+
+If at the end of your project analysis you have an output similar to the following:
+```
+org.springframework.web.client.ResourceAccessException: I/O error on POST request for "http://varicityback:3000/projects": varicityback; nested exception is java.net.UnknownHostException: varicityback
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:785)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:711)
+	at org.springframework.web.client.RestTemplate.postForEntity(RestTemplate.java:468)
+	at fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterHttp.writeResult(ExperimentResultWriterHttp.java:49)
+	at fr.unice.i3s.sparks.deathstar3.symfinder.cli.App.run(App.java:136)
+	at fr.unice.i3s.sparks.deathstar3.symfinder.cli.App.main(App.java:88)
+Caused by: java.net.UnknownHostException: varicityback
+	at java.base/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:229)
+	at java.base/java.net.Socket.connect(Socket.java:609)
+	at java.base/java.net.Socket.connect(Socket.java:558)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:182)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:474)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:569)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:242)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:341)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:362)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1253)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1187)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1081)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1015)
+	at org.springframework.http.client.SimpleBufferingClientHttpRequest.executeInternal(SimpleBufferingClientHttpRequest.java:76)
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:776)
+	... 5 more
+```
+This means that the VariCity backend is not running.
+You then need to run the `run-compose.sh` script in another terminal before re-running the analysis.
+
+#### Windows related issues
 
 - If you run symfinder on a Windows system, symfinder must be placed somewhere on your `C:` drive.
 

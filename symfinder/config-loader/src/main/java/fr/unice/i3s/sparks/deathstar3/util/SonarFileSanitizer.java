@@ -60,7 +60,6 @@ public class SonarFileSanitizer {
         Pattern packagePattern = Pattern.compile("^package (.*);$");
         final Predicate <String> predicate = packagePattern.asPredicate();
         try (final Stream <String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
-            System.out.println(path);
             Optional <String> packageLine = Optional.empty();
             try {
                 packageLine = stream.filter(predicate).findFirst();

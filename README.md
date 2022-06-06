@@ -57,7 +57,7 @@ Build docker images
 ./build-docker-images.bat
 ```
 
-Run visualization
+Run the visualization server in a terminal
 ```shell
 ./run-compose.sh
 ```
@@ -66,13 +66,13 @@ Run visualization
 ./run-compose.bat
 ```
 
-Run the analysis (in another terminal)
+In another terminal, run the analysis
 ```shell
-./run-docker-cli.sh -i /data/junit-r4.13.2-config.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+./run-docker-cli.sh -i /data/jfreechart-1.5.0.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
 ```
 
 ```bat
-./run-docker-cli.bat -i /data/junit-r4.13.2-config.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+./run-docker-cli.bat -i /data/jfreechart-1.5.0.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
 ```
 
 

@@ -170,33 +170,31 @@ junit-r4.12: #Project name
         - "cognitive_complexity"
 ```
 
-Regatta
+JKube
 
 ```yaml
-regatta: #Project name
-  repositoryUrl: "https://github.com/anagonousourou/pns-si3-qgl-regatta-1920-stormbreakers.git"
-  skipSymfinder: false
+jkube:
+  repositoryUrl: "https://github.com/eclipse/jkube"
+  sourcePackage: .
+  sonarqubeNeeded: false
+  tagIds:
+    - v1.7.0
   skipClone: false
-  path: ""
-  buildEnv: "maven"
-  sourcePackage: "src"
-  buildEnvTag: "3.6.1-jdk-13-alpine"
-  buildCmd: "mvn clean install sonar:sonar -f /project/pom.xml"
-  buildCmdIncludeSonar: true
-  sonarqubeNeeded: true # for now this means that a varicity-sonarqube instance will be started (if not already started) and a compilation followed by the scan will be done.
-  #This behavior will be changed so that the build can be skipped but the varicity-sonarqube will still be started and the scan performed
-  #can be useful if the user has already done the build
-  outputPath: ""
-  commitIds:
-    - 1d4d5fc1aba7b176684365000b26bd15b626cd04
+  skipSymfinder: false
+  path: "/data/projects"
+  outputPath: "/data/output"
   sources:
-    - name: "sonarqube"
+    - name: "sonarcloud"
       enabled: true
-      componentName: "regatta"
-      rootUrl: "http://localhost:9000"
+      rootUrl: "https://sonarcloud.io"
+      componentName: "jkubeio_jkube"
+      subdirectory: ""
       metrics:
+        - "coverage"
         - "complexity"
         - "cognitive_complexity"
-        - "coverage"
-
+        - "bugs"
+        - "ncloc"
+        - "duplicated_lines"
+        - "duplicated_blocks"
 ```
