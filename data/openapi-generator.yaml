@@ -1,11 +1,12 @@
 openapi-generator:
   repositoryUrl: "https://github.com/OpenAPITools/openapi-generator"
-  sourcePackage: .
+  sourcePackage: modules
   sonarqubeNeeded: false
   tagIds:
     - v5.4.0
+  skipClone: false
   skipSymfinder: false
-  path: "/data/projects/openapi-generator-v5.4.0/"
+  path: "/data/projects"
   outputPath: "/data/output"
   sources:
     - name: "sonarcloud"

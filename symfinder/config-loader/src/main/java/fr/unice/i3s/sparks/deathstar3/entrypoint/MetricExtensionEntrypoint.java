@@ -174,7 +174,7 @@ public class MetricExtensionEntrypoint {
         }
 
         config.setPath(repositoryPath);
-        String finalRepositoryPath = repositoryPath;
+        String finalPathToAnalyze = Paths.get(repositoryPath, config.getSourcePackage()).toString();
 
         Future<SymfinderResult> futureSymfinderResult;
 
@@ -186,7 +186,7 @@ public class MetricExtensionEntrypoint {
             futureSymfinderResult = executor.submit(() -> {
                 System.out.println("Starting Neo4J container this may take some time ....");
                 Neo4jParameters neo4jParameters = neo4JStarter.startNeo4J();
-                return new Symfinder(finalRepositoryPath, new Configuration(new ParametersObject(neo4jParameters, hotspotsParameters, ""))).run();
+                return new Symfinder(finalPathToAnalyze, new Configuration(new ParametersObject(neo4jParameters, hotspotsParameters, ""))).run();
             });
         }
 
@@ -209,7 +209,7 @@ public class MetricExtensionEntrypoint {
                 }
                 List<Node> nodes1 = metricGatherer.gatherMetrics(config.getProjectName(), source);
                 if (!nodes1.isEmpty()) {
-                    List <Node> sanitizedNodes = new SonarFileSanitizer(nodes1, finalRepositoryPath, source.getSubdirectory()).getSanitizedOutput();
+                    List <Node> sanitizedNodes = new SonarFileSanitizer(nodes1, repositoryPath, source.getSubdirectory()).getSanitizedOutput();
                     metricsResult.put(source.getName(), sanitizedNodes);
                 }
 
