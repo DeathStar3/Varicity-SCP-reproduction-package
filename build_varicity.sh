@@ -19,10 +19,14 @@
 # Copyright 2018-2021 Xhevahire Tërnava <t.xheva@gmail.com>
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
-#This script build the images to be used with docker
+# This script builds the images to be used with docker
+
 set -e
 
-./build_symfinder.sh
-./build_varicity.sh
+cd varicity
+echo "Building VariCity front"
+docker build -t deathstar3/varicity:local .
 
-echo "Done"
+cd varicity-backend
+echo "Building VariCity backend"
+docker build -t deathstar3/varicity-backend:local .

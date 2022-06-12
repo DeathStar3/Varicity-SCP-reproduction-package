@@ -19,10 +19,14 @@
 # Copyright 2018-2021 Xhevahire Tërnava <t.xheva@gmail.com>
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
-#This script build the images to be used with docker
+# This script builds the images to be used with docker
+
 set -e
 
-./build_symfinder.sh
-./build_varicity.sh
+cd symfinder
+echo "Building the symfinder engine"
+docker build -f Dockerfile -t deathstar3/symfinder-cli:local .
 
-echo "Done"
+cd procedures/
+echo "Building symfinder Neo4j procedures"
+docker build -t deathstar3/symfinder-neo4j:local .

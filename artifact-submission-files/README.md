@@ -5,12 +5,23 @@
 
 This artifact submission goes with the paper "Customizable Visualization of Quality Metrics for Object-Oriented Variability Implementations" accepted in the Research Track of SPLC 2022
 
-## Artifact description TOUPDATE
+## Artifact description
 
-The artifact consists in:
+The artifact consists in two archives:
+
+### Current archive
+
+- Excel file used to obtain the data presented in the table 2 of the paper
+- excerpts of SonarQube reports used to obtain the data presented in the table 3 of the paper
+- Documentation to reproduce the results of the paper and to reuse VariMetrics on other projects
+
+### Code artifacts
+
 - the source code of VariMetrics, the visualization presented in the paper.
 VariMetrics relies on data from symfinder, whose source code is also present in the artifact archive.
-- Pre-generated source data used to generate visualizations for all 7 subject systems presented in the Table 2 of the paper and the refactored version of JFreeChart are available in the `dockervolume.zip` archive present at the root of the artifact archive.
+- the `dockervolume.zip` archive present at the root of the artifact archive contains data used to generate visualizations for all 7 subject systems presented in the Table 2 of the paper and the refactored version of JFreeChart:
+  - pre-generated outputs from the symfinder analyses
+  - pre-configured visualizations
 
 ## Availability
 
@@ -121,6 +132,9 @@ dockervolume/
 │       └── spring.json
 └── varicitydb.json
 ```
+The `dockervolume/configs` directory contains the configurations for the views for each project.
+The `dockervolume/data` directory contains the symfinder outputs for each project.
+
 2. Start VariMetrics (see the section "Running VariMetrics" of the INSTALL.md file)
 3. Open your web browser and go to `http://localhost:8000`
 4. On the right panel, click on `Project selection`. A list of the available projects appears.
@@ -135,15 +149,116 @@ More details about the different configuration options are present in the `READM
 
 ### D. Generating the visualizations files with symfinder
 
-symfinder is pre-configured to be executed on the 7 systems presented in the paper.
-More details about the analyzed projects and their definition are given in the "Using symfinder on your project" section in the README present in the artifact's root directory.
+The VariMetrics artifact contains in the `/data` directory the configurations for the 7 systems presented in the paper + JFreeChart's refactor.
+- `azureus.yaml` → [Azureus 5.7.6.0](https://github.com/Corpus-2021/Azureus/tree/5.7.6.0)
+- `geotools.yaml` → [GeoTools 23.5](https://github.com/Corpus-2021/geotools/tree/23.5-AnalysisReady)
+- `jdk.yaml` → [JDK 17-10](https://github.com/Corpus-2021/jdk/tree/17-10-AnalysisReady)
+- `jfreechart-1.5.0.yaml` → [JFreeChart 1.5.0](https://github.com/DeathStar3/jfreechart)
+    - `jfreechart-refactored.yaml` → [JFreeChart 1.5.0](https://github.com/DeathStar3/jfreechart/tree/refactor) after the maintenance actions studied in section 5.2
+- `jkube.yaml` → [JKube 1.7.0](https://github.com/eclipse/jkube)
+- `openapi-generator.yaml` → [OpenAPI Generator 5.4.0](https://github.com/OpenAPITools/openapi-generator)
+- `spring.yaml` → [Spring framework 5.2.3](https://github.com/Corpus-2021/spring-framework/tree/5.2.13-AnalysisReady)
 
-To generate the visualizations files, go to the root of the project and run symfinder as detailed in the "Running symfinder" section of the `INSTALL.md` file.
+To generate the visualizations files for a project, go to the root of the project and run symfinder as detailed in the "Running a symfinder analysis" section of the `INSTALL.md` file.
 
-*Note:* Analyzing the 7 projects with symfinder can be time consuming, especially for CXF and NetBeans which can require multiple hours of computation depending on your host system.
-To obtain minimum but viable results for reproduction in a reasonable amount of time, we thus advise to analyze only small projects, like JFreeChart for example.
-
+*Notes:* Some analyses, such as the JDK, GeoTools or Azureus can take multiple hours.
+We advise, for a quick evaluation of the toolchain's capabilities, to analyse smaller projects (e.g. JFreeChart, JKube or OpenAPI Generator).
 
 ## Reusing VariMetrics and symfinder on other projects
 
-Instructions to adapt symfinder and VariMetrics for your project are detailed in the sections "Using symfinder on your project" and "Configure VariMetrics for your project" in the artifact's `README.md` file.
+To analyse a project, you will need to:
+- create a symfinder configuration file similar to the ones present in the `/data` directory.
+- configure the VariMetrics visualization.
+
+### Creating a symfinder configuration file
+
+The documentation of the symfinder configuration files in available in the "Experiment configuration documentation" section of the `/symfinder/README.md` file. 
+
+### Configuring the VariMetrics visualization
+
+The `/data` directory contains configuration files for two other projects for you to try VariMetrics on.
+- `junit-r4.13.2-config.yaml` → [JUnit 4.13.2](https://github.com/junit-team/junit4/tree/r4.13.2), metrics fetched from a local SonarQube server
+- `nekohtml.yaml` → [NekoHTML 2.1.1](https://github.com/Corpus-2021/nekohtml/tree/2.1.1-AnalysisReady), metrics fetched from its [SonarCloud page](https://sonarcloud.io/summary/overall?id=corpus2021.sonar%3Anekohtml)
+
+As opposed to the projects shown in the paper, the view is not pre-configured.
+Hereafter we will detail the steps to configure a view on one of these systems, NekoHTML.
+
+Let's execute symfinder on NekoHTML
+
+- In one terminal
+
+```
+./run-compose.sh
+```
+
+- In another terminal
+```shell
+./run-docker-cli.sh -i /data/nekohtml.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+```
+
+After the execution of the symfinder analysis, go on `https://localhost:8000` and select the `nekohtml-2.1.1` project.
+
+![nekohtml_selection](images/nekohtml_selection.png)
+
+A unique view configuration is available, called `default configuration`, showing an empty visualization.
+
+On the sidebar, click on the `APIs and Blacklist` button.
+
+![nekohtml_apis_panel](images/nekohtml_APIs_panel.png)
+
+In the `API classes` field, start typing `HTMLScanner`, and select `org.codelibs.nekohtml.HTMLScanner`.
+
+![nekohtml_apis_panel_htmlscanner](images/nekohtml_APIs_panel_HTMLScanner.png)
+
+Press Enter, a visualization should appear.
+
+![nekohtml_htmlscanner_out_2](images/nekohtml_HTMLScanner_OUT_2.png)
+
+Let's tune the orientation and usage level to change them to show both incoming and outgoing classes (orientation IN_OUT) on 4 levels of usages (usage level 4). More classes appear.
+
+![nekohtml_htmlscanner_inout_4](images/nekohtml_HTMLScanner_INOUT_4.png)
+
+This visualization is the standard VariCity one.
+To add metrics on the visualization, on the sidebar, click on the `Metrics` button.
+
+![nekohtml_metrics_panel](images/nekohtml_Metrics_panel.png)
+
+The three additional visualization axes compared to VariCity are intensity (color saturation), fade (red-green scale) and crack (crackled texture).
+Let's display the cognitive complexity on the red-green scale.
+
+![nekohtml_Metrics_panel_fade](images/nekohtml_Metrics_panel_fade.png)
+
+We obtain the following visualization.
+
+![nekohtml_fade](images/nekohtml_fade.png)
+
+Let's now add the coverage using the crackled texture.
+
+![nekohtml_Metrics_panel_cracks](images/nekohtml_Metrics_panel_cracks.png)
+
+Since a high coverage is a sign of good quality, we select the `Higher is Better` option.
+
+![nekohtml_Metrics_panel_coverage_higher](images/nekohtml_Metrics_panel_coverage_higher.png)
+
+We obtain the following visualization. Classes for which we don't have the coverage have metrics have a cross on their building.
+
+![nekohtml_fade_cracks](images/nekohtml_fade_cracks.png)
+
+We can zoom on the visualization to better see the results.
+We notice a large class (therefore possessing multiple constructors) and although it seems relatively complex (as it appears orange,) it exhibits little coverage by appearing very cracked.
+
+By clicking on this class, the `Information` panel opens to give us information about it.
+
+![nekohtml_writer](images/nekohtml_Writer.png)
+
+This class is [`org.codelibs.nekohtml.filters.Writer`](https://github.com/Corpus-2021/nekohtml/blob/2.1.1-AnalysisReady/src/main/java/org/codelibs/nekohtml/filters/Writer.java), whose goal is to print an HTML content to an output stream.
+The three constructors allow to write on different outputs (standard output, Java `OutputStream` or Java `Writer`), therefore exhibiting variability.
+The class is not covered (coverage of 0%) despite having a relatively high cognitive complexity of 76.
+
+## Detailed README
+
+A more exhaustive documentation on
+- the capabilities of the VariMetrics visualization
+- the configuration of a symfinder analysis
+- the technical organization of the toolchain
+is available in the `README.md` file at the root of the VariMetrics artifact's archive, that itself points to other documentations.

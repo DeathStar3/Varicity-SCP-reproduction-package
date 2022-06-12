@@ -44,13 +44,13 @@ The Docker container exposes the application as a server, which is accessed thro
 
 **This step is only needed if you edited VariMetrics's source code.**
 
-You can build VariMetrics's Docker images by going in the `/varicity` directory and running
+You can build VariMetrics's Docker images by running
 
 ```
-./build.sh
+./build_varicity.sh
 ```
 
-Then, run symfinder using the local images that you just built. TOUPDATE
+Then, run VariMetrics using the local images that you just built. TOUPDATE
 
 ```
 ./varicity.sh --local
@@ -132,7 +132,7 @@ varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [NestApplication
 - By selecting the `VariMetrics view` configuration, we obtain the following view:
   ![jfreechart_visualization](images/jfreechart_visualization.png)
 
-## Running symfinder
+## Running a symfinder analysis
 
 Reproducing the pre-generated visualizations is done by executing their analysis before VariMetrics.
 All scripts used in this section are located in the artifact's root directory.
@@ -159,7 +159,19 @@ The configuration files for all 7 projects presented in the paper are available 
 
 Running the analysis of one project is done as follows, here illustrated with the `/data/jfreechart-1.5.0.yaml` file:
 
-- First, run the VariCity backend as detailed in [the section on VariMetrics](#running-varimetrics).
+- First, run the VariMetrics server:
+
+  - On GNU/Linux and macOS
+
+  ```
+  ./run-compose.sh
+  ```
+
+  - On Windows
+
+  ```
+  run-compose.bat
+  ```
 
 - Then, in another terminal:
 
@@ -193,174 +205,108 @@ docker pull deathstar3/symfinder-fetcher:splc2022
 You can build symfinder's Docker images by running
 
 ```
-./build.sh
+./build_symfinder.sh
 ```
 
-Then, run symfinder using the local images that you just built.
+Then, run symfinder using the local images that you just built. TOUPDATE
 
 ```
 ./run.sh --local
 ```
 
 ### Checking that symfinder works
-Hereafter, we illustrate the different steps of the execution of symfinder by giving excerpts of console outputs corresponding to the execution of symfinder on a single project, JFreeChart.
+Hereafter, we illustrate the different steps of the execution of symfinder by giving excerpts of console outputs corresponding to the execution of symfinder on a single project, JKube.
 
-1. First, symfinder creates the directories containing the analyzed project(s) sources and generated visualization files,
-and clones the directory of the analyzed project(s), checking out the desired tags/commits.
+1. First, symfinder clones the repository of the analyzed project, checking out the desired tags/commits.
 ```
-$ ./run.sh jfreechart
-resources directory already exists
-generated_visualizations directory already exists
-Using splc2022 images
-Cloning into 'resources/jfreechart'...
-Note: switching to 'tags/v1.5.0'.
-
-You are in 'detached HEAD' state. You can look around, make experimental
-changes and commit them, and you can discard any commits you make in this
-state without impacting any branches by switching back to a branch.
-
-If you want to create a new branch to retain commits you create, you may
-do so (now or later) by using -c with the switch command. Example:
-
-  git switch -c <new-branch-name>
-
-Or undo this operation with:
-
-  git switch -
-
-Turn off this advice by setting config variable advice.detachedHead to false
-
-HEAD is now at fd72df7c Prepare for 1.5.0 release.
-HEAD is now at fd72df7c Prepare for 1.5.0 release.
+$ ./run-docker-cli.sh -i /data/jkube.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+Log Level is set to INFO. The underlying factory being used is org.slf4j.impl.JDK14LoggerFactory
+Jun 08, 2022 5:24:54 PM fr.unice.i3s.sparks.deathstar3.sourcesfetcher.SourceFetcher cloneRepository
+INFO: [/data/projects/jkube-v1.7.0]
 ```
-2. Then, the `symfinder-runner` container starts, and creates two other Docker containers:
-  - `symfinder-neo4j`, a Neo4j database used to store information about the analyzed project (classes, methods, identified variation points and variants…)
-  - `symfinder`, being the symfinder engine which parses the codebase of the project and populates the Neo4j database.
+2. Then, a Neo4j database used to store information about the analyzed project (classes, methods, identified variation points and variants…) is started.
+Once operational, the symfinder engine parses the codebase of the project and populates the Neo4j database.
 ```
-Creating network "varicity-develop_default" with the default driver
-Creating symfinder-runner ... done
-Attaching to symfinder-runner
-symfinder-runner | Cleaning previous execution...
-symfinder-runner | Removing network default_default
-symfinder-runner | Network default_default not found.
-symfinder-runner | Creating network "default_default" with the default driver
-symfinder-runner | Creating symfinder-neo4j ... 
-symfinder-runner | Creating symfinder-neo4j ... done
-symfinder-runner | Creating symfinder       ... 
-symfinder-runner | Creating symfinder       ... done
-symfinder-runner | Attaching to symfinder-neo4j, symfinder
-symfinder-runner | symfinder-neo4j | Changed password for user 'neo4j'.
-symfinder-runner | symfinder    | WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
-symfinder-runner | symfinder    | Jul 30, 2021 9:16:05 AM org.neo4j.driver.internal.logging.JULogger info
-symfinder-runner | symfinder    | INFO: Direct driver instance 1489933928 created for server address neo4j:7687
-symfinder-runner | symfinder    | 09:16:05.503 [main] MY_LEVEL Symfinder - Symfinder version: 84ef141e60a9414c842e35abdfb5303dc9a204cf
-symfinder-runner | symfinder-neo4j | Directories in use:
-symfinder-runner | symfinder-neo4j |   home:         /var/lib/neo4j
-symfinder-runner | symfinder-neo4j |   config:       /var/lib/neo4j/conf
-symfinder-runner | symfinder-neo4j |   logs:         /logs
-symfinder-runner | symfinder-neo4j |   plugins:      /plugins
-symfinder-runner | symfinder-neo4j |   import:       /var/lib/neo4j/import
-symfinder-runner | symfinder-neo4j |   data:         /var/lib/neo4j/data
-symfinder-runner | symfinder-neo4j |   certificates: /var/lib/neo4j/certificates
-symfinder-runner | symfinder-neo4j |   run:          /var/lib/neo4j/run
-symfinder-runner | symfinder-neo4j | Starting Neo4j.
-symfinder-runner | symfinder    | Waiting for Neo4j database to be ready...
-symfinder-runner | symfinder-neo4j | 2021-07-30 09:16:06.028+0000 INFO  ======== Neo4j 4.0.3 ========
-symfinder-runner | symfinder-neo4j | 2021-07-30 09:16:06.033+0000 INFO  Starting...
-symfinder-runner | symfinder    | Waiting for Neo4j database to be ready...
-symfinder-runner | symfinder-neo4j | 2021-07-30 09:16:13.356+0000 INFO  Called db.clearQueryCaches(): Query cache already empty.
-symfinder-runner | symfinder-neo4j | 2021-07-30 09:16:13.404+0000 INFO  Bolt enabled on 0.0.0.0:7687.
-symfinder-runner | symfinder-neo4j | 2021-07-30 09:16:13.405+0000 INFO  Started.
-symfinder-runner | symfinder-neo4j | 2021-07-30 09:16:13.972+0000 INFO  Remote interface available at http://0.0.0.0:7474/
-symfinder-runner | symfinder    | 09:16:15.780 [main] MY_LEVEL Symfinder - ClassesVisitor
-symfinder-runner | symfinder    | 09:16:16.300 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ClassesVisitor - Class: org.jfree.chart.ui.StrokeChooserPanel
-symfinder-runner | symfinder    | 09:16:17.045 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ClassesVisitor - Class: org.jfree.chart.ui.ApplicationFrame
-symfinder-runner | symfinder    | 09:16:17.228 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ClassesVisitor - Class: org.jfree.chart.ui.FontChooserPanel
-symfinder-runner | symfinder    | 09:16:17.346 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ClassesVisitor - Class: org.jfree.chart.ui.PaintSample
-symfinder-runner | symfinder    | 09:16:17.438 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ClassesVisitor - Class: org.jfree.chart.ui.GradientPaintTransformType
-symfinder-runner | symfinder    | 09:16:17.532 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ClassesVisitor - Class: org.jfree.chart.ui.StrokeSample
+Starting Neo4J container this may take some time ....
+Jun 08, 2022 5:24:55 PM fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants <clinit>
+INFO: Initializing constants based on environment variables...
+Jun 08, 2022 5:24:55 PM fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants <clinit>
+INFO: Running inside Docker.
+Jun 08, 2022 5:24:55 PM fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants <clinit>
+INFO: Using Neo4j deathstar3/symfinder-neo4j:vissoft2021
+Jun 08, 2022 5:24:55 PM fr.unice.i3s.sparks.deathstar3.projectbuilder.Neo4JStarter startNeo4J
+INFO: An instance of neo4j seems to be already running 
+Jun 08, 2022 5:24:55 PM org.neo4j.driver.internal.logging.JULogger info
+INFO: Direct driver instance 1596658651 created for server address symfinder-neo4j:7687
+17:24:55.829 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - ClassesVisitor
+17:24:56.282 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ClassesVisitor - Class: MavenWrapperDownloader
+17:24:56.354 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ClassesVisitor - Class: zero.HelloController
+17:24:56.378 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ClassesVisitor - Class: zero.Application
 ```
 Five visitors are run on the codebase: `ClassesVisitor`, `GraphBuilderVisitor`, `StrategyTemplateDecoratorVisitor`, `FactoryVisitor`, and `ComposeTypeVisitor`.
 
-3. At the end of the successive parsings, a summary of the results of the execution is given, and the `symfinder-runner` stops the `symfinder-neo4j` and `symfinder` containers.
-If multiple projects are analyzed, step 2. is executed for each project.
+3. At the end of the successive parsings, a summary of the results of the execution is given, and symfinder stops.
+The information are then sent to the VariCity backend.
 ```
-symfinder-runner | symfinder    | 09:21:19.953 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ComposeTypeVisitor - Class: org.jfree.data.KeyedObjects2D
-symfinder-runner | symfinder    | 09:21:20.224 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ComposeTypeVisitor - Class: org.jfree.data.category.IntervalCategoryDataset
-symfinder-runner | symfinder    | 09:21:20.299 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ComposeTypeVisitor - Class: org.jfree.data.category.DefaultCategoryDataset
-symfinder-runner | symfinder    | 09:21:20.642 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ComposeTypeVisitor - Class: org.jfree.data.category.SlidingCategoryDataset
-symfinder-runner | symfinder    | 09:21:20.830 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ComposeTypeVisitor - Class: org.jfree.data.category.CategoryToPieDataset
-symfinder-runner | symfinder    | 09:21:20.984 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ComposeTypeVisitor - Class: org.jfree.data.category.CategoryDataset
-symfinder-runner | symfinder    | 09:21:20.985 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ComposeTypeVisitor - Class: org.jfree.data.category.CategoryRangeInfo
-symfinder-runner | symfinder    | 09:21:21.011 [main] INFO  visitors.SymfinderVisitor - Visitor: visitors.ComposeTypeVisitor - Class: org.jfree.data.category.DefaultIntervalCategoryDataset
-symfinder-runner | symfinder    | 09:21:21.417 [main] MY_LEVEL Symfinder - visitors.ComposeTypeVisitor execution time: 00:02:17.476
-symfinder-runner | symfinder    | 09:21:27.381 [main] MY_LEVEL Symfinder - Number of VPs: 926
-symfinder-runner | symfinder    | 09:21:27.385 [main] MY_LEVEL Symfinder - Number of methods VPs: 454
-symfinder-runner | symfinder    | 09:21:27.388 [main] MY_LEVEL Symfinder - Number of constructors VPs: 213
-symfinder-runner | symfinder    | 09:21:27.395 [main] MY_LEVEL Symfinder - Number of method level VPs: 667
-symfinder-runner | symfinder    | 09:21:27.396 [main] MY_LEVEL Symfinder - Number of class level VPs: 259
-symfinder-runner | symfinder    | 09:21:27.427 [main] MY_LEVEL Symfinder - Number of variants: 1923
-symfinder-runner | symfinder    | 09:21:27.430 [main] MY_LEVEL Symfinder - Number of methods variants: 1061
-symfinder-runner | symfinder    | 09:21:27.433 [main] MY_LEVEL Symfinder - Number of constructors variants: 587
-symfinder-runner | symfinder    | 09:21:27.439 [main] MY_LEVEL Symfinder - Number of method level variants: 1648
-symfinder-runner | symfinder    | 09:21:27.440 [main] MY_LEVEL Symfinder - Number of class level variants: 275
-symfinder-runner | symfinder    | 09:21:27.452 [main] MY_LEVEL Symfinder - Number of nodes: 9526
-symfinder-runner | symfinder    | 09:21:27.461 [main] MY_LEVEL Symfinder - Number of relationships: 11438
-symfinder-runner | symfinder    | 09:21:27.470 [main] MY_LEVEL Symfinder - Number of corrected inheritance relationships: 265/1478
-symfinder-runner | symfinder    | Jul 30, 2021 9:21:28 AM org.neo4j.driver.internal.logging.JULogger info
-symfinder-runner | symfinder    | INFO: Closing driver instance 1489933928
-symfinder-runner | symfinder    | Jul 30, 2021 9:21:28 AM org.neo4j.driver.internal.logging.JULogger info
-symfinder-runner | symfinder    | INFO: Closing connection pool towards neo4j:7687
-symfinder-runner | symfinder    | 09:21:28.701 [main] MY_LEVEL Symfinder - Total execution time: 00:05:23.198
-symfinder-runner | symfinder exited with code 0
-symfinder-runner | Stopping symfinder-neo4j ... 
-symfinder-runner | Stopping symfinder-neo4j ... done
-symfinder-runner | Aborting on container exit...
-symfinder-runner | Removing symfinder       ... 
-symfinder-runner | Removing symfinder-neo4j ... 
-symfinder-runner | Removing symfinder       ... done
-symfinder-runner | Removing symfinder-neo4j ... done
-```
-4. Finally, after analysing the last project, `symfinder-runner` exists with code `0`.
-```
-symfinder-runner | Removing network default_default
-symfinder-runner exited with code 0
+17:26:59.061 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.ManifestProvider
+17:26:59.074 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.LogMojo
+17:26:59.107 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.WatchMojo
+17:26:59.162 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.DebugMojo
+17:26:59.189 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.UndeployMojo
+17:26:59.220 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.DeployMojo
+17:26:59.227 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor execution time: 00:00:48.242
+17:27:00.403 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of VPs: 268
+17:27:00.405 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of methods VPs: 128
+17:27:00.406 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of constructors VPs: 30
+17:27:00.409 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of method level VPs: 158
+17:27:00.410 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of class level VPs: 110
+17:27:00.425 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of variants: 547
+17:27:00.426 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of methods variants: 340
+17:27:00.428 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of constructors variants: 73
+17:27:00.430 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of method level variants: 413
+17:27:00.431 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of class level variants: 134
+17:27:00.434 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of nodes: 5044
+17:27:00.438 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of relationships: 5554
+17:27:00.443 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of corrected inheritance relationships: 144/772
+Jun 08, 2022 5:27:01 PM org.neo4j.driver.internal.logging.JULogger info
+INFO: Closing driver instance 1596658651
+Jun 08, 2022 5:27:01 PM org.neo4j.driver.internal.logging.JULogger info
+INFO: Closing connection pool towards symfinder-neo4j:7687
+17:27:01.243 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Total execution time: 00:02:05.629
+Jun 08, 2022 5:27:01 PM fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson writeResult
+INFO: JSON path : /data/output/symfinder_files/jkube.json
+Jun 08, 2022 5:27:01 PM fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson writeResult
+INFO: JSON stats path : /data/output/symfinder_files/jkube-stats.json
 ```
 
-5. Supposing that you run symfinder on JFreeChart only, the `generated_visualizations` directory at the root of the project shall now have the following structure:
+5. Supposing that you run symfinder on JKube only, the `/data/output` directory shall now have the following structure:
 ```
-├── generated_visualizations
-│     ├── data
-│     │     ├── jfreechart-v1.5.0.json
-│     │     ├── jfreechart-v1.5.0-stats.json
-│     ├── index.html
-│     ├── jfreechart-v1.5.0-composition.html
-│     ├── jfreechart-v1.5.0.html
-│     ├── jfreechart-v1.5.0.log
-│     ├── scripts
-│     │     ├── api-filter.js
-│     │     ├── filter.js
-│     │     ├── graphcomposition.js
-│     │     ├── graph.js
-│     │     ├── isolated-filter.js
-│     │     ├── nodes-filter.js
-│     │     ├── package-colorer.js
-│     │     └── variants-filter.js
-│     ├── style.css
-│     ├── symfinder-icon.png
-│     └── symfinder-legend.svg
+/data/output/
+└── symfinder_files
+    ├── externals
+    │   ├── jkube
+    │   │   └── jkube-sonarcloud.json
+    ├── jkube.json
+    └── jkube-stats.json
 ```
-Files starting by `jfreechart-v1.5.0` correspond to files generated by analysing JFreeChart with symfinder.
-For every project `XXX` of tag `YYY` on which you run symfinder, you should obtain the following additional files:
+Files in the `symfinder_files` directory (`jkube.json` and `jkube-stats.json`) correspond to files generated by analysing JFreeChart with symfinder.
+The `externals` directory contains for each analyzed project the JSON files being the extracted metrics (here, `jkube-sonarcloud.json`). 
+
+JKube has a SonarCloud page, therefore metrics were extracted from this page directly.
+
+In the case of an analysis where a SonarQube server is run locally, the execution is done in parallel of symfinder.
+Traces of the execution are also visible, but are mixed up with symfinder's traces.
+Here's an example of hierarchy for a project requiring a local SonarQube server, JFreeChart. 
 ```
-├── generated_visualizations
-│     ├── data
-│     │     ├── XXX-YYY.json
-│     │     ├── XXX-YYY.stats.json
-│     ├── XXX-YYY-composition.html
-│     ├── XXX-YYY.html
-│     ├── XXX-YYY.log
+/data/output/
+└── symfinder_files
+    ├── externals
+    │   ├── jfreechart-1.5.0
+    │   │   └── jfreechart-1.5.0-sonarqube.json
+    ├── jfreechart-1.5.0.json
+    └── jfreechart-1.5.0-stats.json
 ```
+
 
 ### Troubleshooting known issues
 

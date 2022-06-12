@@ -142,7 +142,7 @@ To run a project with Varicity you need to prepare an experiment configuration f
 
 
 
-## Examples of configutations file:
+## Examples of configuration file:
 (may not work **as is**)
 
 Junit4 

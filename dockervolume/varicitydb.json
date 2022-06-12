@@ -35,6 +35,10 @@
         {
             "path": "/persistent/data/symfinder_files/parsed/argouml.json",
             "projectName": "argouml"
+        },
+        {
+            "path": "/persistent/data/symfinder_files/parsed/nekohtml-2.1.1.json",
+            "projectName": "nekohtml-2.1.1"
         }
     ],
     "configs": [
