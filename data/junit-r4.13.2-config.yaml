@@ -1,5 +1,5 @@
 junit-r4.13.2:
-  repositoryUrl: "https://github.com/DeathStar3-projects/junit-test-project.git"
+  repositoryUrl: "https://github.com/DeathStar3/junit-metrics"
   buildEnv: "maven"
   buildEnvTag: "3.8.3-openjdk-17"
   sourcePackage: src

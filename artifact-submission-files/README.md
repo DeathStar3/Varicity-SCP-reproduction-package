@@ -11,21 +11,48 @@ The artifact consists in two archives:
 
 ### Current archive
 
-- Excel file used to obtain the data presented in the table 2 of the paper
-- excerpts of SonarQube reports used to obtain the data presented in the table 3 of the paper
-- Documentation to reproduce the results of the paper and to reuse VariMetrics on other projects
+The current archive is organized as follows:
+```
+.
+├── images/
+├── INSTALL.md
+├── jfreechart_sources/
+│   ├── jfreechart-after-maintenance.zip
+│   ├── jfreechart-original.zip
+│   └── versions_diff.txt
+├── LICENSE.md
+├── README.md
+├── REQUIREMENTS.md
+├── tables_data/
+    ├── sonarqube_reports
+    └── table_2.xlsx
+```
 
-### Code artifacts
+- `INSTALL.md`: VariMetrics and symfinder installation instructions
+- `LICENSE.md`: license file
+- `README.md`: documentation to reproduce the results of the paper and to reuse VariMetrics on other projects
+- `REQUIREMENTS.md`: technical requirements to use VariMetrics
+
+The `tables_data` directory contains:
+- `table_2.xlsx`: Excel file used to obtain the data presented in the table 2 of the paper
+- `sonarqube_reports`: excerpts of SonarQube reports used to obtain the data presented in the table 3 of the paper
+
+The `jfreechart_sources` directory contains:
+- `jfreechart-after-maintenance.zip`: JFreeChart 1.5.0 after applying maintenance actions, studied in the qualitative evaluation (section 5.2 of the paper);
+- `jfreechart-original.zip`: original sources of JFreechart 1.5.0
+- `versions_diff.txt`: diff between the two codebases to visualize the applied modifications
+
+
+### VariMetrics artifact
+
+**DOI:** 
 
 - the source code of VariMetrics, the visualization presented in the paper.
 VariMetrics relies on data from symfinder, whose source code is also present in the artifact archive.
+- symfinder configuration files to analyze the projects studied in the paper
 - the `dockervolume.zip` archive present at the root of the artifact archive contains data used to generate visualizations for all 7 subject systems presented in the Table 2 of the paper and the refactored version of JFreeChart:
   - pre-generated outputs from the symfinder analyses
   - pre-configured visualizations
-
-## Availability
-
-The artifact is available on Zenodo and accessible through the following DOI: **DOI**
 
 
 ## Reproducing the results presented in the paper
@@ -176,7 +203,7 @@ The documentation of the symfinder configuration files in available in the "Expe
 
 ### Configuring the VariMetrics visualization
 
-The `/data` directory contains configuration files for two other projects for you to try VariMetrics on.
+The `/data` directory contains symfinder configuration files for two other projects for you to try VariMetrics on.
 - `junit-r4.13.2-config.yaml` → [JUnit 4.13.2](https://github.com/junit-team/junit4/tree/r4.13.2), metrics fetched from a local SonarQube server
 - `nekohtml.yaml` → [NekoHTML 2.1.1](https://github.com/Corpus-2021/nekohtml/tree/2.1.1-AnalysisReady), metrics fetched from its [SonarCloud page](https://sonarcloud.io/summary/overall?id=corpus2021.sonar%3Anekohtml)
 
