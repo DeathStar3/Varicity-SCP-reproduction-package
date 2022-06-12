@@ -5,7 +5,7 @@ set -e
 sudo apt-get install wait-for-it
 python -m pip install requests
 docker network ls | grep varicity-config > /dev/null || docker network create --driver bridge varicity-config
-docker run --expose 3000 --name varicity-backend --network varicity-config --detach -p 3000:3000 deathstar3/varicity-backend:local
+docker run --expose 3000 --name varicity-backend --network varicity-config --detach -p 3000:3000 deathstar3/varimetrics-backend:local
 
 wait-for-it -t 0 localhost:3000
 

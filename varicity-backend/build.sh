@@ -1,4 +1,4 @@
 #!/bin/bash
 
 
-docker build -t deathstar3/varicity-backend:local .
+docker build -t deathstar3/varimetrics-backend:local .

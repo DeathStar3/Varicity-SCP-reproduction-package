@@ -12,7 +12,7 @@ All the scripts in this section are located and executed from the root of the pr
 
 ### Reusing the existing Docker image
 
-VariMetrics is available as a Docker image hosted on the [Docker Hub](https://hub.docker.com/r/deathstar3/varicity),
+VariMetrics is available as a Docker image hosted on the [Docker Hub](https://hub.docker.com/r/deathstar3/varimetrics),
 allowing to use it without needing to build it.
 
 Run VariMetrics by running
@@ -34,7 +34,7 @@ Run VariMetrics by running
 
 You can also download it manually with:
 ```
-docker pull deathstar3/varicity:splc2022
+docker pull deathstar3/varimetrics:splc2022
 ```
 
 VariMetrics is a NodeJS application written in TypeScript deployed in a webpack environment.
@@ -141,10 +141,10 @@ All scripts used in this section are located in the artifact's root directory.
 
 The following Docker images hosted on the [Docker Hub](https://hub.docker.com/) allow to use symfinder without needing to build it.
 ```
-deathstar3/symfinder-fetcher
+deathstar3/symfinder-cli
 deathstar3/symfinder-neo4j
-deathstar3/symfinder-engine
-deathstar3/symfinder-runner
+deathstar3/varimetrics
+deathstar3/varimetrics-backend
 ```
 
 The configuration files for all 7 projects presented in the paper are available in the `/data` directory.

@@ -2,7 +2,7 @@ version: "3.6"
 services:
    
  varicitybackend:
-    image: deathstar3/varicity-backend:${TAG}
+    image: deathstar3/varimetrics-backend:${TAG}
     container_name: varicity-backend
     user: "${UID}:${GID}"
     ports:

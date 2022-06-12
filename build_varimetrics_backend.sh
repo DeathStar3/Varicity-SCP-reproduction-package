@@ -23,10 +23,6 @@
 
 set -e
 
-cd varicity
-echo "Building VariCity front"
-docker build -t deathstar3/varicity:local .
-
 cd varicity-backend
-echo "Building VariCity backend"
-docker build -t deathstar3/varicity-backend:local .
+echo "Building VariMetrics backend"
+docker build -t deathstar3/varimetrics-backend:local .

@@ -4,7 +4,7 @@ SET COMPOSE_CONVERT_WINDOWS_PATHS=1
 set SYMFINDER_UID=1000
 set SYMFINDER_GID=1000
 set SYMFINDER_VERSION=$(git rev-parse HEAD)
-set TAG=local
+set TAG=splc2022
 set DIR_PATH=%cd%
 set VOLUME_PATH=%cd%\dockervolume
 

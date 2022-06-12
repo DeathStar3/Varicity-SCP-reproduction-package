@@ -19,11 +19,10 @@
 # Copyright 2018-2021 Xhevahire Tërnava <t.xheva@gmail.com>
 # Copyright 2018-2021 Philippe Collet <philippe.collet@univ-cotedazur.fr>
 #
-#This script build the images to be used with docker
+# This script builds the images to be used with docker
+
 set -e
 
-./build_symfinder.sh
-./build_varimetrics.sh
-./build_varimetrics_backend.sh
-
-echo "Done"
+cd varicity
+echo "Building VariMetrics front"
+docker build -t deathstar3/varimetrics:local .

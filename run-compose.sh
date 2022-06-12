@@ -13,7 +13,7 @@ create_directory(){
 export SYMFINDER_UID=$(id -u)
 export SYMFINDER_GID=$(id -g)
 export SYMFINDER_VERSION=$(git rev-parse HEAD)
-export TAG=local
+export TAG=splc2022
 export DIR_PATH=$(pwd)
 export VOLUME_PATH=$(pwd)/dockervolume
 

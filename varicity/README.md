@@ -40,7 +40,7 @@ Such files can be obtained either:
 
 The following Docker image hosted on the [Docker Hub](https://hub.docker.com/) allows to use VariCity without needing to build it.
 ```
-deathstar3/varicity
+deathstar3/varimetrics
 ```
 
 Run VariCity by running
