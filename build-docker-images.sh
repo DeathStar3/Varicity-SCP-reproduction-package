@@ -24,6 +24,5 @@ set -e
 
 ./build_symfinder.sh
 ./build_varimetrics.sh
-./build_varimetrics_backend.sh
 
 echo "Done"

@@ -26,3 +26,7 @@ set -e
 cd varicity
 echo "Building VariMetrics front"
 docker build -t deathstar3/varimetrics:local .
+
+cd ../varicity-backend
+echo "Building VariMetrics backend"
+docker build -t deathstar3/varimetrics-backend:local .

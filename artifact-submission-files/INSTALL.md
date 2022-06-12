@@ -30,7 +30,7 @@ Run VariMetrics by running
     run-compose.bat
     ```
 
-*Note:* Docker automatically downloads the image with the `splc2022` tag if it is not found on the host system. TOUPDATE
+*Note:* Docker automatically downloads the image with the `splc2022` tag if it is not found on the host system.
 
 You can also download it manually with:
 ```
@@ -47,20 +47,28 @@ The Docker container exposes the application as a server, which is accessed thro
 You can build VariMetrics's Docker images by running
 
 ```
-./build_varicity.sh
+./build_varimetrics.sh
 ```
 
-Then, run VariMetrics using the local images that you just built. TOUPDATE
+Then, change the TAG variable in the `run-compose` script from `splc2022` to `local`:
 
+- On GNU/Linux and MacOS, edit `run-compose.sh`
 ```
-./varicity.sh --local
+- export TAG=splc2022
++ export TAG=local
 ```
 
-*Note:* Due to end of lines problems on Windows, building the Docker images is only possible if you use a GNU/Linux or macOS system. TOUPDATE
+- On Windows, edit `run-compose.bat`
+```
+- set TAG=splc2022
++ set TAG=local
+```
 
 ### Checking that VariMetrics works
 
-- Two Docker containers start: `varicity` and `varicity-backend`. TOUPDATE
+- Two Docker containers start:
+  - `varicity`: the visualization server;
+  - `varicity-backend`: a component exposing an endpoint receiving a symfinder analysis as soon as it is finished.
 ```
 $ ./run-compose.sh
 resources directory already exists
@@ -137,7 +145,7 @@ varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [NestApplication
 Reproducing the pre-generated visualizations is done by executing their analysis before VariMetrics.
 All scripts used in this section are located in the artifact's root directory.
 
-### Reusing the existing Docker images TOUPDATE
+### Reusing the existing Docker images
 
 The following Docker images hosted on the [Docker Hub](https://hub.docker.com/) allow to use symfinder without needing to build it.
 ```
@@ -208,10 +216,18 @@ You can build symfinder's Docker images by running
 ./build_symfinder.sh
 ```
 
-Then, run symfinder using the local images that you just built. TOUPDATE
+Then, change the TAG variable in the `run-docker-cli` script from `splc2022` to `local`:
 
+- On GNU/Linux and MacOS, edit `run-docker-cli.sh`
 ```
-./run.sh --local
+- TAG=splc2022
++ TAG=local
+```
+
+- On Windows, edit `run-docker-cli.bat`
+```
+- set tag=splc2022
++ set tag=local
 ```
 
 ### Checking that symfinder works
