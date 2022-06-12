@@ -4,11 +4,11 @@ In this document, we assume that you already have a system with:
 - a fully functional Docker and Docker Compose install;
 - a web browser (our tests have been made with Google Chrome, Mozilla Firefox, and Safari).
 
-See REQUIREMENTS.md file for more details.
+See the `REQUIREMENTS.md` file for more details.
 
 ## Running VariMetrics
 
-All the scripts in this section are located and executed from the root of the project.
+All the scripts in this section are located and executed from the root of the VariMetrics artifact.
 
 ### Reusing the existing Docker image
 
@@ -39,30 +39,6 @@ docker pull deathstar3/varimetrics:splc2022
 
 VariMetrics is a NodeJS application written in TypeScript deployed in a webpack environment.
 The Docker container exposes the application as a server, which is accessed through your web browser.
-
-### Building VariMetrics
-
-**This step is only needed if you edited VariMetrics's source code.**
-
-You can build VariMetrics's Docker images by running
-
-```
-./build_varimetrics.sh
-```
-
-Then, change the TAG variable in the `run-compose` script from `splc2022` to `local`:
-
-- On GNU/Linux and MacOS, edit `run-compose.sh`
-```
-- export TAG=splc2022
-+ export TAG=local
-```
-
-- On Windows, edit `run-compose.bat`
-```
-- set TAG=splc2022
-+ set TAG=local
-```
 
 ### Checking that VariMetrics works
 
@@ -140,6 +116,30 @@ varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [NestApplication
 - By selecting the `VariMetrics view` configuration, we obtain the following view:
   ![jfreechart_visualization](images/jfreechart_visualization.png)
 
+### Building VariMetrics
+
+**This step is only needed if you edited VariMetrics's source code.**
+
+You can build VariMetrics's Docker images by running
+
+```
+./build_varimetrics.sh
+```
+
+Then, change the TAG variable in the `run-compose` script from `splc2022` to `local`:
+
+- On GNU/Linux and MacOS, edit `run-compose.sh`
+```
+- export TAG=splc2022
++ export TAG=local
+```
+
+- On Windows, edit `run-compose.bat`
+```
+- set TAG=splc2022
++ set TAG=local
+```
+
 ## Running a symfinder analysis
 
 Reproducing the pre-generated visualizations is done by executing their analysis before VariMetrics.
@@ -165,7 +165,7 @@ The configuration files for all 7 projects presented in the paper are available 
 - `openapi-generator.yaml` → [OpenAPI Generator 5.4.0](https://github.com/OpenAPITools/openapi-generator)
 - `spring.yaml` → [Spring framework 5.2.3](https://github.com/Corpus-2021/spring-framework/tree/5.2.13-AnalysisReady)
 
-Running the analysis of one project is done as follows, here illustrated with the `/data/jfreechart-1.5.0.yaml` file:
+Running the analysis of one project is done as follows, here illustrated with the `/data/jkube.yaml` file:
 
 - First, run the VariMetrics server:
 
@@ -186,13 +186,13 @@ Running the analysis of one project is done as follows, here illustrated with th
   - On GNU/Linux and macOS
 
   ```
-  ./run-docker-cli.sh -i /data/jfreechart-1.5.0.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+  ./run-docker-cli.sh -i /data/jkube.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
   ```
 
   - On Windows
 
   ```
-  run-docker-cli.bat -i /data/jfreechart-1.5.0.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+  run-docker-cli.bat -i /data/jkube.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
   ```
 
 *Notes:*
@@ -204,30 +204,6 @@ If an image is not found, you can download it manually with the `docker pull` co
 Example:
 ```
 docker pull deathstar3/symfinder-fetcher:splc2022
-```
-
-### Building symfinder
-
-**This step is only needed if you edited symfinder's source code.**
-
-You can build symfinder's Docker images by running
-
-```
-./build_symfinder.sh
-```
-
-Then, change the TAG variable in the `run-docker-cli` script from `splc2022` to `local`:
-
-- On GNU/Linux and MacOS, edit `run-docker-cli.sh`
-```
-- TAG=splc2022
-+ TAG=local
-```
-
-- On Windows, edit `run-docker-cli.bat`
-```
-- set tag=splc2022
-+ set tag=local
 ```
 
 ### Checking that symfinder works
@@ -262,7 +238,7 @@ INFO: Direct driver instance 1596658651 created for server address symfinder-neo
 Five visitors are run on the codebase: `ClassesVisitor`, `GraphBuilderVisitor`, `StrategyTemplateDecoratorVisitor`, `FactoryVisitor`, and `ComposeTypeVisitor`.
 
 3. At the end of the successive parsings, a summary of the results of the execution is given, and symfinder stops.
-The information are then sent to the VariCity backend.
+The information are then sent to the VariMetrics backend.
 ```
 17:26:59.061 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.ManifestProvider
 17:26:59.074 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.LogMojo
@@ -323,12 +299,36 @@ Here's an example of hierarchy for a project requiring a local SonarQube server,
     └── jfreechart-1.5.0-stats.json
 ```
 
+### Building symfinder
+
+**This step is only needed if you edited symfinder's source code.**
+
+You can build symfinder's Docker images by running
+
+```
+./build_symfinder.sh
+```
+
+Then, change the TAG variable in the `run-docker-cli` script from `splc2022` to `local`:
+
+- On GNU/Linux and MacOS, edit `run-docker-cli.sh`
+```
+- TAG=splc2022
++ TAG=local
+```
+
+- On Windows, edit `run-docker-cli.bat`
+```
+- set tag=splc2022
++ set tag=local
+```
+
 
 ### Troubleshooting known issues
 
 #### Common issues
 
-If at the end of your project analysis you have an output similar to the following:
+- If at the end of your project analysis you have an output similar to the following:
 ```
 org.springframework.web.client.ResourceAccessException: I/O error on POST request for "http://varicityback:3000/projects": varicityback; nested exception is java.net.UnknownHostException: varicityback
 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:785)
@@ -357,8 +357,24 @@ Caused by: java.net.UnknownHostException: varicityback
 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:776)
 	... 5 more
 ```
-This means that the VariCity backend is not running.
+This means that the VariMetrics backend is not running.
 You then need to run the `run-compose.sh` script in another terminal before re-running the analysis.
+
+- If you obtain the following message:
+```
+Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+```
+This means that the Docker service is not running on your machine. Start the Docker service.
+
+- If you obtain the following message:
+```
+ERROR: for <container_name>  Cannot create container for service <container_name>: Conflict. The container name "<container_name>" is already in use by container "XXXX". You have to remove (or rename) that container to be able to reuse that name.
+```
+You need to remove the container whose name is already in use.
+```
+$ docker stop <container_name>
+$ docker rm <container_name>
+```
 
 #### Windows related issues
 
