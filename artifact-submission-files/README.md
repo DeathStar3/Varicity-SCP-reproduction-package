@@ -3,7 +3,7 @@
 
 ### Johann Mortara – Philippe Collet – Anne-Marie Dery-Pinna
 
-This artifact submission goes with the paper "Customizable Visualization of Quality Metrics for Object-Oriented Variability Implementations" accepted in the Research Track of SPLC 2022
+This artifact submission goes with the paper "Customizable Visualization of Quality Metrics for Object-Oriented Variability Implementations" accepted in the Research Track of SPLC 2022.
 
 ## Artifact description
 
@@ -17,15 +17,16 @@ The current archive is organized as follows:
 ├── images/
 ├── INSTALL.md
 ├── jfreechart_sources/
+│   ├── jfreechart-1.5.0.zip
 │   ├── jfreechart-after-maintenance.zip
-│   ├── jfreechart-original.zip
 │   └── versions_diff.txt
 ├── LICENSE.md
-├── paper.pdf
 ├── README.md
 ├── REQUIREMENTS.md
 ├── tables_data/
-    ├── sonarqube_reports
+    ├── sonarqube_reports/
+    │   ├── jfreechart-1.5.0/
+    │   ├── jfreechart-after-maintenance/
     └── table_2.xlsx
 ```
 
@@ -46,7 +47,7 @@ The `jfreechart_sources` directory contains:
 
 ### VariMetrics artifact
 
-**Accessible at DOI:** 
+**Accessible at DOI: [https://doi.org/10.5281/zenodo.6644449](https://doi.org/10.5281/zenodo.6644449)** 
 
 This artifact contains:
 
@@ -64,11 +65,11 @@ VariMetrics relies on data from symfinder, whose source code is also present in 
 
 Set up your host system according to the guidelines given in the `REQUIREMENTS.md` file.
 
-**Note:** your Docker daemon must be running in order to  
+**Note:** your Docker daemon must be running in order to use VariMetrics.  
 
 ### B. Getting the sources
 
-1. Download the archive available at **DOI**
+1. Download the archive available at [https://doi.org/10.5281/zenodo.6644449](https://doi.org/10.5281/zenodo.6644449)
 2. Unzip the archive. You should obtain the following hierarchy (only the files useful for the reproduction are shown):
 ```
 varimetrics_reproduction-package/
@@ -302,4 +303,4 @@ A more exhaustive documentation on
 - the capabilities of the VariMetrics visualization
 - the configuration of a symfinder analysis
 - the technical organization of the toolchain
-is available in the `README.md` file at the root of the VariMetrics artifact's archive, that itself points to other documentations.
+is available in the `README.md` file at the root of the [VariMetrics artifact's archive](https://doi.org/10.5281/zenodo.6644449), that itself points to other documentations.
