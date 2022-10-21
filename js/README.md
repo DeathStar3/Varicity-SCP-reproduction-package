@@ -1,5 +1,12 @@
 # SimfinderJS
 
+## Dependencies
+
+This project is in TypeScript.
+I also used a test framework, [Jest](https://jestjs.io/fr/) and the framework used to detect code duplication is Jscpd, repo [here](https://github.com/kucherenko/jscpd) and the npm doc [here](https://www.npmjs.com/package/jscpd).
+
+All dependencies are specified in the **package.json** file and can be installed with the ```npm install```command
+
 ## Run SymfinderJS
 
 > ### Via the Run.sh file:
