@@ -12,14 +12,14 @@ grouping every class linked to the street's starting building.
 
 **SymFinder** is a toolchain parsing a single Java codebase to identify potential variability implementations.
 It also allows you to retrieve additional metrics from external sources. It can be configured to retrieve quality metrics from SonarCloud given a URL, or can automatically pull a local SonarQube image to scan the given project.
-The output of SymFinder can consist in JSON files containing information on the presence of variability implementations in the analysed codebase (e.g. if a class has been identified as a variation point or a variant, number of variants of an identified variation point…) and/or 
+The output of SymFinder can consist in JSON files containing information on the presence of variability implementations in the analysed codebase (e.g. if a class has been identified as a variation point or a variant, number of variants of an identified variation point…) and/or
 metrics on the classes and/or a directory containing HTML files that allow you to visualize Symfinder Variability.
 
 ## How to run the demo
 
 The following demo will use the JUnit project with a custom ``pom.xml`` to build the project with coverage.
 1. The first step will be a variability analysis performed by Symfinder.
-2. After that we will retrieve five extra quality metrics using a local SonarQube generated container. 
+2. After that we will retrieve five extra quality metrics using a local SonarQube generated container.
    * Quality metrics to be gathered: complexity, cognitive_complexity, coverage, duplicated_lines and duplicated_lines_density.
 3. The JSONs created will automatically be sent to the VariCity-Backend
 4. The VariCity-Backend will parsed all the JSONs to regroup all the metrics and node data.
@@ -77,8 +77,13 @@ In another terminal, run the analysis
 
 
 
-Open your browser and go to [http://localhost:8000](http://localhost:8000) and select your project. 
-No worries if no city is displayed, go to the "APIs and Blacklist" menu on the right to define your entry points.
+Open your browser and go to [http://localhost:8000](http://localhost:8000) and select your project.
+No worries if no city is displayed, go to the "APIs and Blacklist" menu on the right to define your entry points and other parameters. To display JFreeChart as a city, you can use:
+
+- Entrypoints: org.jfree.chart.JFreeChart, org.jfree.chart.plot.Plot
+- Usage orientation: OUT
+- Usage level: 4
+- Metrics: coverage (red-green scale), duplicated blocks (cracks)
 
 ## Varicity UI Overview
 
@@ -98,4 +103,3 @@ No worries if no city is displayed, go to the "APIs and Blacklist" menu on the r
  | [Patrick Anagonou](https://github.com/anagonousourou)       | [sourou-patrick.anagonou@etu.univ-cotedazur.fr](mailto:sourou-patrick.anagonou@etu.univ-cotedazur.fr)|
  | [Guillaume Savornin](https://github.com/GuillaumeSavornin)  | [guillaume.savornin@etu.univ-cotedazur.fr](mailto:guillaume.savornin@etu.univ-cotedazur.fr)|
  | [Anton van der Tuijn](https://github.com/Anton-vanderTuijn) | [anton.van-der-tuijn@etu.univ-cotedazur.fr](mailto:anton.van-der-tuijn@etu.univ-cotedazur.fr)|
-
