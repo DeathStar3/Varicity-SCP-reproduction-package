@@ -23,12 +23,13 @@ import StrategyTemplateDecoratorVisitor from "./visitors/StrategyTemplateDecorat
 import Parser from "./parser/Parser";
 import NeoGraph from "./neograph/NeoGraph";
 import { config } from "./configuration/Configuration";
-import { join } from "path";
+import { join, resolve } from "path";
 import { readdirSync, statSync } from "fs";
 import { EntityAttribut, EntityType, RelationType } from "./neograph/NodeType";
 import { Node } from "neo4j-driver-core";
 import { detectClones } from "jscpd";
 import { readFileSync } from "fs";
+import path = require("path");
 
 
 export class Symfinder{
@@ -226,8 +227,19 @@ export class Symfinder{
                 silent: true
             })
             for(let clone of clones){
-                var nodeA: Node = value.find((node: Node) => node.properties.path == clone.duplicationA.sourceId);
-                var nodeB: Node = value.find((node: Node) => node.properties.path == clone.duplicationB.sourceId);
+              console.log(`clone A path ${clone.duplicationA.sourceId}`)
+              var nodeA: any = nodes.find((node: Node) => {
+                const abs_path = path.resolve(node.properties.path)
+                console.log(abs_path)
+                return abs_path == clone.duplicationA.sourceId
+              });
+              console.log(nodeA)
+              console.log(`clone b path ${clone.duplicationB.sourceId}`)
+              var nodeB: any = nodes.find((node: Node) => {
+                const abs_path = path.resolve(node.properties.path)
+                console.log(abs_path)
+                return abs_path == clone.duplicationB.sourceId
+              });
                 var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
                 var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
                 await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CORE_CONTENT,
@@ -247,8 +259,19 @@ export class Symfinder{
             silent: true
         })
         for (let clone of clones){
-            var nodeA: any = nodes.find((node: Node) => node.properties.path == clone.duplicationA.sourceId);
-            var nodeB: any = nodes.find((node: Node) => node.properties.path == clone.duplicationB.sourceId);
+            console.log(`clone A path ${clone.duplicationA.sourceId}`)
+            var nodeA: any = nodes.find((node: Node) => {
+              const abs_path = path.resolve(node.properties.path)
+              console.log(abs_path)
+              return abs_path == clone.duplicationA.sourceId
+            });
+            console.log(nodeA)
+            console.log(`clone b path ${clone.duplicationB.sourceId}`)
+            var nodeB: any = nodes.find((node: Node) => {
+              const abs_path = path.resolve(node.properties.path)
+              console.log(abs_path)
+              return abs_path == clone.duplicationB.sourceId
+            });
             var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
             var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
             await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CODE_DUPLICATED,
