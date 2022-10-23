@@ -3,10 +3,9 @@
 ## Dependencies
 
 This project is in TypeScript.
-I also used a test framework, [Jest](https://jestjs.io/fr/) and the framework used to detect code duplication is Jscpd, repo [here](https://github.com/kucherenko/jscpd) and the npm doc [here](https://www.npmjs.com/package/jscpd).
+It also used a test framework, [Jest](https://jestjs.io/fr/) and the framework used to detect code duplication is Jscpd, repo [here](https://github.com/kucherenko/jscpd) and the npm doc [here](https://www.npmjs.com/package/jscpd).
 
-All dependencies are specified in the **package.json** file and can be installed with the ```npm install```command or by exec ```./prepare.sh```.
-
+All Javascript dependencies are specified in the **package.json** file and can be installed with the ```npm install```command or by exec ```./prepare.sh```.
 
 ## Preparation
 
@@ -23,7 +22,7 @@ To install all dependencies:
 
 For example:
 
->>```./run.sh https://github.com/apache/echarts``` 
+>>```./run.sh https://github.com/apache/echarts```
 
 ### Via the manual procedure:
 
@@ -34,7 +33,7 @@ For example:
 >> **Prerequisites** : Install Docker, NodeJS, NPM (should be included in NodeJS) and then the TypeScript compiler TSC. You can install it with the following command ``` npm install -g typescript```
 >> 1. Create a folder **experiments** at the same level as app (in /js)
 >> 2. Download into the experiments folder the Github project you want to analyze (echarts link : https://github.com/apache/echarts). You should consider not including the .git folder to ensure a reasonable processing time. You can either do a git clone or download the zip file and unzip it into the experiments folder.
->> 3. Run the Neo4J container in Docker ``` docker run -d -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/root neo4j ```
+>> 3. Run the Neo4J container in Docker ``` docker run -d -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/root neo4j:4.1.9 ```
 >> 4. Install NPM dependencies in js/app ``` npm install ```
 >> 5. Build the app still in js/app ``` npm run build ```
 >> 6. Run the analysis from js/app with the following cmd ``` PROJECT_PATH=experiments/echarts node lib/index.js```. Here applied to echarts </br>
@@ -44,11 +43,11 @@ For example:
 
 ## Concerning Test cases
 
-### To run a test case 
+### To run a test case
 
 - Run the ``` run_test.sh ``` file and specify the name of directory that is placed in the directory **test_project** as a parameter. **Before** running test make sure you have the docker running and that all dependencies are installed.
 
-### To create a test 
+### To create a test
 
 - In the directory **test_project** create a directory that contains the file architecture you want to test and then create a test file in the directory **app/tests/** that is name like this : ```<previously_created_directory_name>.test.ts```
 
