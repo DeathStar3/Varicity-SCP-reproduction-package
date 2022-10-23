@@ -227,17 +227,12 @@ export class Symfinder{
                 silent: true
             })
             for(let clone of clones){
-              console.log(`clone A path ${clone.duplicationA.sourceId}`)
               var nodeA: any = nodes.find((node: Node) => {
                 const abs_path = path.resolve(node.properties.path)
-                console.log(abs_path)
                 return abs_path == clone.duplicationA.sourceId
               });
-              console.log(nodeA)
-              console.log(`clone b path ${clone.duplicationB.sourceId}`)
               var nodeB: any = nodes.find((node: Node) => {
                 const abs_path = path.resolve(node.properties.path)
-                console.log(abs_path)
                 return abs_path == clone.duplicationB.sourceId
               });
                 var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
@@ -259,17 +254,12 @@ export class Symfinder{
             silent: true
         })
         for (let clone of clones){
-            console.log(`clone A path ${clone.duplicationA.sourceId}`)
             var nodeA: any = nodes.find((node: Node) => {
               const abs_path = path.resolve(node.properties.path)
-              console.log(abs_path)
               return abs_path == clone.duplicationA.sourceId
             });
-            console.log(nodeA)
-            console.log(`clone b path ${clone.duplicationB.sourceId}`)
             var nodeB: any = nodes.find((node: Node) => {
               const abs_path = path.resolve(node.properties.path)
-              console.log(abs_path)
               return abs_path == clone.duplicationB.sourceId
             });
             var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
