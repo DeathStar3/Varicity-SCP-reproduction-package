@@ -17,15 +17,16 @@ To install all dependencies:
 
 ## Run SymfinderJS
 
-> ### Via the Run.sh file:
+### Via the Run.sh file:
 
 >>```./run.sh <githuburl>```
 
->>For example:
+For example:
 
->>```./run.sh https://github.com/grafana/grafana```
+>>```./run.sh https://github.com/apache/echarts``` </br>
+>>```./run.sh https://github.com/ecomfe/zrender```
 
-> ### Via the manual procedure:
+### Via the manual procedure:
 
 >> There are several steps to follow in order to run the app correctly
 >> Here they are:
@@ -39,8 +40,18 @@ To install all dependencies:
 >> 5. Run the analysis from js/app with the following cmd ``` PROJECT_PATH=experiments/xxxxx node lib/index.js```
 >> 6. Finally, you can find some metrics about the project in your console, and you can go visualize it with Neo4J on http://localhost:7474.
 
+## Concerning Test cases
 
+### To run a test case 
+
+- Run the ``` run_test.sh ``` file and specify the name of directory that is placed in the directory **test_project** as a parameter. **Before** running test make sure you have the docker running and that all dependencies are installed.
+
+### To create a test 
+
+- In the directory **test_project** create a directory that contains the file architecture you want to test and then create a test file in the directory **app/tests/** that is name like this : ```<previously_created_directory_name>.test.ts```
+
+- To write the test in jest with TypeScript, [here](https://jestjs.io/docs/getting-started#using-typescript)
 
 ## Results
 
-http://localhost:7474/browser/
+- You can always visualize your neo4j results at ```http://localhost:7474/browser/```
