@@ -10,6 +10,7 @@ import {MenuController} from "./menu/menu.controller";
 import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
 import {SearchbarController} from "./searchbar.controller";
 import {QueryService} from "../../services/query.service";
+import { JsTestStrategy } from "../parser/strategies/js_test.strategy";
 
 export class ProjectController {
     static el: EntitiesList;
@@ -46,7 +47,9 @@ export class ProjectController {
             MenuController.selectedTab = undefined;
         }
 
-        this.previousParser = new VPVariantsStrategy();
+        // Select the Parsing Strategy
+        // this.previousParser = new VPVariantsStrategy();
+        this.previousParser = new JsTestStrategy();
 
         // clear the current view
         if (UIController.scene) {
@@ -60,8 +63,8 @@ export class ProjectController {
 
             // TODO find alternative
             await ProjectService.fetchVisualizationData(projectName).then(async (response) => {
-                const config = await ConfigService.loadDataFile(projectName);
-                this.el = this.previousParser.parse(response.data, config, projectName);
+                const config = await ConfigService.loadDataFile(projectName); // Load config from backend
+                this.el = this.previousParser.parse(response.data, config, projectName); // Parse the project data
                 SearchbarController.fillSearchBar(response.data.nodes);
 
                 // set the min & max usage level

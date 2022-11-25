@@ -63,11 +63,13 @@ link:
       - "EXTENDS"
     underground_road:
       - "USAGE"
+      - "CHILD"
 
 hierarchy_links:
   - "USAGE"
   - "IMPLEMENTS"
   - "EXTENDS"
+  - "CHILD"
 
 blacklist: #all classes that must not appear
   []
