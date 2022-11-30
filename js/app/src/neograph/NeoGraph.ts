@@ -23,6 +23,7 @@ import { exit } from "process";
 import { Configuration } from "../configuration/Configuration"
 import { NodeType, RelationType, EntityType, EntityAttribut, DesignPatternType } from "./NodeType";
 
+
 export default class NeoGraph{
 
     driver: Driver;
@@ -512,17 +513,17 @@ export default class NeoGraph{
     }
 
     async exportRelationJSON():Promise<void>{
-        const request1 = "match (n)-[r]->(m) where type(r) = 'IMPLEMENTS' or type(r) ='EXTENDS'   with collect ({source:n.name,target:m.name,type:type(r)}) as rela return {link:rela} ";
-        const request2 = "MATCH (n:CLASS) with collect(n) as m return {nodes:m}";
-        let data={
-            nodes:Object,
-            links: Object
-        };
-        await this.submitRequest(request1, {}).then(function(results: Record[]){
-            data.links = results.map((result: Record) => result.get(0))[0].get("links");
+        const requestLinks = "match (n)-[r]->(m) where type(r) = 'IMPLEMENTS' or type(r) ='EXTENDS'" +
+            "   with collect ({source:n.name,target:m.name,type:type(r)}) as rela return {links:rela} ";
+        const requestNodes = "MATCH (n:CLASS) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+            "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
+            "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
+        let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
+        await this.submitRequest(requestLinks, {}).then(function(results: Record[]){
+            data.links = results.map((result: Record) => result.get(0))[0].links;
         });
-        await this.submitRequest(request2,{}).then(function (results:Record[]){
-           data.nodes(results.map((result: Record) => result.get(0))[0]).get("nodes");
+        await this.submitRequest(requestNodes,{}).then(function (results:Record[]){
+            data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
         });
 
         let content = JSON.stringify(data);
