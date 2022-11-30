@@ -29,7 +29,7 @@ export default class NeoGraph{
     driver: Driver;
 
     constructor(config: Configuration){
-        this.driver = driver(config.getNeo4JBoltAdress(), auth.basic('neo4j', 'root'));
+        this.driver = driver(config.getNeo4JBoltAdress(), auth.basic('neo4j', 'root'),{ disableLosslessIntegers: true });
     }
 
     async createNode(name: string, type: NodeType, types: NodeType[]): Promise<Node> {
@@ -523,6 +523,7 @@ export default class NeoGraph{
             data.links = results.map((result: Record) => result.get(0))[0].links;
         });
         await this.submitRequest(requestNodes,{}).then(function (results:Record[]){
+
             data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
         });
 
