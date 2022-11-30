@@ -54,13 +54,14 @@ export class Symfinder{
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes");
         await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations");
         await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies");
-        
+
         await this.neoGraph.detectVPsAndVariants();
         await this.proximityFolderDetection();
         await this.detectCommonEntityProximity();
         await this.detectCommonMethodImplemented();
 
         await this.neoGraph.exportToJSON();
+        await this.neoGraph.exportRelationJSON();
         console.log("db fetched");
 
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
@@ -80,11 +81,11 @@ export class Symfinder{
         console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
         console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
 
-        
+
 
         await this.neoGraph.driver.close();
 
-        
+
     }
 
     /**
@@ -148,7 +149,7 @@ export class Symfinder{
                     process.stdout.write("\rDetecting files ("+files.length+"): '"+fileName + "'\x1b[K");
                     files.push(absolute_path);
                     var fileNode = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.FILE, []);
-                    await this.neoGraph.linkTwoNodes(<Node>parentNode, fileNode, RelationType.CHILD)  
+                    await this.neoGraph.linkTwoNodes(<Node>parentNode, fileNode, RelationType.CHILD)
                 }
             }
         }
@@ -161,7 +162,7 @@ export class Symfinder{
      * VP_FOLDER
      * VARIANT_FOLDER
      * VARIANT_FILE
-     * SUPER_VARIANT_FILE 
+     * SUPER_VARIANT_FILE
      */
     async proximityFolderDetection(): Promise<void>{
 
@@ -241,7 +242,7 @@ export class Symfinder{
                     clone.duplicationA.fragment, percentA, clone.duplicationA.start.line +":"+ clone.duplicationA.end.line);
                 await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CORE_CONTENT,
                     clone.duplicationA.fragment, percentB, clone.duplicationB.start.line +":"+ clone.duplicationB.end.line);
-            }            
+            }
         }
         if(i > 0)
             process.stdout.write("\rCheck duplication code: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
@@ -273,7 +274,7 @@ export class Symfinder{
 
     /**
      * Detect common entities between all VARIANT_FILE of a VP_FOLDER
-     * @returns 
+     * @returns
      */
     async detectCommonEntityProximity(): Promise<void>{
 
@@ -285,14 +286,14 @@ export class Symfinder{
             i++;
             process.stdout.write("\rDetect common entities: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
             var variantFilesNameSet: string[] = await this.neoGraph.getVariantFilesNameForVPFolderPath(vpFolderPath);
-            
+
             for(let variantFileName of variantFilesNameSet){
 
-                var variantFileNodes: Node[] = await this.neoGraph.getVariantFilesForVPFolderPath(vpFolderPath, variantFileName);                
+                var variantFileNodes: Node[] = await this.neoGraph.getVariantFilesForVPFolderPath(vpFolderPath, variantFileName);
                 var entitiesOcc: any[] = [];
 
                 for(let variantFileNode of variantFileNodes){
-                    
+
                     for(let entityNode of await this.neoGraph.getVariantEntityNodeForFileNode(variantFileNode)){
                         let pname :any = entityNode.properties.name + '_reserved';
                         if(entitiesOcc[pname] === undefined){
@@ -305,7 +306,7 @@ export class Symfinder{
                 }
 
                 for(let [key, value] of Object.entries(entitiesOcc)){
-                    if(value.length > 1 && value.length == variantFileNodes.length){               
+                    if(value.length > 1 && value.length == variantFileNodes.length){
                         for(let entityNode of value){
                             await this.neoGraph.addLabelToNode(entityNode, EntityAttribut.PROXIMITY_ENTITY);
                         }
@@ -321,7 +322,7 @@ export class Symfinder{
 
     /**
      * Detect common methods between all VARIANT_FILE of a VP_FOLDER
-     * @returns 
+     * @returns
      */
     async detectCommonMethodImplemented(): Promise<void>{
 
@@ -332,12 +333,12 @@ export class Symfinder{
         for(let motherEntityNode of motherEntitiesNode){
             i++;
             process.stdout.write("\rDetect common method: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
-            
+
             var implementedClasses: Node[] = await this.neoGraph.getImplementedClassesFromEntity(motherEntityNode);
             var occurenceMethod: any = {};
             var motherMethod: string[] = (await this.neoGraph.getMethods(motherEntityNode)).map((n) => n.properties.name);
             for(let implemetedClass of implementedClasses){
-                
+
                 var implementedClassMethods = await this.neoGraph.getMethods(implemetedClass);
                 for(let implementedClassMethod of implementedClassMethods){
                     let pname :any = implementedClassMethod.properties.name + '_reserved';
@@ -350,7 +351,7 @@ export class Symfinder{
                 }
             }
             for(let [key, value] of Object.entries(occurenceMethod)){
-                
+
                 let methods = <Node[]> value;
                 if(methods.length > 1 && methods.length == implementedClasses.length && !motherMethod.includes(key)){
                     for(let method of methods){
