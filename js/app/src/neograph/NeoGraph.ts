@@ -504,7 +504,7 @@ export default class NeoGraph{
         return this.submitRequest(request, {}).then(function(results: Record[]){
             const data = results.map((result: Record) => result.get(0));
             let content = JSON.stringify(data);
-            writeFile('db.json', content, (err: any) => {
+            writeFile('./export/db.json', content, (err: any) => {
                 if (err) throw err;
                 process.stdout.write('data written to file');
             });
@@ -529,7 +529,7 @@ export default class NeoGraph{
 
         let content = JSON.stringify(data);
 
-        writeFile('db_link.json', content, (err: any) => {
+        writeFile('./export/db_link.json', content, (err: any) => {
             if (err) throw err;
             process.stdout.write('data written to file');
         });
