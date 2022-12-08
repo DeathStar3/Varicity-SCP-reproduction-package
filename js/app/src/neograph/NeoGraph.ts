@@ -515,7 +515,7 @@ export default class NeoGraph{
     async exportRelationJSON():Promise<void>{
         const requestLinks = "match (n)-[r]->(m) where type(r) = 'IMPLEMENTS' or type(r) ='EXTENDS'" +
             "   with collect ({source:n.name,target:m.name,type:type(r)}) as rela return {links:rela} ";
-        const requestNodes = "MATCH (n:CLASS) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+        const requestNodes = "MATCH (n) where 'CLASS' in labels(n) or 'INTERFACE' in labels(n) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
         let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
