@@ -17,10 +17,33 @@
  * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
  */
 import SymfinderVisitor from "./SymfinderVisitor";
-import { EntityType, EntityAttribut, EntityVisibility, NodeType, RelationType } from "../neograph/NodeType";
+import {EntityAttribut, EntityType, EntityVisibility, NodeType, RelationType} from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
-import { ClassDeclaration, ClassExpression, ConstructorDeclaration, FunctionDeclaration, InterfaceDeclaration, isClassDeclaration, isClassExpression, isConstructorDeclaration, isFunctionDeclaration, isInterfaceDeclaration, isMethodDeclaration, isMethodSignature, isSourceFile, isVariableStatement, MethodDeclaration, MethodSignature, Node, SourceFile, SyntaxKind, VariableDeclaration, VariableStatement } from "typescript";
-import { filname_from_filepath } from "../utils/path";
+import {
+    ClassDeclaration,
+    ClassExpression,
+    ConstructorDeclaration,
+    FunctionDeclaration,
+    InterfaceDeclaration,
+    isClassDeclaration,
+    isClassExpression,
+    isConstructorDeclaration,
+    isFunctionDeclaration,
+    isInterfaceDeclaration,
+    isMethodDeclaration,
+    isMethodSignature,
+    isParameter,
+    isPropertyDeclaration,
+    isVariableStatement,
+    MethodDeclaration,
+    MethodSignature,
+    ParameterDeclaration,
+    PropertyDeclaration,
+    SyntaxKind,
+    VariableStatement
+} from "typescript";
+import {filname_from_filepath} from "../utils/path";
+
 export default class ClassesVisitor extends SymfinderVisitor{
 
     constructor(neoGraph: NeoGraph){
@@ -33,20 +56,24 @@ export default class ClassesVisitor extends SymfinderVisitor{
     async visit(node: MethodSignature): Promise<void>;
     async visit(node: ConstructorDeclaration): Promise<void>;
     async visit(node: FunctionDeclaration): Promise<void>;
-    async visit(node: VariableStatement): Promise<void>; 
+    async visit(node: VariableStatement): Promise<void>;
+    async visit(node: ParameterDeclaration): Promise<void>;
+    async visit(node: PropertyDeclaration): Promise<void>;
 
     /**
      * Visit InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement
      * @param node AST node
      * @returns ...
      */
-    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement): Promise<void> {
+    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement | ParameterDeclaration | PropertyDeclaration): Promise<void> {
 
         if(isInterfaceDeclaration(node)) await this.visitInterface(node);
         else if(isClassDeclaration(node) || isClassExpression(node)) await this.visitClass(node);
         else if(isMethodDeclaration(node) || isMethodSignature(node) || isConstructorDeclaration(node)) await this.visitMethod(node);
         else if(isFunctionDeclaration(node)) await this.visitFunction(node);
         else if(isVariableStatement(node)) await this.visitVariable(node);
+        else if(isParameter(node)) await this.visitParameter(node);
+        else if(isPropertyDeclaration(node)) await this.visitProperty(node);
         else return;
     }
 
@@ -177,22 +204,70 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var nodeType = EntityType.VARIABLE;
         var filePath = node.getSourceFile().fileName;
         var fileName = filname_from_filepath(filePath);
+        // var className = (<any>node.parent.parent.parent).name.getText();
 
         for(let variableDeclaration of node.declarationList.declarations){
             var name = variableDeclaration.name?.getText()
             if(name === undefined) return;
             
             await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
-                if(filePath === undefined || fileName === undefined) return;
+                if(filePath === undefined || /*className*/fileName === undefined) return;
+                // var neoFileNode = await this.neoGraph.getNodeWithFile(className, filePath);
                 var neoFileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
                 if(neoFileNode !== undefined)
                     return await this.neoGraph.linkTwoNodes(neoFileNode, neoNode, relationType);
                 else
-                    console.log("Error to link nodes "+name+" and "+fileName+"...");
+                    console.log("Error to link nodes "+name+" and "+/*className*/fileName+"...");
             }).catch((reason) => console.log("Error to create node "+name+"..."));
         }
         return;
         
 
+    }
+
+    async visitParameter(node: ParameterDeclaration): Promise<void> {
+        const modifiers = node.modifiers?.map(m => m.kind);
+        const relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
+        const nodeTypeList: NodeType[] = [];
+        const nodeType = EntityType.PARAMETER;
+        const filePath = node.getSourceFile().fileName;
+        var fileName = filname_from_filepath(filePath);
+        // const className = (<any>node.parent.parent).name.getText();
+
+        const name = node.name?.getText()
+        if(name === undefined) return;
+
+        await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
+            if(filePath === undefined || /*className*/fileName === undefined) return;
+            // const classNode = await this.neoGraph.getNodeWithFile(className, filePath);
+            var neoFileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
+            if(neoFileNode !== undefined)
+                return await this.neoGraph.linkTwoNodes(neoFileNode, neoNode, relationType);
+            else
+                console.log("Error to link nodes "+name+" and "+/*className*/fileName+"...");
+        }).catch((reason) => console.log("Error to create node "+name+"..."));
+    }
+
+    async visitProperty(node: PropertyDeclaration): Promise<void> {
+        const modifiers = node.modifiers?.map(m => m.kind);
+        const relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
+        const nodeTypeList: NodeType[] = [];
+        const nodeType = EntityType.PROPERTY;
+        const filePath = node.getSourceFile().fileName;
+        var fileName = filname_from_filepath(filePath);
+        // const className = node.parent.name?.getText();
+
+        const name = node.name?.getText()
+        if(name === undefined) return;
+
+        await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
+            if(filePath === undefined || /*className*/fileName === undefined) return;
+            // const neoFileNode = await this.neoGraph.getNodeWithFile(className, filePath);
+            var neoFileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
+            if(neoFileNode !== undefined)
+                return await this.neoGraph.linkTwoNodes(neoFileNode, neoNode, relationType);
+            else
+                console.log("Error to link nodes "+name+" and "+/*className*/fileName+"...");
+        }).catch((reason) => console.log("Error to create node "+name+"..."));
     }
 }

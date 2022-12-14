@@ -37,6 +37,8 @@ export enum EntityType {
     INTERFACE = "INTERFACE",
     FUNCTION = "FUNCTION",
     VARIABLE = "VARIABLE",
+    PARAMETER = "PARAMETER",
+    PROPERTY = "PROPERTY",
     FILE = "FILE",
     DIRECTORY = "DIRECTORY"
 }
@@ -62,7 +64,8 @@ export enum RelationType {
     LOAD = "LOAD",
     CHILD = "CHILD",
     CODE_DUPLICATED = "CODE_DUPLICATED",
-    CORE_CONTENT = "CORE_CONTENT"
+    CORE_CONTENT = "CORE_CONTENT",
+    TYPE_OF = "TYPE_OF"
 }
 
 export enum DesignPatternType {

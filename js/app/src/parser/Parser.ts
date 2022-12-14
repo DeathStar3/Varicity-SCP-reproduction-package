@@ -17,15 +17,19 @@
  * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
  */
 import SymfinderVisitor from "../visitors/SymfinderVisitor";
-import { createSourceFile, Node, ScriptTarget, SourceFile } from 'typescript';
-import { readFileSync } from 'fs';
+import {Node, Program, SourceFile} from 'typescript';
 
 export default class Parser{
 
     sourceFile: SourceFile;
     
-    constructor(file: string) {
-        this.sourceFile = createSourceFile(file, readFileSync(file, 'utf8'), ScriptTarget.Latest, true);
+    constructor(file: string, program: Program) {
+        const srcFile: SourceFile | undefined = program.getSourceFile(file);
+        if(srcFile != undefined)
+            this.sourceFile = srcFile;
+        else
+            throw new FileNotFoundException(file);
+        // this.sourceFile = createSourceFile(file, readFileSync(file, 'utf8'), ScriptTarget.Latest, true);
     }
 
     async accept(visitor: SymfinderVisitor) {
@@ -38,5 +42,14 @@ export default class Parser{
             await visitor.visit(child);
             await this.visit(child, visitor);
         }
+    }
+
+}
+
+export class FileNotFoundException extends Error {
+    constructor(fileName: String) {
+        super(fileName+" isn't in the project");
+
+        Object.setPrototypeOf(this, FileNotFoundException.prototype);
     }
 }

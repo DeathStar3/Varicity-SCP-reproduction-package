@@ -30,7 +30,15 @@ import { Node } from "neo4j-driver-core";
 import { detectClones } from "jscpd";
 import { readFileSync } from "fs";
 import path = require("path");
-
+import {
+    CompilerOptions,
+    createCompilerHost,
+    createProgram,
+    ModuleKind,
+    Program,
+    ScriptTarget
+} from "typescript";
+import UsageVisitor from "./visitors/UsageVisitor";
 
 export class Symfinder{
 
@@ -51,9 +59,14 @@ export class Symfinder{
 
         var files: string[] = await this.visitAllFiles(src);
         process.stdout.write("\rDetecting files ("+files.length+"): done.\x1b[K\n");
-        await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes");
-        await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations");
-        await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies");
+
+        const options: CompilerOptions = { strict: true, target: ScriptTarget.Latest, allowJs: true, module: ModuleKind.ES2015 }
+        let program = createProgram(files, options, createCompilerHost(options, true));
+
+        await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes", program);
+        await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program);
+        await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program);
+        await this.visitPackage(files, new UsageVisitor(this.neoGraph, program), "usages", program);
         
         await this.neoGraph.detectVPsAndVariants();
         await this.proximityFolderDetection();
@@ -61,6 +74,7 @@ export class Symfinder{
         await this.detectCommonMethodImplemented();
 
         await this.neoGraph.exportToJSON();
+        await this.neoGraph.exportRelationJSON();
         console.log("db fetched");
 
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
@@ -93,11 +107,11 @@ export class Symfinder{
      * @param visitor class wich contain analysis
      * @param label logger label
      */
-    async visitPackage(files: string[], visitor: SymfinderVisitor, label: string){
+    async visitPackage(files: string[], visitor: SymfinderVisitor, label: string, program: Program){
         var nbFiles = files.length;
         var currentFile = 0;
         for(let file of files){
-            let parser = new Parser(file);
+            let parser = new Parser(file, program);
             await parser.accept(visitor);
             currentFile++;
             process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
@@ -144,7 +158,7 @@ export class Symfinder{
             }
             else{
                 //filter typescript files
-                if(fileName.endsWith(".ts") && !fileName.endsWith(".test.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
+                if(fileName.endsWith(".ts") && !fileName.endsWith(".usage.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
                     process.stdout.write("\rDetecting files ("+files.length+"): '"+fileName + "'\x1b[K");
                     files.push(absolute_path);
                     var fileNode = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.FILE, []);

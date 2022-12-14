@@ -16,12 +16,12 @@
  *
  * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
  */
-import { writeFile } from "fs";
-import { driver, Driver } from "neo4j-driver";
-import { auth, Node, QueryResult, Record, Session, Transaction } from "neo4j-driver-core";
-import { exit } from "process";
-import { Configuration } from "../configuration/Configuration"
-import { NodeType, RelationType, EntityType, EntityAttribut, DesignPatternType } from "./NodeType";
+import {writeFile} from "fs";
+import {driver, Driver} from "neo4j-driver";
+import {auth, Node, QueryResult, Record, Session, Transaction} from "neo4j-driver-core";
+import {exit} from "process";
+import {Configuration} from "../configuration/Configuration"
+import {DesignPatternType, EntityAttribut, EntityType, NodeType, RelationType} from "./NodeType";
 
 export default class NeoGraph{
 
@@ -74,6 +74,14 @@ export default class NeoGraph{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
         });
     }
+
+    /*async getNodeWithClass(name: string, className: string): Promise<Node | undefined>{
+        const request = "MATCH (n {name: $name})<--(m:CLASS {name: $className}) RETURN (n)";
+
+        return this.submitRequest(request, {name:name, className:className}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }*/
 
     async getNodeWithFile(name: string, path: string): Promise<Node | undefined>{
         const request = "MATCH (n {name: $name})<--(m {path: $path}) RETURN (n)";
@@ -511,6 +519,35 @@ export default class NeoGraph{
         });
     }
 
+    async exportRelationJSON():Promise<void>{
+        const requestLinks = "match (n)-[r]->(m) where type(r) = 'IMPLEMENTS' or type(r) ='EXTENDS'" +
+            "   with collect ({source:n.name,target:m.name,type:type(r)}) as rela return {links:rela} ";
+        const requestNodes = "MATCH (n) where 'CLASS' in labels(n) or 'INTERFACE' in labels(n) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+            "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
+            "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
+        const requestLinksCompose = "MATCH (f:FILE) -[r]-> (n)-[:TYPE_OF]->(m:CLASS)<-[:EXPORT]-(fe:FILE) " +
+            "WHERE 'PROPERTY' in labels(n) or 'PARAMETER' in labels(n) or 'VARIABLE' in labels(n) " +
+            "WITH collect ( distinct {source:f.path,target:fe.path,type:'USAGE'}) as rela " +
+            "RETURN {linkscompose:rela} ";
+        let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
+        await this.submitRequest(requestLinks, {}).then(function(results: Record[]){
+            data.links = results.map((result: Record) => result.get(0))[0].links;
+        });
+        await this.submitRequest(requestNodes,{}).then(function (results:Record[]){
+            data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
+        });
+        await this.submitRequest(requestLinksCompose,{}).then(function (results:Record[]){
+            data.linkscompose = results.map((result: Record) => result.get(0))[0].linkscompose;
+        });
+
+        let content = JSON.stringify(data);
+
+        writeFile('db_usage.json', content, {flag: "w"}, (err: any) => {
+            if (err) throw err;
+            process.stdout.write('data written to file');
+        });
+    }
+
     async clearNodes(): Promise<void>{
         const request = "MATCH (n) DETACH DELETE n"
         await this.submitRequest(request, {});
@@ -529,6 +566,7 @@ export default class NeoGraph{
                 return result.records;
             } catch (Error) {
                 process.stdout.write("\rData base not ready... Retrying in "+waitingTime+" sec (" + nbTry + "/" + maxTry + ")");
+                console.log(Error)
                 await new Promise<void>((res) => setTimeout(()=>res(), waitingTime * 1000));
             }
         }
