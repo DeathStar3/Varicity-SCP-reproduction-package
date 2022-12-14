@@ -16,7 +16,7 @@ DATA_PATH="$ABSOLUTE_PATH/dockervolume/data/symfinder_files"
 MANUAL_PATH="$ABSOLUTE_PATH/dockervolume/manual/symfinder_files"
 PROJECT_NAME=$2
 JSON_FILE="$PROJECT_NAME.json"
-PATH_TO_SYMFINDER_JS_APP="$ABSOLUTE_PATH/js/app"
+PATH_TO_SYMFINDER_JS_APP="$ABSOLUTE_PATH/js/app/export"
 VARICITY_CONFIG_FILE="$ABSOLUTE_PATH/dockervolume/varicitydb.json"
 
 if [[ "$1" = "-h"  ||  "$1" = "--help" || -z "$1" || -z "$2" ]]
@@ -45,9 +45,9 @@ then
   echo "${MANUAL_PATH} created."
 fi
 
-echo "Moving the $PATH_TO_SYMFINDER_JS_APP/db.json to $DATA_PATH/$JSON_FILE and $MANUAL_PATH/$JSON_FILE :"
-cp "$PATH_TO_SYMFINDER_JS_APP/db.json" "$DATA_PATH/$JSON_FILE"
-cp "$PATH_TO_SYMFINDER_JS_APP/db.json" "$MANUAL_PATH/$JSON_FILE"
+echo "Moving the $PATH_TO_SYMFINDER_JS_APP/db_link.json to $DATA_PATH/$JSON_FILE and $MANUAL_PATH/$JSON_FILE :"
+cp "$PATH_TO_SYMFINDER_JS_APP/db_link.json" "$DATA_PATH/$JSON_FILE"
+cp "$PATH_TO_SYMFINDER_JS_APP/db_link.json" "$MANUAL_PATH/$JSON_FILE"
 
 if [ -f "$VARICITY_CONFIG_FILE" ]
 then
