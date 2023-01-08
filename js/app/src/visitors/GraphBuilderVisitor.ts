@@ -21,7 +21,8 @@ import { EntityType, EntityAttribut, RelationType } from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
 import { ExportDeclaration, ExportSpecifier, HeritageClause, ImportClause, ImportDeclaration, ImportSpecifier, isExportDeclaration, isExportSpecifier, isHeritageClause, isImportClause, isImportDeclaration, isImportSpecifier, Node, SyntaxKind } from "typescript";
 import { join } from 'path'
-import { filname_from_filepath } from '../utils/path' 
+import { filname_from_filepath } from '../utils/path'
+import path = require("path");
 export default class GraphBuilderVisitor extends SymfinderVisitor{
 
     constructor(neoGraph: NeoGraph){
@@ -58,7 +59,9 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         var superClassesName: string[] = node.types.map((type) => type.expression.getText());
         var superClasseType: EntityType;
         var relationType: RelationType;
-        var fileName = node.getSourceFile().fileName;
+        // var fileName = node.getSourceFile().fileName;
+        // @ts-ignore
+        var fileName = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
 
         if(node.parent.kind == SyntaxKind.InterfaceDeclaration)
             classType = EntityType.INTERFACE;
@@ -103,8 +106,9 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
      * @returns 
      */
     async visitImportDeclaration(node: ImportDeclaration): Promise<void>{
-        
-        var filePath = node.getSourceFile().fileName;
+
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
         var fileName = filname_from_filepath(filePath);
         var importedFileName: string;
         var importedFilePath: string;

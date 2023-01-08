@@ -56,6 +56,7 @@ export class Symfinder{
         await this.neoGraph.clearNodes();
 
         console.log("Analyse variability in : '" + src + "'")
+        const timeStart = Date.now();
 
         var files: string[] = await this.visitAllFiles(src);
         process.stdout.write("\rDetecting files ("+files.length+"): done.\x1b[K\n");
@@ -73,7 +74,9 @@ export class Symfinder{
         await this.detectCommonEntityProximity();
         await this.detectCommonMethodImplemented();
 
-        await this.neoGraph.exportToJSON();
+        const timeEnd = Date.now();
+
+        // await this.neoGraph.exportToJSON();
         await this.neoGraph.exportRelationJSON();
         console.log("db fetched");
 
@@ -93,12 +96,26 @@ export class Symfinder{
         console.log("Number of proximity entities: " + await this.neoGraph.getNbProximityEntity());
         console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
         console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
-
-        
+        console.log("Duration: "+this.msToTime(timeEnd-timeStart));
+        //supabase: 01:08.1 -> 1:11.9 => +4%
+        //novu: 2:51.8 -> 2:58.7 => +4%
 
         await this.neoGraph.driver.close();
 
         
+    }
+
+    msToTime(duration: number) {
+        let milliseconds: number = Math.floor((duration % 1000) / 100),
+            seconds:any = Math.floor((duration / 1000) % 60),
+            minutes:any = Math.floor((duration / (1000 * 60)) % 60),
+            hours:any = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
     }
 
     /**
@@ -111,6 +128,7 @@ export class Symfinder{
         var nbFiles = files.length;
         var currentFile = 0;
         for(let file of files){
+            // console.log(file)
             let parser = new Parser(file, program);
             await parser.accept(visitor);
             currentFile++;
@@ -276,6 +294,7 @@ export class Symfinder{
               const abs_path = path.resolve(node.properties.path)
               return abs_path == clone.duplicationB.sourceId
             });
+            if(nodeA === undefined || nodeB === undefined) continue;
             var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
             var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
             await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CODE_DUPLICATED,

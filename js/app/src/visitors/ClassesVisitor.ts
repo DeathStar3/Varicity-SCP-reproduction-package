@@ -43,6 +43,7 @@ import {
     VariableStatement
 } from "typescript";
 import {filname_from_filepath} from "../utils/path";
+import path = require("path");
 
 export default class ClassesVisitor extends SymfinderVisitor{
 
@@ -90,7 +91,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
         var name = node.name?.getText();
         var nodeTypeList: NodeType[] = [nodeVisibility];
-        var filePath = node.getSourceFile().fileName;
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
         var fileName = filname_from_filepath(filePath);
         await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
             if(filePath === undefined || fileName === undefined) return;
@@ -119,7 +121,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
         var nodeTypeList: NodeType[] = [nodeVisibility];
         if(modifiers?.includes(SyntaxKind.AbstractKeyword))nodeTypeList.push(EntityAttribut.ABSTRACT);
-        var filePath = node.getSourceFile().fileName;
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
         var fileName = filname_from_filepath(filePath);
         await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
             if(filePath === undefined || fileName === undefined) return;
@@ -149,7 +152,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var classVisibility = classModifiers?.includes(SyntaxKind.PrivateKeyword) ? EntityVisibility.PRIVATE : EntityVisibility.PUBLIC;
         var nodeTypeList: NodeType[] = [];
         var nodeType = isConstructorDeclaration(node) ? EntityType.CONSTRUCTOR : EntityType.METHOD;
-        var filePath = node.getSourceFile().fileName;
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
 
         if(modifiers?.includes(SyntaxKind.AbstractKeyword)) nodeTypeList.push(EntityAttribut.ABSTRACT);
         if(classVisibility == EntityVisibility.PUBLIC) {
@@ -174,7 +178,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
 
         var name = node.name?.getText()
         if(name === undefined) return;
-        var filePath = node.getSourceFile().fileName;
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
         var fileName = filname_from_filepath(filePath);
         var modifiers = node.modifiers?.map(m => m.kind);
         var relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
@@ -202,7 +207,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
         var nodeTypeList: NodeType[] = [];
         var nodeType = EntityType.VARIABLE;
-        var filePath = node.getSourceFile().fileName;
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
         var fileName = filname_from_filepath(filePath);
         // var className = (<any>node.parent.parent.parent).name.getText();
 
@@ -230,7 +236,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         const relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
         const nodeTypeList: NodeType[] = [];
         const nodeType = EntityType.PARAMETER;
-        const filePath = node.getSourceFile().fileName;
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
         var fileName = filname_from_filepath(filePath);
         // const className = (<any>node.parent.parent).name.getText();
 
@@ -253,7 +260,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         const relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
         const nodeTypeList: NodeType[] = [];
         const nodeType = EntityType.PROPERTY;
-        const filePath = node.getSourceFile().fileName;
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
         var fileName = filname_from_filepath(filePath);
         // const className = node.parent.name?.getText();
 

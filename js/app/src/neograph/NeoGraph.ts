@@ -91,6 +91,14 @@ export default class NeoGraph{
         });
     }
 
+    async getClassNodeWithPath(className: string, path: string): Promise<Node | undefined>{
+        const request = "MATCH (n {name: $name})<-[:EXPORT]-(m {path: $path}) RETURN (n)";
+
+        return this.submitRequest(request, {name:className, path:path}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
     async getNodeWithPath(name: string, path: string): Promise<Node | undefined>{
         const request = "MATCH (n {name:$name, path:$path}) RETURN (n)";
 
