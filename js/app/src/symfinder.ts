@@ -44,7 +44,7 @@ export class Symfinder{
      * run symfinder for the specific project
      * @param src path to the root directory
      */
-    async run(src: string){
+    async run(src: string, http_path: string){
         await this.neoGraph.clearNodes();
 
         console.log("Analyse variability in : '" + src + "'")
@@ -61,7 +61,7 @@ export class Symfinder{
         await this.detectCommonMethodImplemented();
 
         await this.neoGraph.exportToJSON();
-        await this.neoGraph.exportRelationJSON();
+        await this.neoGraph.exportRelationJSON(src,http_path);
         console.log("db fetched");
 
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
