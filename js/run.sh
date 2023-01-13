@@ -34,11 +34,11 @@ cd app
 npm run --silent build
 if [ "$2" = "-http" ]; then
   if [ ! -z "$3" ]; then
-    HTTP_PATH=$3
+    export HTTP_PATH=$3
   else
     echo "HTTP_PATH missing. You need to specify one with the following syntax : './run.sh <githuburl> -http HTTP_PATH'."
     echo "The result will be send to the varicity-backend."
-    HTTP_PATH="http://varicitybackend:3000/projects"
+    export HTTP_PATH="http://varicitybackend:3000/projects"
   fi
   PROJECT_PATH=$path node lib/index.js -http "$HTTP_PATH"
 else

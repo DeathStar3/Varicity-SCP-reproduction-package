@@ -24,6 +24,7 @@ import { Configuration } from "../configuration/Configuration"
 import { NodeType, RelationType, EntityType, EntityAttribut, DesignPatternType } from "./NodeType";
 import {JsonInputInterface, LinkInterface, MetricClassInterface} from "./entities/jsonInput.interface"
 import {ExperimentResult, SymfinderResult} from "./entities/experiment.model";
+//import axios from 'axios';
 
 export default class NeoGraph{
 
@@ -534,8 +535,10 @@ export default class NeoGraph{
             data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
         });
         let content = JSON.stringify(data);
+        console.log("\nhttp_path : "+http_path)
         if(http_path !== ""){
             const project_content = this.createProjectJson(src, content);
+            console.log("Sending request ...")
             const request = await fetch(http_path, {
                 method: 'POST',
                 headers: {
@@ -547,12 +550,10 @@ export default class NeoGraph{
             const response = await request.json();
             console.log(response);
         }
-        else {
-            writeFile('./export/db_link.json', content, (err: any) => {
-                if (err) throw err;
-                process.stdout.write('data written to file');
-            });
-        }
+        writeFile('./export/db_link.json', content, (err: any) => {
+            if (err) throw err;
+            process.stdout.write('data written to file');
+        });
     }
 
     async clearNodes(): Promise<void>{
