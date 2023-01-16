@@ -67,7 +67,8 @@ export class Symfinder{
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes", program);
         await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program);
         await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program);
-        await this.visitPackage(files, new UsageVisitor(this.neoGraph, program), "usages", program);
+        const usageVisitor = new UsageVisitor(this.neoGraph, program);
+        await this.visitPackage(files, usageVisitor, "usages", program);
         
         await this.neoGraph.detectVPsAndVariants();
         await this.proximityFolderDetection();
@@ -97,8 +98,10 @@ export class Symfinder{
         console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
         console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
         console.log("Duration: "+this.msToTime(timeEnd-timeStart));
-        //supabase: 01:08.1 -> 1:11.9 => +4%
-        //novu: 2:51.8 -> 2:58.7 => +4%
+        const classes = await this.neoGraph.getAllClass();
+        console.log("Number of unknown class path: "+((usageVisitor.getUnknownPaths().size/classes.length)*100).toFixed(2)+"%");
+        //supabase (443): 01:08.1 -> 1:11.9 => +4% | 1.89%
+        //novu (1142): 2:51.8 -> 2:58.7 => +4% | 2.05%
 
         await this.neoGraph.driver.close();
 

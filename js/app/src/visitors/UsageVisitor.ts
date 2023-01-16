@@ -10,19 +10,21 @@ import {
     ObjectType,
     ParameterDeclaration,
     Program,
-    PropertyDeclaration,
+    PropertyDeclaration, Set,
     SymbolFlags,
     TypeFlags,
     VariableDeclaration
 } from "typescript";
 import {RelationType} from "../neograph/NodeType";
-import {filname_from_filepath} from "../utils/path";
 import path = require("path");
 
 export default class UsageVisitor extends SymfinderVisitor {
 
+    unknownPaths: Set<string>;
+
     constructor(neoGraph: NeoGraph, private program: Program){
         super(neoGraph);
+        this.unknownPaths = new Set<string>();
     }
 
     async visit(node: VariableDeclaration): Promise<void>;
@@ -64,6 +66,7 @@ export default class UsageVisitor extends SymfinderVisitor {
                 //TODO trouver la bonne class grâce au import
                 //TODO ajout test sur pls class dans même fichier
                 console.log("'"+qualifiedName+"' doesn't contain the path and the class name");
+                this.unknownPaths.add(qualifiedName);
                 return;
             }
             classPath = correctFormat[1];
@@ -72,11 +75,11 @@ export default class UsageVisitor extends SymfinderVisitor {
             // className = type.symbol.getName();
         // console.log(qualifiedName);
         // console.log(type);
-            classPath = (<any>type.symbol).parent.getEscapedName(); //FIXME crash quand création d'une instance
-            classPath = classPath.substring(1, classPath.length - 1);
-            if(className === "default") { // Arrive quand une class est de type default
-                className = filname_from_filepath(classPath);
-            }
+        //     classPath = (<any>type.symbol).parent.getEscapedName();
+        //     classPath = classPath.substring(1, classPath.length - 1);
+        //     if(className === "default") { // Arrive quand une class est de type default
+        //         className = filname_from_filepath(classPath);
+        //     }
         //}
         // @ts-ignore
         classPath = path.relative(process.env.PROJECT_PATH, classPath).substring(6) + ".ts";
@@ -87,6 +90,10 @@ export default class UsageVisitor extends SymfinderVisitor {
             return await this.neoGraph.linkTwoNodes(varNode, classNode, RelationType.TYPE_OF);
         else
             console.log("Error to link 'usage' nodes "+name+" and "+className+"...");
+    }
+
+    getUnknownPaths(): Set<string> {
+        return this.unknownPaths;
     }
 
 }
