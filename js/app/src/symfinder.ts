@@ -30,6 +30,8 @@ import { Node } from "neo4j-driver-core";
 import { detectClones } from "jscpd";
 import { readFileSync } from "fs";
 import path = require("path");
+import {ExperimentResult, SymfinderResult} from "./neograph/entities/experiment.model";
+import axios from "axios";
 
 
 export class Symfinder{
@@ -61,7 +63,11 @@ export class Symfinder{
         await this.detectCommonMethodImplemented();
 
         await this.neoGraph.exportToJSON();
-        await this.neoGraph.exportRelationJSON(src,http_path);
+        let content = await this.neoGraph.exportRelationJSON();
+        if(http_path !== "") {
+            await this.sendToServer(src, http_path, content);
+            console.log("Sent to server " + http_path)
+        }
         console.log("db fetched");
 
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
@@ -365,5 +371,19 @@ export class Symfinder{
             process.stdout.write("\rDetect common method: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
 
         return;
+    }
+
+    private createProjectJson(src: string, content: string): ExperimentResult {
+        let result: ExperimentResult = new ExperimentResult(src);
+        result.symfinderResult.vpJsonGraph = content;
+        return result;
+    }
+
+    private async sendToServer(src: string, http_path: string, content: string) {
+        const project_content = this.createProjectJson(src, content);
+        console.log("Sending request ...")
+        console.log(project_content)
+        await axios.post(http_path, project_content).catch((reason: any) => console.log(reason))
+                                                    .then(() => console.log("Data has been correctly sent"))
     }
 }
