@@ -32,6 +32,7 @@ import { readFileSync } from "fs";
 import path = require("path");
 import {ExperimentResult, SymfinderResult} from "./neograph/entities/experiment.model";
 import axios from "axios";
+import {c} from "../../test_project/modules/moduleC";
 
 
 export class Symfinder{
@@ -374,16 +375,30 @@ export class Symfinder{
     }
 
     private createProjectJson(src: string, content: string): ExperimentResult {
-        let result: ExperimentResult = new ExperimentResult(src);
-        result.symfinderResult.vpJsonGraph = content;
+        let paths = src.split('/');
+        let result: ExperimentResult = {
+            projectName: paths[paths.length-1],
+            symfinderResult: {
+                vpJsonGraph: content,
+                statisticJson: ""
+            },
+            externalMetric: new Map()
+        };
+        // let result: ExperimentResult = new ExperimentResult(paths[paths.length-1]);
+        // const json = JSON.parse(content)
+        // //console.log("JSON OBJECT: \n ",json);
+        // console.log(result)
+        // console.log(result)
+        // console.log(result)
+        // result.symfinderResult.vpJsonGraph = json;
         return result;
     }
 
     private async sendToServer(src: string, http_path: string, content: string) {
-        const project_content = this.createProjectJson(src, content);
-        console.log("Sending request ...")
-        console.log(project_content)
-        await axios.post(http_path, project_content).catch((reason: any) => console.log(reason))
+        console.log("CREATE PROJECT JSON : ");
+        const result = this.createProjectJson(src, content);
+        console.log("\n################Sending request ...\n")
+        await axios.post(http_path, result).catch((reason: any) => console.log(reason))
                                                     .then(() => console.log("Data has been correctly sent"))
     }
 }

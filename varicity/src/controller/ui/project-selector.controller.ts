@@ -10,7 +10,6 @@ import {MenuController} from "./menu/menu.controller";
 import {ApiAndBlacklistController} from "./menu/api-and-blacklist.controller";
 import {SearchbarController} from "./searchbar.controller";
 import {QueryService} from "../../services/query.service";
-import { JsTestStrategy } from "../parser/strategies/js_test.strategy";
 
 export class ProjectController {
     static el: EntitiesList;
@@ -48,8 +47,7 @@ export class ProjectController {
         }
 
         // Select the Parsing Strategy
-        // this.previousParser = new VPVariantsStrategy();
-        this.previousParser = new JsTestStrategy();
+        this.previousParser = new VPVariantsStrategy();
 
         // clear the current view
         if (UIController.scene) {
