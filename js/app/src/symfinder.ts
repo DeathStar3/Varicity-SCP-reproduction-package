@@ -22,17 +22,15 @@ import GraphBuilderVisitor from "./visitors/GraphBuilderVisitor";
 import StrategyTemplateDecoratorVisitor from "./visitors/StrategyTemplateDecoratorVisitor"
 import Parser from "./parser/Parser";
 import NeoGraph from "./neograph/NeoGraph";
-import { config } from "./configuration/Configuration";
-import { join, resolve } from "path";
-import { readdirSync, statSync } from "fs";
-import { EntityAttribut, EntityType, RelationType } from "./neograph/NodeType";
-import { Node } from "neo4j-driver-core";
-import { detectClones } from "jscpd";
-import { readFileSync } from "fs";
-import path = require("path");
-import {ExperimentResult, SymfinderResult} from "./neograph/entities/experiment.model";
+import {config} from "./configuration/Configuration";
+import {join} from "path";
+import {readdirSync, readFileSync, statSync} from "fs";
+import {EntityAttribut, EntityType, RelationType} from "./neograph/NodeType";
+import {Node} from "neo4j-driver-core";
+import {detectClones} from "jscpd";
+import {ExperimentResult} from "./neograph/entities/experiment.model";
 import axios from "axios";
-import {c} from "../../test_project/modules/moduleC";
+import path = require("path");
 
 
 export class Symfinder{
@@ -376,22 +374,14 @@ export class Symfinder{
 
     private createProjectJson(src: string, content: string): ExperimentResult {
         let paths = src.split('/');
-        let result: ExperimentResult = {
-            projectName: paths[paths.length-1],
+        return {
+            projectName: paths[paths.length - 1],
             symfinderResult: {
                 vpJsonGraph: content,
                 statisticJson: ""
             },
             externalMetric: new Map()
         };
-        // let result: ExperimentResult = new ExperimentResult(paths[paths.length-1]);
-        // const json = JSON.parse(content)
-        // //console.log("JSON OBJECT: \n ",json);
-        // console.log(result)
-        // console.log(result)
-        // console.log(result)
-        // result.symfinderResult.vpJsonGraph = json;
-        return result;
     }
 
     private async sendToServer(src: string, http_path: string, content: string) {

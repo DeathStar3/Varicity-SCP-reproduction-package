@@ -45,3 +45,4 @@ js/**/node_modules
 js/**/package-lock.json
 js/**/lib
 js/**/experiments
+js/**/export
