@@ -103,35 +103,3 @@ echo "PROJECT : $PROJECT_PATH"
 
 # Run Symfidner JS
 node lib/index.js
-
-#if [ "$HTTP_COMM" -eq "0" ]; then
-#  if [ ! -z "$HTTP_INDEX" ]; then
-#    echo "HTTP_PATH : $HTTP_PATH"
-#    export HTTP_PATH=$"$HTTP_INDEX"
-#  else
-#    echo "HTTP_PATH missing. You need to specify one with the following syntax : './run.sh <githuburl> -http HTTP_PATH'."
-#    echo "The result will be send to the varicity-backend."
-#    export HTTP_PATH="http://varicitybackend:3000/projects"
-#  fi
-#  PROJECT_PATH=$path node lib/index.js $HTTP_PATH
-#else
-#  echo "The result with be written locally in '$(pwd)/export/db.json' and in '$(pwd)/export/db_link.json'."
-#  PROJECT_PATH=$path node lib/index.js
-#fi
-
-#if [ "$2" = "-http" ]; then
-#  if [ ! -z "$3" ]; then
-#    export HTTP_PATH=$3
-#  else
-#    echo "HTTP_PATH missing. You need to specify one with the following syntax : './run.sh <githuburl> -http HTTP_PATH'."
-#    echo "The result will be send to the varicity-backend."
-#    export HTTP_PATH="http://varicitybackend:3000/projects"
-#  fi
-#  PROJECT_PATH=$path node lib/index.js -http "$HTTP_PATH"
-#else
-#  echo "The result with be written locally in '$(pwd)/export/db.json' and in '$(pwd)/export/db_link.json'."
-#  PROJECT_PATH=$path node lib/index.js
-#fi
-
-#PROJECT_PATH=$path node lib/index.js -http http://varicitybackend:3000/projects
-#PROJECT_PATH=$path HTTP_PATH=http://varicitybackend:3000/projects node lib/index.js
