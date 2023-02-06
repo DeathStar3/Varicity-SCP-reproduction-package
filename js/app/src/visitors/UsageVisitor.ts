@@ -22,7 +22,7 @@ export default class UsageVisitor extends SymfinderVisitor {
 
     unknownPaths: Set<string>;
 
-    constructor(neoGraph: NeoGraph, private program: Program){
+    constructor(neoGraph: NeoGraph, private program: Program) {
         super(neoGraph);
         this.unknownPaths = new Set<string>();
     }
@@ -38,11 +38,11 @@ export default class UsageVisitor extends SymfinderVisitor {
      * @returns
      */
     async visit(node: VariableDeclaration | ParameterDeclaration | PropertyDeclaration | MethodDeclaration): Promise<void> {
-        if(!isVariableDeclaration(node) && !isParameter(node) && !isPropertyDeclaration(node) && !isMethodDeclaration(node)) return;
+        if (!isVariableDeclaration(node) && !isParameter(node) && !isPropertyDeclaration(node) && !isMethodDeclaration(node)) return;
 
         const name = node.name?.getText();
         // console.log("=="+name+"==")
-        if(name === undefined) return;
+        if (name === undefined) return;
         // @ts-ignore
         var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
 
@@ -54,25 +54,34 @@ export default class UsageVisitor extends SymfinderVisitor {
             console.log("node.type: ");
             console.log(node.type)
         } else {*/
-            let type = this.program.getTypeChecker().getTypeAtLocation(node);
-            if (type.flags != TypeFlags.Object || type.getSymbol() === undefined || (type as ObjectType).objectFlags != (ObjectFlags.Class + ObjectFlags.Reference)) return;
-            if(type.symbol.flags === SymbolFlags.Method && node.type === undefined) return; //void method
-            //TODO regarder comment récupérer chemin de la class depuis 'node.type' ou 'type'
+        let type = this.program.getTypeChecker().getTypeAtLocation(node);
+        if (type.flags != TypeFlags.Object || type.getSymbol() === undefined || (type as ObjectType).objectFlags != (ObjectFlags.Class + ObjectFlags.Reference)) return;
+        if (type.symbol.flags === SymbolFlags.Method && node.type === undefined) return; //void method
+        //TODO regarder comment récupérer chemin de la class depuis 'node.type' ou 'type'
 
-            const qualifiedName = this.program.getTypeChecker().getFullyQualifiedName(type.getSymbol()!);
-            // console.log(qualifiedName)
-            const correctFormat = qualifiedName.match(/"([a-zA-Z0-9-._\/]+)"\.([a-zA-Z]+)/);
-            if(correctFormat == null) {
-                //TODO trouver la bonne class grâce au import
-                //TODO ajout test sur pls class dans même fichier
-                console.log("'"+qualifiedName+"' doesn't contain the path and the class name");
-                this.unknownPaths.add(qualifiedName);
-                return;
-            }
+        const qualifiedName = this.program.getTypeChecker().getFullyQualifiedName(type.getSymbol()!);
+        // console.log(qualifiedName)
+        let correctFormat = qualifiedName.match(/"([a-zA-Z0-9-._\/]+)"\.([a-zA-Z]+)/);
+        if (correctFormat == null) {
+/*            console.log(this.program.getTypeChecker().typeToString(type));
+            console.log(this.program.getTypeChecker().getApparentType(type));
+            console.log(this.program.getTypeChecker().getAugmentedPropertiesOfType(type));
+            console.log(this.program.getTypeChecker().getBaseConstraintOfType(type));
+            console.log(this.program.getTypeChecker().getBaseTypeOfLiteralType(type));
+            console.log(this.program.getTypeChecker().getIndexInfosOfType(type));*/
+            //TODO ajout test sur pls class dans même fichier
+            // console.log("'" + qualifiedName + "' doesn't contain the path and the class name");
+            this.unknownPaths.add(qualifiedName);
+            classPath = filePath;
+            className = qualifiedName;
+        } else {
             classPath = correctFormat[1];
             className = correctFormat[2];
+            // @ts-ignore
+            classPath = path.relative(process.env.PROJECT_PATH, classPath).substring(6) + ".ts";
+        }
 
-            // className = type.symbol.getName();
+        // className = type.symbol.getName();
         // console.log(qualifiedName);
         // console.log(type);
         //     classPath = (<any>type.symbol).parent.getEscapedName();
@@ -81,15 +90,26 @@ export default class UsageVisitor extends SymfinderVisitor {
         //         className = filname_from_filepath(classPath);
         //     }
         //}
-        // @ts-ignore
-        classPath = path.relative(process.env.PROJECT_PATH, classPath).substring(6) + ".ts";
-
-        let varNode = await this.neoGraph.getNodeWithFile(name, filePath);
-        const classNode = await this.neoGraph.getClassNodeWithPath(className, classPath);
-        if(varNode != undefined && classNode != undefined)
-            return await this.neoGraph.linkTwoNodes(varNode, classNode, RelationType.TYPE_OF);
-        else
-            console.log("Error to link 'usage' nodes "+name+" and "+className+"...");
+        // console.log(name+" - "+filePath)
+        // console.log(className+" - "+classPath)
+        const varNode = await this.neoGraph.getNodeWithFile(name, filePath);
+        if(varNode != undefined) {
+            let classNode = await this.neoGraph.getClassNodeWithPath(className, classPath);
+            if (classNode == undefined)
+                classNode = await this.neoGraph.getClassNodeWithImport(className, filePath);
+            if (classNode != undefined)
+                return await this.neoGraph.linkTwoNodes(varNode, classNode, RelationType.TYPE_OF);
+            else {
+                /*console.log(name+" - "+filePath)
+                console.log(varNode)
+                console.log(className+" - "+classPath)
+                console.log(classNode)*/
+                console.log(filePath+" > Error to link 'usage' nodes " + name + " and " + className + "...");
+            }
+        } else {
+            new URL("");
+            console.log(filePath+" > Error to link 'usage' nodes because no node named '" + name + "' or with the file path '" + filePath + "' exists");
+        }
     }
 
     getUnknownPaths(): Set<string> {
