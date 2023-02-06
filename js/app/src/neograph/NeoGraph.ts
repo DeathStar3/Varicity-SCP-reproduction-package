@@ -28,7 +28,7 @@ export default class NeoGraph{
     driver: Driver;
 
     constructor(config: Configuration){
-        this.driver = driver(config.getNeo4JBoltAdress(), auth.basic('neo4j', 'root'));
+        this.driver = driver(config.getNeo4JBoltAdress(), auth.basic('neo4j', 'root'),{ disableLosslessIntegers: true });
     }
 
     async createNode(name: string, type: NodeType, types: NodeType[]): Promise<Node> {
@@ -287,7 +287,7 @@ export default class NeoGraph{
 
     // async setModuleVariant(): Promise<void>{
     //     const request = "MATCH (m:MODULE)-[:EXPORT]->(c:MODULE_VP) SET m:"+EntityAttribut.MODULE_VARIANT;
-    //     await this.submitRequest(request, {});  
+    //     await this.submitRequest(request, {});
     // }
 
     async setProximityFolder(): Promise<void>{
@@ -301,7 +301,7 @@ export default class NeoGraph{
         "SET n:"+EntityAttribut.VP_FOLDER+"\n"+
         "SET d1:"+EntityAttribut.VARIANT_FOLDER+"\n"+
         "SET f1:"+EntityAttribut.VARIANT_FILE+"\n";
-        await this.submitRequest(request, {index:"index.ts",utils:"utils.ts",types:'types.ts'}); 
+        await this.submitRequest(request, {index:"index.ts",utils:"utils.ts",types:'types.ts'});
     }
 
     async detectStrategiesWithComposition(): Promise<void>{
@@ -503,12 +503,34 @@ export default class NeoGraph{
         return this.submitRequest(request, {}).then(function(results: Record[]){
             const data = results.map((result: Record) => result.get(0));
             let content = JSON.stringify(data);
-            writeFile('db.json', content, (err: any) => {
+            writeFile('./export/db.json', content, (err: any) => {
                 if (err) throw err;
                 process.stdout.write('data written to file');
             });
             return <string[]> data;
         });
+    }
+
+    async exportRelationJSON():Promise<string>{
+        const requestLinks = "match (n)-[r]->(m) where type(r) = 'IMPLEMENTS' or type(r) ='EXTENDS'" +
+            "   with collect ({source:n.name,target:m.name,type:type(r)}) as rela return {links:rela} ";
+        const requestNodes = "MATCH (n) where 'CLASS' in labels(n) or 'INTERFACE' in labels(n) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+            "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
+            "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
+        let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
+        await this.submitRequest(requestLinks, {}).then(function(results: Record[]){
+            data.links = results.map((result: Record) => result.get(0))[0].links;
+        });
+        await this.submitRequest(requestNodes,{}).then(function (results:Record[]){
+
+            data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
+        });
+        let content = JSON.stringify(data);
+        writeFile('./export/db_link.json', content, (err: any) => {
+            if (err) throw err;
+            process.stdout.write('data written to file');
+        });
+        return content;
     }
 
     async clearNodes(): Promise<void>{

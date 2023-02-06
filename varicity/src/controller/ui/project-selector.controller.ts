@@ -46,6 +46,7 @@ export class ProjectController {
             MenuController.selectedTab = undefined;
         }
 
+        // Select the Parsing Strategy
         this.previousParser = new VPVariantsStrategy();
 
         // clear the current view
@@ -60,8 +61,8 @@ export class ProjectController {
 
             // TODO find alternative
             await ProjectService.fetchVisualizationData(projectName).then(async (response) => {
-                const config = await ConfigService.loadDataFile(projectName);
-                this.el = this.previousParser.parse(response.data, config, projectName);
+                const config = await ConfigService.loadDataFile(projectName); // Load config from backend
+                this.el = this.previousParser.parse(response.data, config, projectName); // Parse the project data
                 SearchbarController.fillSearchBar(response.data.nodes);
 
                 // set the min & max usage level

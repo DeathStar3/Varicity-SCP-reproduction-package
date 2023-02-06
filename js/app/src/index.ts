@@ -31,8 +31,18 @@ let symfinder = new Symfinder();
 //symfinder.run('../experiments/typeorm');
 //symfinder.run('../experiments/vscode');
 const path = process.env.PROJECT_PATH
-if(path === undefined) console.log("Error path undifined...");
-else symfinder.run('../'+path);
+const http_path = process.env.HTTP_PATH
+if(path === undefined) console.log("Error path undefined...");
+else {
+    if(http_path === undefined){
+        console.log("Executing locally...")
+        symfinder.run('../'+path,"");
+    }
+    else{
+        console.log("Sending result to " + http_path + " ...")
+        symfinder.run('../'+path,http_path);
+    }
+}
 
 // MATCH (n:VP_FOLDER)-[:CHILD]->(d:VARIANT_FOLDER)-[:CHILD]->(f:SUPER_VARIANT_FILE) RETURN n, d, f
 // MATCH (n1:FILE_VARIANT)-[r:CODE_DUPLICATED]->(n2:FILE_VARIANT) RETURN n1, n2

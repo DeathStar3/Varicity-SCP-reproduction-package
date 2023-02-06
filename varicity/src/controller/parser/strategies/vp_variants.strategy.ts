@@ -21,6 +21,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
             data.nodes.forEach(n => {
 
                 let node = new NodeElement(n.name);
+                console.log(n);
 
                 node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
                 // TODO check if nbFunctions is missing or not
@@ -28,7 +29,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
 
                 const attr = n.attributes;
                 let nbAttributes = 0;
-                attr.forEach(a => {
+                attr?.forEach(a => {
                     nbAttributes += a.number;
                 })
 
