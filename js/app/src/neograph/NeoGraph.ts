@@ -47,6 +47,12 @@ export default class NeoGraph{
         });
     }
 
+    async changeInternalLinkToExport(name: string, path: string) {
+        const request = "MATCH (n {name: $name})<-[i:INTERNAL]-(f:FILE {path: $path}) WITH n,i,f ORDER BY id(n) DESC LIMIT 1 CREATE (n)<-[:EXPORT]-(f) DELETE i";
+        //on prend celui avec le plus grand Id car il se peut qu'un fichier a plusieurs class/interface avec le même nom mais seulement la dernière est exportée
+        await this.submitRequest(request, {name: name, path: path});
+    }
+
     async getOrCreateNode(name: string, type: EntityType, createAttributes: EntityAttribut[], matchAttributes: EntityAttribut[]): Promise<Node>{
         const onCreateAttributes = createAttributes.length == 0 ? "" : "ON CREATE SET n:" + createAttributes.join(':');
         const onMatchAttributes = matchAttributes.length == 0 ? "" : "ON MATCH SET n:" + matchAttributes.join(":");
@@ -92,7 +98,7 @@ export default class NeoGraph{
     }
 
     async getClassNodeWithPath(className: string, path: string): Promise<Node | undefined>{
-        const request = "MATCH (n {name: $name})<-[:EXPORT]-(m {path: $path}) RETURN (n)";
+        const request = "MATCH (n {name: $name})<-[:EXPORT|INTERNAL]-(m {path: $path}) RETURN (n)";
 
         return this.submitRequest(request, {name:className, path:path}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
@@ -111,6 +117,13 @@ export default class NeoGraph{
         const request = "MATCH (n:"+type+" {name: $name}) RETURN (n)";
 
         return this.submitRequest(request, {name:name}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getClassNodeWithImport(className: string, filePath: string): Promise<Node | undefined> {
+        const request = "MATCH (:FILE {path: $path})-[:IMPORT]->(n {name: $name})<-[:EXPORT]-(:FILE) RETURN n";
+        return this.submitRequest(request, {name: className, path: filePath}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
         });
     }
@@ -434,6 +447,12 @@ export default class NeoGraph{
 
     async getAllFiles(): Promise<Node[]> {
         return this.submitRequest("MATCH (n:"+EntityType.FILE+") RETURN n", {}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
+    async getAllClass(): Promise<Node[]> {
+        return this.submitRequest("MATCH (n:"+EntityType.CLASS+") RETURN n", {}).then((results: Record[]) =>{
             return <Node[]> (results.map((result: Record) => result.get(0)));
         });
     }

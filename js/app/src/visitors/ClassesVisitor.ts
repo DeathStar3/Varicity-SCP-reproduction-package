@@ -22,12 +22,12 @@ import NeoGraph from "../neograph/NeoGraph";
 import {
     ClassDeclaration,
     ClassExpression,
-    ConstructorDeclaration,
+    ConstructorDeclaration, ExportAssignment, ForOfStatement,
     FunctionDeclaration,
     InterfaceDeclaration,
     isClassDeclaration,
     isClassExpression,
-    isConstructorDeclaration,
+    isConstructorDeclaration, isExportAssignment, isForOfStatement,
     isFunctionDeclaration,
     isInterfaceDeclaration,
     isMethodDeclaration,
@@ -39,7 +39,7 @@ import {
     MethodSignature,
     ParameterDeclaration,
     PropertyDeclaration,
-    SyntaxKind,
+    SyntaxKind, VariableDeclarationList,
     VariableStatement
 } from "typescript";
 import {filname_from_filepath} from "../utils/path";
@@ -60,13 +60,15 @@ export default class ClassesVisitor extends SymfinderVisitor{
     async visit(node: VariableStatement): Promise<void>;
     async visit(node: ParameterDeclaration): Promise<void>;
     async visit(node: PropertyDeclaration): Promise<void>;
+    async visit(node: ForOfStatement): Promise<void>;
+    async visit(node: ExportAssignment): Promise<void>;
 
     /**
      * Visit InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement
      * @param node AST node
      * @returns ...
      */
-    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement | ParameterDeclaration | PropertyDeclaration): Promise<void> {
+    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement | ParameterDeclaration | PropertyDeclaration | ForOfStatement | ExportAssignment): Promise<void> {
 
         if(isInterfaceDeclaration(node)) await this.visitInterface(node);
         else if(isClassDeclaration(node) || isClassExpression(node)) await this.visitClass(node);
@@ -75,6 +77,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         else if(isVariableStatement(node)) await this.visitVariable(node);
         else if(isParameter(node)) await this.visitParameter(node);
         else if(isPropertyDeclaration(node)) await this.visitProperty(node);
+        else if(isForOfStatement(node)) await this.visitForVariables(node);
+        else if(isExportAssignment(node)) await this.visitExportAssignment(node);
         else return;
     }
 
@@ -231,6 +235,35 @@ export default class ClassesVisitor extends SymfinderVisitor{
 
     }
 
+    async visitForVariables(node: ForOfStatement): Promise<void>{
+        // var modifiers = node.modifiers?.map(m => m.kind);
+        // var relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
+        var nodeTypeList: NodeType[] = [];
+        var nodeType = EntityType.VARIABLE;
+        // @ts-ignore
+        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var fileName = filname_from_filepath(filePath);
+        // var className = (<any>node.parent.parent.parent).name.getText();
+
+        for(let variableDeclaration of (node.initializer as VariableDeclarationList).declarations){
+            var name = variableDeclaration.name?.getText();
+            if(name === undefined) continue;
+
+            await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
+                if(filePath === undefined || /*className*/fileName === undefined) return;
+                // var neoFileNode = await this.neoGraph.getNodeWithFile(className, filePath);
+                var neoFileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
+                if(neoFileNode !== undefined)
+                    return await this.neoGraph.linkTwoNodes(neoFileNode, neoNode, RelationType.INTERNAL);
+                else
+                    console.log("Error to link nodes "+name+" and "+/*className*/fileName+"...");
+            }).catch((reason) => console.log("Error to create node "+name+"..."));
+        }
+        return;
+
+
+    }
+
     async visitParameter(node: ParameterDeclaration): Promise<void> {
         const modifiers = node.modifiers?.map(m => m.kind);
         const relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
@@ -277,5 +310,13 @@ export default class ClassesVisitor extends SymfinderVisitor{
             else
                 console.log("Error to link nodes "+name+" and "+/*className*/fileName+"...");
         }).catch((reason) => console.log("Error to create node "+name+"..."));
+    }
+
+    async visitExportAssignment(node: ExportAssignment): Promise<void> {
+        const fileName = node.getSourceFile().fileName;
+        // @ts-ignore
+        const filePath = path.relative(process.env.PROJECT_PATH, fileName).substring(6);
+        const className = node.expression.getText();
+        await this.neoGraph.changeInternalLinkToExport(className, filePath);
     }
 }
