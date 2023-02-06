@@ -149,8 +149,8 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
                 
             }
         }
-        else if(node.importClause?.name !== undefined){
-            var importedElementName = node.importClause.getText();
+        if(node.importClause?.name !== undefined){
+            var importedElementName = node.importClause.name.getText();
             var importedElementNode = await this.neoGraph.getNodeWithFile(importedElementName, importedFilePath);
             if(importedElementNode !== undefined){
                 await this.neoGraph.linkTwoNodes(fileNode, importedElementNode, RelationType.IMPORT);
