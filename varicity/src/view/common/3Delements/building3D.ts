@@ -167,14 +167,24 @@ export class Building3D extends Element3D {
 
     render() {
         // Display building
-        this.d3Model = MeshBuilder.CreateBox(
+        //TODO: Switch from this commented code to the code below if node is a directory or  file
+        // this.d3Model = MeshBuilder.CreateBox(
+        //     this.elementModel.name,
+        //     {
+        //         height: this.getHeight(),
+        //         width: this.elementModel.getWidth(this.config.variables.width),
+        //         depth: this.elementModel.getWidth(this.config.variables.width)
+        //     },
+        //     this.scene);
+
+        this.d3Model = MeshBuilder.CreateCylinder(
             this.elementModel.name,
             {
                 height: this.getHeight(),
-                width: this.elementModel.getWidth(this.config.variables.width),
-                depth: this.elementModel.getWidth(this.config.variables.width)
+                diameter: this.elementModel.getWidth(this.config.variables.width)
             },
-            this.scene);
+            this.scene
+        );
         this.d3Model.setPositionWithLocalVector(this.center);
 
         this.highlightLayer = new HighlightLayer("hl", this.scene);
@@ -183,16 +193,25 @@ export class Building3D extends Element3D {
         if (this.config.building.colors.outlines) {
             const outlineColor = this.getColor(this.config.building.colors.outlines, this.elementModel.types);
             if (outlineColor !== undefined) {
-                this.d3ModelOutline = MeshBuilder.CreateBox(
+                //TODO: decomment
+                // this.d3ModelOutline = MeshBuilder.CreateBox(
+                //     this.elementModel.name,
+                //     {
+                //         height: this.getHeight() + this.outlineWidth,
+                //         width: this.elementModel.getWidth(this.config.variables.width) + this.outlineWidth,
+                //         depth: this.elementModel.getWidth(this.config.variables.width) + this.outlineWidth,
+                //         sideOrientation: Mesh.BACKSIDE,
+                //         updatable: false
+                //     },
+                //     this.scene);
+                this.d3ModelOutline = MeshBuilder.CreateCylinder(
                     this.elementModel.name,
                     {
-                        height: this.getHeight() + this.outlineWidth,
-                        width: this.elementModel.getWidth(this.config.variables.width) + this.outlineWidth,
-                        depth: this.elementModel.getWidth(this.config.variables.width) + this.outlineWidth,
-                        sideOrientation: Mesh.BACKSIDE,
-                        updatable: false
+                        height: this.getHeight(),
+                        diameter: this.elementModel.getWidth(this.config.variables.width)
                     },
-                    this.scene);
+                    this.scene
+                );
                 let outlineMat = new StandardMaterial('outlineMaterial', this.scene);
                 this.d3ModelOutline.material = outlineMat;
                 this.d3ModelOutline.parent = this.d3Model;
