@@ -24,7 +24,7 @@ building:
       - name: "CLASS"
         color: "#335DFF"
       - name: "DIRECTORY"
-        color: "#EABB39"
+        color: "#BA8B09"
       - name: "!HOTSPOT"
         color: "#555555"
       - name: "API"

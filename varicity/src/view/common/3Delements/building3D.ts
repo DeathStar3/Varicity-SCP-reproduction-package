@@ -208,7 +208,9 @@ export class Building3D extends Element3D {
                     this.elementModel.name,
                     {
                         height: this.getHeight(),
-                        diameter: this.elementModel.getWidth(this.config.variables.width)
+                        diameter: this.elementModel.getWidth(this.config.variables.width),
+                        sideOrientation: Mesh.BACKSIDE,
+                        updatable: false
                     },
                     this.scene
                 );
