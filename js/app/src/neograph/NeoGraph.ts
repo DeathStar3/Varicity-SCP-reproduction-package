@@ -503,7 +503,7 @@ export default class NeoGraph{
         return this.submitRequest(request, {}).then(function(results: Record[]){
             const data = results.map((result: Record) => result.get(0));
             let content = JSON.stringify(data);
-            writeFile('./export/db.json', content, (err: any) => {
+            writeFile('./export/db.json', content,(err: any) => {
                 if (err) throw err;
                 process.stdout.write('data written to file');
             });
@@ -512,21 +512,29 @@ export default class NeoGraph{
     }
 
     async exportRelationJSON():Promise<string>{
-        const requestLinks = "match (n)-[r]->(m) where type(r) = 'IMPLEMENTS' or type(r) ='EXTENDS'" +
-            "   with collect ({source:n.name,target:m.name,type:type(r)}) as rela return {links:rela} ";
-        const requestNodes = "MATCH (n) where 'CLASS' in labels(n) or 'INTERFACE' in labels(n) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+        const requestLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) ='EXTENDS' or type(r)='IMPORT' or type(r) ='LOAD' or type(r) = 'CHILD')" +
+            " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
+            "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
+            "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}"
+        const classRequest = "MATCH (n) where 'CLASS' in labels(n) or 'INTERFACE' in labels(n) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+            "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
+            "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
+        const fileRequest = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:DIRECTORY OR n:VARIANT_FILE OR n:CORE_FILE OR n:FILE with " +
+            "collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
         let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
         await this.submitRequest(requestLinks, {}).then(function(results: Record[]){
             data.links = results.map((result: Record) => result.get(0))[0].links;
         });
-        await this.submitRequest(requestNodes,{}).then(function (results:Record[]){
-
+        await this.submitRequest(classRequest,{}).then(function (results:Record[]){
             data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
         });
+        await this.submitRequest(fileRequest,{}).then(function (results:Record[]){
+            data.nodes.push.apply(data.nodes,results.map((result: Record) => result.get(0))[0].nodes);
+        });
         let content = JSON.stringify(data);
-        writeFile('./export/db_link.json', content, (err: any) => {
+        writeFile('./export/db_link.json', content,(err: any) => {
             if (err) throw err;
             process.stdout.write('data written to file');
         });
