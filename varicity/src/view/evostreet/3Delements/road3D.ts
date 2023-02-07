@@ -1,4 +1,4 @@
-import {Config} from './../../../model/entitiesImplems/config.model';
+import {Config} from '../../../model/entitiesImplems/config.model';
 import {ActionManager, Color3, ExecuteCodeAction, MeshBuilder, Scene, StandardMaterial, Vector3} from '@babylonjs/core';
 import {Element3D} from '../../common/3Dinterfaces/element3D.interface';
 import {Building3D} from '../../common/3Delements/building3D';
@@ -37,6 +37,9 @@ export class Road3D extends Element3D {
         this.padding = config.district.padding;
     }
 
+    /**
+     * Spreads the buildings between the left part and the right part of the current road
+     */
     private spreadElementsVariants(elements: Building3D[], left: Building3D[], right: Building3D[]): void {
         if (elements.length > 0) {
             const sorted = elements.sort((a, b) => {
@@ -54,17 +57,11 @@ export class Road3D extends Element3D {
         }
     }
 
+    /**
+     * Spreads the reads between the left part and the right part of the current road
+     */
     private spreadElementsVP(elements: Road3D[], left: Road3D[], right: Road3D[]): void {
         if (elements.length > 0) {
-            //const sorted = elements.sort((a, b) => b.getWidth() - a.getWidth());
-            // let i = 0;
-            // while (i < sorted.length && this.sumOfWidths(sorted) / 2 > this.sumOfWidths(left)) {
-            //     left.push(sorted[i]);
-            //     i++;
-            // }
-            // sorted.slice(i).forEach(e => {
-            //     right.push(e);
-            // });
             const sorted = elements.sort((a, b) => {
                 return (b.getWidth() - a.getWidth()) !== 0 ? b.getWidth() - a.getWidth() : (
                     (b.getLength() - a.getLength()) !== 0 ? b.getLength() - a.getLength() : (
@@ -83,7 +80,7 @@ export class Road3D extends Element3D {
     }
 
     private sumOfWidths(list: Element3D[]): number {
-        return list.reduce<number>((prev, cur) => prev += cur.getWidth(), 0);
+        return list.reduce<number>((prev, cur) => prev + cur.getWidth(), 0);
     }
 
     /**
@@ -165,7 +162,9 @@ export class Road3D extends Element3D {
 
     build(config?: Config) {
         const buildings3D: Building3D[] = [];
-        if (this.vp) this.vp.build();
+        if (this.vp) {
+            this.vp.build();
+        }
         this.elementModel.buildings.forEach(b => {
             if (config.blacklist) {
                 // if (!config.blacklist.includes(b.name)) {
@@ -254,9 +253,7 @@ export class Road3D extends Element3D {
         });
 
         let offsetL = Math.max(offsetVL, offsetVR);
-        ;
         let offsetR = Math.max(offsetVL, offsetVR);
-        ;
 
         this.leftVariants.forEach(e => {
             let vX =
