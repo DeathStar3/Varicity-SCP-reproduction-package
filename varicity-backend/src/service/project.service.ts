@@ -189,7 +189,10 @@ export class ProjectService {
    */
   checkIfParsed(projectName: string) {
     if (this.dbFacade.db.exists('/projects')) {
-      return this.dbFacade.db.getIndex('/projects', projectName, 'projectName') > -1
+      return this.dbFacade.db.getIndex('/projects', projectName, 'projectName') > -1 ||
+          (this.dbFacade.db.getData("/projects") as {path: string, projectName: string}[]).some(
+              (project) => project.path.includes(projectName)
+          )
     }
     return false;
   }

@@ -110,7 +110,7 @@ export class InitDBService implements OnApplicationBootstrap {
       configFilePath = configFilePath.replace(/\\/g, '/');
 
       if (!this.varicityConfigService.checkIfConfigIsIndexed(configFilePath)) {
-        //we read the file to get the human readable name of the config but it is ok because we only do it once at startup
+        //we read the file to get the human-readable name of the config, but it is OK because we only do it once at startup
         const configObject = VaricityConfigService.getYamlFromDisk(configFilePath) as VaricityConfig;
 
         this.dbFacade.db.push('/configs[]', new ConfigEntry(configObject.name, configFilePath, configFolder.name));
