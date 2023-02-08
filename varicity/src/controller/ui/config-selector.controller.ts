@@ -12,7 +12,7 @@ import {SearchbarController} from "./searchbar.controller";
 
 export class ConfigSelectorController {
 
-    static el: EntitiesList;
+    static entitiesList: EntitiesList;
     private static previousParser: ParsingStrategy;
     private static filename: string;
 
@@ -79,14 +79,14 @@ export class ConfigSelectorController {
 
         // update the city
         ProjectService.fetchVisualizationData(this.filename).then((response) => {
-            this.el = this.previousParser.parse(response.data, UIController.config, this.filename);
+            this.entitiesList = this.previousParser.parse(response.data, UIController.config, this.filename);
             SearchbarController.fillSearchBar(response.data.nodes);
 
             // set max usage level
-            const maxLvl = this.el.getMaxCompLevel();
+            const maxLvl = this.entitiesList.getMaxCompLevel();
             ApiAndBlacklistController.defineMaxLevelUsage(maxLvl);
 
-            UIController.scene = new EvostreetImplem(UIController.config, this.el.filterCompLevel(+UIController.config.default_level));
+            UIController.scene = new EvostreetImplem(UIController.config, this.entitiesList.filterCompLevel(+UIController.config.default_level));
             UIController.scene.buildScene(updateCamera);
         })
     }

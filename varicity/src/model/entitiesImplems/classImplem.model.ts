@@ -1,4 +1,4 @@
-import {Node} from './../../controller/parser/symfinder_elements/nodes/node.element';
+import {Node} from '../../controller/parser/symfinder_elements/nodes/node.element';
 import {Building} from "../entities/building.interface";
 
 export class ClassImplem extends Building {

@@ -12,6 +12,7 @@ export class City3D {
     config: Config;
     scene: Scene;
 
+    // Is this road the main road?
     road: Road3D;
     links: Link[] = [];
 
@@ -21,11 +22,11 @@ export class City3D {
         this.config = config;
         this.scene = scene;
         this.links = entities.links;
+        console.log("City is initialising its road with entities: ", entities.district as VPVariantsImplem)
         this.init(entities);
     }
 
     private init(entities: EntitiesList) {
-
         let d3elem = new Road3D(this.scene, entities.district as VPVariantsImplem, this.config);
         this.road = d3elem;
     }
