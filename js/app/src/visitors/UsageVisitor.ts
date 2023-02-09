@@ -71,7 +71,6 @@ export default class UsageVisitor extends SymfinderVisitor {
             console.log(this.program.getTypeChecker().getIndexInfosOfType(type));*/
             //TODO ajout test sur pls class dans même fichier
             // console.log("'" + qualifiedName + "' doesn't contain the path and the class name");
-            this.unknownPaths.add(qualifiedName);
             classPath = filePath;
             className = qualifiedName;
         } else {
@@ -97,6 +96,8 @@ export default class UsageVisitor extends SymfinderVisitor {
             let classNode = await this.neoGraph.getClassNodeWithPath(className, classPath);
             if (classNode == undefined)
                 classNode = await this.neoGraph.getClassNodeWithImport(className, filePath);
+            if(classNode == undefined)
+                classNode = await this.neoGraph.getClassNodeIfUnique(className);
             if (classNode != undefined)
                 return await this.neoGraph.linkTwoNodes(varNode, classNode, RelationType.TYPE_OF);
             else {
@@ -104,10 +105,10 @@ export default class UsageVisitor extends SymfinderVisitor {
                 console.log(varNode)
                 console.log(className+" - "+classPath)
                 console.log(classNode)*/
+                this.unknownPaths.add(qualifiedName);
                 console.log(filePath+" > Error to link 'usage' nodes " + name + " and " + className + "...");
             }
         } else {
-            new URL("");
             console.log(filePath+" > Error to link 'usage' nodes because no node named '" + name + "' or with the file path '" + filePath + "' exists");
         }
     }
