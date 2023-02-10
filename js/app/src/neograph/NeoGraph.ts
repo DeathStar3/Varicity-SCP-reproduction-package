@@ -503,7 +503,7 @@ export default class NeoGraph{
         return this.submitRequest(request, {}).then(function(results: Record[]){
             const data = results.map((result: Record) => result.get(0));
             let content = JSON.stringify(data);
-            writeFile('./export/db.json', content,(err: any) => {
+            writeFile('./export/db.json', content,{flag:'a'},(err: any) => {
                 if (err) throw err;
                 process.stdout.write('data written to file');
             });
@@ -520,7 +520,7 @@ export default class NeoGraph{
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
         const fileRequest = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:DIRECTORY OR n:VARIANT_FILE OR n:CORE_FILE OR n:FILE with " +
-            "collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+            "collect({types:labels(n), name:n.path, constructorVPs:n.constructorVPs," +
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
         let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
@@ -534,7 +534,7 @@ export default class NeoGraph{
             data.nodes.push.apply(data.nodes,results.map((result: Record) => result.get(0))[0].nodes);
         });
         let content = JSON.stringify(data);
-        writeFile('./export/db_link.json', content,(err: any) => {
+        writeFile('./export/db_link.json', content,{flag:'a'},(err: any) => {
             if (err) throw err;
             process.stdout.write('data written to file');
         });
