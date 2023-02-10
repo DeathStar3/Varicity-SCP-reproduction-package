@@ -31,8 +31,9 @@ let symfinder = new Symfinder();
 //symfinder.run('../experiments/typeorm');
 //symfinder.run('../experiments/vscode');
 const path = process.env.PROJECT_PATH
+const analysis_base = process.argv.find(arg => arg === "-b") !== undefined;
 if(path === undefined) console.log("Error path undifined...");
-else symfinder.run('../'+path);
+else symfinder.run('../'+path, analysis_base);
 
 // MATCH (n:VP_FOLDER)-[:CHILD]->(d:VARIANT_FOLDER)-[:CHILD]->(f:SUPER_VARIANT_FILE) RETURN n, d, f
 // MATCH (n1:FILE_VARIANT)-[r:CODE_DUPLICATED]->(n2:FILE_VARIANT) RETURN n1, n2

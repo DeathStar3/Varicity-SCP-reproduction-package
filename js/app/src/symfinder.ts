@@ -23,7 +23,7 @@ import StrategyTemplateDecoratorVisitor from "./visitors/StrategyTemplateDecorat
 import Parser from "./parser/Parser";
 import NeoGraph from "./neograph/NeoGraph";
 import { config } from "./configuration/Configuration";
-import { join, resolve } from "path";
+import { join } from "path";
 import { readdirSync, statSync } from "fs";
 import { EntityAttribut, EntityType, RelationType } from "./neograph/NodeType";
 import { Node } from "neo4j-driver-core";
@@ -51,8 +51,9 @@ export class Symfinder{
     /**
      * run symfinder for the specific project
      * @param src path to the root directory
+     * @param analysis_base if it's an analysis of a base library
      */
-    async run(src: string){
+    async run(src: string, analysis_base: boolean){
         await this.neoGraph.clearNodes();
 
         console.log("Analyse variability in : '" + src + "'")
@@ -64,16 +65,20 @@ export class Symfinder{
         const options: CompilerOptions = { strict: true, target: ScriptTarget.Latest, allowJs: true, module: ModuleKind.ES2015 }
         let program = createProgram(files, options, createCompilerHost(options, true));
 
-        await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes", program);
-        await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program);
-        await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program);
+        await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program);
         const usageVisitor = new UsageVisitor(this.neoGraph, program);
-        await this.visitPackage(files, usageVisitor, "usages", program);
-        
-        await this.neoGraph.detectVPsAndVariants();
-        await this.proximityFolderDetection();
-        await this.detectCommonEntityProximity();
-        await this.detectCommonMethodImplemented();
+        if(!analysis_base) {
+            await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program);
+            await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program);
+            await this.visitPackage(files, usageVisitor, "usages", program);
+
+            await this.neoGraph.detectVPsAndVariants();
+            await this.proximityFolderDetection();
+            await this.detectCommonEntityProximity();
+            await this.detectCommonMethodImplemented();
+        } else {
+            await this.neoGraph.markNodesAsBase();
+        }
 
         const timeEnd = Date.now();
 
@@ -98,10 +103,12 @@ export class Symfinder{
         console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
         console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
         console.log("Duration: "+this.msToTime(timeEnd-timeStart));
-        const classes = await this.neoGraph.getAllClass();
-        console.log("Number of unknown class path: "+((usageVisitor.getUnknownPaths().size/classes.length)*100).toFixed(2)+"%");
+        if(!analysis_base) {
+            const classes = await this.neoGraph.getAllClass();
+            console.log("Number of unknown class path: " + ((usageVisitor.getUnknownPaths().size / classes.length) * 100).toFixed(2) + "% (" + usageVisitor.getUnknownPaths().size + "/" + classes.length + ")");
+        }
         //supabase (443): 01:08.1 -> 1:11.9 => +4% | 1.89%
-        //novu (1142): 2:51.8 -> 2:58.7 => +4% | 2.05%
+        //novu (1142): 2:51.8 -> 2:58.7 => +4% | 2.05% | Il y a encore des "Error to link 'usage' nodes..."
 
         await this.neoGraph.driver.close();
 

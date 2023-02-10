@@ -40,7 +40,8 @@ export enum EntityType {
     PARAMETER = "PARAMETER",
     PROPERTY = "PROPERTY",
     FILE = "FILE",
-    DIRECTORY = "DIRECTORY"
+    DIRECTORY = "DIRECTORY",
+    MODULE = "MODULE"
 }
 
 export enum EntityVisibility {

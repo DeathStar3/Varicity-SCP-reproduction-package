@@ -47,7 +47,7 @@ import path = require("path");
 
 export default class ClassesVisitor extends SymfinderVisitor{
 
-    constructor(neoGraph: NeoGraph){
+    constructor(neoGraph: NeoGraph, public analysis_base: boolean){
         super(neoGraph);
     }
 
@@ -62,24 +62,27 @@ export default class ClassesVisitor extends SymfinderVisitor{
     async visit(node: PropertyDeclaration): Promise<void>;
     async visit(node: ForOfStatement): Promise<void>;
     async visit(node: ExportAssignment): Promise<void>;
+    async visit(node: ModuleDeclaration): Promise<void>
 
     /**
      * Visit InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement
      * @param node AST node
      * @returns ...
      */
-    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement | ParameterDeclaration | PropertyDeclaration | ForOfStatement | ExportAssignment): Promise<void> {
+    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement | ParameterDeclaration | PropertyDeclaration | ForOfStatement | ExportAssignment | ModuleDeclaration): Promise<void> {
 
         if(isInterfaceDeclaration(node)) await this.visitInterface(node);
         else if(isClassDeclaration(node) || isClassExpression(node)) await this.visitClass(node);
         else if(isMethodDeclaration(node) || isMethodSignature(node) || isConstructorDeclaration(node)) await this.visitMethod(node);
         else if(isFunctionDeclaration(node)) await this.visitFunction(node);
-        else if(isVariableStatement(node)) await this.visitVariable(node);
-        else if(isParameter(node)) await this.visitParameter(node);
         else if(isPropertyDeclaration(node)) await this.visitProperty(node);
-        else if(isForOfStatement(node)) await this.visitForVariables(node);
-        else if(isExportAssignment(node)) await this.visitExportAssignment(node);
-        else return;
+        else if(isModuleDeclaration(node)) await this.visitModule(node);
+        else if(!this.analysis_base) {
+            if (isVariableStatement(node)) await this.visitVariable(node);
+            else if (isParameter(node)) await this.visitParameter(node);
+            else if (isForOfStatement(node)) await this.visitForVariables(node);
+            // else if (isExportAssignment(node)) await this.visitExportAssignment(node);
+        }
     }
 
     /**
@@ -312,11 +315,23 @@ export default class ClassesVisitor extends SymfinderVisitor{
         }).catch((reason) => console.log("Error to create node "+name+"..."));
     }
 
-    async visitExportAssignment(node: ExportAssignment): Promise<void> {
+    /*async visitExportAssignment(node: ExportAssignment): Promise<void> {
         const fileName = node.getSourceFile().fileName;
         // @ts-ignore
         const filePath = path.relative(process.env.PROJECT_PATH, fileName).substring(6);
         const className = node.expression.getText();
+        if(className === "MetricsPanelCtrl") {
+            console.log("visitExportAssignment>"+filePath)
+        }
         await this.neoGraph.changeInternalLinkToExport(className, filePath);
+    }*/
+
+    async visitModule(node: ModuleDeclaration): Promise<void> {
+        let name = node.name.getText();
+        name = name.substring(1, name.length - 1);
+        const fileName = node.getSourceFile().fileName;
+        // @ts-ignore
+        const filePath = path.relative(process.env.PROJECT_PATH, fileName).substring(6);
+        await this.neoGraph.createNodeWithPath(name, filePath, EntityType.MODULE, []);
     }
 }

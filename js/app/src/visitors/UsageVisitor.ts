@@ -15,7 +15,7 @@ import {
     TypeFlags,
     VariableDeclaration
 } from "typescript";
-import {RelationType} from "../neograph/NodeType";
+import {EntityType, RelationType} from "../neograph/NodeType";
 import path = require("path");
 
 export default class UsageVisitor extends SymfinderVisitor {
@@ -76,8 +76,10 @@ export default class UsageVisitor extends SymfinderVisitor {
         } else {
             classPath = correctFormat[1];
             className = correctFormat[2];
-            // @ts-ignore
-            classPath = path.relative(process.env.PROJECT_PATH, classPath).substring(6) + ".ts";
+            if(classPath.includes("/")) {
+                // @ts-ignore
+                classPath = path.relative(process.env.PROJECT_PATH, classPath).substring(6) + ".ts";
+            }
         }
 
         // className = type.symbol.getName();
@@ -91,9 +93,33 @@ export default class UsageVisitor extends SymfinderVisitor {
         //}
         // console.log(name+" - "+filePath)
         // console.log(className+" - "+classPath)
-        const varNode = await this.neoGraph.getNodeWithFile(name, filePath);
+        let entType;
+        switch(node.kind) {
+            case SyntaxKind.VariableDeclaration:
+                entType = EntityType.VARIABLE;
+                break;
+            case SyntaxKind.Parameter:
+                entType = EntityType.PARAMETER;
+                break;
+            case SyntaxKind.PropertyDeclaration:
+                entType = EntityType.PROPERTY;
+                break;
+            case SyntaxKind.MethodDeclaration:
+                entType = EntityType.METHOD;
+                break;
+        }
+        const varNode = await this.neoGraph.getElementNodeWithFile(name, entType, filePath);
         if(varNode != undefined) {
-            let classNode = await this.neoGraph.getClassNodeWithPath(className, classPath);
+            // console.log(node.getSourceFile().fileName);
+            // const symbol = this.program.getTypeChecker().getSymbolAtLocation(node);
+            // debugger;
+            // console.log(symbol?.declarations?.at(0)?.getSourceFile().fileName)
+
+            let classNode;
+            if(classPath.includes("/"))
+                classNode = await this.neoGraph.getClassNodeWithPath(className, classPath);
+            else
+                classNode = await this.neoGraph.getClassNodeByModuleIfUnique(className, classPath);
             if (classNode == undefined)
                 classNode = await this.neoGraph.getClassNodeWithImport(className, filePath);
             if(classNode == undefined)

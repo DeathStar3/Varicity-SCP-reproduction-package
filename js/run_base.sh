@@ -1,11 +1,3 @@
-if [ ! -d experiments ]; then
-    mkdir experiments
-fi
-
-if ! docker ps | grep -q neo4j; then
-    echo Starting docker
-    ./start_neo4j.sh
-fi
 project=$(basename -- $1)
 path=experiments/$project
 
@@ -27,9 +19,12 @@ if [ ! -d $path ]; then
     rm -d download
 fi
 
-echo Anlysing project: $project
+echo Anlysing base project: $project
 
 cd app
 npm run --silent build
 
-PROJECT_PATH=$path UV_THREADPOOL_SIZE=$(nproc) node lib/index.js
+PROJECT_PATH=$path node lib/index.js -b
+
+docker exec -u neo4j symfinderts_neo4j /bin/bash -c 'cat /import/export_procedure | cypher-shell -u neo4j -p root --format plain'
+

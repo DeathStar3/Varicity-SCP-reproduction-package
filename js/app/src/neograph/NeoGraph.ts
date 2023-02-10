@@ -97,11 +97,27 @@ export default class NeoGraph{
         });
     }
 
+    async getElementNodeWithFile(name: string, type:EntityType,path: string): Promise<Node | undefined>{
+        const request = "MATCH (n:"+type+" {name: $name})<--(m {path: $path}) RETURN (n)";
+
+        return this.submitRequest(request, {name:name, path:path}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
     async getClassNodeWithPath(className: string, path: string): Promise<Node | undefined>{
         const request = "MATCH (n {name: $name})<-[:EXPORT|INTERNAL]-(m {path: $path}) RETURN (n)";
 
         return this.submitRequest(request, {name:className, path:path}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getClassNodeByModuleIfUnique(className: string, moduleName: string): Promise<Node | undefined>{
+        const request = "MATCH (m:MODULE {name: $moduleName}) WITH m.path AS Mpath MATCH (n {name: $className}) <-[:EXPORT|INTERNAL]-(o {path: Mpath}) RETURN (n)";
+
+        return this.submitRequest(request, {className:className, moduleName:moduleName}).then((result: Record[]) =>{
+            return result.length === 1 ? <Node>(result[0].get(0)) : undefined;
         });
     }
 
@@ -125,6 +141,13 @@ export default class NeoGraph{
         const request = "MATCH (:FILE {path: $path})-[:IMPORT]->(n {name: $name})<-[:EXPORT]-(:FILE) RETURN n";
         return this.submitRequest(request, {name: className, path: filePath}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getClassNodeIfUnique(className: string): Promise<Node | undefined> {
+        const request = "MATCH (n {name: $name})<-[:EXPORT|INTERNAL]-(f) RETURN (n)";
+        return this.submitRequest(request, {name: className}).then((result: Record[]) =>{
+            return result.length == 1 ? <Node>(result[0].get(0)) : undefined;
         });
     }
 
@@ -576,7 +599,12 @@ export default class NeoGraph{
     }
 
     async clearNodes(): Promise<void>{
-        const request = "MATCH (n) DETACH DELETE n"
+        const request = "MATCH (n) WHERE NOT (n:BASE) DETACH DELETE n"
+        await this.submitRequest(request, {});
+    }
+
+    async markNodesAsBase(): Promise<void>{
+        const request = "MATCH (n) SET n:BASE"
         await this.submitRequest(request, {});
     }
 
