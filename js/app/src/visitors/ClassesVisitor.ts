@@ -22,24 +22,31 @@ import NeoGraph from "../neograph/NeoGraph";
 import {
     ClassDeclaration,
     ClassExpression,
-    ConstructorDeclaration, ExportAssignment, ForOfStatement,
+    ConstructorDeclaration,
+    ExportAssignment,
+    Expression,
+    ForOfStatement,
     FunctionDeclaration,
     InterfaceDeclaration,
     isClassDeclaration,
     isClassExpression,
-    isConstructorDeclaration, isExportAssignment, isForOfStatement,
+    isConstructorDeclaration,
+    isForOfStatement,
     isFunctionDeclaration,
     isInterfaceDeclaration,
     isMethodDeclaration,
     isMethodSignature,
+    isModuleDeclaration,
     isParameter,
     isPropertyDeclaration,
     isVariableStatement,
     MethodDeclaration,
     MethodSignature,
+    ModuleDeclaration,
     ParameterDeclaration,
     PropertyDeclaration,
-    SyntaxKind, VariableDeclarationList,
+    SyntaxKind,
+    VariableDeclarationList,
     VariableStatement
 } from "typescript";
 import {filname_from_filepath} from "../utils/path";
@@ -248,8 +255,9 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var fileName = filname_from_filepath(filePath);
         // var className = (<any>node.parent.parent.parent).name.getText();
 
-        for(let variableDeclaration of (node.initializer as VariableDeclarationList).declarations){
-            var name = variableDeclaration.name?.getText();
+        const forVars = node.initializer.kind === SyntaxKind.VariableDeclarationList ? (node.initializer as VariableDeclarationList).declarations : [node.initializer as Expression];
+        for(let variableDeclaration of forVars){
+            var name = variableDeclaration.getText();
             if(name === undefined) continue;
 
             await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
