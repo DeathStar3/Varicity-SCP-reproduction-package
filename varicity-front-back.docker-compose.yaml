@@ -23,6 +23,8 @@ version: "3.6"
 
 services:
   varicitybackend:
+    build:
+      context: ./varicity-backend
     image: deathstar3/varimetrics-backend:${TAG}
     container_name: varicity-backend
     hostname: varicityback
@@ -48,6 +50,8 @@ services:
       - WATCHED_SYMFINDER_DIR=/persistent/manual/symfinder_files
 
   varicity:
+    build:
+      context: ./varicity
     image: deathstar3/varimetrics:${TAG}
     container_name: varicity
     ports:

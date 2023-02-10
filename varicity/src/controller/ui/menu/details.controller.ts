@@ -59,7 +59,8 @@ export class DetailsController implements SubMenuInterface {
 
     private static populateMetric(metric: Metrics, parent: HTMLElement) {
         metric.metrics.forEach((value, key) => {
-            SubMenuController.createLongReadonlyText(key, value.value.toString(), parent)
+            if (value.value) /// Avoid trouble when value.value is null
+                SubMenuController.createLongReadonlyText(key, value.value.toString(), parent)
         })
     }
 

@@ -1,4 +1,4 @@
-import {ArcRotateCamera, HemisphericLight, Scene, Vector3} from "@babylonjs/core";
+import {ArcRotateCamera, Scene, Vector3} from "@babylonjs/core";
 import {City3D} from "./3Delements/city3D";
 import {SceneRenderer} from "../sceneRenderer";
 import {Config, Vector3_Local} from "../../model/entitiesImplems/config.model";
@@ -15,13 +15,8 @@ export class EvostreetImplem extends SceneRenderer {
         } else {
             SceneRenderer.camera = new ArcRotateCamera("Camera", this.config.camera_data.alpha, this.config.camera_data.beta, this.config.camera_data.radius, Vector3_Local.toVector3(this.config.camera_data.target), this.scene);
         }
-        SceneRenderer.camera.attachControl(this.canvas, true);
-        SceneRenderer.camera.panningSensibility = 100;
-        SceneRenderer.camera.wheelPrecision = 50;
-        this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
-
-        // this.scene.clearColor = new Color4(1, 0, 0, 1);
-        // this.scene.ambientColor = new Color3(1, 0, 0);
+        this.setupCamera(100, 50)
+        this.setupLight("light1", new Vector3(0, 1, 0))
 
         this.render();
         document.getElementById("loading-frame").style.display = 'none';

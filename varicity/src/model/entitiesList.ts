@@ -4,7 +4,11 @@ import {Link} from "./entities/link.interface";
 
 export class EntitiesList {
     buildings: Building[] = [];
+
     district: District; // [com] => [polytech, utils] => **[unice]**
+
+    file_district: District; // For files
+
     links: Link[] = [];
 
     /**
@@ -13,12 +17,13 @@ export class EntitiesList {
     compositionLinks: Link[] = [];
 
     constructor() {
+      //
     }
 
     public getBuildingFromName(name: string): Building {
-        for (let i = 0; i < this.buildings.length; i++) {
-            if (this.buildings[i].name === name) {
-                return this.buildings[i];
+        for (const building of this.buildings) {
+            if (building.name === name) {
+                return building;
             }
         }
         const res = this.district.getBuildingFromName(name);
@@ -40,9 +45,7 @@ export class EntitiesList {
             result.district = d;
         }
         result.links = Object.assign([], this.links);
-        // this.district.buildings.forEach(b => {
-        //     result.district.buildings.push(Object.assign({}, b));
-        // });
+
         let ar: Building[];
         ar = Object.assign([], this.district.buildings);
         ar.forEach(b => {

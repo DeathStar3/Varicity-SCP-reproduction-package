@@ -1,5 +1,5 @@
-import {Config} from './../../model/entitiesImplems/config.model';
-import {ArcRotateCamera, HemisphericLight, Scene, Vector3} from "@babylonjs/core";
+import {Config} from '../../model/entitiesImplems/config.model';
+import {ArcRotateCamera, Scene, Vector3} from "@babylonjs/core";
 import {City3D} from "./3Delements/city3D";
 import {SceneRenderer} from "../sceneRenderer";
 import {SettingsController} from "../../controller/ui/menu/settings.controller";
@@ -12,10 +12,8 @@ export class MetricityImplem extends SceneRenderer {
         if (updateCamera) {
             SceneRenderer.camera = new ArcRotateCamera("Camera", 2 * Math.PI / 3, Math.PI / 3, 1000, Vector3.Zero(), this.scene);
         }
-        SceneRenderer.camera.attachControl(this.canvas, true);
-        SceneRenderer.camera.panningSensibility = 100;
-        SceneRenderer.camera.wheelPrecision = 50;
-        this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
+        this.setupCamera(100, 50)
+        this.setupLight("light1", new Vector3(0, 1, 0))
 
         this.render();
         document.getElementById("loading-frame").style.display = 'none';

@@ -4,92 +4,75 @@ import {ClassImplem} from "../../../model/entitiesImplems/classImplem.model";
 import {LinkElement} from "../symfinder_elements/links/link.element";
 import {LinkImplem} from "../../../model/entitiesImplems/linkImplem.model";
 import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.model";
-import {JsonInputInterface, LinkInterface} from "../../../model/entities/jsonInput.interface";
+import { JsonInputInterface, LinkInterface, NodeInterface } from "../../../model/entities/jsonInput.interface";
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
 
+/**
+ * Strategy used to parse both Symfinder Java and Symfinder JS results
+ */
 export class VPVariantsStrategy implements ParsingStrategy {
+    private static readonly FILE_TYPES = ["FILE", "DIRECTORY"];
+    private static readonly FILE_LINK_TYPES = ["CHILD", "CORE_CONTENT", "CODE_DUPLICATED"]
 
     public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
         console.log('Analyzing with VP and variants strategy: ', data);
         console.log('Config used: ', config);
         if (data) {
             let nodesList: NodeElement[] = [];
+            let fileList: NodeElement[] = [];
             const apiList: NodeElement[] = [];
 
             data.nodes.forEach(n => {
+                let node = this.nodeInterface2nodeElement(n);
 
-                let node = new NodeElement(n.name);
-                console.log(n);
+                this.checkAndAddApiClass(node, config, apiList);
 
-                node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
-                // TODO check if nbFunctions is missing or not
-                //node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
-
-                const attr = n.attributes;
-                let nbAttributes = 0;
-                attr?.forEach(a => {
-                    nbAttributes += a.number;
-                })
-
-                node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
-                node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
-
-                node.types = Object.assign([], n.types);
-
-                if (config.api_classes !== undefined) {
-                    if (config.api_classes.includes(node.name)) {
-                        console.log("API class: " + n.name);
-                        node.types.push("API");
-                        apiList.push(node);
-                    }
-                }
-
-                node.fillMetricsFromNodeInterface(n);
-
-                nodesList.push(node);
+                if (node.types.find((t => VPVariantsStrategy.FILE_TYPES.find(f => t === f)))) /// This is a file or a folder
+                    fileList.push(node);
+                else
+                    nodesList.push(node);
             });
 
-            const linkElements = data.links.map(l => new LinkElement(l.source, l.target, l.type));
-            const allLinks = data.alllinks.map(l => new LinkElement(l.source, l.target, l.type));
+            const linkElements = data.links
+                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) === -1) /// Remove all that is bind to a file or a folder
+                .map(l => new LinkElement(l.source, l.target, l.type));
+            const allLinks = data.alllinks
+                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) === -1) /// Remove all that is bind to a file or a folder
+                .map(l => new LinkElement(l.source, l.target, l.type));
             const hierarchyLinks = allLinks.filter(l => config.hierarchy_links.includes(l.type));
+            const fileLinks = data.links
+                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) !== -1) /// Remove all that is not bind to a file or a folder
+                .map(l => new LinkElement(l.source, l.target, l.type));
 
             nodesList.forEach(n => {
                 n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
             });
+            fileList.forEach(n => {
+                n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, fileList, fileLinks).length);
+            })
 
-            this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation);
-            //console.log(nodesList.sort((a, b) => a.compositionLevel - b.compositionLevel));
-            console.log(nodesList.sort((a, b) => a.name.localeCompare(b.name)));
+            this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation); // Add composition level to classes
+            this.buildComposition(fileLinks, fileList, apiList, 0, config.orientation); // Add composition level to files ?
+            // Maybe remove this code: console.log(nodesList.sort((a, b) => a.compositionLevel - b.compositionLevel));
+            // console.log(nodesList.sort((a, b) => a.name.localeCompare(b.name)));
 
-            const d = this.buildDistricts(nodesList, hierarchyLinks, config.orientation);
+            const d = this.buildDistricts(nodesList, hierarchyLinks, config.orientation); // Create a district for classes
+            const fileDistrict = this.buildDistricts(fileList, fileLinks, config.orientation); // Create a district for file
 
             let result = new EntitiesList();
             result.district = d;
+            result.file_district = fileDistrict;
 
             if (config.api_classes !== undefined) {
                 data.allnodes.filter(
                     nod => config.api_classes.includes(nod.name)
                         && !nodesList.map(no => no.name).includes(nod.name)
                 ).forEach(n => {
-                    let node = new NodeElement(n.name);
+                    let node = this.nodeInterface2nodeElement(n, false);
 
-                    node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, (n.methodVariants === undefined) ? 0 : n.methodVariants);
-
-                    const attr = n.attributes;
-                    let nbAttributes = 0;
-                    attr.forEach(a => {
-                        nbAttributes += a.number;
-                    })
-
-                    node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
-                    node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, (n.constructorVariants === undefined) ? 0 : n.constructorVariants);
-
-                    node.types = n.types;
                     node.types.push("API");
-
-                    node.fillMetricsFromNodeInterface(n);
 
                     let c = new ClassImplem(
                         node,
@@ -108,14 +91,89 @@ export class VPVariantsStrategy implements ParsingStrategy {
                 }
             });
 
-            // log for non-vp non-variant ndoes
-            //console.log(data.allnodes.filter(nod => !nodesList.map(no => no.name).includes(nod.name)).map(n => n.name));
+            // log for non-vp non-variant nodes
+            console.log(data.allnodes.filter(nod => !nodesList.map(no => no.name).includes(nod.name)).map(n => n.name));
 
+            // log the results
             console.log("Result of parsing: ", result);
 
             return result;
         }
-        throw 'Data is undefined';
+        throw new Error('Data is undefined');
+    }
+
+    /**
+     * Check if the given value is not undefined and returns it. If the value is undefined, then return a default value
+     */
+    private checkAndGetMetric(value: number, _default: number = 0) {
+        return (value === undefined) ? _default : value
+    }
+
+    /**
+     * Check if a node is an api class. If yes, then add the API tag to the node and put it in the given list
+     */
+    private checkAndAddApiClass(node: NodeElement, config: Config, apiList: NodeElement[]) {
+        if (config.api_classes === undefined)
+            return;
+        else if (config.api_classes.includes(node.name)) {
+            console.log("API class: ", node.name);
+            node.types.push("API");
+            apiList.push(node);
+        }
+    }
+
+    /**
+     * Create a new node element from a node interface
+     *
+     * <br><i>This should help reduce the complexity of the {@link #parse} method</i><br>
+     *
+     * @param n The node interface that should be use as template
+     * @param type_copy should the type be copied from n or point to the same array as n types
+     * @private
+     */
+    private nodeInterface2nodeElement(n: NodeInterface, type_copy: boolean = true) {
+        let node: NodeElement = new NodeElement(n.name);
+
+        node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, this.checkAndGetMetric(n.methodVariants));
+        // Fixme: `check if nbFunctions is missing or not`
+        // node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, this.checkAndGetMetric(n.methodVariants));
+
+        const attr = n.attributes;
+        let nbAttributes = 0;
+        attr?.forEach(a => {
+            nbAttributes += a.number
+        });
+
+        node.addMetric(VariabilityMetricsName.NB_ATTRIBUTES, nbAttributes);
+        node.addMetric(VariabilityMetricsName.NB_CONSTRUCTOR_VARIANTS, this.checkAndGetMetric(n.constructorVariants));
+
+        node.types = type_copy ? Object.assign([], n.types) : n.types;
+
+        // Check that this one is not too much
+        node.fillMetricsFromNodeInterface(n);
+
+        return node;
+    }
+
+    /**
+     * This method is here to help reduce complexity of {@link #buildComposition} method below
+     * @param node The node to add
+     * @param target The node name that should exist in the list
+     * @param message The message to add as node origin
+     * @param srcNodes The sources where to add the new node
+     * @param p The predicate that should be verified if the node is undefined or the target is not in the source list
+     */
+    private addNewNodeIfNotExist(
+        node: NodeElement,
+        target: string,
+        message: string,
+        srcNodes: NodeElement[],
+        p: (n: NodeElement) => boolean = (n) => n.compositionLevel === -1
+    ) {
+        if (node !== undefined || p(node) || !srcNodes.map(e => e.name).includes(target)) {
+            node.origin = message;
+            srcNodes.push(node)
+        }
     }
 
     private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number, orientation: Orientation): void {
@@ -129,18 +187,21 @@ export class VPVariantsStrategy implements ParsingStrategy {
                         || (l.source === n.name && !nodeNames.includes(l.target)) // OUT
                 }).forEach(l => {
                     //console.log("Node: ", n.name, " - level: ", n.compositionLevel, " - link: ", l);
+                    /// According to the orientation asked by the user, put the target (OUT) or the source (IN) first
                     if ((orientation === Orientation.OUT || orientation === Orientation.IN_OUT) && n.name === l.source && n.name !== l.target) { // OUT
-                        const targetNode = this.findNodeByName(l.target, nodes);
-                        if (targetNode !== undefined && targetNode.compositionLevel === -1 && !newSrcNodes.map(e => e.name).includes(l.target)) {
-                            targetNode.origin = n.name + " (source)";
-                            newSrcNodes.push(targetNode);
-                        }
+                        this.addNewNodeIfNotExist(
+                            this.findNodeByName(l.target, nodes),
+                            l.target,
+                            n.name + " (source)",
+                            newSrcNodes
+                        );
                     } else if ((orientation === Orientation.IN || orientation === Orientation.IN_OUT) && n.name === l.target && n.name !== l.source) { // IN
-                        const sourceNode = this.findNodeByName(l.source, nodes);
-                        if (sourceNode !== undefined && sourceNode.compositionLevel === -1 && !newSrcNodes.map(e => e.name).includes(l.source)) {
-                            sourceNode.origin = n.name + " (target)";
-                            newSrcNodes.push(sourceNode);
-                        }
+                        this.addNewNodeIfNotExist(
+                            this.findNodeByName(l.source, nodes),
+                            l.source,
+                            n.name + " (target)",
+                            newSrcNodes
+                        );
                     }
                 });
             }
@@ -150,6 +211,9 @@ export class VPVariantsStrategy implements ParsingStrategy {
         }
     }
 
+    /**
+     * Build each district from the roots that are the compositionLevel zero
+     */
     private buildDistricts(nodes: NodeElement[], links: LinkElement[], orientation: Orientation): VPVariantsImplem {
         const roots = nodes.filter(n => n.compositionLevel === 0);
         const rootElems = roots.map(r => {
@@ -200,21 +264,6 @@ export class VPVariantsStrategy implements ParsingStrategy {
         }
     }
 
-    // private removeFromList(d: VPVariantsImplem, l: VPVariantsImplem[]) : VPVariantsImplem[] {
-    //     let index = -1;
-    //     for (let i = 0; i < l.length; i++) {
-    //         if (l[i].name === d.name) {
-    //             index = i;
-    //             break;
-    //         }
-    //     }
-    //     if (index > -1) {
-    //         return l.splice(index, 1);
-    //     } else {
-    //         throw "error: remove from list did not found node";
-    //     }
-    // }
-
     private getLinkedNodesFromSource(n: NodeElement, nodes: NodeElement[], links: LinkElement[]): NodeElement[] {
         const name = n.name;
         const res: NodeElement[] = [];
@@ -246,9 +295,9 @@ export class VPVariantsStrategy implements ParsingStrategy {
     }
 
     private findNodeByName(name: string, nodes: NodeElement[]): NodeElement {
-        for (let i = 0; i < nodes.length; i++) {
-            if (nodes[i].name === name) {
-                return nodes[i];
+        for (const element of nodes) {
+            if (element.name === name) {
+                return element;
             }
         }
         return undefined;

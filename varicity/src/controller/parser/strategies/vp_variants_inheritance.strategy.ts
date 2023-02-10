@@ -10,9 +10,12 @@ import {Config} from "../../../model/entitiesImplems/config.model";
 
 // DEPRECATED
 /**
- * @deprecated
+ * @deprecated Use {@link VPVariantsStrategy} instead
  */
 export class VPVariantsInheritanceStrategy implements ParsingStrategy {
+    /**
+     * @deprecated
+     */
     public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
         // console.log('Analyzing with VP and variants strategy: ', data);
 
