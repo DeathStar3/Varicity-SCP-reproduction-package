@@ -49,7 +49,7 @@ export class DetailsController implements SubMenuInterface {
     private static populateModel(building: any, parent: HTMLElement) {
         SubMenuController.createShortReadonlyText("Origin", building.origin, parent)
         SubMenuController.createShortReadonlyText("Name", building.name, parent)
-
+        console.log("Types of " + building.name + ": " + building.types)
         SubMenuController.createIconDisplaySVG("Types", this.getIconPaths(building.types), parent);
 
         SubMenuController.createShortReadonlyText("Comp. level", building.compLevel.toString(), parent)
@@ -114,12 +114,17 @@ export class DetailsController implements SubMenuInterface {
                     case "OUT_OF_SCOPE":
                     case "VARIANT":
                     case "VP":
+                    case "VP_FOLDER":
+                    case "VARIANT_FOLDER":
+                    case "VARIANT_FILE":
                         paths.push("./images/menu-icons/class-types/entity-attribute/" + type + ".svg");
                         break;
                     case "CLASS":
                     case "CONSTRUCTOR":
                     case "INTERFACE":
                     case "METHOD":
+                    case "FILE":
+                    case "DIRECTORY":
                         paths.push("./images/menu-icons/class-types/entity-type/" + type + ".svg");
                         break;
                     case "PRIVATE":
@@ -131,6 +136,9 @@ export class DetailsController implements SubMenuInterface {
                     // case "INNER":
                     // case "METHOD":
                     case "USAGE":
+                    case "CHILD":
+                    case "CODE_DUPLICATED":
+                    case "CORE_CONTENT":
                         paths.push("./images/menu-icons/class-types/relation-type/" + type + ".svg");
                         break;
                 }

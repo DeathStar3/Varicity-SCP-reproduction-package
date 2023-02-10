@@ -111,7 +111,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
                     return;
                 }
 
-                // Handle error where the input already exist in an other input text
+                // Handle error where the input already exist in another input text
                 if (isClassAlreadyInList) {
                     ToastController.addToast("The class: '" + input.value + "' already exist in the API classes. You can't add it a second time...", ToastType.WARNING);
                     input.value = className; // reset value to the last one
@@ -168,7 +168,7 @@ export class ApiAndBlacklistController implements SubMenuInterface {
                     return;
                 }
 
-                // Handle error where the input already exist in an other input text
+                // Handle error where the input already exist in another input text
                 if (isAlreadyInBlacklist) {
                     ToastController.addToast("The class: '" + input.value + "' already exist in the blacklist. You can't add it a second time...", ToastType.WARNING);
                     input.value = className; // reset value to the last one

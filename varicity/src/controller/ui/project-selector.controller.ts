@@ -12,7 +12,7 @@ import {SearchbarController} from "./searchbar.controller";
 import {QueryService} from "../../services/query.service";
 
 export class ProjectController {
-    static el: EntitiesList;
+    static entitiesList: EntitiesList;
     private static previousParser: ParsingStrategy;
     private static projectListener: CurrentProjectListener = new CurrentProjectListener();
     private static nodes: { [key: string]: HTMLOptionElement } = {}; // TODO INTEGRATION: had to replace to Option instead of Div
@@ -62,14 +62,14 @@ export class ProjectController {
             // TODO find alternative
             await ProjectService.fetchVisualizationData(projectName).then(async (response) => {
                 const config = await ConfigService.loadDataFile(projectName); // Load config from backend
-                this.el = this.previousParser.parse(response.data, config, projectName); // Parse the project data
+                this.entitiesList = this.previousParser.parse(response.data, config, projectName); // Parse the project data
                 SearchbarController.fillSearchBar(response.data.nodes);
 
                 // set the min & max usage level
-                const maxLvl = this.el.getMaxCompLevel();
+                const maxLvl = this.entitiesList.getMaxCompLevel();
                 ApiAndBlacklistController.defineMaxLevelUsage(maxLvl);
 
-                UIController.scene = new EvostreetImplem(config, this.el.filterCompLevel(config.default_level));
+                UIController.scene = new EvostreetImplem(config, this.entitiesList.filterCompLevel(config.default_level));
                 UIController.scene.buildScene(true);
             })
 

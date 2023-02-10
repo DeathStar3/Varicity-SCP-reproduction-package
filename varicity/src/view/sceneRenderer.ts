@@ -1,5 +1,5 @@
 import {Config} from '../model/entitiesImplems/config.model';
-import {ArcRotateCamera, Color3, Color4, Engine, HemisphericLight, Scene, Vector3} from "@babylonjs/core";
+import {ArcRotateCamera, Engine, HemisphericLight, Scene, Vector3} from "@babylonjs/core";
 import {EntitiesList} from "../model/entitiesList";
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
@@ -38,11 +38,11 @@ export abstract class SceneRenderer {
         // hide/show the Inspector
         window.addEventListener("keydown", (ev) => {
             // Shift+Ctrl+Alt+I
-            if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.keyCode === 73) {
+            if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.code == "KeyI") {
                 if (this.scene.debugLayer.isVisible()) {
                     this.scene.debugLayer.hide();
                 } else {
-                    this.scene.debugLayer.show();
+                    this.scene.debugLayer.show().catch(console.error);
                 }
             }
         });

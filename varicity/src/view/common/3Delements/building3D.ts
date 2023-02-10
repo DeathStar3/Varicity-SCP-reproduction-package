@@ -167,14 +167,24 @@ export class Building3D extends Element3D {
 
     render() {
         // Display building
-        this.d3Model = MeshBuilder.CreateBox(
-            this.elementModel.name,
-            {
-                height: this.getHeight(),
-                width: this.elementModel.getWidth(this.config.variables.width),
-                depth: this.elementModel.getWidth(this.config.variables.width)
-            },
-            this.scene);
+        if (this.elementModel.types.includes("FILE") || this.elementModel.types.includes("DIRECTORY")) {
+            this.d3Model = MeshBuilder.CreateCylinder(
+                this.elementModel.name,
+                {
+                    height: this.getHeight(),
+                    diameter: this.elementModel.getWidth(this.config.variables.width)
+                },
+                this.scene);
+        } else {
+            this.d3Model = MeshBuilder.CreateBox(
+                this.elementModel.name,
+                {
+                    height: this.getHeight(),
+                    width: this.elementModel.getWidth(this.config.variables.width),
+                    depth: this.elementModel.getWidth(this.config.variables.width)
+                },
+                this.scene);
+        }
         this.d3Model.setPositionWithLocalVector(this.center);
 
         this.highlightLayer = new HighlightLayer("hl", this.scene);
@@ -183,16 +193,33 @@ export class Building3D extends Element3D {
         if (this.config.building.colors.outlines) {
             const outlineColor = this.getColor(this.config.building.colors.outlines, this.elementModel.types);
             if (outlineColor !== undefined) {
-                this.d3ModelOutline = MeshBuilder.CreateBox(
-                    this.elementModel.name,
-                    {
-                        height: this.getHeight() + this.outlineWidth,
-                        width: this.elementModel.getWidth(this.config.variables.width) + this.outlineWidth,
-                        depth: this.elementModel.getWidth(this.config.variables.width) + this.outlineWidth,
-                        sideOrientation: Mesh.BACKSIDE,
-                        updatable: false
-                    },
-                    this.scene);
+                if (this.elementModel.types.includes("FILE") || this.elementModel.types.includes("DIRECTORY")) {
+                    this.d3ModelOutline = MeshBuilder.CreateCylinder(
+                        this.elementModel.name,
+                        {
+                            height: this.getHeight(),
+                            diameter: this.elementModel.getWidth(this.config.variables.width),
+                            sideOrientation: Mesh.BACKSIDE,
+                            updatable: false
+                        },
+                        this.scene
+                    );
+                }
+                else{
+                    this.d3ModelOutline = MeshBuilder.CreateBox(
+                        this.elementModel.name,
+                        {
+                            height: this.getHeight() + this.outlineWidth,
+                            width: this.elementModel.getWidth(this.config.variables.width) + this.outlineWidth,
+                            depth: this.elementModel.getWidth(this.config.variables.width) + this.outlineWidth,
+                            sideOrientation: Mesh.BACKSIDE,
+                            updatable: false
+                        },
+                        this.scene
+                    );
+
+                }
+                
                 let outlineMat = new StandardMaterial('outlineMaterial', this.scene);
                 this.d3ModelOutline.material = outlineMat;
                 this.d3ModelOutline.parent = this.d3Model;
