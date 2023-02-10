@@ -1,19 +1,24 @@
-import {Config} from '../../../model/entitiesImplems/config.model';
-import {VPVariantsImplem} from '../../../model/entitiesImplems/vpVariantsImplem.model';
-import {Link} from '../../../model/entities/link.interface';
-import {Color3, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3} from '@babylonjs/core';
-import {Building3D} from '../../common/3Delements/building3D';
-import {Road3D} from './road3D';
-import {EntitiesList} from '../../../model/entitiesList';
-import {Link3DFactory} from '../../common/3Dfactory/link3D.factory';
+import { Config } from '../../../model/entitiesImplems/config.model';
+import { VPVariantsImplem } from '../../../model/entitiesImplems/vpVariantsImplem.model';
+import { Link } from '../../../model/entities/link.interface';
+import { Color3, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
+import { Building3D } from '../../common/3Delements/building3D';
+import { Road3D } from './road3D';
+import { EntitiesList } from '../../../model/entitiesList';
+import { Link3DFactory } from '../../common/3Dfactory/link3D.factory';
 
 export class City3D {
 
     config: Config;
     scene: Scene;
 
-    // Is this road the main road?
+    // Is this road the main road
     road: Road3D;
+
+    highway: Road3D;
+
+    file_road: Road3D;
+
     links: Link[] = [];
 
     floor: Mesh;
@@ -22,13 +27,20 @@ export class City3D {
         this.config = config;
         this.scene = scene;
         this.links = entities.links;
-        console.log("City is initialising its road with entities: ", entities.district as VPVariantsImplem)
+        console.log(
+            "City is initialising its road with entities: ",
+            entities.district as VPVariantsImplem,
+            ", and links: ",
+            this.links
+        )
         this.init(entities);
     }
 
     private init(entities: EntitiesList) {
-        let d3elem = new Road3D(this.scene, entities.district as VPVariantsImplem, this.config);
-        this.road = d3elem;
+        this.road = new Road3D(this.scene, entities.district as VPVariantsImplem, this.config);
+        this.file_road = new Road3D(this.scene, entities.file_district as VPVariantsImplem, this.config)
+        this.highway = new Road3D(this.scene, null, this.config);
+        this.highway.forcedLength = 10;
     }
 
     private findSrcLink(name: string): Building3D {
@@ -44,9 +56,11 @@ export class City3D {
         };
 
         this.road.build(this.config);
+        this.highway.build(this.config);
+        this.file_road.build(this.config);
         this.links.forEach(l => {
             let type = l.type;
-            // if (type == "INSTANTIATE") { // we only want to show INSTANTIATE type links since the visualization is based off IMPLEMENTS & EXTENDS hierarchy
+            // we only want to show INSTANTIATE type links since the visualization is based off IMPLEMENTS & EXTENDS hierarchy
             let src = this.findSrcLink(l.source.name);
             let dest = this.findSrcLink(l.target.name);
             if (src !== undefined && dest !== undefined) {
@@ -54,11 +68,8 @@ export class City3D {
                 if (link) {
                     src.link(link);
                     dest.link(link);
-                    // src.link(dest, type);
-                    //dest.link(src, type);
                 }
             }
-            // }
         });
 
         for (let [, value] of this.config.clones.map) {
@@ -68,8 +79,6 @@ export class City3D {
                     if (link) {
                         value.original.link(link);
                         b.link(link);
-                        // value.original.link(b, "DUPLICATES");
-                        //b.link(value.original, "DUPLICATES");
                     }
                 }
             }
@@ -91,11 +100,15 @@ export class City3D {
 
     place() {
         this.road.place(0, 0, 1, 0);
+        this.highway.place(this.road.getRoadLength(), 0, 1, 0);
+        this.file_road.place(this.road.getRoadLength() + this.highway.getRoadLength(), 0, 1, 0);
         this.floor.setPositionWithLocalVector(new Vector3(this.getSize() / 2, -0.01, 0));
     }
 
     render() {
         this.road.render(this.config);
+        this.highway.render(this.config)
+        this.file_road.render(this.config);
 
         let mat = new StandardMaterial("FloorMat", this.scene);
         mat.ambientColor = Color3.FromHexString("#222222");

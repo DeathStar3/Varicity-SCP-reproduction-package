@@ -1,5 +1,5 @@
-import {Link3DFactory} from './../../common/3Dfactory/link3D.factory';
-import {Config} from './../../../model/entitiesImplems/config.model';
+import {Link3DFactory} from '../../common/3Dfactory/link3D.factory';
+import {Config} from '../../../model/entitiesImplems/config.model';
 import {Link} from '../../../model/entities/link.interface';
 import {Scene} from '@babylonjs/core';
 import {Element3D} from '../../common/3Dinterfaces/element3D.interface';
@@ -24,26 +24,23 @@ export class City3D {
     }
 
     private init(entities: EntitiesList) {
-
         let d3elem = new District3D(this.scene, entities.district, 0);
         this.districts.push(d3elem);
 
         entities.buildings.forEach(b => {
             let d3elem = new Building3D(this.scene, b, 0, this.config);
             this.buildings.push(d3elem);
-            // d3elem.build();
-            // d3elem.render(this.config);
         });
     }
 
     private findSrcLink(name: string): Building3D {
         let building: Building3D = undefined;
         for (let b of this.buildings) {
-            if (b.getName() == name) return building = b;
+            if (b.getName() == name) return b;
         }
         for (let d of this.districts) {
             let b = d.get(name);
-            if (b != undefined) return building = b;
+            if (b != undefined) return b;
         }
         return building;
     }
@@ -64,8 +61,6 @@ export class City3D {
                 if (link) {
                     src.link(link);
                     dest.link(link);
-                    // src.link(dest, type);
-                    // dest.link(src, type);
                 }
             }
         });
@@ -74,7 +69,7 @@ export class City3D {
     }
 
     getWidth(): number {
-        return this.districts.reduce<number>((prev, cur) => prev += cur.getWidth(), 0);
+        return this.districts.reduce<number>((prev, cur) => prev + cur.getWidth(), 0);
     }
 
     getLength(): number {
@@ -89,8 +84,6 @@ export class City3D {
         let size = this.getWidth();
         d3elements.forEach(e => {
             let eSize = e.getWidth();
-            // e.place(x + currentX, z + currentZ);
-            // currentX += eSize;
             e.place(currentX + (eSize - size) / 2, 0);
             currentX += eSize;
         });

@@ -29,11 +29,8 @@ export abstract class SceneRenderer {
         this.engine = new Engine(this.canvas, true);
         this.scene = new Scene(this.engine);
         SettingsController.updateBackgroundColorFromCookie(this.scene);
-        //console.log(" *** Camera position here"+ this.camera.position);
         this.light = new HemisphericLight("light1", new Vector3(0, 1, 0), this.scene);
         this.entitiesList = entitiesList;
-        // this.scene.clearColor = new Color4(1, 0, 0, 1);
-        // this.scene.ambientColor = new Color3(1, 0, 0);
 
         // hide/show the Inspector
         window.addEventListener("keydown", (ev) => {
@@ -64,4 +61,14 @@ export abstract class SceneRenderer {
     abstract buildScene(updateCamera: boolean): void;
 
     abstract render(): void;
+
+    protected setupCamera(panningSensibility: number, wheelPrecision: number) {
+        SceneRenderer.camera.attachControl(this.canvas, true)
+        SceneRenderer.camera.panningSensibility = panningSensibility
+        SceneRenderer.camera.wheelPrecision = wheelPrecision
+    }
+
+    protected setupLight(name: string, position: Vector3) {
+        this.light = new HemisphericLight(name, position, this.scene)
+    }
 }

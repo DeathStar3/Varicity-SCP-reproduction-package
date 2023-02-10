@@ -6,11 +6,6 @@ export class ClassImplem extends Building {
     constructor(node: Node, level: number) {
         super();
         Object.assign(this, node);
-        // this.name = name;
-        // this.height = height;
-        // this.width = width;
-        // this.types = types;
-        // this.fullName = fullName;
         this.compLevel = level;
     }
 

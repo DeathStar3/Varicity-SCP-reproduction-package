@@ -7,14 +7,20 @@ import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.
 export class Road3D extends Element3D {
     padding: number = 0;
 
+    // This is element that road is representing
     elementModel: VPVariantsImplem;
 
+    // ????
     leftVPs: Road3D[] = [];
+    // ????
     rightVPs: Road3D[] = [];
 
+    // ????
     leftVariants: Building3D[] = [];
+    // ????
     rightVariants: Building3D[] = [];
 
+    // In my opinion, this is the starting point of the road (the building with the pyramid on top).
     vp: Building3D;
 
     vector: Vector3;
@@ -24,13 +30,15 @@ export class Road3D extends Element3D {
 
     roadWidth = 0.3;
 
+    forcedLength: number = undefined;
+
     status: boolean = false;
 
     constructor(scene: Scene, vpElmt: VPVariantsImplem, config: Config) {
         super(scene);
 
         this.elementModel = vpElmt;
-        if (vpElmt.vp) {
+        if (vpElmt && vpElmt.vp) {
             this.vp = new Building3D(scene, vpElmt.vp, 0, config);
         }
 
@@ -63,11 +71,9 @@ export class Road3D extends Element3D {
     private spreadElementsVP(elements: Road3D[], left: Road3D[], right: Road3D[]): void {
         if (elements.length > 0) {
             const sorted = elements.sort((a, b) => {
-                return (b.getWidth() - a.getWidth()) !== 0 ? b.getWidth() - a.getWidth() : (
-                    (b.getLength() - a.getLength()) !== 0 ? b.getLength() - a.getLength() : (
-                        b.getHeight() - a.getHeight()
-                    )
-                );
+                if ((b.getWidth() - a.getWidth()) !== 0) return b.getWidth() - a.getWidth()          // Sort by width
+                else if ((b.getLength() - a.getLength()) !== 0) return b.getLength() - a.getLength() // Then by length
+                else return (b.getHeight() - a.getHeight())                                          // Finally by height
             });
             sorted.forEach((e) => {
                 if (this.sumOfWidths(left) > this.sumOfWidths(right)) {
@@ -122,6 +128,8 @@ export class Road3D extends Element3D {
     }
 
     getLength(): number {
+        if (this.forcedLength !== undefined) return this.forcedLength;
+
         return Math.max(
             this.leftVariants.reduce(((a, b) => a + b.getWidth()), 0),
             this.rightVariants.reduce(((a, b) => a + b.getWidth()), 0)
@@ -147,27 +155,29 @@ export class Road3D extends Element3D {
         const arrConcat = this.leftVariants.concat(this.rightVariants);
         for (let b of arrConcat) {
             if (b.getName() == name) {
-                return building = b;
+                return b;
             }
         }
         const roadsConcat = this.leftVPs.concat(this.rightVPs);
         for (let d of roadsConcat) {
             let b = d.get(name);
             if (b != undefined) {
-                return building = b;
+                return b;
             }
         }
         return building;
     }
 
     build(config?: Config) {
+        if (this.forcedLength !== undefined) return;
+
         const buildings3D: Building3D[] = [];
         if (this.vp) {
             this.vp.build();
         }
-        this.elementModel.buildings.forEach(b => {
+        this.elementModel.buildings
+            .forEach(b => {
             if (config.blacklist) {
-                // if (!config.blacklist.includes(b.name)) {
                 if (!config.blacklist.some(blacklisted => b.name.includes(blacklisted))) {
                     if (config.clones) {
                         if (config.clones.map.has(b.name)) {
@@ -189,7 +199,6 @@ export class Road3D extends Element3D {
         const roads3D: Road3D[] = [];
         this.elementModel.districts.forEach(v => {
             if (config.blacklist) {
-                // if (!config.blacklist.includes(v.name)) {
                 if (!config.blacklist.some(blacklisted => v.name.includes(blacklisted))) {
                     if (config.clones) {
                         if (config.clones.map.has(v.vp.name)) {
@@ -280,7 +289,7 @@ export class Road3D extends Element3D {
 
     render(config: Config) {
         this.d3Model = MeshBuilder.CreateBox(
-            this.elementModel.name,
+            this.elementModel ? this.elementModel.name : "Highway to Hell", // Love my refs
             {
                 height: 0.001,
                 width: (this.orientationX == 0 ? this.roadWidth : this.getRoadLength()),
