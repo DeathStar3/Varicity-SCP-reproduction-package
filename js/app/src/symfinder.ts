@@ -137,13 +137,15 @@ export class Symfinder{
     async visitPackage(files: string[], visitor: SymfinderVisitor, label: string, program: Program){
         var nbFiles = files.length;
         var currentFile = 0;
+        const analyse = [];
         for(let file of files){
-            // console.log(file)
             let parser = new Parser(file, program);
-            await parser.accept(visitor);
-            currentFile++;
-            process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
+            analyse.push(parser.accept(visitor).then(_ => {
+                currentFile++;
+                process.stdout.write("\rResolving " + label + ": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
+            }));
         }
+        await Promise.all(analyse);
         process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")" + ", done.\n");
     }
 

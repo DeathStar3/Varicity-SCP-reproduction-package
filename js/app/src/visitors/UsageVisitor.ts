@@ -11,7 +11,7 @@ import {
     ParameterDeclaration,
     Program,
     PropertyDeclaration, Set,
-    SymbolFlags,
+    SymbolFlags, SyntaxKind,
     TypeFlags,
     VariableDeclaration
 } from "typescript";
@@ -60,6 +60,7 @@ export default class UsageVisitor extends SymfinderVisitor {
         //TODO regarder comment récupérer chemin de la class depuis 'node.type' ou 'type'
 
         const qualifiedName = this.program.getTypeChecker().getFullyQualifiedName(type.getSymbol()!);
+        // console.log(name+">"+qualifiedName)
         // console.log(qualifiedName)
         let correctFormat = qualifiedName.match(/"([a-zA-Z0-9-._\/]+)"\.([a-zA-Z]+)/);
         if (correctFormat == null) {
