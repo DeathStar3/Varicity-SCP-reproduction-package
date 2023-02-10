@@ -503,7 +503,7 @@ export default class NeoGraph{
         return this.submitRequest(request, {}).then(function(results: Record[]){
             const data = results.map((result: Record) => result.get(0));
             let content = JSON.stringify(data);
-            writeFile('./export/db.json', content,{flag:'a'},(err: any) => {
+            writeFile('./export/db.json', content,(err: any) => {
                 if (err) throw err;
                 process.stdout.write('data written to file');
             });
@@ -527,14 +527,25 @@ export default class NeoGraph{
         await this.submitRequest(requestLinks, {}).then(function(results: Record[]){
             data.links = results.map((result: Record) => result.get(0))[0].links;
         });
-        await this.submitRequest(classRequest,{}).then(function (results:Record[]){
-            data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
+        data.links.map((link: any) => {
+            if(link.source.startsWith('..')){
+                link.source = './'+link.source.split('/').slice(2).join('/');
+            }
+            if(link.target.startsWith('..')){
+                link.target = './'+link.target.split('/').slice(2).join('/');
+            }
         });
         await this.submitRequest(fileRequest,{}).then(function (results:Record[]){
             data.nodes.push.apply(data.nodes,results.map((result: Record) => result.get(0))[0].nodes);
         });
+        data.nodes.map((node: any) => {
+            node.name = './'+node.name.split('/').slice(2).join('/');
+        })
+        await this.submitRequest(classRequest,{}).then(function (results:Record[]){
+            data.nodes.push.apply(data.nodes,results.map((result: Record) => result.get(0))[0].nodes) ;
+        });
         let content = JSON.stringify(data);
-        writeFile('./export/db_link.json', content,{flag:'a'},(err: any) => {
+        writeFile('./export/db_link.json', content,(err: any) => {
             if (err) throw err;
             process.stdout.write('data written to file');
         });
