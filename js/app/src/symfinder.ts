@@ -253,7 +253,6 @@ export class Symfinder{
                 await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CORE_CONTENT,
                     clone.duplicationA.fragment, percentB, clone.duplicationB.start.line + ":" + clone.duplicationB.end.line);
             }
-            }
         }
         if(i > 0)
             process.stdout.write("\rCheck duplication code: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
