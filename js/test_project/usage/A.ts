@@ -4,6 +4,9 @@ import { C as Cbis } from './Cbis';
 import D from "./D";
 import H from "./H";
 import I from "./I";
+import K, {testType} from "./K";
+import {N} from "usage/foo/bar/N";
+import * as m from "m";
 
 export default class A {
 
@@ -13,12 +16,16 @@ export default class A {
     constructor(d: D) {
     }
 
-    test(c: C) {
+    test(c: C, m: m.M) {
         const e = c.e; //sans default
         const f = c.f; //default
         const g = c.g();
         const h: H = c.h;
         const i = new I();
+        const k = new K();
+        const type: testType = "a";
+        const l = this.b.getL();
+        const n = new N();
     }
 
 }
