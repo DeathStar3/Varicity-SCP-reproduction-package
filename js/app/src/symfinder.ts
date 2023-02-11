@@ -112,7 +112,7 @@ export class Symfinder{
 
         await this.neoGraph.driver.close();
 
-        
+
     }
 
     msToTime(duration: number) {
@@ -188,11 +188,11 @@ export class Symfinder{
             }
             else{
                 //filter typescript files
-                if(fileName.endsWith(".ts") && !fileName.endsWith(".usage.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
+                if(fileName.endsWith(".ts") && !fileName.endsWith(".usage.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith("test.ts") && !fileName.endsWith("tests.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
                     process.stdout.write("\rDetecting files ("+files.length+"): '"+fileName + "'\x1b[K");
                     files.push(absolute_path);
                     var fileNode = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.FILE, []);
-                    await this.neoGraph.linkTwoNodes(<Node>parentNode, fileNode, RelationType.CHILD)  
+                    await this.neoGraph.linkTwoNodes(<Node>parentNode, fileNode, RelationType.CHILD)
                 }
             }
         }
@@ -310,6 +310,7 @@ export class Symfinder{
               const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
               return abs_path == clone.duplicationB.sourceId
             });
+            if(nodeA == undefined || nodeB == undefined) continue;
             var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
             var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
             await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CODE_DUPLICATED,
