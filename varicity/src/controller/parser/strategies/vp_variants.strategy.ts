@@ -14,6 +14,7 @@ import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
  */
 export class VPVariantsStrategy implements ParsingStrategy {
     private static readonly FILE_TYPES = ["FILE", "DIRECTORY"];
+    private static readonly FILE_CLASS_LINK_TYPES = ["EXPORT", "IMPORT"];
     private static readonly FILE_LINK_TYPES = ["CHILD", "CORE_CONTENT", "CODE_DUPLICATED"]
 
     public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
@@ -36,21 +37,27 @@ export class VPVariantsStrategy implements ParsingStrategy {
             });
 
             const linkElements = data.links
-                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) === -1) /// Remove all that is bind to a file or a folder
+                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
             const allLinks = data.alllinks
-                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) === -1) /// Remove all that is bind to a file or a folder
+                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
             const hierarchyLinks = allLinks.filter(l => config.hierarchy_links.includes(l.type));
             const fileLinks = data.links
-                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) !== -1) /// Remove all that is not bind to a file or a folder
+                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is not bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
+            const fileClassLinks = data.alllinks.filter(l => VPVariantsStrategy.FILE_CLASS_LINK_TYPES.includes(l.type));
 
             nodesList.forEach(n => {
                 n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
             });
             fileList.forEach(n => {
                 n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, fileList, fileLinks).length);
+            })
+            fileList.forEach(file => {
+                file.exportedClasses = fileClassLinks
+                    .filter(link => link.source === file.name)
+                    .map(link => this.findNodeByName(link.target, nodesList))
             })
 
             this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation); // Add composition level to classes
@@ -250,12 +257,16 @@ export class VPVariantsStrategy implements ParsingStrategy {
             linked.push(...inLinks);
         }
 
+
         const children = linked.filter(ln => ln.compositionLevel === level + 1);
         if (children.length > 0) {
             let result = new VPVariantsImplem(new ClassImplem(
                 nodeElement,
                 nodeElement.compositionLevel
             ));
+
+            result.vp.exportedClasses = nodeElement.exportedClasses.map(nodeElement => new ClassImplem(nodeElement,0));
+
             children.forEach(c => {
                 const r = this.buildDistrict(c, nodes, links, level + 1, orientation);
                 if (r instanceof VPVariantsImplem) {
@@ -266,10 +277,14 @@ export class VPVariantsStrategy implements ParsingStrategy {
             });
             return result;
         } else {
-            return new ClassImplem(
+            let result = new ClassImplem(
                 nodeElement,
                 nodeElement.compositionLevel
             );
+
+            result.exportedClasses = nodeElement.exportedClasses.map(nodeElement => new ClassImplem(nodeElement,0));
+
+            return result;
         }
     }
 

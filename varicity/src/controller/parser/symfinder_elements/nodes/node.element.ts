@@ -6,6 +6,7 @@ export interface Node {
     name: string;
     types: string[];
     metrics: Metrics;
+    exportedClasses: Node[];
 }
 
 export class NodeElement implements Node {
@@ -17,12 +18,14 @@ export class NodeElement implements Node {
     root: boolean;
     compositionLevel: number = -1;
     origin: string = "";
+    exportedClasses: Node[];
 
     constructor(name: string) {
         this.name = name;
         this.analyzed = false;
         this.root = true;
         this.metrics = new Metrics();
+        this.exportedClasses = [];
     }
 
     // public addMetric(metric: MetricObject){

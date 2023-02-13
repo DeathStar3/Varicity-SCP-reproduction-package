@@ -85,7 +85,8 @@ export class SearchbarController {
         const nodeKeys: Node = {
             name: "",
             types: [],
-            metrics: new Metrics()
+            metrics: new Metrics(),
+            exportedClasses: []
         }
         for (let key in nodeKeys) {
             if (typeof nodeKeys[key] === "number") {

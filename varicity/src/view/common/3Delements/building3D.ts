@@ -167,6 +167,7 @@ export class Building3D extends Element3D {
      * Create the base mesh for the current element (cylinder if it is a file, a box for a class)
      */
     protected renderBaseElement(
+        scale: number = 1,
         sideOrientation: number = Mesh.DEFAULTSIDE,
         updatable: boolean = false
         ): Mesh {
@@ -174,8 +175,8 @@ export class Building3D extends Element3D {
             return MeshBuilder.CreateCylinder(
                 this.elementModel.name,
                 {
-                    height: this.getHeight(),
-                    diameter: this.elementModel.getWidth(this.config.variables.width),
+                    height: this.getHeight() * scale,
+                    diameter: this.elementModel.getWidth(this.config.variables.width) * scale,
                     sideOrientation: sideOrientation,
                     updatable: updatable
                 },
@@ -184,9 +185,9 @@ export class Building3D extends Element3D {
             return MeshBuilder.CreateBox(
                 this.elementModel.name,
                 {
-                    height: this.getHeight(),
-                    width: this.elementModel.getWidth(this.config.variables.width),
-                    depth: this.elementModel.getWidth(this.config.variables.width),
+                    height: this.getHeight() * scale,
+                    width: this.elementModel.getWidth(this.config.variables.width) * scale,
+                    depth: this.elementModel.getWidth(this.config.variables.width) * scale,
                     sideOrientation: sideOrientation,
                     updatable: updatable
                 },
@@ -336,9 +337,9 @@ export class Building3D extends Element3D {
         }
     }
 
-    render() {
+    render(config?: Config, scale: number = 1) {
         // Display building
-        this.d3Model = this.renderBaseElement()
+        this.d3Model = this.renderBaseElement(scale)
         this.d3Model.setPositionWithLocalVector(this.center);
 
         this.highlightLayer = new HighlightLayer("hl", this.scene);
@@ -347,7 +348,7 @@ export class Building3D extends Element3D {
         if (this.config.building.colors.outlines) {
             const outlineColor = this.getColor(this.config.building.colors.outlines, this.elementModel.types);
             if (outlineColor !== undefined) {
-                this.d3ModelOutline = this.renderBaseElement(Mesh.BACKSIDE);
+                this.d3ModelOutline = this.renderBaseElement(scale, Mesh.BACKSIDE);
                 
                 let outlineMat = new StandardMaterial('outlineMaterial', this.scene);
                 this.d3ModelOutline.material = outlineMat;
@@ -379,7 +380,7 @@ export class Building3D extends Element3D {
         // draw sphere for decorator
         if (this.elementModel.types.includes("DECORATOR")) {
             this.d3ModelSphere = MeshBuilder.CreateSphere("sphere", {
-                diameter: (this.getWidth() - this.padding),
+                diameter: (this.getWidth() - this.padding) * scale,
             }, this.scene);
             this.d3ModelSphere.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelSphere.material = mat;
@@ -393,8 +394,8 @@ export class Building3D extends Element3D {
             this.d3ModelInvertedPyramid = MeshBuilder.CreateCylinder("reversedPyramid", {
                 diameterTop: 0,
                 tessellation: 4,
-                diameterBottom: this.getWidth() - this.padding,
-                height: this.getWidth() - this.padding
+                diameterBottom: (this.getWidth() - this.padding) * scale,
+                height: (this.getWidth() - this.padding) * scale
             }, this.scene);
             this.d3ModelInvertedPyramid.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelInvertedPyramid.rotate(new Vector3(1, 0, 0), Math.PI);
@@ -409,8 +410,8 @@ export class Building3D extends Element3D {
         if (this.elementModel.types.includes("STRATEGY")) {
             this.d3ModelPrism = MeshBuilder.CreateCylinder("prism", {
                 tessellation: 8,
-                diameter: (this.getWidth() - this.padding),
-                height: this.getWidth() - this.padding
+                diameter: (this.getWidth() - this.padding) * scale,
+                height: (this.getWidth() - this.padding) * scale
             }, this.scene);
             this.d3ModelPrism.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelPrism.material = mat;
@@ -422,16 +423,16 @@ export class Building3D extends Element3D {
         // draw chimney for factories
         if (this.elementModel.types.includes("FACTORY")) {
             this.d3ModelChimney1 = MeshBuilder.CreateCylinder("chimney1", {
-                diameter: (this.getWidth() - this.padding) / 6,
-                height: this.getWidth() - this.padding
+                diameter: (this.getWidth() - this.padding) / 6 * scale,
+                height: (this.getWidth() - this.padding) * scale
             }, this.scene);
             this.d3ModelChimney2 = MeshBuilder.CreateCylinder("chimney2", {
-                diameter: (this.getWidth() - this.padding) / 6,
-                height: this.getWidth() - this.padding
+                diameter: (this.getWidth() - this.padding) / 6 * scale,
+                height: (this.getWidth() - this.padding) * scale
             }, this.scene);
             this.d3ModelChimney3 = MeshBuilder.CreateCylinder("chimney3", {
-                diameter: (this.getWidth() - this.padding) / 6,
-                height: this.getWidth() - this.padding
+                diameter: (this.getWidth() - this.padding) / 6 * scale,
+                height: (this.getWidth() - this.padding) * scale
             }, this.scene);
             this.d3ModelChimney1.setPositionWithLocalVector(this.center.add(new Vector3(-((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney2.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
@@ -451,8 +452,8 @@ export class Building3D extends Element3D {
             this.d3ModelPyramid = MeshBuilder.CreateCylinder("pyramid", {
                 diameterTop: 0,
                 tessellation: 4,
-                diameterBottom: this.getWidth() - this.padding,
-                height: this.getWidth() - this.padding
+                diameterBottom: (this.getWidth() - this.padding) * scale,
+                height: (this.getWidth() - this.padding) * scale
             }, this.scene);
             this.d3ModelPyramid.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2 + this.edgesWidth / 120, 0)));
             this.d3ModelPyramid.rotate(new Vector3(0, 1, 0), Math.PI / 4);
