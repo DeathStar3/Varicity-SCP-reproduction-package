@@ -135,8 +135,6 @@ export class VPVariantsStrategy implements ParsingStrategy {
         let node: NodeElement = new NodeElement(n.name);
 
         node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, this.checkAndGetMetric(n.methodVariants));
-        // Fixme: `check if nbFunctions is missing or not`
-        // node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, this.checkAndGetMetric(n.methodVariants));
 
         const attr = n.attributes;
         let nbAttributes = 0;
@@ -176,15 +174,26 @@ export class VPVariantsStrategy implements ParsingStrategy {
         }
     }
 
-    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number, orientation: Orientation): void {
+    private isLinkParsable(l: LinkInterface, n: NodeElement, nodeNames: string[]) {
+        return (l.target === n.name && !nodeNames.includes(l.source)) // IN
+            || (l.source === n.name && !nodeNames.includes(l.target)) // OUT
+            || l.type !== "EXPORT" // Link between classes and files
+    }
+
+    private buildComposition(
+        alllinks: LinkInterface[],
+        nodes: NodeElement[],
+        srcNodes: NodeElement[],
+        level: number,
+        orientation: Orientation
+    ): void {
         const newSrcNodes: NodeElement[] = [];
         const nodeNames = srcNodes.map(sn => sn.name);
         nodes.forEach(n => {
             if (nodeNames.includes(n.name)) {
                 n.compositionLevel = level;
                 alllinks.filter(l => {
-                    return (l.target === n.name && !nodeNames.includes(l.source)) // IN
-                        || (l.source === n.name && !nodeNames.includes(l.target)) // OUT
+                    return this.isLinkParsable(l, n, nodeNames);
                 }).forEach(l => {
                     //console.log("Node: ", n.name, " - level: ", n.compositionLevel, " - link: ", l);
                     /// According to the orientation asked by the user, put the target (OUT) or the source (IN) first

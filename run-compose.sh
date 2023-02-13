@@ -12,6 +12,7 @@ create_directory(){
 
 kill_container(){
   docker-compose -f varicity-front-back.docker-compose.yaml down
+  docker rmi deathstar3/varimetrics:local -f
 }
 
 # Blank value means option unset

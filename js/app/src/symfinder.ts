@@ -44,13 +44,14 @@ export class Symfinder{
     /**
      * run symfinder for the specific project
      * @param src path to the root directory
+     * @param http_path
      */
     async run(src: string, http_path: string){
         await this.neoGraph.clearNodes();
 
         console.log("Analyse variability in : '" + src + "'")
 
-        var files: string[] = await this.visitAllFiles(src);
+        let files: string[] = await this.visitAllFiles(src);
         process.stdout.write("\rDetecting files ("+files.length+"): done.\x1b[K\n");
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes");
         await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations");
@@ -252,7 +253,6 @@ export class Symfinder{
                     clone.duplicationA.fragment, percentA, clone.duplicationA.start.line + ":" + clone.duplicationA.end.line);
                 await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CORE_CONTENT,
                     clone.duplicationA.fragment, percentB, clone.duplicationB.start.line + ":" + clone.duplicationB.end.line);
-            }
             }
         }
         if(i > 0)

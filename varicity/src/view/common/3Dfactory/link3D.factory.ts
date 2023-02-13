@@ -10,13 +10,5 @@ export class Link3DFactory {
         if (!config.link.display) return undefined;
         if (config.link.display.air_traffic.includes(type)) return new Link3DImplem(src, dest, type, scene, config);
         if (config.link.display.underground_road.includes(type)) return new UndergroundRoad3DImplem(src, dest, type, scene, config);
-        // switch(type) {
-        //     // case 'DUPLICATES':
-        //     case 'DUPLICATES': return new UndergroundRoad3DImplem(src, dest, type, scene);
-        //     case 'INSTANTIATE':
-        //     case 'EXTENDS':
-        //     case 'IMPLEMENTS': return new Link3DImplem(src, dest, type, scene);
-        //     default: throw new Error("Tasukete kudasai goshujin franshoah sama");
-        // }
     }
 }

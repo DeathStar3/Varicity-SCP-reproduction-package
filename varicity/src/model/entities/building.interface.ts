@@ -14,8 +14,6 @@ export abstract class Building implements Node {
     width: number;
     height: number;
 
-    // TODO: remove fullName to keep only building name
-
     compLevel: number;
 
     constructor() {

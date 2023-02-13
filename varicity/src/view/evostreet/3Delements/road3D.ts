@@ -3,6 +3,7 @@ import {ActionManager, Color3, ExecuteCodeAction, MeshBuilder, Scene, StandardMa
 import {Element3D} from '../../common/3Dinterfaces/element3D.interface';
 import {Building3D} from '../../common/3Delements/building3D';
 import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.model";
+import { Building3DFactory } from "../../common/3Dfactory/building3D.factory";
 
 export class Road3D extends Element3D {
     padding: number = 0;
@@ -168,34 +169,34 @@ export class Road3D extends Element3D {
         return building;
     }
 
-    build(config?: Config) {
-        if (this.forcedLength !== undefined) return;
+    private buildBuildings(config: Config) {
+        console.log("Have I access to the file links? ", this.elementModel.districts)
 
         const buildings3D: Building3D[] = [];
-        if (this.vp) {
-            this.vp.build();
-        }
-        this.elementModel.buildings
-            .forEach(b => {
+        this.elementModel.buildings.forEach(b => {
             if (config.blacklist) {
                 if (!config.blacklist.some(blacklisted => b.name.includes(blacklisted))) {
                     if (config.clones) {
                         if (config.clones.map.has(b.name)) {
                             config.clones.map.get(b.name).clones.push(this.vp);
                         } else {
-                            let d3 = new Building3D(this.scene, b, 0, config);
+                            let d3 = Building3DFactory.createBuildingMesh(b, 0, this.scene, config);
                             config.clones.map.set(b.name, {original: d3, clones: []});
                             d3.build();
                             buildings3D.push(d3);
                         }
                     } else {
-                        let d3 = new Building3D(this.scene, b, 0, config);
+                        let d3 = Building3DFactory.createBuildingMesh(b, 0, this.scene, config);
                         d3.build();
                         buildings3D.push(d3);
                     }
                 }
             }
         });
+        return buildings3D;
+    }
+
+    private buildRoads(config: Config) {
         const roads3D: Road3D[] = [];
         this.elementModel.districts.forEach(v => {
             if (config.blacklist) {
@@ -217,6 +218,17 @@ export class Road3D extends Element3D {
                 }
             }
         });
+        return roads3D;
+    }
+
+    build(config?: Config) {
+        if (this.forcedLength !== undefined) return;
+
+        if (this.vp) {
+            this.vp.build();
+        }
+        const buildings3D: Building3D[] = this.buildBuildings(config);
+        const roads3D: Road3D[] = this.buildRoads(config);
 
         this.spreadElementsVariants(buildings3D, this.leftVariants, this.rightVariants);
         this.spreadElementsVP(roads3D, this.leftVPs, this.rightVPs);
