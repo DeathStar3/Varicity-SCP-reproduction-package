@@ -110,15 +110,15 @@ export default class NeoGraph{
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
-    async linkTwoNodesWithCodeDuplicated(node1: Node, node2: Node, type: RelationType, zfragment: string, percent: string, lines: string): Promise<void> {
+    async linkTwoNodesWithCodeDuplicated(node1: Node, node2: Node, type: RelationType, percent: string, lines: string): Promise<void> {
         const request = "MATCH(a)\n" +
         "WHERE ID(a)=$aId\n" +
         "WITH a\n" +
         "MATCH (b)\n" +
         "WITH a,b\n" +
         "WHERE ID(b)=$bId\n" +
-        "CREATE (a)-[r:"+type+" {zfragment: $zfragment, codePercent: $percent, lines: $lines}]->(b)";
-        await this.submitRequest(request, {aId: node1.identity, bId: node2.identity, percent:percent, zfragment:zfragment, lines: lines});
+        "CREATE (a)-[r:"+type+" {codePercent: $percent, lines: $lines}]->(b)";
+        await this.submitRequest(request, {aId: node1.identity, bId: node2.identity, percent:percent, lines: lines});
     }
 
     async updateLinkTwoNode(node1: Node, node2: Node, oldType: RelationType, newType: RelationType): Promise<void> {
@@ -512,10 +512,12 @@ export default class NeoGraph{
     }
 
     async exportRelationJSON():Promise<string>{
-        const requestLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) ='EXTENDS' or type(r)='IMPORT' or type(r) ='LOAD' or type(r) = 'CHILD')" +
+        const requestLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) = 'EXTENDS'" +
+            " or type(r) = 'IMPORT' or type(r) = 'LOAD' or type(r) = 'CHILD') or type(r) = 'CORE_CONTENT' or type(r) = 'CODE_DUPLICATED'" +
             " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
             "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
-            "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}"
+            "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}";
+
         const classRequest = "MATCH (n) where 'CLASS' in labels(n) or 'INTERFACE' in labels(n) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
@@ -527,6 +529,7 @@ export default class NeoGraph{
         await this.submitRequest(requestLinks, {}).then(function(results: Record[]){
             data.links = results.map((result: Record) => result.get(0))[0].links;
         });
+
         await this.submitRequest(classRequest,{}).then(function (results:Record[]){
             data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
         });
