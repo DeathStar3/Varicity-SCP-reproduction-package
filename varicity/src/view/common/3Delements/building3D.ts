@@ -175,7 +175,7 @@ export class Building3D extends Element3D {
             return MeshBuilder.CreateCylinder(
                 this.elementModel.name,
                 {
-                    height: this.getHeight() * scale,
+                    height: this.getHeight(),
                     diameter: this.elementModel.getWidth(this.config.variables.width) * scale,
                     sideOrientation: sideOrientation,
                     updatable: updatable
@@ -185,7 +185,7 @@ export class Building3D extends Element3D {
             return MeshBuilder.CreateBox(
                 this.elementModel.name,
                 {
-                    height: this.getHeight() * scale,
+                    height: this.getHeight(),
                     width: this.elementModel.getWidth(this.config.variables.width) * scale,
                     depth: this.elementModel.getWidth(this.config.variables.width) * scale,
                     sideOrientation: sideOrientation,
@@ -382,7 +382,12 @@ export class Building3D extends Element3D {
             this.d3ModelSphere = MeshBuilder.CreateSphere("sphere", {
                 diameter: (this.getWidth() - this.padding) * scale,
             }, this.scene);
-            this.d3ModelSphere.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
+            this.d3ModelSphere.setPositionWithLocalVector(
+                this.center.add(
+                    new Vector3(
+                        0,
+                        offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2,
+                        0)));
             this.d3ModelSphere.material = mat;
             this.d3ModelSphere.material.backFaceCulling = false;
             offSet += this.getWidth() - this.padding;
@@ -395,9 +400,15 @@ export class Building3D extends Element3D {
                 diameterTop: 0,
                 tessellation: 4,
                 diameterBottom: (this.getWidth() - this.padding) * scale,
-                height: (this.getWidth() - this.padding) * scale
+                height: (this.getWidth() - this.padding)
             }, this.scene);
-            this.d3ModelInvertedPyramid.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
+            this.d3ModelInvertedPyramid.setPositionWithLocalVector(
+                this.center.add(
+                    new Vector3(
+                        0,
+                        offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2,
+                        0
+                    )));
             this.d3ModelInvertedPyramid.rotate(new Vector3(1, 0, 0), Math.PI);
             this.d3ModelInvertedPyramid.rotate(new Vector3(0, 1, 0), Math.PI / 4);
             this.d3ModelInvertedPyramid.material = mat;
@@ -411,9 +422,15 @@ export class Building3D extends Element3D {
             this.d3ModelPrism = MeshBuilder.CreateCylinder("prism", {
                 tessellation: 8,
                 diameter: (this.getWidth() - this.padding) * scale,
-                height: (this.getWidth() - this.padding) * scale
+                height: (this.getWidth() - this.padding)
             }, this.scene);
-            this.d3ModelPrism.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
+            this.d3ModelPrism.setPositionWithLocalVector(
+                this.center.add(
+                    new Vector3(
+                        0,
+                        offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2,
+                        0
+                    )));
             this.d3ModelPrism.material = mat;
             this.d3ModelPrism.material.backFaceCulling = false;
             offSet += this.getWidth() - this.padding;
@@ -424,19 +441,22 @@ export class Building3D extends Element3D {
         if (this.elementModel.types.includes("FACTORY")) {
             this.d3ModelChimney1 = MeshBuilder.CreateCylinder("chimney1", {
                 diameter: (this.getWidth() - this.padding) / 6 * scale,
-                height: (this.getWidth() - this.padding) * scale
+                height: (this.getWidth() - this.padding)
             }, this.scene);
             this.d3ModelChimney2 = MeshBuilder.CreateCylinder("chimney2", {
                 diameter: (this.getWidth() - this.padding) / 6 * scale,
-                height: (this.getWidth() - this.padding) * scale
+                height: (this.getWidth() - this.padding)
             }, this.scene);
             this.d3ModelChimney3 = MeshBuilder.CreateCylinder("chimney3", {
                 diameter: (this.getWidth() - this.padding) / 6 * scale,
-                height: (this.getWidth() - this.padding) * scale
+                height: (this.getWidth() - this.padding)
             }, this.scene);
-            this.d3ModelChimney1.setPositionWithLocalVector(this.center.add(new Vector3(-((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
-            this.d3ModelChimney2.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
-            this.d3ModelChimney3.setPositionWithLocalVector(this.center.add(new Vector3(((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
+            this.d3ModelChimney1.setPositionWithLocalVector(
+                this.center.add(new Vector3(-((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
+            this.d3ModelChimney2.setPositionWithLocalVector(
+                this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + scale * (this.getWidth() - this.padding) / 2, 0)));
+            this.d3ModelChimney3.setPositionWithLocalVector(
+                this.center.add(new Vector3(((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney1.material = mat;
             this.d3ModelChimney2.material = mat;
             this.d3ModelChimney3.material = mat;
@@ -453,9 +473,10 @@ export class Building3D extends Element3D {
                 diameterTop: 0,
                 tessellation: 4,
                 diameterBottom: (this.getWidth() - this.padding) * scale,
-                height: (this.getWidth() - this.padding) * scale
+                height: (this.getWidth() - this.padding)
             }, this.scene);
-            this.d3ModelPyramid.setPositionWithLocalVector(this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2 + this.edgesWidth / 120, 0)));
+            this.d3ModelPyramid.setPositionWithLocalVector(
+                this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2 + this.edgesWidth / 120, 0)));
             this.d3ModelPyramid.rotate(new Vector3(0, 1, 0), Math.PI / 4);
             this.d3ModelPyramid.material = mat;
             this.d3ModelPyramid.material.backFaceCulling = false;

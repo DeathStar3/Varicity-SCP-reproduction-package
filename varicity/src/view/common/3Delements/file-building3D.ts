@@ -5,12 +5,14 @@ import { Config } from "../../../model/entitiesImplems/config.model";
 import {Building3DFactory} from "../3Dfactory/building3D.factory";
 
 /**
- * This class represent a file and the classes that it exports
+ * This class represent a file and the classes that it exports.
  */
 export class FileBuilding3D extends Building3D {
 	private hat_city: Building3D[][] = [];
 	private max_x: number = 5;
 	private max_z: number = 5;
+
+	private class_width: number = 1;
 
 	constructor(scene: Scene, building: Building, depth: number, config: Config) {
 		super(scene, building, depth, config);
@@ -29,9 +31,12 @@ export class FileBuilding3D extends Building3D {
 		for (let x = 0; x < this.max_x; x++) {
 			this.hat_city.push([])
 			for (let z = 0; z < this.max_z; z++) {
-				if (x % 2 === 0 && z % 2 === 0)
-					this.hat_city[x].push(elements.pop());
-				else
+				if (x % 2 === 0 && z % 2 === 0) {
+					const elem = elements.pop();
+					this.hat_city[x].push(elem);
+
+					this.class_width = Math.max(this.class_width, elem.getWidth());
+				} else
 					this.hat_city[x].push(undefined);
 			}
 		}
@@ -73,34 +78,51 @@ export class FileBuilding3D extends Building3D {
 	}
 
 	render() {
-		const scale = 0.8;
-
-		let old_types = Object.assign([], this.elementModel.types);
-		this.elementModel.types = this.elementModel.types.filter(elem => elem !== "API")
+		let old_types = Object.assign([], this.elementModel.types); // Save all the types that had the file
+		this.elementModel.types = this.elementModel.types.filter(elem => elem !== "API"); // Remove API to not display a hat
 
 		super.render();
+
 		console.log("Matrix : ",this.hat_city);
-		let offset_x = this.elementModel.getWidth(this.config.variables.width) / this.max_x + 0.5;
-		let offset_z = this.elementModel.getWidth(this.config.variables.width) / this.max_z + 0.5;
-		let x = this.center.x - this.elementModel.getWidth(this.config.variables.width) / 2;
-		let z = this.center.z - this.elementModel.getWidth(this.config.variables.width) / 2;
+
+		const r = this.elementModel.getWidth(this.config.variables.width) / 2;
+		const inner_square_dim = 2 * r * Math.sin(Math.PI / 4);
+		let offset_x = inner_square_dim / this.max_x;
+		let offset_z = inner_square_dim / this.max_z;
+		let x = this.center.x - inner_square_dim / 2;
+		let z_i = this.center.z - inner_square_dim / 2;
+		let z = z_i;
+
+		const scale = offset_x / this.class_width * 3; // Multiplication by 3 to eat a bit of padding cells
+
+		console.log("f(x) = ", x, " + x * ", offset_x);
+		console.log("f(z) = ", z, " + z * ", offset_z);
+		console.log("Matrix size: ", inner_square_dim, "x", inner_square_dim, " inside the circle of diameter ", r * 2);
+		console.log("Scale: ", scale);
+
+		const meshes: Mesh[] = [];
+
 		for (const line of this.hat_city) {
 			for (const building of line) {
 				if (building !== undefined) {
+					console.log("Building ", building.elementModel.name, " at (", x + (offset_x / 2), ", ", z + (offset_z / 2), ")");
 					building.place(x + (offset_x / 2), z + (offset_z / 2));
 					building.render(this.config, scale);
 					building.d3Model.translate(new Vector3(0, 1, 0), this.getHeight());
-					Mesh.MergeMeshes(
-						[this.d3Model, building.d3Model],
-						false, false,
-						undefined, false,
-						true);
+					meshes.push(building.d3Model);
 				}
 				z += offset_z;
 			}
+			z = z_i;
 			x += offset_x;
 		}
 
-		this.elementModel.types = old_types;
+		Mesh.MergeMeshes(
+			[this.d3Model, ...meshes],
+			true, true,
+			undefined, false,
+			true);
+
+		this.elementModel.types = old_types; // Reset the types of the file
 	}
 }
