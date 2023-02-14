@@ -62,7 +62,7 @@ export default class UsageVisitor extends SymfinderVisitor {
         const qualifiedName = this.program.getTypeChecker().getFullyQualifiedName(type.getSymbol()!);
         // console.log(name+">"+qualifiedName)
         // console.log(qualifiedName)
-        let correctFormat = qualifiedName.match(/"([a-zA-Z0-9-._\/]+)"\.([a-zA-Z]+)/);
+        let correctFormat = qualifiedName.match(/^"([a-zA-Z0-9-._\/]+)"\.([a-zA-Z_0-9]+)$/);
         if (correctFormat == null) {
 /*            console.log(this.program.getTypeChecker().typeToString(type));
             console.log(this.program.getTypeChecker().getApparentType(type));
@@ -136,7 +136,7 @@ export default class UsageVisitor extends SymfinderVisitor {
                 console.log(filePath+" > Error to link 'usage' nodes " + name + " and " + className + "...");
             }
         } else {
-            console.log(filePath+" > Error to link 'usage' nodes because no node named '" + name + "' or with the file path '" + filePath + "' exists");
+            console.log("Error to link 'usage' nodes because no node named '" + name + "' or with the file path '" + filePath + "' exists");
         }
     }
 

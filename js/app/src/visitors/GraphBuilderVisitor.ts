@@ -176,7 +176,7 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         if(node.propertyName !== undefined){
             if(exportedElementNode === undefined) return;
             exportedElementName = node.name.getText();
-            var exportedElementNode = await this.neoGraph.updateNodeName(exportedElementNode, exportedElementName);
+            exportedElementNode = await this.neoGraph.setAlternativeName(exportedElementNode, exportedElementName);
         }
 
         

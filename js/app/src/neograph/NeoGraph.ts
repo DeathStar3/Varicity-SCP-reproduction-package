@@ -98,7 +98,7 @@ export default class NeoGraph{
     }
 
     async getElementNodeWithFile(name: string, type:EntityType,path: string): Promise<Node | undefined>{
-        const request = "MATCH (n:"+type+" {name: $name})<--(m {path: $path}) RETURN (n)";
+        const request = "MATCH (n:"+type+")<--(m {path: $path}) WHERE n.name = $name OR n.alt_name = $name RETURN (n)";
 
         return this.submitRequest(request, {name:name, path:path}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
@@ -187,10 +187,10 @@ export default class NeoGraph{
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
-    async updateNodeName(node: Node, name: string): Promise<Node | undefined>{
+    async setAlternativeName(node: Node, name: string): Promise<Node | undefined>{
         const request = "MATCH (n)\n" +
         "WHERE ID(n) = $id\n" +
-        "SET n.name = $name\n" +
+        "SET n.alt_name = $name\n" +
         "RETURN n";
 
         return await this.submitRequest(request, {id: node.identity, name: name}).then((result: Record[]) =>{
