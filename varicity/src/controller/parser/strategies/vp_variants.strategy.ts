@@ -49,6 +49,8 @@ export class VPVariantsStrategy implements ParsingStrategy {
             const fileClassLinks = data.alllinks.filter(l => VPVariantsStrategy.FILE_CLASS_LINK_TYPES.includes(l.type));
             const fileHierarchyLinks = fileLinks.filter(l => config.hierarchy_links.includes(l.type))
 
+            console.log("Links to create file hierarchy: ", fileHierarchyLinks);
+
             nodesList.forEach(n => {
                 n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
             });
@@ -65,7 +67,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
             this.buildComposition(fileHierarchyLinks, fileList, apiList, 0, config.orientation); // Add composition level to files ?
 
             const d = this.buildDistricts(nodesList, hierarchyLinks, config.orientation); // Create a district for classes
-            const fileDistrict = this.buildDistricts(fileList, fileLinks, config.orientation); // Create a district for file
+            const fileDistrict = this.buildDistricts(fileList, fileHierarchyLinks, config.orientation); // Create a district for file
 
             let result = new EntitiesList();
             result.district = d;
