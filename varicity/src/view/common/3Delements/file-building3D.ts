@@ -45,7 +45,6 @@ export class FileBuilding3D extends Building3D {
 	}
 
 	build() {
-		console.log("[", this.elementModel.name, "] Exported classes: ", this.elementModel.exportedClasses)
 		const length = this.elementModel.exportedClasses.length;
 		// nb = (n/2)^2
 		let dim = Math.floor(Math.sqrt(length)) * 2;
@@ -64,7 +63,6 @@ export class FileBuilding3D extends Building3D {
 		sideOrientation: number = Mesh.DEFAULTSIDE,
 		updatable: boolean = false
 	): Mesh {
-		console.log("File render for ", this.elementModel.name);
 		return MeshBuilder.CreateCylinder(
 			this.elementModel.name,
 			{
@@ -83,8 +81,6 @@ export class FileBuilding3D extends Building3D {
 
 		super.render();
 
-		console.log("Matrix : ",this.hat_city);
-
 		const r = this.elementModel.getWidth(this.config.variables.width) / 2;
 		const inner_square_dim = 2 * r * Math.sin(Math.PI / 4);
 		let offset_x = inner_square_dim / this.max_x;
@@ -95,17 +91,11 @@ export class FileBuilding3D extends Building3D {
 
 		const scale = offset_x / this.class_width * 3; // Multiplication by 3 to eat a bit of padding cells
 
-		console.log("f(x) = ", x, " + x * ", offset_x);
-		console.log("f(z) = ", z, " + z * ", offset_z);
-		console.log("Matrix size: ", inner_square_dim, "x", inner_square_dim, " inside the circle of diameter ", r * 2);
-		console.log("Scale: ", scale);
-
 		const meshes: Mesh[] = [];
 
 		for (const line of this.hat_city) {
 			for (const building of line) {
 				if (building !== undefined) {
-					console.log("Building ", building.elementModel.name, " at (", x + (offset_x / 2), ", ", z + (offset_z / 2), ")");
 					building.place(x + (offset_x / 2), z + (offset_z / 2));
 					building.render(this.config, scale);
 					building.d3Model.translate(new Vector3(0, 1, 0), this.getHeight());

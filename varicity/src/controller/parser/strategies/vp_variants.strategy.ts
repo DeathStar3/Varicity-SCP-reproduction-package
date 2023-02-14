@@ -37,10 +37,10 @@ export class VPVariantsStrategy implements ParsingStrategy {
             });
 
             const linkElements = data.links
-                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is bind to a file or a folder
+                .filter(l => !VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
             const allLinks = data.alllinks
-                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is bind to a file or a folder
+                .filter(l => !VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
             const hierarchyLinks = allLinks.filter(l => config.hierarchy_links.includes(l.type));
             const fileLinks = data.links
@@ -256,7 +256,6 @@ export class VPVariantsStrategy implements ParsingStrategy {
         if (orientation === Orientation.IN || orientation === Orientation.IN_OUT) {
             linked.push(...inLinks);
         }
-
 
         const children = linked.filter(ln => ln.compositionLevel === level + 1);
         if (children.length > 0) {

@@ -31,8 +31,8 @@ export class VPVariantsImplem extends District {
     }
 
     hasChild(obj: ClassImplem | VPVariantsImplem): boolean {
-        for (let i = 0; i < this.buildings.length; i++) {
-            if (this.buildings[i].name === obj.name) {
+        for (const element of this.buildings) {
+            if (element.name === obj.name) {
                 return true;
             }
         }

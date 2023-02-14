@@ -35,12 +35,16 @@ export class Road3D extends Element3D {
 
     status: boolean = false;
 
-    constructor(scene: Scene, vpElmt: VPVariantsImplem, config: Config) {
+    constructor(scene: Scene, vpElmt: VPVariantsImplem, config: Config, name: string = "") {
         super(scene);
 
         this.elementModel = vpElmt;
         if (vpElmt && vpElmt.vp) {
             this.vp = new Building3D(scene, vpElmt.vp, 0, config);
+        }
+
+        if (vpElmt !== null && (vpElmt.name === undefined || vpElmt.name === "")) { // Add custom road for district main roads
+            this.elementModel.name = name;
         }
 
         this.padding = config.district.padding;
@@ -170,8 +174,6 @@ export class Road3D extends Element3D {
     }
 
     private buildBuildings(config: Config) {
-        console.log("Have I access to the file links? ", this.elementModel.districts)
-
         const buildings3D: Building3D[] = [];
         this.elementModel.buildings.forEach(b => {
             if (config.blacklist) {
@@ -301,7 +303,7 @@ export class Road3D extends Element3D {
 
     render(config: Config) {
         this.d3Model = MeshBuilder.CreateBox(
-            this.elementModel ? this.elementModel.name : "Highway to Hell", // Love my refs
+            this.elementModel ? this.elementModel.name : "Highway to Hell",
             {
                 height: 0.001,
                 width: (this.orientationX == 0 ? this.roadWidth : this.getRoadLength()),

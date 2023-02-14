@@ -469,6 +469,7 @@ export class Building3D extends Element3D {
 
         // draw top pyramid if API class
         if (this.elementModel.types.includes("API")) {
+            this.edgesWidth = 1.0
             this.d3ModelPyramid = MeshBuilder.CreateCylinder("pyramid", {
                 diameterTop: 0,
                 tessellation: 4,
@@ -476,7 +477,14 @@ export class Building3D extends Element3D {
                 height: (this.getWidth() - this.padding)
             }, this.scene);
             this.d3ModelPyramid.setPositionWithLocalVector(
-                this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2 + this.edgesWidth / 120, 0)));
+                this.center.add(
+                    new Vector3(
+                        0,
+                        offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2 + this.edgesWidth / 240, // Last addition is here to see the pyramid bottom edge
+                        0
+                    )
+                )
+            );
             this.d3ModelPyramid.rotate(new Vector3(0, 1, 0), Math.PI / 4);
             this.d3ModelPyramid.material = mat;
             this.d3ModelPyramid.material.backFaceCulling = false;
@@ -541,11 +549,6 @@ export class Building3D extends Element3D {
                 )
             );
         }
-
-        // Display links to other buildings
-        // this.links.forEach(l => {
-        //     if (l.src.elementModel.name === this.getName()) l.render(this.config);
-        // });
     }
 
     /**

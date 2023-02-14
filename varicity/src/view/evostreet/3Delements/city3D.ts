@@ -37,8 +37,8 @@ export class City3D {
     }
 
     private init(entities: EntitiesList) {
-        this.road = new Road3D(this.scene, entities.district as VPVariantsImplem, this.config);
-        this.file_road = new Road3D(this.scene, entities.file_district as VPVariantsImplem, this.config)
+        this.road = new Road3D(this.scene, entities.district as VPVariantsImplem, this.config, "Class district");
+        this.file_road = new Road3D(this.scene, entities.file_district as VPVariantsImplem, this.config, "File district")
         this.highway = new Road3D(this.scene, null, this.config);
         this.highway.forcedLength = 10;
     }
