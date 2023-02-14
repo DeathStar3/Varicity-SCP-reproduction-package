@@ -7,6 +7,7 @@ import I from "./I";
 import K, {testType} from "./K";
 import {N} from "usage/foo/bar/N";
 import * as m from "m";
+import {O} from "./O"
 
 export default class A {
 
@@ -26,6 +27,7 @@ export default class A {
         const type: testType = "a";
         const l = this.b.getL();
         const n = new N();
+        const o = O.toString();
     }
 
 }
