@@ -47,6 +47,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
                 .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is not bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
             const fileClassLinks = data.alllinks.filter(l => VPVariantsStrategy.FILE_CLASS_LINK_TYPES.includes(l.type));
+            const fileHierarchyLinks = fileLinks.filter(l => config.hierarchy_links.includes(l.type))
 
             nodesList.forEach(n => {
                 n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
@@ -61,9 +62,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
             })
 
             this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation); // Add composition level to classes
-            this.buildComposition(fileLinks, fileList, apiList, 0, config.orientation); // Add composition level to files ?
-            // Maybe remove this code: console.log(nodesList.sort((a, b) => a.compositionLevel - b.compositionLevel));
-            // console.log(nodesList.sort((a, b) => a.name.localeCompare(b.name)));
+            this.buildComposition(fileHierarchyLinks, fileList, apiList, 0, config.orientation); // Add composition level to files ?
 
             const d = this.buildDistricts(nodesList, hierarchyLinks, config.orientation); // Create a district for classes
             const fileDistrict = this.buildDistricts(fileList, fileLinks, config.orientation); // Create a district for file
@@ -202,7 +201,6 @@ export class VPVariantsStrategy implements ParsingStrategy {
                 alllinks.filter(l => {
                     return this.isLinkParsable(l, n, nodeNames);
                 }).forEach(l => {
-                    //console.log("Node: ", n.name, " - level: ", n.compositionLevel, " - link: ", l);
                     /// According to the orientation asked by the user, put the target (OUT) or the source (IN) first
                     if ((orientation === Orientation.OUT || orientation === Orientation.IN_OUT) && n.name === l.source && n.name !== l.target) { // OUT
                         this.addNewNodeIfNotExist(

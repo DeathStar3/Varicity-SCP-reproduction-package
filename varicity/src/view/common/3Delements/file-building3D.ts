@@ -1,5 +1,5 @@
 import { Building3D } from "./building3D";
-import {Mesh, MeshBuilder, Scene, Vector3} from "@babylonjs/core";
+import { ActionManager, ExecuteCodeAction, Mesh, MeshBuilder, Scene, Vector3 } from "@babylonjs/core";
 import { Building } from "../../../model/entities/building.interface";
 import { Config } from "../../../model/entitiesImplems/config.model";
 import {Building3DFactory} from "../3Dfactory/building3D.factory";
@@ -41,7 +41,8 @@ export class FileBuilding3D extends Building3D {
 			}
 		}
 
-		console.log("The classes ", elements, " were not included in the display for file ", this.elementModel.name);
+		if (elements)
+			console.log("The classes ", elements, " were not included in the display for file ", this.elementModel.name);
 	}
 
 	build() {
@@ -107,12 +108,25 @@ export class FileBuilding3D extends Building3D {
 			x += offset_x;
 		}
 
-		Mesh.MergeMeshes(
+		this.d3Model = Mesh.MergeMeshes(
 			[this.d3Model, ...meshes],
 			true, true,
 			undefined, false,
 			true);
 
 		this.elementModel.types = old_types; // Reset the types of the file
+
+		this.d3Model.actionManager = new ActionManager(this.scene); // Reset this cause of the Merge
+		this.d3Model.actionManager.registerAction(
+			new ExecuteCodeAction(
+				{
+					trigger: ActionManager.OnPickTrigger
+				},
+				() => {
+					this.flag = !this.flag;
+					this.selectAndDisplayDetails(this.flag, this.flag);
+				}
+			)
+		);
 	}
 }

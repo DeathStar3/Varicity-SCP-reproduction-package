@@ -47,7 +47,7 @@ export class Building3D extends Element3D {
     heightScale = 0.3;
     outlineWidth = 0.05;
 
-    edgesWidth: number = 7.0;
+    edgesWidth: number = 1.0;
 
     highlightLayer: HighlightLayer;
     highlightForce: boolean;
@@ -108,7 +108,7 @@ export class Building3D extends Element3D {
         this.selectAndDisplayDetails(this.flag, openInfo);
     }
 
-    private selectAndDisplayDetails(flag, openInfo: boolean = true) {
+    protected selectAndDisplayDetails(flag, openInfo: boolean = true) {
         if (flag) {
             SelectedBuildingController.selectABuilding(this.elementModel);
         } else {
@@ -192,6 +192,29 @@ export class Building3D extends Element3D {
                     updatable: updatable
                 },
                 this.scene);
+        }
+    }
+
+    /**
+     * Render outline element if needed
+     */
+    private renderOutlineElement(scale: number = 1) {
+        // if config -> building -> colors -> outline is defined
+        if (this.config.building.colors.outlines) {
+            const outlineColor = this.getColor(this.config.building.colors.outlines, this.elementModel.types);
+            if (outlineColor !== undefined) {
+                this.d3ModelOutline = this.renderBaseElement(scale, Mesh.BACKSIDE);
+
+                let outlineMat = new StandardMaterial('outlineMaterial', this.scene);
+                this.d3ModelOutline.material = outlineMat;
+                this.d3ModelOutline.parent = this.d3Model;
+                outlineMat.diffuseColor = Color3.FromHexString(outlineColor);
+                outlineMat.emissiveColor = Color3.FromHexString(outlineColor);
+            } else {
+                this.d3Model.renderOutline = false;
+            }
+        } else {
+            this.d3Model.renderOutline = false;
         }
     }
 
@@ -344,23 +367,7 @@ export class Building3D extends Element3D {
 
         this.highlightLayer = new HighlightLayer("hl", this.scene);
 
-        // if config -> building -> colors -> outline is defined
-        if (this.config.building.colors.outlines) {
-            const outlineColor = this.getColor(this.config.building.colors.outlines, this.elementModel.types);
-            if (outlineColor !== undefined) {
-                this.d3ModelOutline = this.renderBaseElement(scale, Mesh.BACKSIDE);
-                
-                let outlineMat = new StandardMaterial('outlineMaterial', this.scene);
-                this.d3ModelOutline.material = outlineMat;
-                this.d3ModelOutline.parent = this.d3Model;
-                outlineMat.diffuseColor = Color3.FromHexString(outlineColor);
-                outlineMat.emissiveColor = Color3.FromHexString(outlineColor);
-            } else {
-                this.d3Model.renderOutline = false;
-            }
-        } else {
-            this.d3Model.renderOutline = false;
-        }
+        this.renderOutlineElement(scale);
 
         let mat = this.createDefaultMaterial();
 

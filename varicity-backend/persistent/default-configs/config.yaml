@@ -63,6 +63,8 @@ link:
     air_traffic:
       - "IMPLEMENTS"
       - "EXTENDS"
+      - "CORE_CONTENT"
+      - "CODE_DUPLICATED"
     underground_road:
       - "USAGE"
       - "CHILD"

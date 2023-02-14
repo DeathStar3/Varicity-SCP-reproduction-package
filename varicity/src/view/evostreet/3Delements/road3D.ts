@@ -301,9 +301,13 @@ export class Road3D extends Element3D {
         });
     }
 
+    private getMeshName(): string {
+        return this.elementModel ? this.elementModel.name : "Highway to Hell";
+    }
+
     render(config: Config) {
         this.d3Model = MeshBuilder.CreateBox(
-            this.elementModel ? this.elementModel.name : "Highway to Hell",
+            this.getMeshName(),
             {
                 height: 0.001,
                 width: (this.orientationX == 0 ? this.roadWidth : this.getRoadLength()),
