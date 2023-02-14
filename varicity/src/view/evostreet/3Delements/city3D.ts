@@ -39,7 +39,10 @@ export class City3D {
     }
 
     private findSrcLink(name: string): Building3D {
-        return this.road.get(name);
+        let res = this.road.get(name);
+        if (res !== undefined)
+            return res
+        return this.file_road.get(name);
     }
 
     private registerLink(link: Link3D, src: Building3D, dest: Building3D) {

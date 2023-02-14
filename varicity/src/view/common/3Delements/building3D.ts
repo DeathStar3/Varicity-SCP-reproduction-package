@@ -121,6 +121,7 @@ export class Building3D extends Element3D {
         this.highlight(flag, true);
 
         // Display the links.
+        console.log("[Building ", this.elementModel.name, "] Links: ", this.links)
         this.links.forEach(l => l.display(flag, flag));
 
         if (openInfo) {

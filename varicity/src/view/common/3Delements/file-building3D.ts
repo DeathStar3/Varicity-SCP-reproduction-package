@@ -1,5 +1,5 @@
 import { Building3D } from "./building3D";
-import { ActionManager, Color4, ExecuteCodeAction, Mesh, MeshBuilder, Scene, Vector3 } from "@babylonjs/core";
+import { Mesh, MeshBuilder, Scene, Vector3 } from "@babylonjs/core";
 import { Building } from "../../../model/entities/building.interface";
 import { Config } from "../../../model/entitiesImplems/config.model";
 import {Building3DFactory} from "../3Dfactory/building3D.factory";

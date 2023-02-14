@@ -67,7 +67,7 @@ link:
       - "CODE_DUPLICATED"
     underground_road:
       - "USAGE"
-      - "CHILD"
+#      - "CHILD"
 
 hierarchy_links:
   - "USAGE"
