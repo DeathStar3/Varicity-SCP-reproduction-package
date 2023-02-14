@@ -26,10 +26,13 @@ export class EntitiesList {
                 return building;
             }
         }
-        const res = this.district.getBuildingFromName(name);
+        let res = this.district.getBuildingFromName(name);
         if (res !== undefined) {
             return res;
         }
+        res = this.file_district.getBuildingFromName(name);
+        if (res !== undefined)
+            return res;
         return undefined;
     }
 

@@ -56,6 +56,8 @@ export class Building3D extends Element3D {
 
     flag: boolean = false;
 
+    protected mat: StandardMaterial;
+
     constructor(scene: Scene, buildingElement: Building, depth: number, config: Config) {
         super(scene);
         this.elementModel = buildingElement;
@@ -360,6 +362,58 @@ export class Building3D extends Element3D {
         }
     }
 
+    protected renderEdges() {
+        this.d3Model.enableEdgesRendering();
+        this.d3Model.edgesWidth = this.edgesWidth;
+
+        let hsv = this.rgb2Hsv(this.mat.emissiveColor.r, this.mat.emissiveColor.g, this.mat.emissiveColor.b)
+        let rgb = this.hsv2Rgb(hsv[0], hsv[1], Math.max(hsv[2] - 0.2, 0))
+        this.d3Model.edgesColor = new Color4(rgb[0], rgb[1], rgb[2], 1)
+    }
+
+    protected setupActionManager() {
+        this.d3Model.actionManager = new ActionManager(this.scene);
+
+        UIController.addEntry(this.getName(), this);
+
+        this.d3Model.actionManager.registerAction(
+            new ExecuteCodeAction(
+                {
+                    trigger: ActionManager.OnPointerOverTrigger
+                },
+                () => {
+                    this.highlight(true);
+                    this.links.forEach(l => l.display(undefined, true));
+                    if (SelectedBuildingController.selected.length == 0) {
+                        UIController.displayObjectInfo(this);
+                    }
+                }
+            )
+        );
+        this.d3Model.actionManager.registerAction(
+            new ExecuteCodeAction(
+                {
+                    trigger: ActionManager.OnPointerOutTrigger
+                },
+                () => {
+                    this.highlight(false);
+                    this.links.forEach(l => l.display(undefined, false));
+                }
+            )
+        );
+        this.d3Model.actionManager.registerAction(
+            new ExecuteCodeAction(
+                {
+                    trigger: ActionManager.OnPickTrigger
+                },
+                () => {
+                    this.flag = !this.flag;
+                    this.selectAndDisplayDetails(this.flag, this.flag);
+                }
+            )
+        );
+    }
+
     render(config?: Config, scale: number = 1) {
         // Display building
         this.d3Model = this.renderBaseElement(scale)
@@ -369,18 +423,18 @@ export class Building3D extends Element3D {
 
         this.renderOutlineElement(scale);
 
-        let mat = this.createDefaultMaterial();
+        this.mat = this.createDefaultMaterial();
 
         // New way to display a metric: city fade
-        this.displayMetricByCityFade(mat);
+        this.displayMetricByCityFade(this.mat);
 
         // New way to display a metric: building opacity
-        this.displayMetricByOpacity(mat)
+        this.displayMetricByOpacity(this.mat)
 
         // New way to display a metric: building cracks
-        this.displayMetricByCrack(mat)
+        this.displayMetricByCrack(this.mat)
 
-        this.d3Model.material = mat;
+        this.d3Model.material = this.mat;
 
         let offSet = 0;
 
@@ -395,7 +449,7 @@ export class Building3D extends Element3D {
                         0,
                         offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2,
                         0)));
-            this.d3ModelSphere.material = mat;
+            this.d3ModelSphere.material = this.mat;
             this.d3ModelSphere.material.backFaceCulling = false;
             offSet += this.getWidth() - this.padding;
             this.d3Model = Mesh.MergeMeshes([this.d3Model, this.d3ModelSphere], true);
@@ -418,7 +472,7 @@ export class Building3D extends Element3D {
                     )));
             this.d3ModelInvertedPyramid.rotate(new Vector3(1, 0, 0), Math.PI);
             this.d3ModelInvertedPyramid.rotate(new Vector3(0, 1, 0), Math.PI / 4);
-            this.d3ModelInvertedPyramid.material = mat;
+            this.d3ModelInvertedPyramid.material = this.mat;
             this.d3ModelInvertedPyramid.material.backFaceCulling = false;
             offSet += this.getWidth() - this.padding;
             this.d3Model = Mesh.MergeMeshes([this.d3Model, this.d3ModelInvertedPyramid], true);
@@ -438,7 +492,7 @@ export class Building3D extends Element3D {
                         offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2,
                         0
                     )));
-            this.d3ModelPrism.material = mat;
+            this.d3ModelPrism.material = this.mat;
             this.d3ModelPrism.material.backFaceCulling = false;
             offSet += this.getWidth() - this.padding;
             this.d3Model = Mesh.MergeMeshes([this.d3Model, this.d3ModelPrism], true);
@@ -464,9 +518,9 @@ export class Building3D extends Element3D {
                 this.center.add(new Vector3(0, offSet + this.getHeight() / 2 + scale * (this.getWidth() - this.padding) / 2, 0)));
             this.d3ModelChimney3.setPositionWithLocalVector(
                 this.center.add(new Vector3(((this.getWidth() - this.padding) / 2) * 10 / 12, offSet + this.getHeight() / 2 + (this.getWidth() - this.padding) / 2, 0)));
-            this.d3ModelChimney1.material = mat;
-            this.d3ModelChimney2.material = mat;
-            this.d3ModelChimney3.material = mat;
+            this.d3ModelChimney1.material = this.mat;
+            this.d3ModelChimney2.material = this.mat;
+            this.d3ModelChimney3.material = this.mat;
             this.d3ModelChimney1.material.backFaceCulling = false;
             this.d3ModelChimney2.material.backFaceCulling = false;
             this.d3ModelChimney3.material.backFaceCulling = false;
@@ -493,18 +547,13 @@ export class Building3D extends Element3D {
                 )
             );
             this.d3ModelPyramid.rotate(new Vector3(0, 1, 0), Math.PI / 4);
-            this.d3ModelPyramid.material = mat;
+            this.d3ModelPyramid.material = this.mat;
             this.d3ModelPyramid.material.backFaceCulling = false;
             this.d3Model = Mesh.MergeMeshes([this.d3Model, this.d3ModelPyramid], true);
         }
 
         // Default edge coloring
-        this.d3Model.enableEdgesRendering();
-        this.d3Model.edgesWidth = this.edgesWidth;
-
-        let hsv = this.rgb2Hsv(mat.emissiveColor.r, mat.emissiveColor.g, mat.emissiveColor.b)
-        let rgb = this.hsv2Rgb(hsv[0], hsv[1], Math.max(hsv[2] - 0.2, 0))
-        this.d3Model.edgesColor = new Color4(rgb[0], rgb[1], rgb[2], 1)
+        this.renderEdges();
 
         if (this.config.building.colors.edges) {
             const edgesColor = this.getColor(this.config.building.colors.edges, this.elementModel.types);
@@ -515,46 +564,7 @@ export class Building3D extends Element3D {
                 this.d3Model.edgesColor = new Color4(c.r, c.g, c.b, 1);
             }
 
-            this.d3Model.actionManager = new ActionManager(this.scene);
-
-            UIController.addEntry(this.getName(), this);
-
-            this.d3Model.actionManager.registerAction(
-                new ExecuteCodeAction(
-                    {
-                        trigger: ActionManager.OnPointerOverTrigger
-                    },
-                    () => {
-                        this.highlight(true);
-                        this.links.forEach(l => l.display(undefined, true));
-                        if (SelectedBuildingController.selected.length == 0) {
-                            UIController.displayObjectInfo(this);
-                        }
-                    }
-                )
-            );
-            this.d3Model.actionManager.registerAction(
-                new ExecuteCodeAction(
-                    {
-                        trigger: ActionManager.OnPointerOutTrigger
-                    },
-                    () => {
-                        this.highlight(false);
-                        this.links.forEach(l => l.display(undefined, false));
-                    }
-                )
-            );
-            this.d3Model.actionManager.registerAction(
-                new ExecuteCodeAction(
-                    {
-                        trigger: ActionManager.OnPickTrigger
-                    },
-                    () => {
-                        this.flag = !this.flag;
-                        this.selectAndDisplayDetails(this.flag, this.flag);
-                    }
-                )
-            );
+            this.setupActionManager();
         }
     }
 

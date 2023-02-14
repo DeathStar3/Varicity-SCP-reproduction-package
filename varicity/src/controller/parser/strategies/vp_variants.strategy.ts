@@ -49,8 +49,6 @@ export class VPVariantsStrategy implements ParsingStrategy {
             const fileClassLinks = data.alllinks.filter(l => VPVariantsStrategy.FILE_CLASS_LINK_TYPES.includes(l.type));
             const fileHierarchyLinks = fileLinks.filter(l => config.hierarchy_links.includes(l.type))
 
-            console.log("Links to create file hierarchy: ", fileHierarchyLinks);
-
             nodesList.forEach(n => {
                 n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
             });
@@ -91,13 +89,8 @@ export class VPVariantsStrategy implements ParsingStrategy {
                 });
             }
 
-            allLinks.forEach(le => {
-                const source = result.getBuildingFromName(le.source);
-                const target = result.getBuildingFromName(le.target);
-                if (source !== undefined && target !== undefined) {
-                    result.links.push(new LinkImplem(source, target, le.type));
-                }
-            });
+            this.addAllLink(allLinks, result)
+            this.addAllLink(fileLinks, result);
 
             // log for non-vp non-variant nodes
             console.log(data.allnodes.filter(nod => !nodesList.map(no => no.name).includes(nod.name)).map(n => n.name));
@@ -108,6 +101,16 @@ export class VPVariantsStrategy implements ParsingStrategy {
             return result;
         }
         throw new Error('Data is undefined');
+    }
+
+    private addAllLink(links: LinkElement[], result: EntitiesList) {
+        links.forEach(link => {
+            const source = result.getBuildingFromName(link.source);
+            const target = result.getBuildingFromName(link.target);
+            if (source !== undefined && target !== undefined) {
+                result.links.push(new LinkImplem(source, target, link.type));
+            }
+        })
     }
 
     /**

@@ -1,5 +1,5 @@
 import { Building3D } from "./building3D";
-import { ActionManager, ExecuteCodeAction, Mesh, MeshBuilder, Scene, Vector3 } from "@babylonjs/core";
+import { ActionManager, Color4, ExecuteCodeAction, Mesh, MeshBuilder, Scene, Vector3 } from "@babylonjs/core";
 import { Building } from "../../../model/entities/building.interface";
 import { Config } from "../../../model/entitiesImplems/config.model";
 import {Building3DFactory} from "../3Dfactory/building3D.factory";
@@ -41,7 +41,7 @@ export class FileBuilding3D extends Building3D {
 			}
 		}
 
-		if (elements)
+		if (elements.length > 0)
 			console.log("The classes ", elements, " were not included in the display for file ", this.elementModel.name);
 	}
 
@@ -116,17 +116,9 @@ export class FileBuilding3D extends Building3D {
 
 		this.elementModel.types = old_types; // Reset the types of the file
 
-		this.d3Model.actionManager = new ActionManager(this.scene); // Reset this cause of the Merge
-		this.d3Model.actionManager.registerAction(
-			new ExecuteCodeAction(
-				{
-					trigger: ActionManager.OnPickTrigger
-				},
-				() => {
-					this.flag = !this.flag;
-					this.selectAndDisplayDetails(this.flag, this.flag);
-				}
-			)
-		);
+		// Default edge coloring
+		this.renderEdges();
+
+		this.setupActionManager();
 	}
 }
