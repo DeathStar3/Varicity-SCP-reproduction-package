@@ -268,6 +268,16 @@ export class Symfinder{
         })
 
         for (let clone of clones){
+            let fileA = clone.duplicationA.sourceId;
+            let fileB = clone.duplicationB.sourceId;
+            if(fileA === fileB){
+                continue;
+            }else if(fileA.endsWith(".ts")||fileA.endsWith(".test.ts") || fileA.endsWith("Test.ts")||fileA.endsWith(".spec.ts")||fileA.endsWith(".d.ts"))||fileA.endsWith(".tsx"){
+                continue;
+            }else if(fileB.endsWith(".ts")||fileB.endsWith(".test.ts") || fileB.endsWith("Test.ts")||fileB.endsWith(".spec.ts")||fileB.endsWith(".d.ts"))||fileB.endsWith(".tsx"){
+                continue;
+            }
+
             var nodeA: any = nodes.find((node: Node) => {
               // const abs_path = path.resolve(node.properties.path);
               return node.properties.path == clone.duplicationA.sourceId;
@@ -276,6 +286,12 @@ export class Symfinder{
               // const abs_path = path.resolve(node.properties.path);
               return node.properties.path == clone.duplicationB.sourceId;
             });
+            if(nodeA === undefined || nodeB === undefined){
+                console.log("ERROR: nodeA or nodeB is undefined");
+                console.log("A path: "+clone.duplicationA.sourceId);
+                console.log("B path: "+clone.duplicationB.sourceId);
+                continue;
+            }
 
             var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
             var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
