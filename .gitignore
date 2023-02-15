@@ -37,6 +37,7 @@ testadd
 *node_modules*
 varicity-backend/dockervolume
 private-tools
+result_stats.json
 
 # Js Files #
 js/**/node_modules
