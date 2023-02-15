@@ -62,7 +62,7 @@ export default class UsageVisitor extends SymfinderVisitor {
         const qualifiedName = this.program.getTypeChecker().getFullyQualifiedName(type.getSymbol()!);
         // console.log(name+">"+qualifiedName)
         // console.log(qualifiedName)
-        let correctFormat = qualifiedName.match(/^"([a-zA-Z0-9-._\/]+)"\.([a-zA-Z_0-9]+)$/);
+        let correctFormat = qualifiedName.match(/^"([a-zA-Z0-9-._\/]+)"\.([a-zA-Z_0-9.]+)$/);
         if (correctFormat == null) {
 /*            console.log(this.program.getTypeChecker().typeToString(type));
             console.log(this.program.getTypeChecker().getApparentType(type));
@@ -117,9 +117,13 @@ export default class UsageVisitor extends SymfinderVisitor {
             // console.log(symbol?.declarations?.at(0)?.getSourceFile().fileName)
 
             let classNode;
-            if(classPath.includes("/"))
-                classNode = await this.neoGraph.getClassNodeWithPath(className, classPath);
-            else
+            if(classPath.includes("/")) {
+                if(className.includes(".")) {
+                    const module_class: string[] = className.split(".");
+                    classNode = await this.neoGraph.getClassNodeByModule(module_class[1], module_class[0], classPath);
+                } else
+                    classNode = await this.neoGraph.getClassNodeWithPath(className, classPath);
+            } else
                 classNode = await this.neoGraph.getClassNodeByModuleIfUnique(className, classPath);
             if (classNode == undefined)
                 classNode = await this.neoGraph.getClassNodeWithImport(className, filePath);

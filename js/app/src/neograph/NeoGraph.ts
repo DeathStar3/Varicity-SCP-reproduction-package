@@ -121,6 +121,14 @@ export default class NeoGraph{
         });
     }
 
+    async getClassNodeByModule(className: string, moduleName: string, path: string): Promise<Node | undefined>{
+        const request = "MATCH (:MODULE {name: $moduleName, path: $path})<-[:EXPORT|INTERNAL]-(:FILE)-[:EXPORT|INTERNAL]->(n {name: $className}) WHERE NOT n:MODULE RETURN (n)";
+
+        return this.submitRequest(request, {className:className, moduleName:moduleName, path:path}).then((result: Record[]) =>{
+            return result.length === 1 ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
     async getNodeWithPath(name: string, path: string): Promise<Node | undefined>{
         const request = "MATCH (n {name:$name, path:$path}) RETURN (n)";
 

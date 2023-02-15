@@ -336,10 +336,18 @@ export default class ClassesVisitor extends SymfinderVisitor{
 
     async visitModule(node: ModuleDeclaration): Promise<void> {
         let name = node.name.getText();
-        name = name.substring(1, name.length - 1);
-        const fileName = node.getSourceFile().fileName;
+        // name = name.substring(1, name.length - 1);
+        const modifiers = node.modifiers?.map(m => m.kind);
+        const relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
         // @ts-ignore
-        const filePath = path.relative(process.env.PROJECT_PATH, fileName).substring(6);
-        await this.neoGraph.createNodeWithPath(name, filePath, EntityType.MODULE, []);
+        const filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        const fileName = filname_from_filepath(filePath);
+        await this.neoGraph.createNodeWithPath(name, filePath, EntityType.MODULE, []).then(async (moduleNode) => {
+            const fileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
+            if(fileNode !== undefined)
+                return await this.neoGraph.linkTwoNodes(fileNode, moduleNode, relationType);
+            else
+                console.log("Error to link nodes "+name+" and "+/*className*/fileName+"...");
+        });
     }
 }
