@@ -39,6 +39,7 @@ import {
     ScriptTarget
 } from "typescript";
 import UsageVisitor from "./visitors/UsageVisitor";
+import {FileStats} from "./utils/file_stats";
 
 export class Symfinder{
 
@@ -53,7 +54,7 @@ export class Symfinder{
      * @param src path to the root directory
      * @param analysis_base if it's an analysis of a base library
      */
-    async run(src: string, analysis_base: boolean){
+    async run(src: string, analysis_base: boolean, stats_file: boolean){
         await this.neoGraph.clearNodes();
 
         console.log("Analyse variability in : '" + src + "'")
@@ -86,12 +87,18 @@ export class Symfinder{
         await this.neoGraph.exportRelationJSON();
         console.log("db fetched");
 
+        let stats = new FileStats();
+        stats.files_count = files.length;
+        stats.variants_count = await this.neoGraph.getTotalNbVariants();
+        stats.relationships_count = await this.neoGraph.getNbRelationships();
+        stats.nodes_count = await this.neoGraph.getNbNodes();
+        stats.unknown_paths_count = usageVisitor.getUnknownPaths().size;
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
         console.log("Number of constructor VPs: " + await this.neoGraph.getNbConstructorVPs());
         console.log("Number of method level VPs: " + await this.neoGraph.getNbMethodLevelVPs());
         console.log("Number of class level VPs: " + await this.neoGraph.getNbClassLevelVPs());
-        console.log("Number of variants: " + await this.neoGraph.getTotalNbVariants());
+        console.log("Number of variants: " + stats.variants_count);
         console.log("Number of methods variants: " + await this.neoGraph.getNbMethodVariants());
         console.log("Number of constructors variants: " + await this.neoGraph.getNbConstructorVariants());
         console.log("Number of method level variants: " + await this.neoGraph.getNbMethodLevelVariants());
@@ -100,15 +107,15 @@ export class Symfinder{
         console.log("Number of variant folder: " + await this.neoGraph.getNbVariantFolders());
         console.log("Number of vp folder: " + await this.neoGraph.getNbVPFolders());
         console.log("Number of proximity entities: " + await this.neoGraph.getNbProximityEntity());
-        console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
-        console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
+        console.log("Number of nodes: " + stats.nodes_count);
+        console.log("Number of relationships: " + stats.relationships_count);
         console.log("Duration: "+this.msToTime(timeEnd-timeStart));
         if(!analysis_base) {
             const classes = await this.neoGraph.getAllClass();
-            console.log("Number of unknown class path: " + ((usageVisitor.getUnknownPaths().size / classes.length) * 100).toFixed(2) + "% (" + usageVisitor.getUnknownPaths().size + "/" + classes.length + ")");
+            console.log("Number of unknown class path: " + ((stats.unknown_paths_count / classes.length) * 100).toFixed(2) + "% (" + stats.unknown_paths_count + "/" + classes.length + ")");
         }
-        //supabase (443): 01:08.1 -> 1:11.9 => +4% | 1.89%
-        //novu (1142): 2:51.8 -> 2:58.7 => +4% | 2.05% | Il y a encore des "Error to link 'usage' nodes..."
+        if(stats_file)
+            stats.write();
 
         await this.neoGraph.driver.close();
 
