@@ -82,6 +82,15 @@ export class FileBuilding3D extends Building3D {
 
 		super.render();
 
+		if (this.elementModel.force_color !== undefined) {
+			let color = this.elementModel.force_color;
+
+			this.mat.ambientColor = color;
+			this.mat.diffuseColor = color;
+			this.mat.emissiveColor = color;
+			this.mat.specularColor = color;
+		}
+
 		const r = this.elementModel.getWidth(this.config.variables.width) / 2;
 		const inner_square_dim = 2 * r * Math.sin(Math.PI / 4);
 		let offset_x = inner_square_dim / this.max_x;

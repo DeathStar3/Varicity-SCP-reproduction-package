@@ -1,5 +1,6 @@
 import {Node, NodeElement} from './../../controller/parser/symfinder_elements/nodes/node.element';
 import {Metrics} from "../entitiesImplems/metrics.model";
+import { Color3 } from "@babylonjs/core";
 
 export abstract class Building implements Node {
     name: string;
@@ -17,6 +18,8 @@ export abstract class Building implements Node {
     compLevel: number;
 
     exportedClasses: Node[];
+
+    force_color: Color3 = undefined;
 
     constructor() {
         this.types = [];

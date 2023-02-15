@@ -8,6 +8,7 @@ import { JsonInputInterface, LinkInterface, NodeInterface } from "../../../model
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
+import { Color3 } from "@babylonjs/core";
 
 /**
  * Strategy used to parse both Symfinder Java and Symfinder JS results
@@ -59,7 +60,19 @@ export class VPVariantsStrategy implements ParsingStrategy {
                 file.exportedClasses = fileClassLinks
                     .filter(link => link.source === file.name)
                     .map(link => this.findNodeByName(link.target, nodesList))
-            })
+            });
+
+            // Give a color to all duplicate set of file
+            const duplicates = this.findDuplicatedFiles(
+                fileList.filter(l => l.types.includes("FILE")),
+                fileLinks.filter(l => l.type === "CORE_CONTENT")
+            )
+            const colors: Color3[] = this.pickColorsForNElements(duplicates.filter(array => array.length > 1).length);
+            duplicates.filter(array => array.length > 1).forEach(array => {
+                let color = colors.pop();
+                array.forEach(file => file.forceColor = color);
+            });
+
 
             this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation); // Add composition level to classes
             this.buildComposition(fileHierarchyLinks, fileList, apiList, 0, config.orientation); // Add composition level to files ?
@@ -264,7 +277,8 @@ export class VPVariantsStrategy implements ParsingStrategy {
         if (children.length > 0) {
             let result = new VPVariantsImplem(new ClassImplem(
                 nodeElement,
-                nodeElement.compositionLevel
+                nodeElement.compositionLevel,
+                nodeElement.forceColor
             ));
 
             result.vp.exportedClasses = nodeElement.exportedClasses.map(nodeElement => new ClassImplem(nodeElement,0));
@@ -281,7 +295,8 @@ export class VPVariantsStrategy implements ParsingStrategy {
         } else {
             let result = new ClassImplem(
                 nodeElement,
-                nodeElement.compositionLevel
+                nodeElement.compositionLevel,
+                nodeElement.forceColor
             );
 
             result.exportedClasses = nodeElement.exportedClasses.map(nodeElement => new ClassImplem(nodeElement,0));
@@ -327,5 +342,57 @@ export class VPVariantsStrategy implements ParsingStrategy {
             }
         }
         return undefined;
+    }
+
+    private findDuplicatedFiles(files: NodeElement[], links: LinkElement[]): NodeElement[][] {
+        const excluded = []
+        const res: NodeElement[][] = []
+
+        for (const file of files) {
+            if (excluded.includes(file))
+                continue;
+            res.push(this.findDuplicatesForFile(file, files, links, excluded));
+        }
+
+        return res;
+    }
+
+    private findDuplicatesForFile(
+        file: NodeElement,
+        files: NodeElement[],
+        links: LinkElement[],
+        excluded: NodeElement[]
+    ): NodeElement[] {
+        if (excluded.includes(file))
+            return []
+        excluded.push(file)
+
+        const res = [file]
+        const duplicates = this.getLinkedNodesFromSource(file, files, links);
+        for (const duplicate of duplicates) {
+            res.push(...this.findDuplicatesForFile(duplicate, files, links, excluded));
+        }
+
+        return res
+    }
+
+    private areColorClose(color1: Color3, color2: Color3, epsilon: number = 0.01) {
+        return Math.abs(color1.r - color2.r) < epsilon && Math.abs(color1.g - color2.g) < epsilon && Math.abs(color1.b - color2.b) < epsilon
+    }
+
+    private pickColorsForNElements(n: number, max_try: number = 10): Color3[] {
+        const colors = [];
+
+        for (let i = 0; i < n; i++) {
+            let color;
+            let nb_try = 0;
+            do {
+                color = Color3.Random();
+                nb_try ++
+            } while (colors.some(c => this.areColorClose(color, c)) && nb_try < max_try);
+            colors.push(color);
+        }
+
+        return colors;
     }
 }
