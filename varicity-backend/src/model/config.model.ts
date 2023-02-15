@@ -33,8 +33,18 @@ export interface Color {
   color: string; // HEX COLOR string
 }
 
+export enum FileDislayEnum {
+  FORCE = "force",
+  ADAPTATIVE = "adaptative"
+}
+
+export interface DisplayInterface {
+  file_size: FileDislayEnum;
+}
+
 export interface D3Config {
   padding: number;
+  display: DisplayInterface;
   colors: ConfigColor;
 }
 
