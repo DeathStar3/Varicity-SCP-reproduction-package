@@ -110,18 +110,18 @@ export class Building3D extends Element3D {
         this.selectAndDisplayDetails(this.flag, openInfo);
     }
 
-    protected selectAndDisplayDetails(flag, openInfo: boolean = true) {
+    protected selectAndDisplayDetails(flag, openInfo: boolean = true, element: Building = this.elementModel) {
         if (flag) {
-            SelectedBuildingController.selectABuilding(this.elementModel);
+            SelectedBuildingController.selectABuilding(element);
         } else {
-            SelectedBuildingController.unselectABuilding(this.elementModel);
+            SelectedBuildingController.unselectABuilding(element);
         }
 
         // Highlight the building.
         this.highlight(flag, true);
 
         // Display the links.
-        console.log("[Building ", this.elementModel.name, "] Links: ", this.links)
+        console.log("[Building ", element.name, "] Links: ", this.links)
         this.links.forEach(l => l.display(flag, flag));
 
         if (openInfo) {

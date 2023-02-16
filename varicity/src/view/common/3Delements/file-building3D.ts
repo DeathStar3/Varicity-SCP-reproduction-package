@@ -131,7 +131,13 @@ export class FileBuilding3D extends Building3D {
 
 		this.changeColorIfForced();
 
-		const meshes: Mesh[] = [];
+		for (const line of this.hat_city) // Attach links to building in hat_city
+			line.forEach(building => {
+				building.links = this.links.filter(
+					link => link.dest.elementModel.name === building.elementModel.name ||
+						link.src.elementModel.name === building.elementModel.name
+				);
+			});
 
 		//max_x = matrix dimension
 		const inner_square_dim = this.elementModel.getWidth(this.config.variables.width) * this.scale * Math.sqrt(2) / 2;
@@ -155,7 +161,6 @@ export class FileBuilding3D extends Building3D {
 					)
 					building.render(this.config, scale);
 					building.d3Model.translate(new Vector3(0, 1, 0), this.getHeight());
-					meshes.push(building.d3Model);
 				}
 				z += offset_z;
 			}
@@ -163,19 +168,7 @@ export class FileBuilding3D extends Building3D {
 			x += offset_x;
 		}
 
-		this.d3Model = Mesh.MergeMeshes(
-			[this.d3Model, ...meshes],
-			true, true,
-			undefined, false,
-			true);
-
 		this.elementModel.types = old_types; // Reset the types of the file
-
-		// Default edge coloring
-		this.renderEdges();
-
-		this.setupActionManager();
-
 	}
 
 	getPositionForBuilding(building_name: string) {
