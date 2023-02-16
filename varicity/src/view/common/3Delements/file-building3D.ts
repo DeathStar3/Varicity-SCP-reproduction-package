@@ -19,8 +19,15 @@ export class FileBuilding3D extends Building3D {
 	 */
 	private class_width: number = 1;
 
+	/**
+	 * Is it the cylinder that adapt to hat city size?
+	 */
+	private readonly auto_scale: boolean = false;
+
 	constructor(scene: Scene, building: Building, depth: number, config: Config) {
 		super(scene, building, depth, config);
+
+		this.auto_scale = this.config.building.display.file_size === FileDislayEnum.ADAPTATIVE;
 	}
 
 	private placeClasses() {
@@ -50,12 +57,9 @@ export class FileBuilding3D extends Building3D {
 		this.max_x = this.max_z = dim;
 		this.placeClasses();
 
-		if (this.config.building.display.file_size === FileDislayEnum.ADAPTATIVE){ // Compute scaling for folder mesh
+		if (this.auto_scale){ // Compute scaling for folder mesh
 			const diameter = (this.class_width * this.max_x) / Math.cos(Math.PI / 4);
-			console.log("Calcul of diameter : ",this.class_width," * ",this.max_x, " / ", Math.sin(Math.PI / 4));
-
-			console.log("Diameter: ", diameter, ", max_width: ", (this.class_width * this.max_x))
-			this.scale = diameter / super.getWidth();
+			this.scale = diameter / this.elementModel.getWidth(this.config.variables.width);
 		}
 	}
 
@@ -99,46 +103,21 @@ export class FileBuilding3D extends Building3D {
 		let old_types = Object.assign([], this.elementModel.types); // Save all the types that had the file
 		this.elementModel.types = this.elementModel.types.filter(elem => elem !== "API"); // Remove API to not display a hat
 
+		super.render(this.config, this.scale);
+
+		this.changeColorIfForced();
+
 		const meshes: Mesh[] = [];
-		console.log("########CONFIG :", this.config);
-		if(this.config.building.display.file_size === FileDislayEnum.FORCE) {
-			super.render();
 
-			this.changeColorIfForced();
-
-			console.log("FORCED");
-			this.renderBuildingForced(meshes);
-		}
-		else{
-			console.log("ADAPTATIVE");
-			this.renderBuildingAdapted(meshes);
-		}
-		// this.d3Model = Mesh.MergeMeshes(
-		// 	[this.d3Model, ...meshes],
-		// 	true, true,
-		// 	undefined, false,
-		// 	true);
-
-		this.elementModel.types = old_types; // Reset the types of the file
-
-		// Default edge coloring
-		this.renderEdges();
-
-		this.setupActionManager();
-
-	}
-
-	private renderBuildingForced(meshes: Mesh[]) {
-		//max_x = dimension matrice
-		const r = this.elementModel.getWidth(this.config.variables.width) / 2;
-		const inner_square_dim = 2 * r * Math.sin(Math.PI / 4);
+		//max_x = matrix dimension
+		const inner_square_dim = this.elementModel.getWidth(this.config.variables.width) * this.scale * Math.sqrt(2) / 2; //Math.cos(Math.PI / 4);
 		let offset_x = inner_square_dim / this.max_x;
 		let offset_z = inner_square_dim / this.max_z;
 		let x = this.center.x - inner_square_dim / 2;
 		let z_i = this.center.z - inner_square_dim / 2;
 		let z = z_i;
 
-		const scale = offset_x / this.class_width * 3; // Multiplication by 3 to eat a bit of padding cells
+		const scale = offset_x / this.class_width // * (this.auto_scale ? 1 : 3); // Multiplication by 3 to eat a bit of padding cells
 
 		for (const line of this.hat_city) {
 			for (const building of line) {
@@ -153,51 +132,19 @@ export class FileBuilding3D extends Building3D {
 			z = z_i;
 			x += offset_x;
 		}
-	}
 
-	private renderBuildingAdapted(meshes: Mesh[]) {
-		// let max_width = 0;
-		// let tmp = 0;
-		// for (let i = 0; i < this.max_x; i++) {
-		// 	for (let j = 0; j < this.max_z; j++) {
-		// 		if (this.hat_city[i][j] !== undefined)
-		// 			tmp += this.hat_city[i][j].getWidth();
-		// 	}
-		// 	if(tmp > max_width){
-		// 		max_width = tmp;
-		// 	}
-		// 	tmp = 0;
-		// }
-		//
-		// const r = (max_width/2) / Math.cos(Math.PI / 4);
-		//
-		// const scale = 2*r / this.getWidth();
-		console.log("SCALE FOR THE CIRCLE : ", this.scale);
+		this.d3Model = Mesh.MergeMeshes(
+			[this.d3Model, ...meshes],
+			true, true,
+			undefined, false,
+			true);
 
-		super.render(this.config, this.scale);
+		this.elementModel.types = old_types; // Reset the types of the file
 
-		this.changeColorIfForced();
+		// Default edge coloring
+		this.renderEdges();
 
-		const inner_square_dim = this.class_width * this.max_x;
-		let offset_x = this.class_width;
-		let offset_z = this.class_width;
-		let x = this.center.x - inner_square_dim / 2;
-		let z_i = this.center.z - inner_square_dim / 2;
-		let z = z_i;
+		this.setupActionManager();
 
-
-		for (const line of this.hat_city) {
-			for (const building of line) {
-				if (building !== undefined) {
-					building.place(x + (offset_x / 2), z + (offset_z / 2));
-					building.render(this.config);
-					building.d3Model.translate(new Vector3(0, 1, 0), this.getHeight());
-					meshes.push(building.d3Model);
-				}
-				z += offset_z;
-			}
-			z = z_i;
-			x += offset_x;
-		}
 	}
 }

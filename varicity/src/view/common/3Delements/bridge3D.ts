@@ -41,7 +41,6 @@ export class Bridge3D implements Link3D {
 	}
 
 	private createBridge(src: Vector3, dest: Vector3) {
-		console.log("Link ", this.getName(), " between ", src, " and ", dest);
 		this.center = Vector3.Center(src, dest);
 
 		let curve = Curve3.CreateQuadraticBezier(
@@ -50,8 +49,6 @@ export class Bridge3D implements Link3D {
 			dest,
 			25
 		);
-
-		console.log("Points drawn: ", curve.getPoints());
 
 		let colors = []
 		for (const _ of curve.getPoints())
