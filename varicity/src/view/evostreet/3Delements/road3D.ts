@@ -11,14 +11,14 @@ export class Road3D extends Element3D {
     // This is element that road is representing
     elementModel: VPVariantsImplem;
 
-    // ????
+    // Roads
     leftVPs: Road3D[] = [];
-    // ????
+    // Roads
     rightVPs: Road3D[] = [];
 
-    // ????
+    // Building
     leftVariants: Building3D[] = [];
-    // ????
+    // Building
     rightVariants: Building3D[] = [];
 
     // In my opinion, this is the starting point of the road (the building with the pyramid on top).
@@ -262,7 +262,7 @@ export class Road3D extends Element3D {
                 /* horizontal case: */ (e.getVpWidth() / 2 - e.vp.padding / 2 + this.roadWidth / 2) * orientationX +
                 /* vertical case:   */ (e.getSideWidth(false) + offsetVL) * orientationZ;
             e.place(vX + x, vZ + z, -orientationZ, orientationX);
-            offsetVL += e.getWidth();
+            offsetVL += e.getWidth() + 0.2;
         });
         this.rightVPs.forEach(e => {
             let vX =
@@ -272,7 +272,7 @@ export class Road3D extends Element3D {
                 /* horizontal case: */ -(e.getVpWidth() / 2 - e.vp.padding / 2 + this.roadWidth / 2) * orientationX +
                 /* vertical case:   */ (e.getSideWidth(true) + offsetVR) * orientationZ;
             e.place(vX + x, vZ + z, orientationZ, -orientationX);
-            offsetVR += e.getWidth();
+            offsetVR += e.getWidth() + 0.2;
         });
 
         let offsetL = Math.max(offsetVL, offsetVR);

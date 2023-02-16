@@ -14,10 +14,12 @@ export class FileBuilding3D extends Building3D {
 	private max_z: number = 5;
 	private scale: number = 1;
 
+	private classes: Map<string, Vector3> = new Map();
+
 	/**
 	 * Max width of a building in the hat city
 	 */
-	private class_width: number = 1;
+	private class_width: number = 0;
 
 	/**
 	 * Is it the cylinder that adapt to hat city size?
@@ -26,8 +28,8 @@ export class FileBuilding3D extends Building3D {
 
 	constructor(scene: Scene, building: Building, depth: number, config: Config) {
 		super(scene, building, depth, config);
-
 		this.auto_scale = this.config.building.display.file_size === FileDislayEnum.ADAPTATIVE;
+		if (this.auto_scale) this.padding = 0.005
 	}
 
 	private placeClasses() {
@@ -36,13 +38,11 @@ export class FileBuilding3D extends Building3D {
 		for (let x = 0; x < this.max_x; x++) {
 			this.hat_city.push([])
 			for (let z = 0; z < this.max_z; z++) {
-				if (x % 2 === 0 && z % 2 === 0) {
-					const elem = elements.pop();
-					this.hat_city[x].push(elem);
+				const elem = elements.pop();
+				elem.padding = 0.2
+				this.hat_city[x].push(elem);
 
-					this.class_width = Math.max(this.class_width, elem.getWidth());
-				} else
-					this.hat_city[x].push(undefined);
+				this.class_width = Math.max(this.class_width, elem.getWidth()); // Minus 0.4 to remove some padding
 			}
 		}
 
@@ -52,12 +52,11 @@ export class FileBuilding3D extends Building3D {
 
 	build() {
 		const length = this.elementModel.exportedClasses.length;
-		let dim = Math.floor(Math.sqrt(length)) * 2;
-		dim = dim % 2 == 0 ? dim - 1 : dim;
+		let dim = Math.floor(Math.sqrt(length));
 		this.max_x = this.max_z = dim;
 		this.placeClasses();
 
-		if (this.auto_scale){ // Compute scaling for folder mesh
+		if (this.auto_scale && length > 0){ // Compute scaling for folder mesh
 			const diameter = (this.class_width * this.max_x) / Math.cos(Math.PI / 4);
 			this.scale = diameter / this.elementModel.getWidth(this.config.variables.width);
 		}
@@ -99,6 +98,31 @@ export class FileBuilding3D extends Building3D {
 		}
 	}
 
+	private drawMatrix(start_x, start_z, end_x, end_z, y, dim) {
+		const offset_x = (end_x - start_x) / dim
+		const offset_z = (end_z - start_z) / dim
+
+		for (let x = start_x; x <= end_x; x += offset_x)
+			for (let z = start_z; z < end_z; z += offset_z)
+				MeshBuilder.CreateLines(
+					"Matrix",
+					{
+						points: [new Vector3(x, y, z), new Vector3(x, y, z + offset_z)]
+					},
+					this.scene
+				)
+
+		for (let x = start_x; x < end_x; x += offset_x)
+			for (let z = start_z; z <= end_z; z += offset_z)
+				MeshBuilder.CreateLines(
+					"Matrix",
+					{
+						points: [new Vector3(x, y, z), new Vector3(x + offset_z, y, z)]
+					},
+					this.scene
+				)
+	}
+
 	render() {
 		let old_types = Object.assign([], this.elementModel.types); // Save all the types that had the file
 		this.elementModel.types = this.elementModel.types.filter(elem => elem !== "API"); // Remove API to not display a hat
@@ -110,12 +134,14 @@ export class FileBuilding3D extends Building3D {
 		const meshes: Mesh[] = [];
 
 		//max_x = matrix dimension
-		const inner_square_dim = this.elementModel.getWidth(this.config.variables.width) * this.scale * Math.sqrt(2) / 2; //Math.cos(Math.PI / 4);
+		const inner_square_dim = this.elementModel.getWidth(this.config.variables.width) * this.scale * Math.sqrt(2) / 2;
 		let offset_x = inner_square_dim / this.max_x;
 		let offset_z = inner_square_dim / this.max_z;
 		let x = this.center.x - inner_square_dim / 2;
 		let z_i = this.center.z - inner_square_dim / 2;
 		let z = z_i;
+
+		// this.drawMatrix(x, z, x + this.max_x * offset_x, z + this.max_z * offset_z, this.getHeight() + 0.1, this.max_x)
 
 		const scale = offset_x / this.class_width // * (this.auto_scale ? 1 : 3); // Multiplication by 3 to eat a bit of padding cells
 
@@ -123,6 +149,10 @@ export class FileBuilding3D extends Building3D {
 			for (const building of line) {
 				if (building !== undefined) {
 					building.place(x + (offset_x / 2), z + (offset_z / 2));
+					this.classes.set(
+						building.elementModel.name,
+						building.center.add(new Vector3(0, this.getHeight(), 0))
+					)
 					building.render(this.config, scale);
 					building.d3Model.translate(new Vector3(0, 1, 0), this.getHeight());
 					meshes.push(building.d3Model);
@@ -146,5 +176,12 @@ export class FileBuilding3D extends Building3D {
 
 		this.setupActionManager();
 
+	}
+
+	getPositionForBuilding(building_name: string) {
+		if (this.classes.has(building_name)) {
+			return this.classes.get(building_name);
+		}
+		return this.center;
 	}
 }

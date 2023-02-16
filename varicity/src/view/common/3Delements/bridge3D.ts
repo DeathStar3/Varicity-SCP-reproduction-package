@@ -2,6 +2,7 @@ import { Link3D } from '../3Dinterfaces/link3D.interface';
 import { Color3, Color4, Curve3, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
 import { Building3D } from "./building3D";
 import { Config } from "../../../model/entitiesImplems/config.model";
+import { FileBuilding3D } from "./file-building3D";
 
 export class Bridge3D implements Link3D {
 	scene: Scene;
@@ -15,7 +16,6 @@ export class Bridge3D implements Link3D {
 	config: Config;
 
 	private mesh: Mesh;
-	private material: StandardMaterial;
 	private center: Vector3;
 
 	constructor(src: Building3D, dest: Building3D, type: string, scene: Scene, config: Config) {
@@ -66,7 +66,12 @@ export class Bridge3D implements Link3D {
 
 	render(display: boolean): void {
 		if (display) {
-			this.createBridge(this.src.center, this.dest.center);
+			let start = this.src.center;
+			if (this.src instanceof FileBuilding3D) {
+				start = this.src.getPositionForBuilding(this.dest.elementModel.name)
+			}
+
+			this.createBridge(start, this.dest.center);
 		} else {
 			this.mesh?.dispose();
 			delete this.mesh;
