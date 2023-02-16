@@ -24,7 +24,6 @@ echo Anlysing base project: $project
 cd app
 npm run --silent build
 
-PROJECT_PATH=$path node lib/index.js -b
+PROJECT_PATH=$path node --max-old-space-size=8192 lib/index.js -b
 
 docker exec -u neo4j symfinderts_neo4j /bin/bash -c 'cat /import/export_procedure | cypher-shell -u neo4j -p root --format plain'
-

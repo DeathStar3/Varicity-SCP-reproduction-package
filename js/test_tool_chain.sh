@@ -23,7 +23,7 @@ function analyse() {
   fi
   cd app
   npm run --silent build
-  PROJECT_PATH=$path UV_THREADPOOL_SIZE=$(nproc) node lib/index.js -sf
+  PROJECT_PATH=$path UV_THREADPOOL_SIZE=$(nproc) node --max-old-space-size=8192 lib/index.js -sf
 }
 
 function check() {
