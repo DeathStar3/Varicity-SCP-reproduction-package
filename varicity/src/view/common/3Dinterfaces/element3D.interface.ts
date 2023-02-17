@@ -20,7 +20,7 @@ export abstract class Element3D {
 
     abstract place(x: number, z: number, orientationX?: number, orientationZ?: number): void;
 
-    abstract render(config: Config): void;
+    abstract render(config: Config, scale?: number): void;
 
     getColor(colorsList: Color[], types: string[]): string {
         for (let c of colorsList) {

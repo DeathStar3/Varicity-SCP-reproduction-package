@@ -14,8 +14,18 @@ export interface ConfigColor {
     // }
 }
 
+export enum FileDislayEnum {
+    FORCE = "force",
+    ADAPTATIVE = "adaptative"
+}
+
+export interface DisplayInterface {
+    file_size: FileDislayEnum;
+}
+
 export interface D3Config {
     padding: number;
+    display: DisplayInterface;
     colors: ConfigColor;
 }
 

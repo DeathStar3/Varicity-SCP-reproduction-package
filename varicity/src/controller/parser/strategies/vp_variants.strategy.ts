@@ -8,12 +8,14 @@ import { JsonInputInterface, LinkInterface, NodeInterface } from "../../../model
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {ParsingStrategy} from "./parsing.strategy.interface";
 import {Orientation} from "../../../model/entitiesImplems/orientation.enum";
+import { Color3 } from "@babylonjs/core";
 
 /**
  * Strategy used to parse both Symfinder Java and Symfinder JS results
  */
 export class VPVariantsStrategy implements ParsingStrategy {
     private static readonly FILE_TYPES = ["FILE", "DIRECTORY"];
+    private static readonly FILE_CLASS_LINK_TYPES = ["EXPORT", "IMPORT"];
     private static readonly FILE_LINK_TYPES = ["CHILD", "CORE_CONTENT", "CODE_DUPLICATED"]
 
     public parse(data: JsonInputInterface, config: Config, project: string): EntitiesList {
@@ -36,15 +38,17 @@ export class VPVariantsStrategy implements ParsingStrategy {
             });
 
             const linkElements = data.links
-                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) === -1) /// Remove all that is bind to a file or a folder
+                .filter(l => !VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
             const allLinks = data.alllinks
-                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) === -1) /// Remove all that is bind to a file or a folder
+                .filter(l => !VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
             const hierarchyLinks = allLinks.filter(l => config.hierarchy_links.includes(l.type));
             const fileLinks = data.links
-                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.indexOf(l.type) !== -1) /// Remove all that is not bind to a file or a folder
+                .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is not bind to a file or a folder
                 .map(l => new LinkElement(l.source, l.target, l.type));
+            const fileClassLinks = data.alllinks.filter(l => VPVariantsStrategy.FILE_CLASS_LINK_TYPES.includes(l.type));
+            const fileHierarchyLinks = fileLinks.filter(l => config.hierarchy_links.includes(l.type))
 
             nodesList.forEach(n => {
                 n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, nodesList, linkElements).length);
@@ -52,14 +56,29 @@ export class VPVariantsStrategy implements ParsingStrategy {
             fileList.forEach(n => {
                 n.addMetric(VariabilityMetricsName.NB_VARIANTS, this.getLinkedNodesFromSource(n, fileList, fileLinks).length);
             })
+            fileList.forEach(file => {
+                file.exportedClasses = fileClassLinks
+                    .filter(link => link.source === file.name)
+                    .map(link => this.findNodeByName(link.target, nodesList))
+            });
+
+            // Give a color to all duplicate set of file
+            const duplicates = this.findDuplicatedFiles(
+                fileList.filter(l => l.types.includes("FILE")),
+                fileLinks.filter(l => l.type === "CORE_CONTENT")
+            )
+            const colors: Color3[] = this.pickColorsForNElements(duplicates.filter(array => array.length > 1).length);
+            duplicates.filter(array => array.length > 1).forEach(array => {
+                let color = colors.pop();
+                array.forEach(file => file.forceColor = color);
+            });
+
 
             this.buildComposition(hierarchyLinks, nodesList, apiList, 0, config.orientation); // Add composition level to classes
-            this.buildComposition(fileLinks, fileList, apiList, 0, config.orientation); // Add composition level to files ?
-            // Maybe remove this code: console.log(nodesList.sort((a, b) => a.compositionLevel - b.compositionLevel));
-            // console.log(nodesList.sort((a, b) => a.name.localeCompare(b.name)));
+            this.buildComposition(fileHierarchyLinks, fileList, apiList, 0, config.orientation); // Add composition level to files ?
 
             const d = this.buildDistricts(nodesList, hierarchyLinks, config.orientation); // Create a district for classes
-            const fileDistrict = this.buildDistricts(fileList, fileLinks, config.orientation); // Create a district for file
+            const fileDistrict = this.buildDistricts(fileList, fileHierarchyLinks, config.orientation); // Create a district for file
 
             let result = new EntitiesList();
             result.district = d;
@@ -83,13 +102,8 @@ export class VPVariantsStrategy implements ParsingStrategy {
                 });
             }
 
-            allLinks.forEach(le => {
-                const source = result.getBuildingFromName(le.source);
-                const target = result.getBuildingFromName(le.target);
-                if (source !== undefined && target !== undefined) {
-                    result.links.push(new LinkImplem(source, target, le.type));
-                }
-            });
+            this.addAllLink(allLinks, result)
+            this.addAllLink(fileLinks, result);
 
             // log for non-vp non-variant nodes
             console.log(data.allnodes.filter(nod => !nodesList.map(no => no.name).includes(nod.name)).map(n => n.name));
@@ -100,6 +114,16 @@ export class VPVariantsStrategy implements ParsingStrategy {
             return result;
         }
         throw new Error('Data is undefined');
+    }
+
+    private addAllLink(links: LinkElement[], result: EntitiesList) {
+        links.forEach(link => {
+            const source = result.getBuildingFromName(link.source);
+            const target = result.getBuildingFromName(link.target);
+            if (source !== undefined && target !== undefined) {
+                result.links.push(new LinkImplem(source, target, link.type));
+            }
+        })
     }
 
     /**
@@ -135,8 +159,6 @@ export class VPVariantsStrategy implements ParsingStrategy {
         let node: NodeElement = new NodeElement(n.name);
 
         node.addMetric(VariabilityMetricsName.NB_METHOD_VARIANTS, this.checkAndGetMetric(n.methodVariants));
-        // Fixme: `check if nbFunctions is missing or not`
-        // node.addMetric(VariabilityMetricsName.NB_FUNCTIONS, this.checkAndGetMetric(n.methodVariants));
 
         const attr = n.attributes;
         let nbAttributes = 0;
@@ -176,17 +198,27 @@ export class VPVariantsStrategy implements ParsingStrategy {
         }
     }
 
-    private buildComposition(alllinks: LinkInterface[], nodes: NodeElement[], srcNodes: NodeElement[], level: number, orientation: Orientation): void {
+    private isLinkParsable(l: LinkInterface, n: NodeElement, nodeNames: string[]) {
+        return (l.target === n.name && !nodeNames.includes(l.source)) // IN
+            || (l.source === n.name && !nodeNames.includes(l.target)) // OUT
+            || l.type !== "EXPORT" // Link between classes and files
+    }
+
+    private buildComposition(
+        alllinks: LinkInterface[],
+        nodes: NodeElement[],
+        srcNodes: NodeElement[],
+        level: number,
+        orientation: Orientation
+    ): void {
         const newSrcNodes: NodeElement[] = [];
         const nodeNames = srcNodes.map(sn => sn.name);
         nodes.forEach(n => {
             if (nodeNames.includes(n.name)) {
                 n.compositionLevel = level;
                 alllinks.filter(l => {
-                    return (l.target === n.name && !nodeNames.includes(l.source)) // IN
-                        || (l.source === n.name && !nodeNames.includes(l.target)) // OUT
+                    return this.isLinkParsable(l, n, nodeNames);
                 }).forEach(l => {
-                    //console.log("Node: ", n.name, " - level: ", n.compositionLevel, " - link: ", l);
                     /// According to the orientation asked by the user, put the target (OUT) or the source (IN) first
                     if ((orientation === Orientation.OUT || orientation === Orientation.IN_OUT) && n.name === l.source && n.name !== l.target) { // OUT
                         this.addNewNodeIfNotExist(
@@ -245,8 +277,12 @@ export class VPVariantsStrategy implements ParsingStrategy {
         if (children.length > 0) {
             let result = new VPVariantsImplem(new ClassImplem(
                 nodeElement,
-                nodeElement.compositionLevel
+                nodeElement.compositionLevel,
+                nodeElement.forceColor
             ));
+
+            result.vp.exportedClasses = nodeElement.exportedClasses.map(nodeElement => new ClassImplem(nodeElement,0));
+
             children.forEach(c => {
                 const r = this.buildDistrict(c, nodes, links, level + 1, orientation);
                 if (r instanceof VPVariantsImplem) {
@@ -257,10 +293,15 @@ export class VPVariantsStrategy implements ParsingStrategy {
             });
             return result;
         } else {
-            return new ClassImplem(
+            let result = new ClassImplem(
                 nodeElement,
-                nodeElement.compositionLevel
+                nodeElement.compositionLevel,
+                nodeElement.forceColor
             );
+
+            result.exportedClasses = nodeElement.exportedClasses.map(nodeElement => new ClassImplem(nodeElement,0));
+
+            return result;
         }
     }
 
@@ -301,5 +342,57 @@ export class VPVariantsStrategy implements ParsingStrategy {
             }
         }
         return undefined;
+    }
+
+    private findDuplicatedFiles(files: NodeElement[], links: LinkElement[]): NodeElement[][] {
+        const excluded = []
+        const res: NodeElement[][] = []
+
+        for (const file of files) {
+            if (excluded.includes(file))
+                continue;
+            res.push(this.findDuplicatesForFile(file, files, links, excluded));
+        }
+
+        return res;
+    }
+
+    private findDuplicatesForFile(
+        file: NodeElement,
+        files: NodeElement[],
+        links: LinkElement[],
+        excluded: NodeElement[]
+    ): NodeElement[] {
+        if (excluded.includes(file))
+            return []
+        excluded.push(file)
+
+        const res = [file]
+        const duplicates = this.getLinkedNodesFromSource(file, files, links);
+        for (const duplicate of duplicates) {
+            res.push(...this.findDuplicatesForFile(duplicate, files, links, excluded));
+        }
+
+        return res
+    }
+
+    private areColorClose(color1: Color3, color2: Color3, epsilon: number = 0.01) {
+        return Math.abs(color1.r - color2.r) < epsilon && Math.abs(color1.g - color2.g) < epsilon && Math.abs(color1.b - color2.b) < epsilon
+    }
+
+    private pickColorsForNElements(n: number, max_try: number = 10): Color3[] {
+        const colors = [];
+
+        for (let i = 0; i < n; i++) {
+            let color;
+            let nb_try = 0;
+            do {
+                color = Color3.Random();
+                nb_try ++
+            } while (colors.some(c => this.areColorClose(color, c)) && nb_try < max_try);
+            colors.push(color);
+        }
+
+        return colors;
     }
 }

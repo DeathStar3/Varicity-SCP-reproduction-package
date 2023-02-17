@@ -1,11 +1,13 @@
 import {Metrics} from "../../../../model/entitiesImplems/metrics.model";
 import {MetricObject} from "../../../../model/entitiesImplems/metricObject.model";
 import {NodeInterface} from "../../../../model/entities/jsonInput.interface";
+import { Color3 } from "@babylonjs/core";
 
 export interface Node {
     name: string;
     types: string[];
     metrics: Metrics;
+    exportedClasses: Node[];
 }
 
 export class NodeElement implements Node {
@@ -17,12 +19,15 @@ export class NodeElement implements Node {
     root: boolean;
     compositionLevel: number = -1;
     origin: string = "";
+    exportedClasses: Node[];
+    forceColor: Color3 = undefined;
 
     constructor(name: string) {
         this.name = name;
         this.analyzed = false;
         this.root = true;
         this.metrics = new Metrics();
+        this.exportedClasses = [];
     }
 
     // public addMetric(metric: MetricObject){

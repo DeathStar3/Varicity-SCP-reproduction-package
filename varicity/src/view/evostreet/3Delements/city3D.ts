@@ -6,6 +6,7 @@ import { Building3D } from '../../common/3Delements/building3D';
 import { Road3D } from './road3D';
 import { EntitiesList } from '../../../model/entitiesList';
 import { Link3DFactory } from '../../common/3Dfactory/link3D.factory';
+import { Link3D } from "../../common/3Dinterfaces/link3D.interface";
 
 export class City3D {
 
@@ -27,24 +28,28 @@ export class City3D {
         this.config = config;
         this.scene = scene;
         this.links = entities.links;
-        console.log(
-            "City is initialising its road with entities: ",
-            entities.district as VPVariantsImplem,
-            ", and links: ",
-            this.links
-        )
         this.init(entities);
     }
 
     private init(entities: EntitiesList) {
-        this.road = new Road3D(this.scene, entities.district as VPVariantsImplem, this.config);
-        this.file_road = new Road3D(this.scene, entities.file_district as VPVariantsImplem, this.config)
+        this.road = new Road3D(this.scene, entities.district as VPVariantsImplem, this.config, "Class district");
+        this.file_road = new Road3D(this.scene, entities.file_district as VPVariantsImplem, this.config, "File district")
         this.highway = new Road3D(this.scene, null, this.config);
         this.highway.forcedLength = 10;
     }
 
     private findSrcLink(name: string): Building3D {
-        return this.road.get(name);
+        let res = this.road.get(name);
+        if (res !== undefined)
+            return res
+        return this.file_road.get(name);
+    }
+
+    private registerLink(link: Link3D, src: Building3D, dest: Building3D) {
+        if (link) {
+            src.link(link);
+            dest.link(link);
+        }
     }
 
     build() {
@@ -58,6 +63,7 @@ export class City3D {
         this.road.build(this.config);
         this.highway.build(this.config);
         this.file_road.build(this.config);
+
         this.links.forEach(l => {
             let type = l.type;
             // we only want to show INSTANTIATE type links since the visualization is based off IMPLEMENTS & EXTENDS hierarchy
@@ -65,10 +71,7 @@ export class City3D {
             let dest = this.findSrcLink(l.target.name);
             if (src !== undefined && dest !== undefined) {
                 let link = Link3DFactory.createLink(src, dest, type, this.scene, this.config);
-                if (link) {
-                    src.link(link);
-                    dest.link(link);
-                }
+                this.registerLink(link, src, dest);
             }
         });
 
@@ -76,10 +79,7 @@ export class City3D {
             for (let b of value.clones) {
                 if (b !== undefined) {
                     let link = Link3DFactory.createLink(value.original, b, "DUPLICATES", this.scene, this.config);
-                    if (link) {
-                        value.original.link(link);
-                        b.link(link);
-                    }
+                    this.registerLink(link, value.original, b);
                 }
             }
         }

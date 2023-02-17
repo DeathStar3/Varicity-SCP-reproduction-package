@@ -47,7 +47,7 @@ export enum EntityVisibility {
 }
 
 export enum UnknownEntity {
-    UNKONWN = "UNKONWN"
+    UNKNOWN = "UNKNOWN"
 }
 
 export enum RelationType {

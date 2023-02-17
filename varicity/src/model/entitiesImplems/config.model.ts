@@ -34,6 +34,7 @@ export class Config implements ConfigInterface {
         colors: [Color],
         display: {
             air_traffic: string[],
+            bridges: string[],
             underground_road: string[],
         }
     };

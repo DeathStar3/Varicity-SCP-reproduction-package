@@ -1,5 +1,6 @@
-import {Node} from './../../controller/parser/symfinder_elements/nodes/node.element';
+import {Node, NodeElement} from './../../controller/parser/symfinder_elements/nodes/node.element';
 import {Metrics} from "../entitiesImplems/metrics.model";
+import { Color3 } from "@babylonjs/core";
 
 export abstract class Building implements Node {
     name: string;
@@ -14,9 +15,11 @@ export abstract class Building implements Node {
     width: number;
     height: number;
 
-    // TODO: remove fullName to keep only building name
-
     compLevel: number;
+
+    exportedClasses: Node[];
+
+    force_color: Color3 = undefined;
 
     constructor() {
         this.types = [];
@@ -25,4 +28,6 @@ export abstract class Building implements Node {
     abstract getHeight(field: string): number;
 
     abstract getWidth(field: string): number;
+
+
 }

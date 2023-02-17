@@ -4,6 +4,7 @@ export abstract class Link {
     target: Building;
     source: Building;
     type: string;
+    percentage?: number;
 
     constructor() {
     }

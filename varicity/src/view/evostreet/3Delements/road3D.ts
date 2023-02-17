@@ -3,6 +3,7 @@ import {ActionManager, Color3, ExecuteCodeAction, MeshBuilder, Scene, StandardMa
 import {Element3D} from '../../common/3Dinterfaces/element3D.interface';
 import {Building3D} from '../../common/3Delements/building3D';
 import {VPVariantsImplem} from "../../../model/entitiesImplems/vpVariantsImplem.model";
+import { Building3DFactory } from "../../common/3Dfactory/building3D.factory";
 
 export class Road3D extends Element3D {
     padding: number = 0;
@@ -10,14 +11,14 @@ export class Road3D extends Element3D {
     // This is element that road is representing
     elementModel: VPVariantsImplem;
 
-    // ????
+    // Roads
     leftVPs: Road3D[] = [];
-    // ????
+    // Roads
     rightVPs: Road3D[] = [];
 
-    // ????
+    // Building
     leftVariants: Building3D[] = [];
-    // ????
+    // Building
     rightVariants: Building3D[] = [];
 
     // In my opinion, this is the starting point of the road (the building with the pyramid on top).
@@ -34,12 +35,16 @@ export class Road3D extends Element3D {
 
     status: boolean = false;
 
-    constructor(scene: Scene, vpElmt: VPVariantsImplem, config: Config) {
+    constructor(scene: Scene, vpElmt: VPVariantsImplem, config: Config, name: string = "") {
         super(scene);
 
         this.elementModel = vpElmt;
         if (vpElmt && vpElmt.vp) {
             this.vp = new Building3D(scene, vpElmt.vp, 0, config);
+        }
+
+        if (vpElmt !== null && (vpElmt.name === undefined || vpElmt.name === "")) { // Add custom road for district main roads
+            this.elementModel.name = name;
         }
 
         this.padding = config.district.padding;
@@ -168,34 +173,32 @@ export class Road3D extends Element3D {
         return building;
     }
 
-    build(config?: Config) {
-        if (this.forcedLength !== undefined) return;
-
+    private buildBuildings(config: Config) {
         const buildings3D: Building3D[] = [];
-        if (this.vp) {
-            this.vp.build();
-        }
-        this.elementModel.buildings
-            .forEach(b => {
+        this.elementModel.buildings.forEach(b => {
             if (config.blacklist) {
                 if (!config.blacklist.some(blacklisted => b.name.includes(blacklisted))) {
                     if (config.clones) {
                         if (config.clones.map.has(b.name)) {
                             config.clones.map.get(b.name).clones.push(this.vp);
                         } else {
-                            let d3 = new Building3D(this.scene, b, 0, config);
+                            let d3 = Building3DFactory.createBuildingMesh(b, 0, this.scene, config);
                             config.clones.map.set(b.name, {original: d3, clones: []});
                             d3.build();
                             buildings3D.push(d3);
                         }
                     } else {
-                        let d3 = new Building3D(this.scene, b, 0, config);
+                        let d3 = Building3DFactory.createBuildingMesh(b, 0, this.scene, config);
                         d3.build();
                         buildings3D.push(d3);
                     }
                 }
             }
         });
+        return buildings3D;
+    }
+
+    private buildRoads(config: Config) {
         const roads3D: Road3D[] = [];
         this.elementModel.districts.forEach(v => {
             if (config.blacklist) {
@@ -217,6 +220,17 @@ export class Road3D extends Element3D {
                 }
             }
         });
+        return roads3D;
+    }
+
+    build(config?: Config) {
+        if (this.forcedLength !== undefined) return;
+
+        if (this.vp) {
+            this.vp.build();
+        }
+        const buildings3D: Building3D[] = this.buildBuildings(config);
+        const roads3D: Road3D[] = this.buildRoads(config);
 
         this.spreadElementsVariants(buildings3D, this.leftVariants, this.rightVariants);
         this.spreadElementsVP(roads3D, this.leftVPs, this.rightVPs);
@@ -248,7 +262,7 @@ export class Road3D extends Element3D {
                 /* horizontal case: */ (e.getVpWidth() / 2 - e.vp.padding / 2 + this.roadWidth / 2) * orientationX +
                 /* vertical case:   */ (e.getSideWidth(false) + offsetVL) * orientationZ;
             e.place(vX + x, vZ + z, -orientationZ, orientationX);
-            offsetVL += e.getWidth();
+            offsetVL += e.getWidth() + 0.2;
         });
         this.rightVPs.forEach(e => {
             let vX =
@@ -258,7 +272,7 @@ export class Road3D extends Element3D {
                 /* horizontal case: */ -(e.getVpWidth() / 2 - e.vp.padding / 2 + this.roadWidth / 2) * orientationX +
                 /* vertical case:   */ (e.getSideWidth(true) + offsetVR) * orientationZ;
             e.place(vX + x, vZ + z, orientationZ, -orientationX);
-            offsetVR += e.getWidth();
+            offsetVR += e.getWidth() + 0.2;
         });
 
         let offsetL = Math.max(offsetVL, offsetVR);
@@ -287,9 +301,13 @@ export class Road3D extends Element3D {
         });
     }
 
+    private getMeshName(): string {
+        return this.elementModel ? this.elementModel.name : "Highway to Hell";
+    }
+
     render(config: Config) {
         this.d3Model = MeshBuilder.CreateBox(
-            this.elementModel ? this.elementModel.name : "Highway to Hell", // Love my refs
+            this.getMeshName(),
             {
                 height: 0.001,
                 width: (this.orientationX == 0 ? this.roadWidth : this.getRoadLength()),
