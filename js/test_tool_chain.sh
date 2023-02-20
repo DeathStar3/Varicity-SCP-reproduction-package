@@ -63,19 +63,12 @@ function check() {
   echo "=====$(echo $project | sed 's/./=/g')====="
 }
 
-#function compare() {
-#  if [ $1 = ${projects[0]} ]; then
-#    check $1 275 17 7374 8318 0
-#  elif [ $1 = ${projects[1]} ]; then
-#    check $1 639 501 20731 26390 1
-#  elif [ $1 = ${projects[2]} ]; then
-#    check $1 1180 342 14732 19256 6
-#  elif [ $1 = ${projects[3]} ]; then
-#    check $1 499 112 9519 11809 3
-#  elif [ $1 = ${projects[4]} ]; then
-#    check $1 644 211 25989 29219 9
-#  fi
-#}
+if [ ! -d experiments ]; then
+    mkdir experiments
+fi
+if [ ! -d logs ]; then
+    mkdir logs
+fi
 
 for ((i = 1; i <= $#; i += 7)); do
   project=${!i}
@@ -92,7 +85,10 @@ for ((i = 1; i <= $#; i += 7)); do
   unknown_paths_count_pos=$(($i + 6))
   unknown_paths_count=${!unknown_paths_count_pos}
 
+  project_name=$(basename -- $1)
+  {
   analyse $project $commit
   check $project $files_count $variants_count $nodes_count $relationships_count $unknown_paths_count
+  } | tee ./logs/"$project_name".log
   cd ..
 done

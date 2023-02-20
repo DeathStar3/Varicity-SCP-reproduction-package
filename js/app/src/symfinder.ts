@@ -40,6 +40,8 @@ import {
 } from "typescript";
 import UsageVisitor from "./visitors/UsageVisitor";
 import {FileStats} from "./utils/file_stats";
+import ExportVisitor from "./visitors/ExportVisitor";
+import InternalExport from "./visitors/InternalExport";
 
 export class Symfinder{
 
@@ -53,6 +55,7 @@ export class Symfinder{
      * run symfinder for the specific project
      * @param src path to the root directory
      * @param analysis_base if it's an analysis of a base library
+     * @param stats_file create or not a file with some statistics
      */
     async run(src: string, analysis_base: boolean, stats_file: boolean){
         await this.neoGraph.clearNodes();
@@ -66,12 +69,16 @@ export class Symfinder{
         const options: CompilerOptions = { strict: true, target: ScriptTarget.Latest, allowJs: true, module: ModuleKind.ES2015 }
         let program = createProgram(files, options, createCompilerHost(options, true));
 
-        await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program);
+        await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program, true);
+        await this.visitPackage(files, new InternalExport(this.neoGraph, program), "internal_export", program, true);
+        await this.visitPackage(files, new ExportVisitor(this.neoGraph, program), "export", program, false);
         const usageVisitor = new UsageVisitor(this.neoGraph, program);
         if(!analysis_base) {
-            await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program);
-            await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program);
-            await this.visitPackage(files, usageVisitor, "usages", program);
+            //sync:206 - 30902
+            //async:
+            await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program, true);
+            await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program, true);
+            await this.visitPackage(files, usageVisitor, "usages", program, false); // See issue #33 "Wrong objectFlags value in async"
 
             await this.neoGraph.detectVPsAndVariants();
             await this.proximityFolderDetection();
@@ -140,21 +147,30 @@ export class Symfinder{
      * @param files to visit
      * @param visitor class wich contain analysis
      * @param label logger label
+     * @param program the program
+     * @param async determines if the function executes the analyses in async or sync
      */
-    async visitPackage(files: string[], visitor: SymfinderVisitor, label: string, program: Program){
-        var nbFiles = files.length;
-        var currentFile = 0;
+    async visitPackage(files: string[], visitor: SymfinderVisitor, label: string, program: Program, async: boolean){
+        const nbFiles = files.length;
+        let currentFile = 0;
         const analyse = [];
         for(let file of files){
             let parser = new Parser(file, program);
-            analyse.push(parser.accept(visitor).then(_ => {
+            if(async) {
+                analyse.push(parser.accept(visitor).then(_ => {
+                    currentFile++;
+                    process.stdout.write("\rResolving " + label + ": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
+                }));
+            } else {
+                await parser.accept(visitor);
                 currentFile++;
                 process.stdout.write("\rResolving " + label + ": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
-            }));
+            }
         }
-        await Promise.all(analyse);
+        if(async)
+            await Promise.all(analyse);
         process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")" + ", done.\n");
-    }
+        }
 
     /**
      * Visit all files of the selected project and annoted them in the neo4j graph
@@ -195,7 +211,7 @@ export class Symfinder{
             }
             else{
                 //filter typescript files
-                if(fileName.endsWith(".ts") && !fileName.endsWith(".usage.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith("test.ts") && !fileName.endsWith("tests.ts") && !fileName.endsWith(".spec.ts") /*&& !fileName.endsWith(".d.ts")*/){
+                if(fileName.endsWith(".ts") && !fileName.endsWith(".usage.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith("test.ts") && !fileName.endsWith("tests.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
                     process.stdout.write("\rDetecting files ("+files.length+"): '"+fileName + "'\x1b[K");
                     files.push(absolute_path);
                     var fileNode = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.FILE, []);

@@ -81,6 +81,14 @@ export default class NeoGraph{
         });
     }
 
+    async getAllNodes(path: string, relationship: RelationType): Promise<Node[]>{
+        const request = "MATCH (:FILE {path: $path})-[:"+relationship+"]->(n) RETURN (n)";
+
+        return this.submitRequest(request, {path: path}).then((result: Record[]) =>{
+            return result.map(value => value.get(0));
+        });
+    }
+
     /*async getNodeWithClass(name: string, className: string): Promise<Node | undefined>{
         const request = "MATCH (n {name: $name})<--(m:CLASS {name: $className}) RETURN (n)";
 
@@ -90,7 +98,7 @@ export default class NeoGraph{
     }*/
 
     async getNodeWithFile(name: string, path: string): Promise<Node | undefined>{
-        const request = "MATCH (n {name: $name})<--(m {path: $path}) RETURN (n)";
+        const request = "MATCH (n)<-[r]-(m {path: $path}) WHERE n.name = $name or r.alt_name = $name RETURN (n)";
 
         return this.submitRequest(request, {name:name, path:path}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
@@ -166,7 +174,7 @@ export default class NeoGraph{
         "MATCH (b)\n" +
         "WITH a,b\n" +
         "WHERE ID(b)=$bId\n" +
-        "CREATE (a)-[r:"+type+"]->(b)";
+        "MERGE (a)-[r:"+type+"]->(b)";
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
@@ -195,13 +203,13 @@ export default class NeoGraph{
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
-    async setAlternativeName(node: Node, name: string): Promise<Node | undefined>{
-        const request = "MATCH (n)\n" +
-        "WHERE ID(n) = $id\n" +
-        "SET n.alt_name = $name\n" +
+    async setAlternativeName(fileNode: Node, node: Node, name: string): Promise<Node | undefined>{
+        const request = "MATCH (f)-[e:EXPORT]->(n)\n" +
+        "WHERE ID(f) = $fileId and ID(n) = $id\n" +
+        "SET e.alt_name = $name\n" +
         "RETURN n";
 
-        return await this.submitRequest(request, {id: node.identity, name: name}).then((result: Record[]) =>{
+        return await this.submitRequest(request, {fileId: fileNode.identity, id: node.identity, name: name}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
         });
     }

@@ -23,7 +23,7 @@ import {
     ClassDeclaration,
     ClassExpression,
     ConstructorDeclaration,
-    ExportAssignment,
+    ExportDeclaration,
     Expression,
     ForOfStatement,
     FunctionDeclaration,
@@ -68,7 +68,6 @@ export default class ClassesVisitor extends SymfinderVisitor{
     async visit(node: ParameterDeclaration): Promise<void>;
     async visit(node: PropertyDeclaration): Promise<void>;
     async visit(node: ForOfStatement): Promise<void>;
-    async visit(node: ExportAssignment): Promise<void>;
     async visit(node: ModuleDeclaration): Promise<void>
 
     /**
@@ -76,7 +75,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
      * @param node AST node
      * @returns ...
      */
-    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement | ParameterDeclaration | PropertyDeclaration | ForOfStatement | ExportAssignment | ModuleDeclaration): Promise<void> {
+    async visit(node: InterfaceDeclaration | ClassDeclaration | ClassExpression | MethodDeclaration | MethodSignature | ConstructorDeclaration | FunctionDeclaration | VariableStatement | ParameterDeclaration | PropertyDeclaration | ForOfStatement | ExportDeclaration | ModuleDeclaration): Promise<void> {
 
         if(isInterfaceDeclaration(node)) await this.visitInterface(node);
         else if(isClassDeclaration(node) || isClassExpression(node)) await this.visitClass(node);
@@ -88,7 +87,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
             if (isVariableStatement(node)) await this.visitVariable(node);
             else if (isParameter(node)) await this.visitParameter(node);
             else if (isForOfStatement(node)) await this.visitForVariables(node);
-            // else if (isExportAssignment(node)) await this.visitExportAssignment(node);
+            // else if (isExportDeclaration(node)) await this.visitExportDeclaration(node);
         }
     }
 
@@ -322,17 +321,6 @@ export default class ClassesVisitor extends SymfinderVisitor{
                 console.log("Error to link nodes "+name+" and "+/*className*/fileName+"...");
         }).catch((reason) => console.log("Error to create node "+name+"..."));
     }
-
-    /*async visitExportAssignment(node: ExportAssignment): Promise<void> {
-        const fileName = node.getSourceFile().fileName;
-        // @ts-ignore
-        const filePath = path.relative(process.env.PROJECT_PATH, fileName).substring(6);
-        const className = node.expression.getText();
-        if(className === "MetricsPanelCtrl") {
-            console.log("visitExportAssignment>"+filePath)
-        }
-        await this.neoGraph.changeInternalLinkToExport(className, filePath);
-    }*/
 
     async visitModule(node: ModuleDeclaration): Promise<void> {
         let name = node.name.getText();

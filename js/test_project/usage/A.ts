@@ -27,7 +27,13 @@ export default class A {
         const type: testType = "a";
         const l = this.b.getL();
         const n = new N();
+        const anonyme = new class {};
+        const anonyme2 = this.getAnonyme();
         const o = O.toString();
+    }
+
+    getAnonyme() {
+        return new class {}
     }
 
 }

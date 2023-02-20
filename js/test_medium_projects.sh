@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #github_link commit files_count variants_count nodes_count relationship_count unknown_paths_count
 ionic=("https://github.com/ionic-team/ionic-framework" "1c719833292d4cfbdecadf9838d8c783785222ad" 275 17 7368 8318 0)
 typeorm=("https://github.com/typeorm/typeorm" "58fc08840a4a64ca1935391f4709a784c3f0b373" 639 501 20731 26390 1)

@@ -17,13 +17,26 @@
  * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
  */
 import SymfinderVisitor from "./SymfinderVisitor";
-import { EntityType, EntityAttribut, RelationType } from "../neograph/NodeType";
+import {EntityAttribut, EntityType, RelationType} from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
-import { ExportDeclaration, ExportSpecifier, HeritageClause, ImportClause, ImportDeclaration, ImportSpecifier, isExportDeclaration, isExportSpecifier, isHeritageClause, isImportClause, isImportDeclaration, isImportSpecifier, Node, SyntaxKind } from "typescript";
-import { join } from 'path'
-import { filname_from_filepath } from '../utils/path'
+import {
+    HeritageClause,
+    ImportDeclaration,
+    isHeritageClause,
+    isImportDeclaration,
+    isImportSpecifier,
+    SyntaxKind
+} from "typescript";
+import {join} from 'path'
+import {filname_from_filepath} from '../utils/path'
+import {Node} from "neo4j-driver-core";
+import {Mutex} from "async-mutex";
 import path = require("path");
+
 export default class GraphBuilderVisitor extends SymfinderVisitor{
+
+    heritageMutex = new Mutex();
+    importMutex = new Mutex();
 
     constructor(neoGraph: NeoGraph){
         super(neoGraph);
@@ -31,19 +44,17 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
 
     async visit(node: HeritageClause): Promise<void>;
     async visit(node: ImportDeclaration): Promise<void>;
-    async visit(node: ExportSpecifier): Promise<void>;
 
     /**
      * Visit HeritageClause | ImportDeclaration | ExportSpecifier
      * @param node AST node
      * @returns ...
      */
-    async visit(node: HeritageClause | ImportDeclaration | ExportSpecifier): Promise<void> {
+    async visit(node: HeritageClause | ImportDeclaration): Promise<void> {
 
         if(isHeritageClause(node)) await this.visitHeritageClause(node);
         else if(isImportDeclaration(node)) await this.visitImportDeclaration(node);
-        else if(isExportSpecifier(node)) await this.visitExportSpecifier(node);
-        return;        
+        return;
     }
 
     /**
@@ -86,16 +97,17 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         }
 
         for(let scn of superClassesName){
-                var superClassNode = await this.neoGraph.getOrCreateNode(scn, superClasseType, [EntityAttribut.OUT_OF_SCOPE], []);
-                if(superClassNode !== undefined){
-                    var classNode = await this.neoGraph.getNodeWithFile(className, fileName)
-                    if(classNode !== undefined)
-                        await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
-                    else 
-                        console.log("Cannot get "+className+" with file "+fileName+"...");
-                }
+            var superClassNode:Node = await this.heritageMutex.runExclusive(async () => {
+                return await this.neoGraph.getOrCreateNode(scn, superClasseType, [EntityAttribut.OUT_OF_SCOPE], []);
+            });
+            if (superClassNode !== undefined) {
+                var classNode = await this.neoGraph.getNodeWithFile(className, fileName)
+                if (classNode !== undefined)
+                    await this.neoGraph.linkTwoNodes(superClassNode, classNode, relationType);
                 else
-                    console.log("Cannot get "+scn+"...");                
+                    console.log("Cannot get " + className + " with file " + fileName + "...");
+            } else
+                console.log("Cannot get " + scn + "...");
         };
         return;
     }
@@ -132,9 +144,7 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
             importedFilePath = "";
         }
 
-
-
-        var importedFileNode = await this.neoGraph.getOrCreateNodeWithPath(importedFileName, importedFilePath, EntityType.FILE, [EntityAttribut.OUT_OF_SCOPE], []);
+        var importedFileNode = await this.importMutex.runExclusive(() => this.neoGraph.getOrCreateNodeWithPath(importedFileName, importedFilePath, EntityType.FILE, [EntityAttribut.OUT_OF_SCOPE], []));
         if(importedFileNode !== undefined)
             await this.neoGraph.linkTwoNodes(fileNode, importedFileNode, RelationType.LOAD);
         else
@@ -150,7 +160,6 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
                     if(importedElementNode !== undefined)
                         await this.neoGraph.linkTwoNodes(fileNode, importedElementNode, RelationType.IMPORT);
                 }
-                
             }
         }
         if(node.importClause?.name !== undefined){
@@ -162,31 +171,4 @@ export default class GraphBuilderVisitor extends SymfinderVisitor{
         }
     }
 
-    /**
-     * Visit ExportSpecifier to specifie an exported member in neo4j
-     * @param node AST node
-     * @returns 
-     */
-    async visitExportSpecifier(node: ExportSpecifier): Promise<void>{
-        // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
-        var fileName = filname_from_filepath(filePath);
-        var exportedElementName: string = node.propertyName ? node.propertyName.getText() : node.name.getText();
-        var exportedElementNode = await this.neoGraph.getNodeWithFile(exportedElementName, filePath);
-        if(node.propertyName !== undefined){
-            if(exportedElementNode === undefined) return;
-            exportedElementName = node.name.getText();
-            exportedElementNode = await this.neoGraph.setAlternativeName(exportedElementNode, exportedElementName);
-        }
-
-        
-        if(exportedElementNode !== undefined){
-            var fileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);
-            if(fileNode !== undefined){
-                await this.neoGraph.updateLinkTwoNode(fileNode, exportedElementNode, RelationType.INTERNAL, RelationType.EXPORT);
-            }
-            else
-                console.log("Error to find nodes "+fileName+" to link with "+exportedElementName+"...");
-        }
-    }
 }
