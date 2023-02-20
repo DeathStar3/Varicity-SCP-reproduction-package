@@ -16,12 +16,12 @@
  *
  * Copyright 2021-2022 Bruel Martin <martin.bruel999@gmail.com>
  */
-import { writeFile } from "fs";
-import { driver, Driver } from "neo4j-driver";
-import { auth, Node, QueryResult, Record, Session, Transaction } from "neo4j-driver-core";
-import { exit } from "process";
-import { Configuration } from "../configuration/Configuration"
-import { NodeType, RelationType, EntityType, EntityAttribut, DesignPatternType } from "./NodeType";
+import {writeFile} from "fs";
+import {driver, Driver} from "neo4j-driver";
+import {auth, Node, QueryResult, Record, Session, Transaction} from "neo4j-driver-core";
+import {exit} from "process";
+import {Configuration} from "../configuration/Configuration"
+import {DesignPatternType, EntityAttribut, EntityType, NodeType, RelationType} from "./NodeType";
 import {stringify} from "querystring";
 
 export default class NeoGraph{
@@ -46,6 +46,12 @@ export default class NeoGraph{
         return this.submitRequest(request, {name: name, path:path}).then((result: Record[]) =>{
             return <Node>(result[0].get(0));
         });
+    }
+
+    async changeInternalLinkToExport(name: string, path: string) {
+        const request = "MATCH (n {name: $name})<-[i:INTERNAL]-(f:FILE {path: $path}) WITH n,i,f ORDER BY id(n) DESC LIMIT 1 CREATE (n)<-[:EXPORT]-(f) DELETE i";
+        //on prend celui avec le plus grand Id car il se peut qu'un fichier a plusieurs class/interface avec le même nom mais seulement la dernière est exportée
+        await this.submitRequest(request, {name: name, path: path});
     }
 
     async getOrCreateNode(name: string, type: EntityType, createAttributes: EntityAttribut[], matchAttributes: EntityAttribut[]): Promise<Node>{
@@ -76,11 +82,59 @@ export default class NeoGraph{
         });
     }
 
+    async getAllNodes(path: string, relationship: RelationType): Promise<Node[]>{
+        const request = "MATCH (:FILE {path: $path})-[:"+relationship+"]->(n) RETURN (n)";
+
+        return this.submitRequest(request, {path: path}).then((result: Record[]) =>{
+            return result.map(value => value.get(0));
+        });
+    }
+
+    /*async getNodeWithClass(name: string, className: string): Promise<Node | undefined>{
+        const request = "MATCH (n {name: $name})<--(m:CLASS {name: $className}) RETURN (n)";
+
+        return this.submitRequest(request, {name:name, className:className}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }*/
+
     async getNodeWithFile(name: string, path: string): Promise<Node | undefined>{
-        const request = "MATCH (n {name: $name})<--(m {path: $path}) RETURN (n)";
+        const request = "MATCH (n)<-[r]-(m {path: $path}) WHERE n.name = $name or r.alt_name = $name RETURN (n)";
 
         return this.submitRequest(request, {name:name, path:path}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getElementNodeWithFile(name: string, type:EntityType,path: string): Promise<Node | undefined>{
+        const request = "MATCH (n:"+type+")<--(m {path: $path}) WHERE n.name = $name OR n.alt_name = $name RETURN (n)";
+
+        return this.submitRequest(request, {name:name, path:path}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getClassNodeWithPath(className: string, path: string): Promise<Node | undefined>{
+        const request = "MATCH (n {name: $name})<-[:EXPORT|INTERNAL]-(m {path: $path}) RETURN (n)";
+
+        return this.submitRequest(request, {name:className, path:path}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getClassNodeByModuleIfUnique(className: string, moduleName: string): Promise<Node | undefined>{
+        const request = "MATCH (m:MODULE {name: $moduleName}) WITH m.path AS Mpath MATCH (n {name: $className}) <-[:EXPORT|INTERNAL]-(o {path: Mpath}) RETURN (n)";
+
+        return this.submitRequest(request, {className:className, moduleName:moduleName}).then((result: Record[]) =>{
+            return result.length === 1 ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getClassNodeByModule(className: string, moduleName: string, path: string): Promise<Node | undefined>{
+        const request = "MATCH (:MODULE {name: $moduleName, path: $path})<-[:EXPORT|INTERNAL]-(:FILE)-[:EXPORT|INTERNAL]->(n {name: $className}) WHERE NOT n:MODULE RETURN (n)";
+
+        return this.submitRequest(request, {className:className, moduleName:moduleName, path:path}).then((result: Record[]) =>{
+            return result.length === 1 ? <Node>(result[0].get(0)) : undefined;
         });
     }
 
@@ -100,6 +154,20 @@ export default class NeoGraph{
         });
     }
 
+    async getClassNodeWithImport(className: string, filePath: string): Promise<Node | undefined> {
+        const request = "MATCH (:FILE {path: $path})-[:IMPORT]->(n {name: $name})<-[:EXPORT]-(:FILE) RETURN n";
+        return this.submitRequest(request, {name: className, path: filePath}).then((result: Record[]) =>{
+            return result[0] ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
+    async getClassNodeIfUnique(className: string): Promise<Node | undefined> {
+        const request = "MATCH (n {name: $name})<-[:EXPORT|INTERNAL]-(f) RETURN (n)";
+        return this.submitRequest(request, {name: className}).then((result: Record[]) =>{
+            return result.length == 1 ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
     async linkTwoNodes(node1: Node, node2: Node, type: RelationType): Promise<void> {
         const request = "MATCH(a)\n" +
         "WHERE ID(a)=$aId\n" +
@@ -107,7 +175,7 @@ export default class NeoGraph{
         "MATCH (b)\n" +
         "WITH a,b\n" +
         "WHERE ID(b)=$bId\n" +
-        "CREATE (a)-[r:"+type+"]->(b)";
+        "MERGE (a)-[r:"+type+"]->(b)";
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
@@ -136,13 +204,13 @@ export default class NeoGraph{
         await this.submitRequest(request, {aId: node1.identity, bId: node2.identity});
     }
 
-    async updateNodeName(node: Node, name: string): Promise<Node | undefined>{
-        const request = "MATCH (n)\n" +
-        "WHERE ID(n) = $id\n" +
-        "SET n.name = $name\n" +
+    async setAlternativeName(fileNode: Node, node: Node, name: string): Promise<Node | undefined>{
+        const request = "MATCH (f)-[e:EXPORT]->(n)\n" +
+        "WHERE ID(f) = $fileId and ID(n) = $id\n" +
+        "SET e.alt_name = $name\n" +
         "RETURN n";
 
-        return await this.submitRequest(request, {id: node.identity, name: name}).then((result: Record[]) =>{
+        return await this.submitRequest(request, {fileId: fileNode.identity, id: node.identity, name: name}).then((result: Record[]) =>{
             return result[0] ? <Node>(result[0].get(0)) : undefined;
         });
     }
@@ -423,6 +491,12 @@ export default class NeoGraph{
         });
     }
 
+    async getAllClass(): Promise<Node[]> {
+        return this.submitRequest("MATCH (n:"+EntityType.CLASS+") RETURN n", {}).then((results: Record[]) =>{
+            return <Node[]> (results.map((result: Record) => result.get(0)));
+        });
+    }
+
     async getAllVPFoldersPath(): Promise<string[]>{
         return this.submitRequest("MATCH (n:"+EntityAttribut.VP_FOLDER+") RETURN n.path", {}).then((results: Record[]) =>{
             return <string[]> (results.map((result: Record) => result.get(0)));
@@ -528,6 +602,10 @@ export default class NeoGraph{
             "collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
+        const linksComposeRequest = "MATCH (f:FILE) -[r]-> (n)-[:TYPE_OF]->(m:CLASS)<-[:EXPORT]-(fe:FILE) " +
+            "WHERE 'PROPERTY' in labels(n) or 'PARAMETER' in labels(n) or 'VARIABLE' in labels(n) " +
+            "WITH collect ( distinct {source:f.path,target:fe.path,type:'USAGE'}) as rela " +
+            "RETURN {linkscompose:rela} ";
         let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
 
           await this.submitRequest(duplicationLinksRequest, {}).then(function(results: Record[]){
@@ -553,6 +631,9 @@ export default class NeoGraph{
         await this.submitRequest(classRequest,{}).then(function (results:Record[]){
             data.nodes.push.apply(data.nodes,results.map((result: Record) => result.get(0))[0].nodes);
         });
+        await this.submitRequest(linksComposeRequest,{}).then(function (results:Record[]){
+            data.linkscompose = results.map((result: Record) => result.get(0))[0].linkscompose;
+        });
 
         let content = JSON.stringify(data);
         writeFile('./export/db_link.json', content,(err: any) => {
@@ -563,7 +644,12 @@ export default class NeoGraph{
     }
 
     async clearNodes(): Promise<void>{
-        const request = "MATCH (n) DETACH DELETE n"
+        const request = "MATCH (n) WHERE NOT (n:BASE) DETACH DELETE n"
+        await this.submitRequest(request, {});
+    }
+
+    async markNodesAsBase(): Promise<void>{
+        const request = "MATCH (n) SET n:BASE"
         await this.submitRequest(request, {});
     }
 
@@ -580,6 +666,7 @@ export default class NeoGraph{
                 return result.records;
             } catch (Error) {
                 process.stdout.write("\rData base not ready... Retrying in "+waitingTime+" sec (" + nbTry + "/" + maxTry + ")");
+                console.log(Error)
                 await new Promise<void>((res) => setTimeout(()=>res(), waitingTime * 1000));
             }
         }

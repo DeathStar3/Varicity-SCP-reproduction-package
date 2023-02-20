@@ -32,15 +32,17 @@ let symfinder = new Symfinder();
 //symfinder.run('../experiments/vscode');
 const path = process.env.PROJECT_PATH
 const http_path = process.env.HTTP_PATH
+const analysis_base = process.argv.find(arg => arg === "-b") !== undefined;
+const stats_file = process.argv.find(arg => arg === "-sf") !== undefined;
 if(path === undefined) console.log("Error path undefined...");
 else {
     if(http_path === undefined){
         console.log("Executing locally...")
-        symfinder.run('../'+path,"");
+        symfinder.run('../'+path,"",analysis_base, stats_file);
     }
     else{
         console.log("Sending result to " + http_path + " ...")
-        symfinder.run('../'+path,http_path);
+        symfinder.run('../'+path,http_path,analysis_base, stats_file);
     }
 }
 

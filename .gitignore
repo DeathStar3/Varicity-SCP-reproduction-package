@@ -39,6 +39,7 @@ varicity-backend/dockervolume
 private-tools
 dockervolume
 data
+result_stats.json
 
 # Js Files #
 js/**/node_modules
