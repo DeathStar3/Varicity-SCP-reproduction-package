@@ -1,10 +1,13 @@
 if [ ! -d experiments ]; then
     mkdir experiments
 fi
+if [ ! -d ./app/export ]; then
+    mkdir ./app/export
+fi
 
 if ! docker ps | grep -q neo4j; then
     echo Starting docker
-    docker run -d -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/root neo4j:4.1.9
+    ./start_neo4j.sh
 fi
 
 # Environment variables
@@ -95,8 +98,10 @@ npm run --silent build
 
 # Export environment variables
 PROJECT_PATH=$path
+UV_THREADPOOL_SIZE=$(nproc)
 export HTTP_PATH
 export PROJECT_PATH
+export UV_THREADPOOL_SIZE
 
 echo "HTTP : $HTTP_PATH"
 echo "PROJECT : $PROJECT_PATH"

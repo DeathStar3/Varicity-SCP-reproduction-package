@@ -31,7 +31,18 @@ import {detectClones} from "jscpd";
 import {ExperimentResult} from "./neograph/entities/experiment.model";
 import axios from "axios";
 import path = require("path");
-
+import {
+    CompilerOptions,
+    createCompilerHost,
+    createProgram,
+    ModuleKind,
+    Program,
+    ScriptTarget
+} from "typescript";
+import UsageVisitor from "./visitors/UsageVisitor";
+import {FileStats} from "./utils/file_stats";
+import ExportVisitor from "./visitors/ExportVisitor";
+import InternalExport from "./visitors/InternalExport";
 
 export class Symfinder{
 
@@ -45,22 +56,41 @@ export class Symfinder{
      * run symfinder for the specific project
      * @param src path to the root directory
      * @param http_path
+     * @param analysis_base if it's an analysis of a base library
+     * @param stats_file create or not a file with some statistics
      */
-    async run(src: string, http_path: string){
+    async run(src: string, http_path: string, analysis_base: boolean, stats_file: boolean){
         await this.neoGraph.clearNodes();
 
         console.log("Analyse variability in : '" + src + "'")
+        const timeStart = Date.now();
 
         let files: string[] = await this.visitAllFiles(src);
         process.stdout.write("\rDetecting files ("+files.length+"): done.\x1b[K\n");
-        await this.visitPackage(files, new ClassesVisitor(this.neoGraph), "classes");
-        await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations");
-        await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies");
 
-        await this.neoGraph.detectVPsAndVariants();
-        await this.proximityFolderDetection();
-        await this.detectCommonEntityProximity();
-        await this.detectCommonMethodImplemented();
+        const options: CompilerOptions = { strict: true, target: ScriptTarget.Latest, allowJs: true, module: ModuleKind.ES2015 }
+        let program = createProgram(files, options, createCompilerHost(options, true));
+
+        await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program, true);
+        await this.visitPackage(files, new InternalExport(this.neoGraph, program), "internal_export", program, true);
+        await this.visitPackage(files, new ExportVisitor(this.neoGraph, program), "export", program, false);
+        const usageVisitor = new UsageVisitor(this.neoGraph, program);
+        if(!analysis_base) {
+            //sync:206 - 30902
+            //async:
+            await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program, true);
+            await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program, true);
+            await this.visitPackage(files, usageVisitor, "usages", program, false); // See issue #33 "Wrong objectFlags value in async"
+
+            await this.neoGraph.detectVPsAndVariants();
+            await this.proximityFolderDetection();
+            await this.detectCommonEntityProximity();
+            await this.detectCommonMethodImplemented();
+        } else {
+            await this.neoGraph.markNodesAsBase();
+        }
+
+        const timeEnd = Date.now();
 
         await this.neoGraph.exportToJSON();
         let content = await this.neoGraph.exportRelationJSON();
@@ -70,12 +100,18 @@ export class Symfinder{
         }
         console.log("db fetched");
 
+        let stats = new FileStats();
+        stats.files_count = files.length;
+        stats.variants_count = await this.neoGraph.getTotalNbVariants();
+        stats.relationships_count = await this.neoGraph.getNbRelationships();
+        stats.nodes_count = await this.neoGraph.getNbNodes();
+        stats.unknown_paths_count = usageVisitor.getUnknownPaths().size;
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
         console.log("Number of constructor VPs: " + await this.neoGraph.getNbConstructorVPs());
         console.log("Number of method level VPs: " + await this.neoGraph.getNbMethodLevelVPs());
         console.log("Number of class level VPs: " + await this.neoGraph.getNbClassLevelVPs());
-        console.log("Number of variants: " + await this.neoGraph.getTotalNbVariants());
+        console.log("Number of variants: " + stats.variants_count);
         console.log("Number of methods variants: " + await this.neoGraph.getNbMethodVariants());
         console.log("Number of constructors variants: " + await this.neoGraph.getNbConstructorVariants());
         console.log("Number of method level variants: " + await this.neoGraph.getNbMethodLevelVariants());
@@ -84,14 +120,32 @@ export class Symfinder{
         console.log("Number of variant folder: " + await this.neoGraph.getNbVariantFolders());
         console.log("Number of vp folder: " + await this.neoGraph.getNbVPFolders());
         console.log("Number of proximity entities: " + await this.neoGraph.getNbProximityEntity());
-        console.log("Number of nodes: " + await this.neoGraph.getNbNodes());
-        console.log("Number of relationships: " + await this.neoGraph.getNbRelationships());
-
-
+        console.log("Number of nodes: " + stats.nodes_count);
+        console.log("Number of relationships: " + stats.relationships_count);
+        console.log("Duration: "+this.msToTime(timeEnd-timeStart));
+        if(!analysis_base) {
+            const classes = await this.neoGraph.getAllClass();
+            console.log("Number of unknown class path: " + ((stats.unknown_paths_count / classes.length) * 100).toFixed(2) + "% (" + stats.unknown_paths_count + "/" + classes.length + ")");
+        }
+        if(stats_file)
+            stats.write();
 
         await this.neoGraph.driver.close();
 
 
+    }
+
+    msToTime(duration: number) {
+        let milliseconds: number = Math.floor((duration % 1000) / 100),
+            seconds:any = Math.floor((duration / 1000) % 60),
+            minutes:any = Math.floor((duration / (1000 * 60)) % 60),
+            hours:any = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
     }
 
     /**
@@ -99,18 +153,30 @@ export class Symfinder{
      * @param files to visit
      * @param visitor class wich contain analysis
      * @param label logger label
+     * @param program the program
+     * @param async determines if the function executes the analyses in async or sync
      */
-    async visitPackage(files: string[], visitor: SymfinderVisitor, label: string){
-        var nbFiles = files.length;
-        var currentFile = 0;
+    async visitPackage(files: string[], visitor: SymfinderVisitor, label: string, program: Program, async: boolean){
+        const nbFiles = files.length;
+        let currentFile = 0;
+        const analyse = [];
         for(let file of files){
-            let parser = new Parser(file);
-            await parser.accept(visitor);
-            currentFile++;
-            process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
+            let parser = new Parser(file, program);
+            if(async) {
+                analyse.push(parser.accept(visitor).then(_ => {
+                    currentFile++;
+                    process.stdout.write("\rResolving " + label + ": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
+                }));
+            } else {
+                await parser.accept(visitor);
+                currentFile++;
+                process.stdout.write("\rResolving " + label + ": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")");
+            }
         }
+        if(async)
+            await Promise.all(analyse);
         process.stdout.write("\rResolving "+label+": " + ((100 * currentFile) / nbFiles).toFixed(0) + "% (" + currentFile + "/" + nbFiles + ")" + ", done.\n");
-    }
+        }
 
     /**
      * Visit all files of the selected project and annoted them in the neo4j graph
@@ -151,7 +217,7 @@ export class Symfinder{
             }
             else{
                 //filter typescript files
-                if(fileName.endsWith(".ts") && !fileName.endsWith(".test.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
+                if(fileName.endsWith(".ts") && !fileName.endsWith(".usage.ts") && !fileName.endsWith("Test.ts") && !fileName.endsWith("test.ts") && !fileName.endsWith("tests.ts") && !fileName.endsWith(".spec.ts") && !fileName.endsWith(".d.ts")){
                     process.stdout.write("\rDetecting files ("+files.length+"): '"+fileName + "'\x1b[K");
                     files.push(absolute_path);
                     var fileNode = await this.neoGraph.createNodeWithPath(fileName, absolute_path, EntityType.FILE, []);
@@ -236,18 +302,15 @@ export class Symfinder{
 
             for(let clone of clones){
               var nodeA: any = nodes.find((node: Node) => {
-                // const abs_path = path.resolve(node.properties.path)
-                return node.properties.path == clone.duplicationA.sourceId
+                  // @ts-ignore
+                  const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
+                return abs_path == clone.duplicationA.sourceId
               });
               var nodeB: any = nodes.find((node: Node) => {
-                // const abs_path = path.resolve(node.properties.path)
-                return node.properties.path == clone.duplicationB.sourceId
+                  // @ts-ignore
+                  const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
+                return abs_path == clone.duplicationB.sourceId
               });
-
-                if(nodeA === undefined || nodeB === undefined){
-                    continue;
-                }
-
                 var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
                 var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
                 await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CORE_CONTENT,
@@ -279,10 +342,14 @@ export class Symfinder{
             }
 
             var nodeA: any = nodes.find((node: Node) => {
-              return node.properties.path == clone.duplicationA.sourceId;
+                // @ts-ignore
+              const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
+              return abs_path == clone.duplicationA.sourceId
             });
             var nodeB: any = nodes.find((node: Node) => {
-              return node.properties.path == clone.duplicationB.sourceId;
+                // @ts-ignore
+              const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
+              return abs_path == clone.duplicationB.sourceId
             });
             if(nodeA === undefined || nodeB === undefined){
                 console.log("ERROR: nodeA or nodeB is undefined");
