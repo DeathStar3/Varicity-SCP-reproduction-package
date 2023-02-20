@@ -69,6 +69,9 @@ fi
 if [ ! -d logs ]; then
     mkdir logs
 fi
+if [ ! -d ./app/export ]; then
+    mkdir ./app/export
+fi
 
 for ((i = 1; i <= $#; i += 7)); do
   project=${!i}
