@@ -316,10 +316,10 @@ export class Building3D extends Element3D {
      * @param level         A value between 0 and 7
      * @param isWhiteColor  Is the display color white?
      * @param mat           The material that is applied on the mesh
-     * @private
+     * @protected
      */
-    private applyCrackTextureForLevel(level: number, isWhiteColor: boolean, mat: StandardMaterial) {
-        level = Math.max(0, Math.min(7, level)); // Level is bound between 0 and
+    protected applyCrackTextureForLevel(level: number, isWhiteColor: boolean, mat: StandardMaterial) {
+        level = Math.max(1, Math.min(7, level)); // Level is bound between 0 and
         let color = isWhiteColor ? 'w_' : '';
 
         mat.diffuseTexture = new Texture(

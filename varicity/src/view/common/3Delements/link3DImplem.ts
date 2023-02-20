@@ -9,6 +9,7 @@ export class Link3DImplem implements Link3D {
     src: Building3D;
     dest: Building3D
     type: string;
+    percentage: number = undefined
 
     mesh: LinesMesh;
 
@@ -18,12 +19,13 @@ export class Link3DImplem implements Link3D {
 
     config: Config
 
-    constructor(src: Building3D, dest: Building3D, type: string, scene: Scene, config: Config) {
+    constructor(src: Building3D, dest: Building3D, type: string, percentage: number, scene: Scene, config: Config) {
         this.src = src;
         this.dest = dest;
         this.type = type;
         this.scene = scene;
         this.config = config;
+        this.percentage = percentage
     }
 
     render(bool: boolean): void {

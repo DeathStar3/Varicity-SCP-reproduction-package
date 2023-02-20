@@ -6,6 +6,6 @@ export abstract class Link {
     type: string;
     percentage?: number;
 
-    constructor() {
+    protected constructor() {
     }
 }

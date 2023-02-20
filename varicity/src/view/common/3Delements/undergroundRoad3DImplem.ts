@@ -10,6 +10,7 @@ export class UndergroundRoad3DImplem implements Link3D {
     src: Building3D;
     dest: Building3D
     type: string;
+    percentage: number;
 
     downRoadMesh: Mesh;
     roadMesh: Mesh

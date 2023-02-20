@@ -70,7 +70,7 @@ export class City3D {
             let src = this.findSrcLink(l.source.name);
             let dest = this.findSrcLink(l.target.name);
             if (src !== undefined && dest !== undefined) {
-                let link = Link3DFactory.createLink(src, dest, type, this.scene, this.config);
+                let link = Link3DFactory.createLink(src, dest, type, l.percentage, this.scene, this.config);
                 this.registerLink(link, src, dest);
             }
         });
@@ -78,7 +78,7 @@ export class City3D {
         for (let [, value] of this.config.clones.map) {
             for (let b of value.clones) {
                 if (b !== undefined) {
-                    let link = Link3DFactory.createLink(value.original, b, "DUPLICATES", this.scene, this.config);
+                    let link = Link3DFactory.createLink(value.original, b, "DUPLICATES", undefined, this.scene, this.config);
                     this.registerLink(link, value.original, b);
                 }
             }

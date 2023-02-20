@@ -1,9 +1,9 @@
 import {Building3D} from "./building3D";
-import {Mesh, MeshBuilder, Scene, Vector3} from "@babylonjs/core";
+import {Mesh, MeshBuilder, Scene, Texture, Vector3} from "@babylonjs/core";
 import {Building} from "../../../model/entities/building.interface";
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {Building3DFactory} from "../3Dfactory/building3D.factory";
-import {FileDislayEnum} from "../../../model/entities/config.interface";
+import {Link3D} from "../3Dinterfaces/link3D.interface";
 
 /**
  * This class represent a file and the classes that it exports.
@@ -28,7 +28,7 @@ export class FileBuilding3D extends Building3D {
 
 	constructor(scene: Scene, building: Building, depth: number, config: Config) {
 		super(scene, building, depth, config);
-		this.auto_scale = this.config.building.display.file_size === FileDislayEnum.ADAPTATIVE;
+		// this.auto_scale = this.config.building.display.file_size === FileDislayEnum.ADAPTATIVE;
 		if (this.auto_scale) this.padding = 0.005
 	}
 
@@ -168,6 +168,8 @@ export class FileBuilding3D extends Building3D {
 			x += offset_x;
 		}
 
+		this.updateBuildingTexture();
+
 		this.elementModel.types = old_types; // Reset the types of the file
 	}
 
@@ -176,5 +178,30 @@ export class FileBuilding3D extends Building3D {
 			return this.classes.get(building_name);
 		}
 		return this.center;
+	}
+
+	updateBuildingTexture(){
+		if(this.links.some(l=> l.type == "CORE_CONTENT")){
+			//
+			this.updateTextureCoreContent();
+		}
+		if (this.links.some(l => l.type == "CODE_DUPLICATED")){
+			//
+			this.updateTextureCodeDuplicated(this.links.find(l => l.type === "CODE_DUPLICATED"));
+
+		}
+	}
+
+	private updateTextureCoreContent() {
+		this.mat.emissiveTexture = new Texture(
+			`${Building3D.TEXTURE_PATH}/core_content.svg`,
+			this.scene
+		)
+	}
+
+	private updateTextureCodeDuplicated(link: Link3D) {
+		const percentage = link.percentage ?? 0;
+		const level = Math.floor(percentage / 100 * 7);
+		this.applyCrackTextureForLevel(level, false, this.mat);
 	}
 }

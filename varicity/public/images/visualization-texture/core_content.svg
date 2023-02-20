@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+    <defs>
+        <clipPath id="clip-CORE_CONTENT">
+            <rect width="64" height="64"/>
+        </clipPath>
+    </defs>
+    <g id="CORE_CONTENT" clip-path="url(#clip-CORE_CONTENT)">
+        <g id="Groupe_147" transform="translate(-11950 3881)">
+            <g id="Groupe_146">
+                <g id="Groupe_120">
+                    <!--<rect width="300" height="100" style="fill:rgba(0,0,255, 0);stroke-width:3;stroke:rgba(0,0,0,0)" />-->
+                    <text id="CORE_CONTENT" transform="translate(11982 -3838)" fill="#fff" font-size="25" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="-9" y="0">=</tspan></text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
