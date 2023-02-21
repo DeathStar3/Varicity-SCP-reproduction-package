@@ -599,7 +599,7 @@ export default class NeoGraph{
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
         const fileRequest = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:DIRECTORY OR n:VARIANT_FILE OR n:CORE_FILE OR n:FILE with " +
-            "collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+            "collect({types:labels(n), name:n.path, constructorVPs:n.constructorVPs," +
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
         const linksComposeRequest = "MATCH (f:FILE) -[r]-> (n)-[:TYPE_OF]->(m:CLASS)<-[:EXPORT]-(fe:FILE) " +
@@ -626,7 +626,9 @@ export default class NeoGraph{
             data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
         });
         data.nodes.map((node: any) => {
-            node.name = './'+node.name.split('/').slice(2).join('/');
+            if(node.name.startsWith('..')){
+                node.name = './'+node.name.split('/').slice(2).join('/');
+            }
         })
         await this.submitRequest(classRequest,{}).then(function (results:Record[]){
             data.nodes.push.apply(data.nodes,results.map((result: Record) => result.get(0))[0].nodes);
@@ -634,7 +636,13 @@ export default class NeoGraph{
         await this.submitRequest(linksComposeRequest,{}).then(function (results:Record[]){
             data.linkscompose = results.map((result: Record) => result.get(0))[0].linkscompose;
         });
-
+        data.linkscompose.map((linkscompose: any) => {
+            if(linkscompose.source.startsWith('..')){
+                linkscompose.source = './'+linkscompose.source.split('/').slice(2).join('/');
+            }
+            if(linkscompose.target.startsWith('..')){
+                linkscompose.target = './'+linkscompose.target.split('/').slice(2).join('/');
+            }});
         let content = JSON.stringify(data);
         writeFile('./export/db_link.json', content,(err: any) => {
             if (err) throw err;
