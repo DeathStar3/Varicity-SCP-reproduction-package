@@ -335,9 +335,9 @@ export class Symfinder{
             let fileB = clone.duplicationB.sourceId;
             if(fileA === fileB){
                 continue;
-            }else if(fileA.endsWith(".ts")||fileA.endsWith(".test.ts") || fileA.endsWith("Test.ts")||fileA.endsWith(".spec.ts")||fileA.endsWith(".d.ts") || fileA.endsWith(".tsx")){
+            }else if(fileA.endsWith(".test.ts") || fileA.endsWith("Test.ts")||fileA.endsWith(".spec.ts")||fileA.endsWith(".d.ts") || fileA.endsWith(".tsx")){
                 continue;
-            }else if(fileB.endsWith(".ts")||fileB.endsWith(".test.ts") || fileB.endsWith("Test.ts")||fileB.endsWith(".spec.ts")||fileB.endsWith(".d.ts") || fileB.endsWith(".tsx")){
+            }else if(fileB.endsWith(".test.ts") || fileB.endsWith("Test.ts")||fileB.endsWith(".spec.ts")||fileB.endsWith(".d.ts") || fileB.endsWith(".tsx")){
                 continue;
             }
 
