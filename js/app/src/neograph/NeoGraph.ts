@@ -587,8 +587,8 @@ export default class NeoGraph{
     }
 
     async exportRelationJSON():Promise<string>{
-        const requestLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) = 'EXTENDS'" +
-            " or type(r) = 'IMPORT' or type(r) = 'LOAD' or type(r) = 'CHILD'  or type(r) = 'CORE_CONTENT' or type(r) = 'CODE_DUPLICATED')" +
+        const requestLinks = "match (n)-[r]->(m) where (" +
+            " type(r) = 'LOAD' or type(r) = 'CHILD')" +
             " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
             "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
             "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}";
@@ -606,6 +606,20 @@ export default class NeoGraph{
             "WHERE 'PROPERTY' in labels(n) or 'PARAMETER' in labels(n) or 'VARIABLE' in labels(n) " +
             "WITH collect ( distinct {source:f.path,target:fe.path,type:'USAGE'}) as rela " +
             "RETURN {linkscompose:rela} ";
+        const allLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) = 'EXTENDS'" +
+            " or type(r) = 'IMPORT' or type(r) = 'LOAD' or type(r) = 'CHILD'  or type(r) = 'CORE_CONTENT' or type(r) = 'CODE_DUPLICATED')" +
+            " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n) or 'FUNCTION' in labels(n) " +
+            "or 'VARIABLE' in labels(n) or 'PROPERTY' in labels(n)) with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
+            "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
+            "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}";
+        function replaceLinkPrefix(link: any) {
+            if (link.source.startsWith('..')) {
+                link.source = './' + link.source.split('/').slice(2).join('/');
+            }
+            if (link.target.startsWith('..')) {
+                link.target = './' + link.target.split('/').slice(2).join('/');
+            }
+        }
         let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
 
           await this.submitRequest(duplicationLinksRequest, {}).then(function(results: Record[]){
@@ -614,13 +628,7 @@ export default class NeoGraph{
         await this.submitRequest(requestLinks, {}).then(function(results: Record[]){
             data.links.push.apply(data.links,results.map((result: Record) => result.get(0))[0].links);
         });
-        data.links.map((link: any) => {
-            if(link.source.startsWith('..')){
-                link.source = './'+link.source.split('/').slice(2).join('/');
-            }
-            if(link.target.startsWith('..')){
-                link.target = './'+link.target.split('/').slice(2).join('/');
-            }});
+
 
         await this.submitRequest(fileRequest,{}).then(function (results:Record[]){
             data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
@@ -637,12 +645,17 @@ export default class NeoGraph{
             data.linkscompose = results.map((result: Record) => result.get(0))[0].linkscompose;
         });
         data.linkscompose.map((linkscompose: any) => {
-            if(linkscompose.source.startsWith('..')){
-                linkscompose.source = './'+linkscompose.source.split('/').slice(2).join('/');
-            }
-            if(linkscompose.target.startsWith('..')){
-                linkscompose.target = './'+linkscompose.target.split('/').slice(2).join('/');
-            }});
+            replaceLinkPrefix(linkscompose);});
+
+        await this.submitRequest(allLinks,{}).then(function (results:Record[]){
+            data.alllinks = results.map((result: Record) => result.get(0))[0].links;
+        });
+        data.alllinks.push.apply(data.alllinks,data.linkscompose);
+        data.links.map((link: any) => {
+            replaceLinkPrefix(link);
+        });
+        data.alllinks.map((link: any) => {
+            replaceLinkPrefix(link);});
         let content = JSON.stringify(data);
         writeFile('./export/db_link.json', content,(err: any) => {
             if (err) throw err;
