@@ -88,10 +88,9 @@ for ((i = 1; i <= $#; i += 7)); do
   unknown_paths_count_pos=$(($i + 6))
   unknown_paths_count=${!unknown_paths_count_pos}
 
-  project_name=$(basename -- $1)
-  {
+  project_name=$(basename -- $project)
+  (
   analyse $project $commit
   check $project $files_count $variants_count $nodes_count $relationships_count $unknown_paths_count
-  } | tee ./logs/"$project_name".log
-  cd ..
+  ) | tee ./logs/"$project_name".log
 done
