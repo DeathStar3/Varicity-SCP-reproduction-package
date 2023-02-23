@@ -602,7 +602,8 @@ export default class NeoGraph{
     async exportRelationJSON():Promise<string>{
         const requestLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) = 'EXTENDS'" +
             " or type(r) = 'IMPORT' or type(r) = 'LOAD' or type(r) = 'CHILD'  or type(r) = 'CORE_CONTENT' or type(r) = 'CODE_DUPLICATED')" +
-            " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
+            " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) and not ('VARIABLE' in labels (m)) and not ('FUNCTION' in labels(m))" +
+            "with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
             "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
             "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}";
         const duplicationLinksRequest ="match (n)-[r]->(m) where type(r) = 'CODE_DUPLICATED'  or type(r) = 'CORE_CONTENT' and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) " +
