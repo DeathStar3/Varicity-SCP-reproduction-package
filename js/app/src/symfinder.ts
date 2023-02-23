@@ -42,7 +42,6 @@ import {
 import UsageVisitor from "./visitors/UsageVisitor";
 import {FileStats} from "./utils/file_stats";
 import ExportVisitor from "./visitors/ExportVisitor";
-import InternalExport from "./visitors/InternalExport";
 
 export class Symfinder{
 
@@ -72,12 +71,9 @@ export class Symfinder{
         let program = createProgram(files, options, createCompilerHost(options, true));
 
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program, true);
-        await this.visitPackage(files, new InternalExport(this.neoGraph, program), "internal_export", program, true);
-        await this.visitPackage(files, new ExportVisitor(this.neoGraph, program), "export", program, false);
+        await this.visitPackage(files, new ExportVisitor(this.neoGraph, program), "export", program, true);
         const usageVisitor = new UsageVisitor(this.neoGraph, program);
         if(!analysis_base) {
-            //sync:206 - 30902
-            //async:
             await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program, true);
             await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program, true);
             await this.visitPackage(files, usageVisitor, "usages", program, false); // See issue #33 "Wrong objectFlags value in async"

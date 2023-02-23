@@ -168,6 +168,13 @@ export default class NeoGraph{
         });
     }
 
+    async getNodeByClass(name: string, filePath: string) {
+        const request = "MATCH (n {name: $name})<--(:CLASS)<--(:FILE {path: $path}) RETURN (n)";
+        return this.submitRequest(request, {name: name, path: filePath}).then((result: Record[]) =>{
+            return result.length == 1 ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
     async linkTwoNodes(node1: Node, node2: Node, type: RelationType): Promise<void> {
         const request = "MATCH(a)\n" +
         "WHERE ID(a)=$aId\n" +
