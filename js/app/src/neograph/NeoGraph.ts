@@ -608,7 +608,7 @@ export default class NeoGraph{
             "RETURN {linkscompose:rela} ";
         const allLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) = 'EXTENDS'" +
             " or type(r) = 'IMPORT' or type(r) = 'LOAD' or type(r) = 'CHILD'  or type(r) = 'CORE_CONTENT' or type(r) = 'CODE_DUPLICATED')" +
-            " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n) or 'FUNCTION' in labels(n) " +
+            " and not ('OUT_OF_SCOPE' in labels(m)  or 'FUNCTION' in labels(m) or 'VARIABLE' in labels(m) or 'PROPERTY' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n) or 'FUNCTION' in labels(n) " +
             "or 'VARIABLE' in labels(n) or 'PROPERTY' in labels(n)) with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
             "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
             "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}";
