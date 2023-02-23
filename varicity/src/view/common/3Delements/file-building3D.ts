@@ -4,6 +4,7 @@ import {Building} from "../../../model/entities/building.interface";
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {Building3DFactory} from "../3Dfactory/building3D.factory";
 import {Link3D} from "../3Dinterfaces/link3D.interface";
+import {FileDislayEnum} from "../../../model/entities/config.interface";
 
 /**
  * This class represent a file and the classes that it exports.
@@ -28,7 +29,7 @@ export class FileBuilding3D extends Building3D {
 
 	constructor(scene: Scene, building: Building, depth: number, config: Config) {
 		super(scene, building, depth, config);
-		// this.auto_scale = this.config.building.display.file_size === FileDislayEnum.ADAPTATIVE;
+		this.auto_scale = this.config.building.display.file_size === FileDislayEnum.ADAPTATIVE;
 		if (this.auto_scale) this.padding = 0.005
 	}
 
@@ -185,7 +186,7 @@ export class FileBuilding3D extends Building3D {
 			//
 			this.updateTextureCoreContent();
 		}
-		if (this.links.some(l => l.type == "CODE_DUPLICATED")){
+		else if (this.links.some(l => l.type == "CODE_DUPLICATED")){
 			//
 			this.updateTextureCodeDuplicated(this.links.find(l => l.type === "CODE_DUPLICATED"));
 
