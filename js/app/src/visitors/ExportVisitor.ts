@@ -9,6 +9,8 @@ import path = require("path");
 export default class ExportVisitor extends SymfinderVisitor {
 
     exportMutex = new Mutex();
+    unknownSourcesMutex = new Mutex();
+    unknownSources = 0;
 
     constructor(neoGraph: NeoGraph, public program: Program) {
         super(neoGraph);
@@ -42,35 +44,42 @@ export default class ExportVisitor extends SymfinderVisitor {
 
             if (symbol.flags == SymbolFlags.Alias) {
                 const originalSymbol = this.getOriginalSymbol(symbol, checker);
-                if (originalSymbol !== undefined)
+                if (originalSymbol !== undefined && originalSymbol.escapedName !== "unknown")
                     symbol = originalSymbol;
-                else
+                else {
+                    this.incrementUnknownSource();
                     continue;
+                }
             }
 
-            if(symbol.escapedName === "default")
+            if(symbol.escapedName === "default") {
+                this.incrementUnknownSource();
                 continue; // They are many cases and handle them can be long whereas the count is low
+            }
 
-            if (symbol.flags == SymbolFlags.ExportStar)
-                console.log("OK")
-
-            if (symbol.flags != SymbolFlags.RegularEnum && symbol.flags != SymbolFlags.TypeAlias && symbol.flags != SymbolFlags.ExportStar && symbol.flags != SymbolFlags.ConstEnum)
+            if (this.isAcceptedType(symbol.flags))
                 exportOriginals.push(symbol);
+            else
+                this.incrementUnknownSource();
         }
 
-        const exportExternals = exportOriginals.filter(symbol => this.isPathCorrect(this.getPath(symbol)))
-        if (exportExternals.length === 0)
+        const exportCorrects = exportOriginals.filter(symbol => this.isPathCorrect(this.getPath(symbol)));
+        this.incrementUnknownSource(exportOriginals.length - exportCorrects.length);
+        if (exportCorrects.length === 0)
             return;
 
-        for (const exportExternal of exportExternals) {
+        for (const exportExternal of exportCorrects) {
             if (exportExternal.declarations === undefined) {
-                console.log("Bug ?")
+                console.log("Declarations undefined, ignore");
+                this.incrementUnknownSource();
                 continue;
             }
             const declaration = (<any>exportExternal.declarations[0]);
             let modulePath = this.getPath(checker.getSymbolAtLocation(declaration.propertyName ?? declaration.name)!);
-            if(modulePath.endsWith(".d.ts"))
+            if(modulePath.endsWith(".d.ts")) {
+                this.incrementUnknownSource();
                 continue;
+            }
             let exportedElementNode = await this.getNode(exportExternal, modulePath);
             if (exportedElementNode !== undefined) {
                 if (modulePath === filePath)
@@ -78,6 +87,7 @@ export default class ExportVisitor extends SymfinderVisitor {
                 else
                     await this.neoGraph.linkTwoNodes(fileNode, exportedElementNode, RelationType.EXPORT);
             } else {
+                this.incrementUnknownSource();
                 console.log("Error to link nodes " + filePath + " and " + modulePath + " - cannot get " + exportExternal.escapedName);
             }
         }
@@ -86,7 +96,10 @@ export default class ExportVisitor extends SymfinderVisitor {
     getPath(symbol: Symbol) {
         let name: string = "";
         if (symbol.valueDeclaration !== undefined) {
-            name = (symbol.valueDeclaration.parent as SourceFile).fileName;
+            let parent = symbol.valueDeclaration.parent;
+            while(!('fileName' in parent))
+                parent = parent.parent;
+            name = (parent as SourceFile).fileName;
         } else if ("parent" in symbol && symbol.parent !== undefined) {
             name = (<any>symbol.parent).getEscapedName().toString();
             if (name.startsWith("\"") && name.endsWith("\""))
@@ -108,16 +121,22 @@ export default class ExportVisitor extends SymfinderVisitor {
     getOriginalSymbol(symbol: Symbol, checker: TypeChecker) {
         while (symbol.flags == SymbolFlags.Alias) {
             const alias = checker.getAliasedSymbol(symbol);
-            const exportsAlias = alias.exports;
-            if (alias.flags != SymbolFlags.TypeAlias && exportsAlias != undefined && exportsAlias.size > 0) {
-                exportsAlias.forEach((value, key) => {
-                    if (key === "prototype")
-                        symbol = (<any>value).parent;
-                    else
-                        symbol = value;
-                })
+            if("exports" in alias) {
+                const exportsAlias = alias.exports;
+                if (alias.flags != SymbolFlags.TypeAlias && exportsAlias != undefined) {
+                    if (exportsAlias.size > 0) {
+                        exportsAlias.forEach((value, key) => {
+                            if (key === "prototype")
+                                symbol = (<any>value).parent;
+                            else
+                                symbol = value;
+                        });
+                    } else
+                        symbol = alias;
+                } else
+                    return undefined;
             } else
-                return undefined;
+                symbol = alias;
         }
         return symbol;
     }
@@ -129,6 +148,7 @@ export default class ExportVisitor extends SymfinderVisitor {
     async getNode(symbol: Symbol, filePath: string) {
         const name = symbol.getEscapedName().toString()
         if (!filePath.includes("/")) {
+            this.incrementUnknownSource();
             console.log("No path for '" + filePath + "', it is a part of the base library ? A out of scope node '"+name+"' will be created");
             return await this.exportMutex.runExclusive(async () => {
                 const node = await this.neoGraph.getOrCreateNode(name, this.symbolFlagsToEntityType(symbol.flags), [EntityAttribut.OUT_OF_SCOPE], []);
@@ -150,6 +170,20 @@ export default class ExportVisitor extends SymfinderVisitor {
                 console.log("Unknown conversion for "+flags)
                 return EntityType.CLASS;
         }
+    }
+
+    incrementUnknownSource(count = 1) {
+        this.unknownSourcesMutex.runExclusive(() => this.unknownSources += count)
+    }
+
+    getUnknownSourcesCount() {
+        return this.unknownSources;
+    }
+
+    isAcceptedType(flags: SymbolFlags) {
+        return flags === SymbolFlags.Class || flags === SymbolFlags.Interface || flags === SymbolFlags.Method || flags === SymbolFlags.Constructor
+        || flags === SymbolFlags.Function || flags === SymbolFlags.Variable || flags === SymbolFlags.Property || flags === SymbolFlags.Module ||
+            flags === (SymbolFlags.Class + SymbolFlags.Interface) || flags === SymbolFlags.BlockScopedVariable
     }
 
 }

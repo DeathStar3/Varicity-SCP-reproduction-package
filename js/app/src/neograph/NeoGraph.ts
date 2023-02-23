@@ -504,6 +504,12 @@ export default class NeoGraph{
         });
     }
 
+    async getNbExportRelationships(): Promise<number>{
+        return this.submitRequest("MATCH (n)-[r:EXPORT]->() RETURN COUNT(r)", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
     async getAllVPFoldersPath(): Promise<string[]>{
         return this.submitRequest("MATCH (n:"+EntityAttribut.VP_FOLDER+") RETURN n.path", {}).then((results: Record[]) =>{
             return <string[]> (results.map((result: Record) => result.get(0)));
