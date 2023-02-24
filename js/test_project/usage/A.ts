@@ -30,6 +30,7 @@ export default class A {
         const anonyme = new class {};
         const anonyme2 = this.getAnonyme();
         const o = O.toString();
+        const baseLibrary = new URL("");
     }
 
     getAnonyme() {
