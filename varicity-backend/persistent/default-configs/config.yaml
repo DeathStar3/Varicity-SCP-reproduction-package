@@ -8,7 +8,7 @@ name: "default config"
 building:
   padding: 0.2
   display:
-    #file_size: "force" # -> circle size updating with total size of buildings
+#    file_size: "force" # -> circle size updating with total size of buildings
     file_size: "adaptative" # -> circle size updating with total size of buildings
   colors:
     # outline: "#145a32" # dark green

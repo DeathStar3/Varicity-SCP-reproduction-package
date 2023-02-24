@@ -35,7 +35,8 @@ export class FileBuilding3D extends Building3D {
 
 	private placeClasses() {
 		const elements = this.elementModel.exportedClasses.map(model => Building3DFactory.createBuildingMesh(model as Building, 0, this.scene, this.config));
-		elements.sort((a: Building3D, b: Building3D) => a.getHeight() - b.getHeight())
+		elements.sort(
+			(a: Building3D, b: Building3D) => a.getName().localeCompare(b.getName())); // Sort the class building by name
 		for (let x = 0; x < this.max_x; x++) {
 			this.hat_city.push([])
 			for (let z = 0; z < this.max_z; z++) {
