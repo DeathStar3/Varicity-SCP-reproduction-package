@@ -90,7 +90,7 @@ export class Symfinder{
         const timeEnd = Date.now();
 
         await this.neoGraph.exportToJSON();
-        let content = await this.neoGraph.exportRelationJSON();
+        let content = await this.neoGraph.exportRelationJSON(src);
         if(http_path !== "") {
             await this.sendToServer(src, http_path, content);
             console.log("Sent to server " + http_path)

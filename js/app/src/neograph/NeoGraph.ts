@@ -599,7 +599,7 @@ export default class NeoGraph{
         });
     }
 
-    async exportRelationJSON():Promise<string>{
+    async exportRelationJSON(src:string):Promise<string>{
         const requestLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) = 'EXTENDS'" +
             " or type(r) = 'IMPORT' or type(r) = 'LOAD' or type(r) = 'CHILD'  or type(r) = 'CORE_CONTENT' or type(r) = 'CODE_DUPLICATED')" +
             " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) and not ('VARIABLE' in labels (m)) and not ('FUNCTION' in labels(m))" +
@@ -658,7 +658,8 @@ export default class NeoGraph{
                 linkscompose.target = './'+linkscompose.target.split('/').slice(2).join('/');
             }});
         let content = JSON.stringify(data);
-        writeFile('./export/db_link.json', content,(err: any) => {
+        let projectName =src.split("/").pop();
+        writeFile('./export/'+projectName+'.json', content,(err: any) => {
             if (err) throw err;
             process.stdout.write('data written to file');
         });
