@@ -140,7 +140,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         if (config.api_classes === undefined)
             return;
         else if (config.api_classes.includes(node.name)) {
-            console.log("API class: ", node.name);
+            // console.log("API class: ", node.name);
             node.types.push("API");
             apiList.push(node);
         }

@@ -6,11 +6,27 @@ import {NodeInterface} from "../../model/entities/jsonInput.interface";
 export class SearchbarController {
     public static map: Map<string, Building3D>;
     public static classSet: Set<string>;
+    public static fileSet: Set<string>;
+
     private static searchbar: HTMLInputElement;
+
+    private static searchDestroy(searchbar, searchbarBox) {
+        if (searchbar.placeholder === "" && !this.map.has(searchbar.value)) { // the search key doesn't exist
+            searchbarBox.style.border = "2px solid red";
+        } else {
+            if (this.map.has(searchbar.value)) { // we take the value because it exists
+                this.map.get(searchbar.value).focus();
+            } else { // we take the placeholder
+                this.map.get(searchbar.placeholder).focus();
+            }
+            searchbarBox.style.border = "2px solid #e9ecef";
+        }
+    }
 
     public static initMap() {
         this.map = new Map<string, Building3D>();
         this.classSet = new Set<string>();
+        this.fileSet = new Set<string>();
 
         /* @ts-ignore */
         let searchbar: HTMLInputElement = document.getElementById("searchbar");
@@ -30,33 +46,13 @@ export class SearchbarController {
         let searchbarBtn = document.getElementById("searchbar-btn");
         searchbarBtn.addEventListener("click", (ev) => {
             // recherche and destroy
-            if (searchbar.placeholder === "" && !this.map.has(searchbar.value)) { // the search key doesn't exist
-                searchbarBox.style.border = "2px solid red";
-            } else {
-                if (this.map.has(searchbar.value)) { // we take the value because it exists
-                    this.map.get(searchbar.value).focus();
-                } else { // we take the placeholder
-                    this.map.get(searchbar.placeholder).focus();
-                }
-                searchbarBox.style.border = "2px solid #e9ecef";
-                return;
-            }
+            this.searchDestroy(searchbar, searchbarBox);
         });
 
         searchbar.addEventListener("keydown", (ev) => {
             if (ev.key === "Enter") {
                 // recherche and destroy
-                if (searchbar.placeholder === "" && !this.map.has(searchbar.value)) { // the search key doesn't exist
-                    searchbarBox.style.border = "2px solid red";
-                } else {
-                    if (this.map.has(searchbar.value)) { // we take the value because it exists
-                        this.map.get(searchbar.value).focus();
-                    } else { // we take the placeholder
-                        this.map.get(searchbar.placeholder).focus();
-                    }
-                    searchbarBox.style.border = "2px solid #e9ecef";
-                    return;
-                }
+                this.searchDestroy(searchbar, searchbarBox);
             } else {
                 for (let [k, v] of this.map) {
                     if (k.includes(searchbar.value)) {
@@ -133,10 +129,31 @@ export class SearchbarController {
         }
     }
 
+    public static emptyFileList() {
+        if (this.fileSet) {
+            this.fileSet.clear();
+
+            let datalist = document.getElementById("datalist-files");
+            while (datalist.firstChild) {
+                datalist.removeChild(datalist.lastChild);
+            }
+        }
+    }
+
     public static addEntryToClassList(key: string) {
         this.classSet.add(key)
 
         let datalist = document.getElementById("datalist-classes");
+
+        let option = document.createElement("option");
+        option.innerHTML = key;
+        datalist.appendChild(option);
+    }
+
+    public static addEntryToFileList(key: string) {
+        this.fileSet.add(key)
+
+        let datalist = document.getElementById("datalist-files");
 
         let option = document.createElement("option");
         option.innerHTML = key;
@@ -158,8 +175,21 @@ export class SearchbarController {
 
         SearchbarController.emptyClassList()
 
-        nodes.forEach(n => {
+        console.log("Class nodes: ", nodes.filter(n => n.types.includes("CLASS")))
+        nodes.filter(n => n.types.includes("CLASS")).forEach(n => {
             SearchbarController.addEntryToClassList(n.name)
         });
+
+        datalist = document.createElement("datalist");
+        datalist.id = "datalist-files";
+
+        document.getElementById("main").appendChild(datalist);
+
+        SearchbarController.emptyFileList();
+
+        console.log("File nodes: ", nodes.filter(n => n.types.includes("FILE") || n.types.includes("DIRECTORY")))
+        nodes.filter(n => n.types.includes("FILE") || n.types.includes("DIRECTORY")).forEach(n => {
+            SearchbarController.addEntryToFileList(n.name);
+        })
     }
 }

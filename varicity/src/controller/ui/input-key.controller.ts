@@ -1,5 +1,4 @@
 import {UIController} from "./ui.controller";
-import Cookies from "js-cookie";
 import {SaveController} from "./save.controller";
 import {MenuController} from "./menu/menu.controller";
 
