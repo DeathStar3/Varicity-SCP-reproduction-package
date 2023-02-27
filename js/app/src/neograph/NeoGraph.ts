@@ -609,10 +609,12 @@ export default class NeoGraph{
         const duplicationLinksRequest ="match (n)-[r]->(m) where type(r) = 'CODE_DUPLICATED'  or type(r) = 'CORE_CONTENT' and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) " +
             "with CASE when m.path IS NULL then m.name else m.path end as mname, CASE when n.path IS NULL then n.name else n.path end as nname,r " +
             " with collect ({source:nname,target:mname,percentage: r.codePercent, type:type(r)}) as rela return {links:rela} ";
-        const classRequest = "MATCH (n) where 'CLASS' in labels(n) or 'INTERFACE' in labels(n) with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
+        const classRequest = "MATCH (n) where ('CLASS' in labels(n) or 'INTERFACE' in labels(n)) and not ('BASE' in labels(n)) " +
+            "with collect({types:labels(n), name:n.name, constructorVPs:n.constructorVPs," +
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
-        const fileRequest = "MATCH (n) WHERE n:VP_FOLDER OR n:VARIANT_FOLDER OR n:DIRECTORY OR n:VARIANT_FILE OR n:CORE_FILE OR n:FILE with " +
+        const fileRequest = "MATCH (n) WHERE (n:VP_FOLDER OR n:VARIANT_FOLDER OR n:DIRECTORY OR n:VARIANT_FILE OR n:CORE_FILE OR n:FILE) " +
+            "and not ('BASE' in labels(n)) with " +
             "collect({types:labels(n), name:n.path, constructorVPs:n.constructorVPs," +
             "publicConstructors:n.publicConstructors, methodVariants:n.methodVariants, classVariants:n.classVariants," +
             "publicMethods:n.publicMethods, methodVPs:n.methodVPs}) as m return {nodes:m}";
