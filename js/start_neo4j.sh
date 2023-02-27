@@ -5,8 +5,9 @@ if ! docker  ps -a | grep -q symfinderts_neo4j; then
   --volume $(pwd)/conf:/conf \
   --volume $(pwd)/import:/import \
   neo4j:4.1.9
-  echo "Import base"
-  ./import_base.sh > /dev/null
+# See issue #35 "The base nodes aren't linked to files"
+#  echo "Import base"
+#  ./import_base.sh > /dev/null
 elif ! docker ps | grep -q symfinderts_neo4j; then
   echo "Restarting Docker"
   docker restart symfinderts_neo4j
