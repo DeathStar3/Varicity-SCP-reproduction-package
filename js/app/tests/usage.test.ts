@@ -1,16 +1,16 @@
 describe('in usage project', () => {
 
-    let linkscompose: Array<any> = require('../db_usage.json').linkscompose;
+    let linkscompose: Array<any> = require('../export/db_link.json').linkscompose;
     console.log(linkscompose)
 
     function usage(source: string, target: string) {
-        return {source: "../test_project/usage/" + source, type: 'USAGE', target: "../test_project/usage/" + target};
+        return {source: "./usage/" + source, type: 'USAGE', target: "./usage/" + target};
     }
 
     function containsUsage(source: string, target: string) {
         for (const usage of linkscompose) {
-            if (usage.source === "../test_project/usage/" + source
-                && usage.target === "../test_project/usage/" + target
+            if (usage.source === "./usage/" + source
+                && usage.target === "./usage/" + target
                 && usage.type === "USAGE")
                 return true;
         }
@@ -59,14 +59,14 @@ describe('in usage project', () => {
         });
     });
 
-    /*describe('concerning G', () => {
+    describe('concerning G', () => {
         it('used by A by the variable g', () => {
             expect(containsUsage("A.ts", "G.ts")).toBe(true);
         });
         it('used by C by the function g', () => {
             expect(containsUsage("C.ts", "G.ts")).toBe(true);
         });
-    });*/
+    });
 
     describe('concerning H', () => {
         it('used by A by the variable h', () => {
@@ -83,5 +83,43 @@ describe('in usage project', () => {
         });
     });
 
+    describe('concerning K', () => {
+        it('used by A by the variable k', () => {
+            expect(containsUsage("A.ts", "K.ts")).toBe(true);
+        });
+    });
+
+    describe('concerning testType', () => {
+        it('used by A by the variable type', () => {
+            expect(containsUsage("A.ts", "testType.ts")).toBe(true);
+        });
+    });
+
+    describe('concerning L', () => {
+        it('used by A by the variable l', () => {
+            expect(containsUsage("A.ts", "L.ts")).toBe(true);
+        });
+        it('used by B by the method getL', () => {
+            expect(containsUsage("A.ts", "L.ts")).toBe(true);
+        });
+    });
+
+    describe('concerning N', () => {
+        it('used by A by the variable n', () => {
+            expect(containsUsage("A.ts", "N.ts")).toBe(true);
+        });
+    });
+
+    describe('concerning URL', () => {
+        it('used by A by the variable baseLibrary', () => {
+            expect(containsUsage("A.ts", "URL.ts")).toBe(true);
+        });
+    });
+
+    describe('concerning JIntern', () => {
+        it('used by J by the variable intern', () => {
+            expect(containsUsage("J.ts", "JIntern.ts")).toBe(true);
+        });
+    });
 
 });

@@ -42,7 +42,6 @@ import {
 import UsageVisitor from "./visitors/UsageVisitor";
 import {FileStats} from "./utils/file_stats";
 import ExportVisitor from "./visitors/ExportVisitor";
-import InternalExport from "./visitors/InternalExport";
 
 export class Symfinder{
 
@@ -72,12 +71,10 @@ export class Symfinder{
         let program = createProgram(files, options, createCompilerHost(options, true));
 
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program, true);
-        await this.visitPackage(files, new InternalExport(this.neoGraph, program), "internal_export", program, true);
-        await this.visitPackage(files, new ExportVisitor(this.neoGraph, program), "export", program, false);
         const usageVisitor = new UsageVisitor(this.neoGraph, program);
+        const exportVisitor = new ExportVisitor(this.neoGraph, program);
         if(!analysis_base) {
-            //sync:206 - 30902
-            //async:
+            await this.visitPackage(files, exportVisitor, "export", program, true);
             await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program, true);
             await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program, true);
             await this.visitPackage(files, usageVisitor, "usages", program, false); // See issue #33 "Wrong objectFlags value in async"
@@ -93,7 +90,7 @@ export class Symfinder{
         const timeEnd = Date.now();
 
         await this.neoGraph.exportToJSON();
-        let content = await this.neoGraph.exportRelationJSON();
+        let content = await this.neoGraph.exportRelationJSON(src);
         if(http_path !== "") {
             await this.sendToServer(src, http_path, content);
             console.log("Sent to server " + http_path)
@@ -106,6 +103,7 @@ export class Symfinder{
         stats.relationships_count = await this.neoGraph.getNbRelationships();
         stats.nodes_count = await this.neoGraph.getNbNodes();
         stats.unknown_paths_count = usageVisitor.getUnknownPaths().size;
+        stats.unknown_export_sources = exportVisitor.getUnknownSourcesCount();
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
         console.log("Number of constructor VPs: " + await this.neoGraph.getNbConstructorVPs());
@@ -125,7 +123,10 @@ export class Symfinder{
         console.log("Duration: "+this.msToTime(timeEnd-timeStart));
         if(!analysis_base) {
             const classes = await this.neoGraph.getAllClass();
-            console.log("Number of unknown class path: " + ((stats.unknown_paths_count / classes.length) * 100).toFixed(2) + "% (" + stats.unknown_paths_count + "/" + classes.length + ")");
+            console.log("Number of unknown class path: " + ((stats.unknown_paths_count / (classes.length+stats.unknown_paths_count)) * 100).toFixed(2) + "% (" + stats.unknown_paths_count + "/" + classes.length + ")");
+
+            const exportsCount = await this.neoGraph.getNbExportRelationships();
+            console.log("Number of unknown export source: " + ((stats.unknown_export_sources / (stats.unknown_export_sources + exportsCount)) * 100).toFixed(2) + "% (" + stats.unknown_export_sources + "/" + exportsCount + ")");
         }
         if(stats_file)
             stats.write();

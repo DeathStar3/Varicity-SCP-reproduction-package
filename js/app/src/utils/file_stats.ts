@@ -7,6 +7,7 @@ export class FileStats {
     nodes_count = 0;
     relationships_count = 0;
     unknown_paths_count = 0;
+    unknown_export_sources = 0;
 
     write() {
         writeFile('result_stats.json', JSON.stringify(this), {flag: "w"}, (err: any) => {

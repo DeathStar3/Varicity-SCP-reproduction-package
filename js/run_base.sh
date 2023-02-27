@@ -27,3 +27,6 @@ npm run --silent build
 PROJECT_PATH=$path node --max-old-space-size=8192 lib/index.js -b
 
 docker exec -u neo4j symfinderts_neo4j /bin/bash -c 'cat /import/export_procedure | cypher-shell -u neo4j -p root --format plain'
+sed -E -i 's/:([A-Z]*)/;\1/g' ./import/base.csv
+sed -E -i 's/^"([0-9]+)","(;)([^"]*)"/\"\1","\3"/g' ./import/base.csv
+sed -i '1 c"id:ID","_labels:LABEL","name","path","_start","_end","_type"' ./import/base.csv

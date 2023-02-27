@@ -168,6 +168,13 @@ export default class NeoGraph{
         });
     }
 
+    async getNodeByClass(name: string, filePath: string) {
+        const request = "MATCH (n {name: $name})<--(:CLASS)<--(:FILE {path: $path}) RETURN (n)";
+        return this.submitRequest(request, {name: name, path: filePath}).then((result: Record[]) =>{
+            return result.length == 1 ? <Node>(result[0].get(0)) : undefined;
+        });
+    }
+
     async linkTwoNodes(node1: Node, node2: Node, type: RelationType): Promise<void> {
         const request = "MATCH(a)\n" +
         "WHERE ID(a)=$aId\n" +
@@ -497,6 +504,12 @@ export default class NeoGraph{
         });
     }
 
+    async getNbExportRelationships(): Promise<number>{
+        return this.submitRequest("MATCH (n)-[r:EXPORT]->() RETURN COUNT(r)", {}).then((result: Record[]) =>{
+            return +(result[0].get(0));
+        });
+    }
+
     async getAllVPFoldersPath(): Promise<string[]>{
         return this.submitRequest("MATCH (n:"+EntityAttribut.VP_FOLDER+") RETURN n.path", {}).then((results: Record[]) =>{
             return <string[]> (results.map((result: Record) => result.get(0)));
@@ -586,10 +599,11 @@ export default class NeoGraph{
         });
     }
 
-    async exportRelationJSON():Promise<string>{
-        const requestLinks = "match (n)-[r]->(m) where (" +
-            " type(r) = 'LOAD' or type(r) = 'CHILD')" +
-            " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
+    async exportRelationJSON(src:string):Promise<string>{
+        const requestLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) = 'EXTENDS'" +
+            " or type(r) = 'IMPORT' or type(r) = 'LOAD' or type(r) = 'CHILD'  or type(r) = 'CORE_CONTENT' or type(r) = 'CODE_DUPLICATED')" +
+            " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) and not ('VARIABLE' in labels (m)) and not ('FUNCTION' in labels(m))" +
+            "with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
             "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
             "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}";
         const duplicationLinksRequest ="match (n)-[r]->(m) where type(r) = 'CODE_DUPLICATED'  or type(r) = 'CORE_CONTENT' and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) " +
@@ -645,19 +659,15 @@ export default class NeoGraph{
             data.linkscompose = results.map((result: Record) => result.get(0))[0].linkscompose;
         });
         data.linkscompose.map((linkscompose: any) => {
-            replaceLinkPrefix(linkscompose);});
-
-        await this.submitRequest(allLinks,{}).then(function (results:Record[]){
-            data.alllinks = results.map((result: Record) => result.get(0))[0].links;
-        });
-        data.alllinks.push.apply(data.alllinks,data.linkscompose);
-        data.links.map((link: any) => {
-            replaceLinkPrefix(link);
-        });
-        data.alllinks.map((link: any) => {
-            replaceLinkPrefix(link);});
+            if(linkscompose.source.startsWith('..')){
+                linkscompose.source = './'+linkscompose.source.split('/').slice(2).join('/');
+            }
+            if(linkscompose.target.startsWith('..')){
+                linkscompose.target = './'+linkscompose.target.split('/').slice(2).join('/');
+            }});
         let content = JSON.stringify(data);
-        writeFile('./export/db_link.json', content,(err: any) => {
+        let projectName =src.split("/").pop();
+        writeFile('./export/'+projectName+'.json', content,(err: any) => {
             if (err) throw err;
             process.stdout.write('data written to file');
         });
