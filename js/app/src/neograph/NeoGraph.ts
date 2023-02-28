@@ -599,14 +599,14 @@ export default class NeoGraph{
         });
     }
 
-    async exportRelationJSON(src:string):Promise<string>{
+    async exportRelationJSON(src:string):Promise<string> {
         const requestLinks = "match (n)-[r]->(m) where (type(r) = 'EXPORT' or type(r) = 'IMPLEMENTS' or type(r) = 'EXTENDS'" +
             " or type(r) = 'IMPORT' or type(r) = 'LOAD' or type(r) = 'CHILD'  or type(r) = 'CORE_CONTENT' or type(r) = 'CODE_DUPLICATED')" +
             " and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) and not ('VARIABLE' in labels (m)) and not ('FUNCTION' in labels(m))" +
             "with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
             "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
             "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}";
-        const duplicationLinksRequest ="match (n)-[r]->(m) where type(r) = 'CODE_DUPLICATED'  or type(r) = 'CORE_CONTENT' and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) " +
+        const duplicationLinksRequest = "match (n)-[r]->(m) where type(r) = 'CODE_DUPLICATED'  or type(r) = 'CORE_CONTENT' and not ('OUT_OF_SCOPE' in labels(m)) and not ('OUT_OF_SCOPE' in labels(n)) " +
             "with CASE when m.path IS NULL then m.name else m.path end as mname, CASE when n.path IS NULL then n.name else n.path end as nname,r " +
             " with collect ({source:nname,target:mname,percentage: r.codePercent, type:type(r)}) as rela return {links:rela} ";
         const classRequest = "MATCH (n) where ('CLASS' in labels(n) or 'INTERFACE' in labels(n)) and not ('BASE' in labels(n)) " +
@@ -628,6 +628,7 @@ export default class NeoGraph{
             "or 'VARIABLE' in labels(n) or 'PROPERTY' in labels(n)) with CASE when m.path IS NULL then m.name else m.path end as mname, CASE " +
             "when n.path IS NULL then n.name else n.path end as nname,r with collect " +
             "({source:nname,target:mname,type:type(r)}) as rela return {links:rela}";
+
         function replaceLinkPrefix(link: any) {
             if (link.source.startsWith('..')) {
                 link.source = './' + link.source.split('/').slice(2).join('/');
@@ -636,37 +637,56 @@ export default class NeoGraph{
                 link.target = './' + link.target.split('/').slice(2).join('/');
             }
         }
-        let data = {links:[], nodes:[],alllinks:[],allnodes:[],linkscompose:[]};
 
-          await this.submitRequest(duplicationLinksRequest, {}).then(function(results: Record[]){
-              data.links= results.map((result: Record) => result.get(0))[0].links;
-          });
-        await this.submitRequest(requestLinks, {}).then(function(results: Record[]){
-            data.links.push.apply(data.links,results.map((result: Record) => result.get(0))[0].links);
+        let data = {links: [], nodes: [], alllinks: [], allnodes: [], linkscompose: []};
+        await this.submitRequest(duplicationLinksRequest, {}).then(function (results: Record[]) {
+            data.links = results.map((result: Record) => result.get(0))[0].links;
         });
-
-
-        await this.submitRequest(fileRequest,{}).then(function (results:Record[]){
-            data.nodes= results.map((result: Record) => result.get(0))[0].nodes;
+        await this.submitRequest(requestLinks, {}).then(function (results: Record[]) {
+            data.links.push.apply(data.links, results.map((result: Record) => result.get(0))[0].links);
+        });
+        data.links.map((link: any) => {
+            if (link.source.startsWith('..')) {
+                link.source = './' + link.source.split('/').slice(2).join('/');
+            }
+            if (link.target.startsWith('..')) {
+                link.target = './' + link.target.split('/').slice(2).join('/');
+            }
+        });
+        await this.submitRequest(fileRequest, {}).then(function (results: Record[]) {
+            data.nodes = results.map((result: Record) => result.get(0))[0].nodes;
         });
         data.nodes.map((node: any) => {
-            if(node.name.startsWith('..')){
-                node.name = './'+node.name.split('/').slice(2).join('/');
+            if (node.name.startsWith('..')) {
+                node.name = './' + node.name.split('/').slice(2).join('/');
             }
         })
-        await this.submitRequest(classRequest,{}).then(function (results:Record[]){
-            data.nodes.push.apply(data.nodes,results.map((result: Record) => result.get(0))[0].nodes);
+        await this.submitRequest(classRequest, {}).then(function (results: Record[]) {
+            data.nodes.push.apply(data.nodes, results.map((result: Record) => result.get(0))[0].nodes);
         });
-        await this.submitRequest(linksComposeRequest,{}).then(function (results:Record[]){
+        await this.submitRequest(linksComposeRequest, {}).then(function (results: Record[]) {
             data.linkscompose = results.map((result: Record) => result.get(0))[0].linkscompose;
         });
         data.linkscompose.map((linkscompose: any) => {
-            if(linkscompose.source.startsWith('..')){
-                linkscompose.source = './'+linkscompose.source.split('/').slice(2).join('/');
+            if (linkscompose.source.startsWith('..')) {
+                linkscompose.source = './' + linkscompose.source.split('/').slice(2).join('/');
             }
-            if(linkscompose.target.startsWith('..')){
-                linkscompose.target = './'+linkscompose.target.split('/').slice(2).join('/');
-            }});
+            if (linkscompose.target.startsWith('..')) {
+                linkscompose.target = './' + linkscompose.target.split('/').slice(2).join('/');
+            }
+        });
+
+        await this.submitRequest(allLinks, {}).then(function (results: Record[]) {
+            data.alllinks = results.map((result: Record) => result.get(0))[0].links;
+        });
+        data.alllinks.push.apply(data.alllinks, data.linkscompose);
+        data.links.map((link: any) => {
+            replaceLinkPrefix(link);
+        });
+        data.alllinks.map((link: any) => {
+            replaceLinkPrefix(link);
+        });
+
         let content = JSON.stringify(data);
         let projectName =src.split("/").pop();
         writeFile('./export/'+projectName+'.json', content,(err: any) => {
