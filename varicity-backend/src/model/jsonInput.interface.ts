@@ -35,6 +35,7 @@ export interface LinkInterface {
   type: string;
   source: string;
   target: string;
+  percentage?: number;
 }
 
 export interface JsonInputInterface {

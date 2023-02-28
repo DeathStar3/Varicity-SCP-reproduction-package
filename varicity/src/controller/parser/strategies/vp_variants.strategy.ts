@@ -46,7 +46,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
             const hierarchyLinks = allLinks.filter(l => config.hierarchy_links.includes(l.type));
             const fileLinks = data.links
                 .filter(l => VPVariantsStrategy.FILE_LINK_TYPES.includes(l.type)) /// Remove all that is not bind to a file or a folder
-                .map(l => new LinkElement(l.source, l.target, l.type));
+                .map(l => new LinkElement(l.source, l.target, l.type, l.percentage));
             const fileClassLinks = data.alllinks.filter(l => VPVariantsStrategy.FILE_CLASS_LINK_TYPES.includes(l.type));
             const fileHierarchyLinks = fileLinks.filter(l => config.hierarchy_links.includes(l.type))
 
@@ -102,7 +102,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
                 });
             }
 
-            this.addAllLink(allLinks, result)
+            this.addAllLink(allLinks, result);
             this.addAllLink(fileLinks, result);
 
             // log for non-vp non-variant nodes
@@ -121,7 +121,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
             const source = result.getBuildingFromName(link.source);
             const target = result.getBuildingFromName(link.target);
             if (source !== undefined && target !== undefined) {
-                result.links.push(new LinkImplem(source, target, link.type));
+                result.links.push(new LinkImplem(source, target, link.type, link.percentage));
             }
         })
     }
@@ -140,7 +140,7 @@ export class VPVariantsStrategy implements ParsingStrategy {
         if (config.api_classes === undefined)
             return;
         else if (config.api_classes.includes(node.name)) {
-            console.log("API class: ", node.name);
+            // console.log("API class: ", node.name);
             node.types.push("API");
             apiList.push(node);
         }

@@ -10,6 +10,7 @@ export class Bridge3D implements Link3D {
 	src: Building3D;
 	dest: Building3D;
 	type: string;
+	percentage: number;
 
 	force: boolean = false;
 

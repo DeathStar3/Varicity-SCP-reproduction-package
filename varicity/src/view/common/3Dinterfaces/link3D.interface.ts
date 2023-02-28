@@ -7,6 +7,7 @@ export interface Link3D {
     src: Building3D;
     dest: Building3D
     type: string;
+    percentage: number;
 
     render(bool: boolean): void;
 

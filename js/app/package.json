@@ -31,6 +31,7 @@
   "dependencies": {
     "@jscpd/tokenizer": "^3.4.1",
     "@types/js-yaml": "^4.0.4",
+    "async-mutex": "^0.4.0",
     "axios": "^1.2.2"
   }
 }

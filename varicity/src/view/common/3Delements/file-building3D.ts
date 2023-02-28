@@ -1,8 +1,9 @@
 import {Building3D} from "./building3D";
-import {Mesh, MeshBuilder, Scene, Vector3} from "@babylonjs/core";
+import {Mesh, MeshBuilder, Scene, Texture, Vector3} from "@babylonjs/core";
 import {Building} from "../../../model/entities/building.interface";
 import {Config} from "../../../model/entitiesImplems/config.model";
 import {Building3DFactory} from "../3Dfactory/building3D.factory";
+import {Link3D} from "../3Dinterfaces/link3D.interface";
 import {FileDislayEnum} from "../../../model/entities/config.interface";
 
 /**
@@ -34,7 +35,8 @@ export class FileBuilding3D extends Building3D {
 
 	private placeClasses() {
 		const elements = this.elementModel.exportedClasses.map(model => Building3DFactory.createBuildingMesh(model as Building, 0, this.scene, this.config));
-		elements.sort((a: Building3D, b: Building3D) => a.getHeight() - b.getHeight())
+		elements.sort(
+			(a: Building3D, b: Building3D) => a.getName().localeCompare(b.getName())); // Sort the class building by name
 		for (let x = 0; x < this.max_x; x++) {
 			this.hat_city.push([])
 			for (let z = 0; z < this.max_z; z++) {
@@ -168,6 +170,8 @@ export class FileBuilding3D extends Building3D {
 			x += offset_x;
 		}
 
+		this.updateBuildingTexture();
+
 		this.elementModel.types = old_types; // Reset the types of the file
 	}
 
@@ -176,5 +180,30 @@ export class FileBuilding3D extends Building3D {
 			return this.classes.get(building_name);
 		}
 		return this.center;
+	}
+
+	updateBuildingTexture(){
+		if(this.links.some(l=> l.type == "CORE_CONTENT")){
+			//
+			this.updateTextureCoreContent();
+		}
+		else if (this.links.some(l => l.type == "CODE_DUPLICATED")){
+			//
+			this.updateTextureCodeDuplicated(this.links.find(l => l.type === "CODE_DUPLICATED"));
+
+		}
+	}
+
+	private updateTextureCoreContent() {
+		this.mat.emissiveTexture = new Texture(
+			`${Building3D.TEXTURE_PATH}/core_content.svg`,
+			this.scene
+		)
+	}
+
+	private updateTextureCodeDuplicated(link: Link3D) {
+		const percentage = link.percentage ?? 0;
+		const level = Math.floor(percentage / 100 * 7);
+		this.applyCrackTextureForLevel(level, false, this.mat);
 	}
 }

@@ -57,7 +57,7 @@ export class City3D {
             let dest = this.findSrcLink(l.target.name);
             let type = l.type;
             if (src != undefined && dest != undefined) {
-                let link = Link3DFactory.createLink(src, dest, type, this.scene, this.config);
+                let link = Link3DFactory.createLink(src, dest, type, l.percentage, this.scene, this.config);
                 if (link) {
                     src.link(link);
                     dest.link(link);
