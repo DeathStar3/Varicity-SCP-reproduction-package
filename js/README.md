@@ -62,6 +62,26 @@ For example:
 
 - To write the test in jest with TypeScript, [here](https://jestjs.io/docs/getting-started#using-typescript)
 
+### Test tool chain
+
+Execute a project and compare the values obtained with those excepted. Its aim is to easily see the changes in the graph after code modifications are made.
+The values monitor are:
+- The files count
+- The variants count
+- The nodes count
+- The relationships count
+- The number of unknown paths during the usage detection
+- The number of unknown export objects
+
+This script takes 8 arguments: the github link of the project, the commit, and the 6 excepted values.
+
+#### test_medium_projects script
+Test 5 medium projects: Ionic-Framework, Prisma, NativeScript, TypeORM and NestJS. It can be used to check if regressions happened or the code modifications changed the right values and without side effects.
+
+
+#### test_big_projects script
+Test 6 big projects: VSCode, Angular, BabylonJS, n8n, AzureDataStudio and Grafana. It can be used to check the consistency of SymfinderJS and if it scales without problems.
+  
 ## ECharts
 
 - Git repository [here](https://github.com/apache/echarts)
