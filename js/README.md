@@ -18,7 +18,16 @@ To install all dependencies:
 
 ### Via the Run.sh file:
 
+#### Not sending result 
+
 >>```./run.sh <githuburl>```
+
+#### Sending result
+
+>>```./run.sh <githuburl> -http <targeturl>```
+
+``<targeturl>`` can be empty or invalid. In this case, it will use the default value ``http://localhost:3000/projects`` who is the url for the local docker container of the Varicity-Backend.
+The format of the data sent is the object the Varicity-Backend expect for a project. 
 
 For example:
 
