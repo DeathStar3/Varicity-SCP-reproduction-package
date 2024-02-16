@@ -19,13 +19,13 @@ export class ApiAndBlacklistController implements SubMenuInterface {
         const menuOrientation = SubMenuController.createMenu("Orientation and Level usage", true, parent);
         ApiAndBlacklistController.rangeParentElement = menuOrientation;
         const menuAPIClasses = SubMenuController.createMenu("API classes", true, parent);
-        const menuAPIFiles = SubMenuController.createMenu("API files", true, parent);
+        // const menuAPIFiles = SubMenuController.createMenu("API files", true, parent);
         const menuBlacklist = SubMenuController.createMenu("Blacklist", true, parent);
 
         if (UIController.config) {
             this.populateOrientationAndLevelUsage(menuOrientation);
             this.populateApiClasses(menuAPIClasses);
-            this.populateApiFiles(menuAPIFiles);
+            // this.populateApiFiles(menuAPIFiles);
             this.populateBlackList(menuBlacklist);
         }
     }

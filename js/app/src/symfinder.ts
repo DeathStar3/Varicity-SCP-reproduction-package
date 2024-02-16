@@ -67,22 +67,22 @@ export class Symfinder{
         let files: string[] = await this.visitAllFiles(src);
         process.stdout.write("\rDetecting files ("+files.length+"): done.\x1b[K\n");
 
-        const options: CompilerOptions = { strict: true, target: ScriptTarget.Latest, allowJs: true, module: ModuleKind.ES2015 }
-        let program = createProgram(files, options, createCompilerHost(options, true));
+        // const options: CompilerOptions = { strict: true, target: ScriptTarget.Latest, allowJs: true, module: ModuleKind.ES2015 }
+        // let program = createProgram(files, options, createCompilerHost(options, true));
 
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program, true);
         const usageVisitor = new UsageVisitor(this.neoGraph, program);
-        const exportVisitor = new ExportVisitor(this.neoGraph, program);
+        // const exportVisitor = new ExportVisitor(this.neoGraph, program);
         if(!analysis_base) {
-            await this.visitPackage(files, exportVisitor, "export", program, true);
+            // await this.visitPackage(files, exportVisitor, "export", program, true);
             await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program, true);
             await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program, true);
             await this.visitPackage(files, usageVisitor, "usages", program, false); // See issue #33 "Wrong objectFlags value in async"
 
             await this.neoGraph.detectVPsAndVariants();
-            await this.proximityFolderDetection();
-            await this.detectCommonEntityProximity();
-            await this.detectCommonMethodImplemented();
+            // await this.proximityFolderDetection();
+            // await this.detectCommonEntityProximity();
+            // await this.detectCommonMethodImplemented();
         } else {
             await this.neoGraph.markNodesAsBase();
         }
@@ -103,21 +103,21 @@ export class Symfinder{
         stats.relationships_count = await this.neoGraph.getNbRelationships();
         stats.nodes_count = await this.neoGraph.getNbNodes();
         stats.unknown_paths_count = usageVisitor.getUnknownPaths().size;
-        stats.unknown_export_sources = exportVisitor.getUnknownSourcesCount();
+        // stats.unknown_export_sources = exportVisitor.getUnknownSourcesCount();
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
         console.log("Number of constructor VPs: " + await this.neoGraph.getNbConstructorVPs());
         console.log("Number of method level VPs: " + await this.neoGraph.getNbMethodLevelVPs());
-        console.log("Number of class level VPs: " + await this.neoGraph.getNbClassLevelVPs());
+        console.log("Number of class level VPs: " + await this.neoGraph.getNbClassLevelVPs())
         console.log("Number of variants: " + stats.variants_count);
         console.log("Number of methods variants: " + await this.neoGraph.getNbMethodVariants());
         console.log("Number of constructors variants: " + await this.neoGraph.getNbConstructorVariants());
         console.log("Number of method level variants: " + await this.neoGraph.getNbMethodLevelVariants());
         console.log("Number of class level variants: " + await this.neoGraph.getNbClassLevelVariants());
-        console.log("Number of variant files: " + await this.neoGraph.getNbVariantFiles());
-        console.log("Number of variant folder: " + await this.neoGraph.getNbVariantFolders());
-        console.log("Number of vp folder: " + await this.neoGraph.getNbVPFolders());
-        console.log("Number of proximity entities: " + await this.neoGraph.getNbProximityEntity());
+        // console.log("Number of variant files: " + await this.neoGraph.getNbVariantFiles());
+        // console.log("Number of variant folder: " + await this.neoGraph.getNbVariantFolders());
+        // console.log("Number of vp folder: " + await this.neoGraph.getNbVPFolders());
+        // console.log("Number of proximity entities: " + await this.neoGraph.getNbProximityEntity());
         console.log("Number of nodes: " + stats.nodes_count);
         console.log("Number of relationships: " + stats.relationships_count);
         console.log("Duration: "+this.msToTime(timeEnd-timeStart));
@@ -125,8 +125,8 @@ export class Symfinder{
             const classes = await this.neoGraph.getAllClass();
             console.log("Number of unknown class path: " + ((stats.unknown_paths_count / (classes.length+stats.unknown_paths_count)) * 100).toFixed(2) + "% (" + stats.unknown_paths_count + "/" + classes.length + ")");
 
-            const exportsCount = await this.neoGraph.getNbExportRelationships();
-            console.log("Number of unknown export source: " + ((stats.unknown_export_sources / (stats.unknown_export_sources + exportsCount)) * 100).toFixed(2) + "% (" + stats.unknown_export_sources + "/" + exportsCount + ")");
+            // const exportsCount = await this.neoGraph.getNbExportRelationships();
+            // console.log("Number of unknown export source: " + ((stats.unknown_export_sources / (stats.unknown_export_sources + exportsCount)) * 100).toFixed(2) + "% (" + stats.unknown_export_sources + "/" + exportsCount + ")");
         }
         if(stats_file)
             stats.write();
