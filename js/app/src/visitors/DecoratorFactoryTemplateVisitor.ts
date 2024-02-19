@@ -19,33 +19,36 @@
 import SymfinderVisitor from "./SymfinderVisitor";
 import { DesignPatternType } from "../neograph/NodeType";
 import NeoGraph from "../neograph/NeoGraph";
-import { isPropertyDeclaration, Node, PropertyDeclaration } from "typescript";
+import { isClassDeclaration, ClassDeclaration, Node } from "typescript";
 
-export default class StrategyTemplateDecoratorVisitor extends SymfinderVisitor{
+export default class DecoratorFactoryTemplateVisitor extends SymfinderVisitor{
 
     constructor(neoGraph: NeoGraph){
         super(neoGraph);
     }
 
-    async visit(node: PropertyDeclaration): Promise<void>;
+    async visit(node: ClassDeclaration): Promise<void>;
 
     /**
-     * Visit PropertyDeclaration to detect Strategy pattern
+     * Detect Decorator, Template and Factory patterns based on name
      * @param node AST node
      * @returns ...
      */
-    async visit(node: PropertyDeclaration): Promise<void> {
+    async visit(node: ClassDeclaration): Promise<void> {
 
-        if(!isPropertyDeclaration(node) || node.type === undefined) return;
+        if (!isClassDeclaration(node) || node.kind === undefined) return;
 
-        
-        
-        var propertyTypeName = node.type.getText();
-        var propertyTypeNode = await this.neoGraph.getNode(propertyTypeName);
-        if(propertyTypeNode !== undefined){
-            var propertyTypeNbVariant: number = await this.neoGraph.getNbVariant(propertyTypeNode);
-            if(propertyTypeNbVariant >= 2){
-                return await this.neoGraph.addLabelToNode(propertyTypeNode, DesignPatternType.STRATEGY);
+        var className = node.name!.text;
+        var graphNode = await this.neoGraph.getNode(className);
+        if (graphNode !== undefined){
+            if (className.includes("Decorator")) {
+                return await this.neoGraph.addLabelToNode(graphNode, DesignPatternType.DECORATOR);
+            }
+            if (className.includes("Template")) {
+                return await this.neoGraph.addLabelToNode(graphNode, DesignPatternType.TEMPLATE);
+            }
+            if (className.includes("Factory")) {
+                return await this.neoGraph.addLabelToNode(graphNode, DesignPatternType.FACTORY);
             }
         }
         return;

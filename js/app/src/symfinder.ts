@@ -19,7 +19,8 @@
 import ClassesVisitor from "./visitors/ClassesVisitor"
 import SymfinderVisitor from "./visitors/SymfinderVisitor";
 import GraphBuilderVisitor from "./visitors/GraphBuilderVisitor";
-import StrategyTemplateDecoratorVisitor from "./visitors/StrategyTemplateDecoratorVisitor"
+import StrategyVisitor from "./visitors/StrategyVisitor"
+import DecoratorFactoryTemplateVisitor from "./visitors/DecoratorFactoryTemplateVisitor"
 import Parser from "./parser/Parser";
 import NeoGraph from "./neograph/NeoGraph";
 import {config} from "./configuration/Configuration";
@@ -67,8 +68,8 @@ export class Symfinder{
         let files: string[] = await this.visitAllFiles(src);
         process.stdout.write("\rDetecting files ("+files.length+"): done.\x1b[K\n");
 
-        // const options: CompilerOptions = { strict: true, target: ScriptTarget.Latest, allowJs: true, module: ModuleKind.ES2015 }
-        // let program = createProgram(files, options, createCompilerHost(options, true));
+        const options: CompilerOptions = { strict: true, target: ScriptTarget.Latest, allowJs: true, module: ModuleKind.ES2015 }
+        let program = createProgram(files, options, createCompilerHost(options, true));
 
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program, true);
         const usageVisitor = new UsageVisitor(this.neoGraph, program);
@@ -76,9 +77,9 @@ export class Symfinder{
         if(!analysis_base) {
             // await this.visitPackage(files, exportVisitor, "export", program, true);
             await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program, true);
-            await this.visitPackage(files, new StrategyTemplateDecoratorVisitor(this.neoGraph), "strategies", program, true);
+            await this.visitPackage(files, new StrategyVisitor(this.neoGraph), "strategies", program, true);
             await this.visitPackage(files, usageVisitor, "usages", program, false); // See issue #33 "Wrong objectFlags value in async"
-
+            await this.visitPackage(files, new DecoratorFactoryTemplateVisitor(this.neoGraph), "decorators, factories, templates", program, true);
             await this.neoGraph.detectVPsAndVariants();
             // await this.proximityFolderDetection();
             // await this.detectCommonEntityProximity();
