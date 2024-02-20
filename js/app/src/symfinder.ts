@@ -73,17 +73,12 @@ export class Symfinder{
 
         await this.visitPackage(files, new ClassesVisitor(this.neoGraph, analysis_base), "classes", program, true);
         const usageVisitor = new UsageVisitor(this.neoGraph, program);
-        // const exportVisitor = new ExportVisitor(this.neoGraph, program);
         if(!analysis_base) {
-            // await this.visitPackage(files, exportVisitor, "export", program, true);
             await this.visitPackage(files, new GraphBuilderVisitor(this.neoGraph), "relations", program, true);
             await this.visitPackage(files, new StrategyVisitor(this.neoGraph), "strategies", program, true);
-            await this.visitPackage(files, usageVisitor, "usages", program, false); // See issue #33 "Wrong objectFlags value in async"
+            await this.visitPackage(files, usageVisitor, "usages", program, false);
             await this.visitPackage(files, new DecoratorFactoryTemplateVisitor(this.neoGraph), "decorators, factories, templates", program, true);
             await this.neoGraph.detectVPsAndVariants();
-            // await this.proximityFolderDetection();
-            // await this.detectCommonEntityProximity();
-            // await this.detectCommonMethodImplemented();
         } else {
             await this.neoGraph.markNodesAsBase();
         }
@@ -104,7 +99,6 @@ export class Symfinder{
         stats.relationships_count = await this.neoGraph.getNbRelationships();
         stats.nodes_count = await this.neoGraph.getNbNodes();
         stats.unknown_paths_count = usageVisitor.getUnknownPaths().size;
-        // stats.unknown_export_sources = exportVisitor.getUnknownSourcesCount();
         console.log("Number of VPs: " + await this.neoGraph.getTotalNbVPs());
         console.log("Number of methods VPs: " + await this.neoGraph.getNbMethodVPs());
         console.log("Number of constructor VPs: " + await this.neoGraph.getNbConstructorVPs());
@@ -115,10 +109,6 @@ export class Symfinder{
         console.log("Number of constructors variants: " + await this.neoGraph.getNbConstructorVariants());
         console.log("Number of method level variants: " + await this.neoGraph.getNbMethodLevelVariants());
         console.log("Number of class level variants: " + await this.neoGraph.getNbClassLevelVariants());
-        // console.log("Number of variant files: " + await this.neoGraph.getNbVariantFiles());
-        // console.log("Number of variant folder: " + await this.neoGraph.getNbVariantFolders());
-        // console.log("Number of vp folder: " + await this.neoGraph.getNbVPFolders());
-        // console.log("Number of proximity entities: " + await this.neoGraph.getNbProximityEntity());
         console.log("Number of nodes: " + stats.nodes_count);
         console.log("Number of relationships: " + stats.relationships_count);
         console.log("Duration: "+this.msToTime(timeEnd-timeStart));
@@ -126,15 +116,11 @@ export class Symfinder{
             const classes = await this.neoGraph.getAllClass();
             console.log("Number of unknown class path: " + ((stats.unknown_paths_count / (classes.length+stats.unknown_paths_count)) * 100).toFixed(2) + "% (" + stats.unknown_paths_count + "/" + classes.length + ")");
 
-            // const exportsCount = await this.neoGraph.getNbExportRelationships();
-            // console.log("Number of unknown export source: " + ((stats.unknown_export_sources / (stats.unknown_export_sources + exportsCount)) * 100).toFixed(2) + "% (" + stats.unknown_export_sources + "/" + exportsCount + ")");
         }
         if(stats_file)
             stats.write();
 
         await this.neoGraph.driver.close();
-
-
     }
 
     msToTime(duration: number) {
@@ -228,240 +214,6 @@ export class Symfinder{
             }
         }
         return files;
-    }
-
-    /**
-     * Detect folder with the proximity analyse describe in scientific TER article
-     * This method annoted folder and files with :
-     * VP_FOLDER
-     * VARIANT_FOLDER
-     * VARIANT_FILE
-     * SUPER_VARIANT_FILE
-     */
-    async proximityFolderDetection(): Promise<void>{
-
-        await this.neoGraph.setProximityFolder();
-        var vpFoldersPath: string[] = await this.neoGraph.getAllVPFoldersPath();
-
-        let i = 0;
-        let len = vpFoldersPath.length;
-        for(let vpFolderPath of vpFoldersPath){
-            i++;
-            process.stdout.write("\rSearch SUPER variant files: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
-            var variantFilesNameSet: string[] = await this.neoGraph.getVariantFilesNameForVPFolderPath(vpFolderPath);
-            var foldersPath: string[] = await this.neoGraph.getFoldersPathForVPFolderPath(vpFolderPath);
-
-            var isSuperVariantFile = true;
-            for(let variantFileName of variantFilesNameSet){
-
-                var superVariantFilesNode: Node[] = [];
-                for(let folderPath of foldersPath){
-
-                    let currentFile: Node | undefined = await this.neoGraph.getVariantFileForFolderPath(folderPath, variantFileName);
-                    if(currentFile === undefined){
-                        isSuperVariantFile = false;
-                        break;
-                    }
-                    else superVariantFilesNode.push(currentFile)
-                }
-                if(isSuperVariantFile){
-                    for(let superVariantFileNode of superVariantFilesNode){
-                        await this.neoGraph.addLabelToNode(superVariantFileNode, EntityAttribut.CORE_FILE)
-                    }
-                }
-            }
-            await this.detectCodeDuplication(vpFolderPath);
-        }
-        if(i > 0)
-            process.stdout.write("\rSearch SUPER variant files: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
-        await this.detectCodeClone();
-    }
-
-    /**
-     * Detect clones beetween all VARIANT_FILE of a VP_FOLDER
-     */
-    async detectCodeClone(): Promise<void>{
-        var nodes: Node[] = await this.neoGraph.getAllVariantFiles();
-        var groupedNode: any[] = [];
-        for(let node of nodes){
-            if(groupedNode[node.properties.name] === undefined){
-                groupedNode[node.properties.name] = [node]
-            }
-            else{
-                groupedNode[node.properties.name].push(node)
-            }
-        }
-        let i = 0;
-        let len = Object.entries(groupedNode).length
-        for(let [key, value] of Object.entries(groupedNode)){
-            i++;
-            process.stdout.write("\rCheck duplication code: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
-
-            var clones: any[] = await detectClones({
-                path: value.map((node: Node) => node.properties.path),
-                silent: true
-            })
-
-            for(let clone of clones){
-              var nodeA: any = nodes.find((node: Node) => {
-                  // @ts-ignore
-                  const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
-                return abs_path == clone.duplicationA.sourceId
-              });
-              var nodeB: any = nodes.find((node: Node) => {
-                  // @ts-ignore
-                  const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
-                return abs_path == clone.duplicationB.sourceId
-              });
-                var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
-                var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
-                await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CORE_CONTENT,
-                    percentA, clone.duplicationA.start.line + ":" + clone.duplicationA.end.line);
-                await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CORE_CONTENT,
-                     percentB, clone.duplicationB.start.line + ":" + clone.duplicationB.end.line);
-            }
-        }
-        if(i > 0)
-            process.stdout.write("\rCheck duplication code: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
-    }
-
-    async detectCodeDuplication(folderPath: string): Promise<void> {
-        var nodes: Node[] = await this.neoGraph.getAllFiles();
-        var clones: any[] = await detectClones({
-            path: [folderPath],
-            silent: true
-        })
-
-        for (let clone of clones){
-            let fileA = clone.duplicationA.sourceId;
-            let fileB = clone.duplicationB.sourceId;
-            if(fileA === fileB){
-                continue;
-            }else if(fileA.endsWith(".test.ts") || fileA.endsWith("Test.ts")||fileA.endsWith(".spec.ts")||fileA.endsWith(".d.ts") || fileA.endsWith(".tsx")){
-                continue;
-            }else if(fileB.endsWith(".test.ts") || fileB.endsWith("Test.ts")||fileB.endsWith(".spec.ts")||fileB.endsWith(".d.ts") || fileB.endsWith(".tsx")){
-                continue;
-            }
-
-            var nodeA: any = nodes.find((node: Node) => {
-                // @ts-ignore
-              const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
-              return abs_path == clone.duplicationA.sourceId
-            });
-            var nodeB: any = nodes.find((node: Node) => {
-                // @ts-ignore
-              const abs_path = path.relative(process.env.PROJECT_PATH, path.resolve(node.properties.path)).substring(6);
-              return abs_path == clone.duplicationB.sourceId
-            });
-            if(nodeA === undefined || nodeB === undefined){
-                console.log("ERROR: nodeA or nodeB is undefined");
-                console.log("A path: "+clone.duplicationA.sourceId);
-                console.log("B path: "+clone.duplicationB.sourceId);
-                continue;
-            }
-
-            var percentA = (((clone.duplicationA.range[1] - clone.duplicationA.range[0]) / readFileSync(nodeA.properties.path, 'utf-8').length) * 100).toFixed(0);
-            var percentB = (((clone.duplicationB.range[1] - clone.duplicationB.range[0]) / readFileSync(nodeB.properties.path, 'utf-8').length) * 100).toFixed(0);
-            await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeA, nodeB, RelationType.CODE_DUPLICATED,
-                percentA, clone.duplicationA.start.line +":"+ clone.duplicationA.end.line);
-            await this.neoGraph.linkTwoNodesWithCodeDuplicated(nodeB, nodeA, RelationType.CODE_DUPLICATED,
-                percentB, clone.duplicationB.start.line +":"+ clone.duplicationB.end.line);
-        }
-    }
-
-    /**
-     * Detect common entities between all VARIANT_FILE of a VP_FOLDER
-     * @returns
-     */
-    async detectCommonEntityProximity(): Promise<void>{
-
-        var vpFoldersPath: string[] = await this.neoGraph.getAllVPFoldersPath();
-
-        let i = 0;
-        let len = vpFoldersPath.length;
-        for(let vpFolderPath of vpFoldersPath){
-            i++;
-            process.stdout.write("\rDetect common entities: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
-            var variantFilesNameSet: string[] = await this.neoGraph.getVariantFilesNameForVPFolderPath(vpFolderPath);
-
-            for(let variantFileName of variantFilesNameSet){
-
-                var variantFileNodes: Node[] = await this.neoGraph.getVariantFilesForVPFolderPath(vpFolderPath, variantFileName);
-                var entitiesOcc: any[] = [];
-
-                for(let variantFileNode of variantFileNodes){
-
-                    for(let entityNode of await this.neoGraph.getVariantEntityNodeForFileNode(variantFileNode)){
-                        let pname :any = entityNode.properties.name + '_reserved';
-                        if(entitiesOcc[pname] === undefined){
-                            entitiesOcc[pname] = [entityNode];
-                        }
-                        else{
-                            entitiesOcc[pname].push(entityNode);
-                        }
-                    }
-                }
-
-                for(let [key, value] of Object.entries(entitiesOcc)){
-                    if(value.length > 1 && value.length == variantFileNodes.length){
-                        for(let entityNode of value){
-                            await this.neoGraph.addLabelToNode(entityNode, EntityAttribut.PROXIMITY_ENTITY);
-                        }
-                    }
-                }
-            }
-        }
-        if(i > 0)
-            process.stdout.write("\rDetect common entities: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
-
-        return;
-    }
-
-    /**
-     * Detect common methods between all VARIANT_FILE of a VP_FOLDER
-     * @returns
-     */
-    async detectCommonMethodImplemented(): Promise<void>{
-
-        var motherEntitiesNode: Node[] = await this.neoGraph.getMotherEntitiesNode();
-        let i = 0;
-        let len = motherEntitiesNode.length;
-
-        for(let motherEntityNode of motherEntitiesNode){
-            i++;
-            process.stdout.write("\rDetect common method: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+")");
-
-            var implementedClasses: Node[] = await this.neoGraph.getImplementedClassesFromEntity(motherEntityNode);
-            var occurenceMethod: any = {};
-            var motherMethod: string[] = (await this.neoGraph.getMethods(motherEntityNode)).map((n) => n.properties.name);
-            for(let implemetedClass of implementedClasses){
-
-                var implementedClassMethods = await this.neoGraph.getMethods(implemetedClass);
-                for(let implementedClassMethod of implementedClassMethods){
-                    let pname :any = implementedClassMethod.properties.name + '_reserved';
-                    if(occurenceMethod[pname] === undefined){
-                        occurenceMethod[pname] = [implementedClassMethod];
-                    }
-                    else{
-                        occurenceMethod[pname].push(implementedClassMethod);
-                    }
-                }
-            }
-            for(let [key, value] of Object.entries(occurenceMethod)){
-
-                let methods = <Node[]> value;
-                if(methods.length > 1 && methods.length == implementedClasses.length && !motherMethod.includes(key)){
-                    for(let method of methods){
-                        await this.neoGraph.addLabelToNode(method, EntityAttribut.COMMON_METHOD);
-                    }
-                }
-            }
-
-        }
-        if(i > 0)
-            process.stdout.write("\rDetect common method: "+ (((i) / len) * 100).toFixed(0) +"% ("+i+"/"+len+"), done.\n");
-
-        return;
     }
 
     private createProjectJson(src: string, content: string): ExperimentResult {

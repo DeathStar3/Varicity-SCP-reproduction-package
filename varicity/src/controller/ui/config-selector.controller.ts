@@ -67,7 +67,7 @@ export class ConfigSelectorController {
     }
 
     public static reParse(updateCamera: boolean) {
-        this.previousParser = new VPVariantsStrategy(); // changes here
+        this.previousParser = new VPVariantsStrategy();
 
         // clear the current city
         if (UIController.scene) {
