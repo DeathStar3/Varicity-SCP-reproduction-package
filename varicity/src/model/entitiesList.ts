@@ -7,8 +7,6 @@ export class EntitiesList {
 
     district: District; // [com] => [polytech, utils] => **[unice]**
 
-    file_district: District; // For files
-
     links: Link[] = [];
 
     /**
@@ -30,9 +28,6 @@ export class EntitiesList {
         if (res !== undefined) {
             return res;
         }
-        res = this.file_district.getBuildingFromName(name);
-        if (res !== undefined)
-            return res;
         return undefined;
     }
 

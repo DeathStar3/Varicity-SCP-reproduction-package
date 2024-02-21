@@ -3,6 +3,7 @@ import {ProjectService} from "../../services/project.service";
 import {EvostreetImplem} from "../../view/evostreet/evostreetImplem";
 import {ConfigService} from "../../services/config.service";
 import {VPVariantsStrategy} from "../parser/strategies/vp_variants.strategy";
+import {VPVariantsInheritanceStrategy} from "../parser/strategies/vp_variants_inheritance.strategy"
 import {ParsingStrategy} from '../parser/strategies/parsing.strategy.interface';
 import {UIController} from "./ui.controller";
 import {ConfigName} from "../../model/entitiesImplems/config.model";

@@ -38,7 +38,7 @@ done
 export SYMFINDER_UID=$(id -u)
 export SYMFINDER_GID=$(id -g)
 export SYMFINDER_VERSION=$(git rev-parse HEAD)
-export TAG=local
+export TAG=ts
 export DIR_PATH=$(pwd)
 export VOLUME_PATH=$(pwd)/dockervolume
 
@@ -53,4 +53,5 @@ then
   trap "kill_container" INT
 fi
 
-docker-compose -f varicity-front-back.docker-compose.yaml up $DETACH
+docker compose -f varicity-front-back.docker-compose.yaml build
+docker compose -f varicity-front-back.docker-compose.yaml up $DETACH

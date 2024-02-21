@@ -47,7 +47,7 @@ export class ProjectController {
         }
 
         // Select the Parsing Strategy
-        this.previousParser = new VPVariantsStrategy();
+        this.previousParser = new VPVariantsStrategy(); // changes here
 
         // clear the current view
         if (UIController.scene) {

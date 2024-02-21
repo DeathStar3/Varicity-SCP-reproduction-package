@@ -48,4 +48,4 @@ done
 
 echo "Using $TAG VariCity image"
 
-docker run --rm -p 8080:80 varicity-nginx
+docker run --rm -p 8080:80 varicity:local

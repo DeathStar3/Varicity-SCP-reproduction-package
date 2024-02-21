@@ -1,8 +1,0 @@
-api-filter.js
-filter.js
-graph.js
-graphcomposition.js
-isolated-filter.js
-nodes-filter.js
-package-colorer.js
-variants-filter.js
