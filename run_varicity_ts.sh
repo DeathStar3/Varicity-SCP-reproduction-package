@@ -2,11 +2,11 @@
 #######################################################################################################
 usage() {
   echo
-  echo "Usage ./run_js_symfinder_varicity.sh PATH_TO_PROJECT NAME_JSON_FILE"
+  echo "Usage ./run_varicity_ts.sh PATH_TO_PROJECT PROJECT_NAME"
   echo
   echo "ARGUMENTS : "
-  echo "PATH_TO_PROJECT should be a local path (absolute or relative) or a link of a git repository."
-  echo "NAME_JSON_FILE should be a string composed of only letter, number, and underscore."
+  echo "PATH_TO_PROJECT must be the link of a git repository."
+  echo "PROJECT_NAME should be a string composed of only letter, number, and underscore."
   echo
 }
 #######################################################################################################
