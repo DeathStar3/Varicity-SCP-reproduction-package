@@ -53,5 +53,4 @@ then
   trap "kill_container" INT
 fi
 
-docker compose -f varicity-front-back.docker-compose.yaml build
 docker compose -f varicity-front-back.docker-compose.yaml up $DETACH

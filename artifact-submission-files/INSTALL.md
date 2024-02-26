@@ -1,50 +1,46 @@
 # Installation instructions
 
 In this document, we assume that you already have a system with:
-- a fully functional Docker and Docker Compose install;
-- a web browser (our tests have been made with Google Chrome, Mozilla Firefox, and Safari).
+- a fully functional Docker and Docker Compose installed;
+- a web browser (our tests have been made with Google Chrome, Mozilla Firefox, Safari and Edge).
 
 See the `REQUIREMENTS.md` file for more details.
 
-## Running VariMetrics
+## Running varicity _TODOS #updateName_
 
-All the scripts in this section are located and executed from the root of the VariMetrics artifact.
+All the scripts in this section are located and executed from the root of the varicity artifact.
 
 ### Reusing the existing Docker image
 
-VariMetrics is available as a Docker image hosted on the [Docker Hub](https://hub.docker.com/r/deathstar3/varimetrics),
+varicity is available as a Docker image hosted on the [Docker Hub](https://hub.docker.com/r/deathstar3/varicity),
 allowing to use it without needing to build it.
 
-Run VariMetrics by running
+Run varicity by running
 
-
-- On GNU/Linux and macOS
+- On GNU/Linux
 
     ```
     ./run-compose.sh
     ```
 
-- On Windows
-
-    ```
-    run-compose.bat
-    ```
-
-*Note:* Docker automatically downloads the image with the `splc2022` tag if it is not found on the host system.
+*Note:* Docker automatically downloads the image with the `scp2024` tag if it is not found on the host system.
 
 You can also download it manually with:
 ```
-docker pull deathstar3/varimetrics:splc2022
+docker pull deathstar3/varicity:scp2024
 ```
 
-VariMetrics is a NodeJS application written in TypeScript deployed in a webpack environment.
+
+
+Varicity is a NodeJS application written in TypeScript deployed in a webpack environment.
 The Docker container exposes the application as a server, which is accessed through your web browser.
 
-### Checking that VariMetrics works
+### Checking that varicity works
 
 - Two Docker containers start:
   - `varicity`: the visualization server;
   - `varicity-backend`: a component exposing an endpoint receiving a symfinder analysis as soon as it is finished.
+
 ```
 $ ./run-compose.sh
 resources directory already exists
@@ -108,196 +104,116 @@ varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [NestApplication
 - Once the `Nest application successfully started` log appears, you can now open your web browser and go to `http://localhost:8000`.
 - A page appears, showing the list of the available projects.
   ![project_selection_panel](images/project_selection_panel.png)
-- By clicking on the desired project's name, you can then select the configuration you want to visualize while a first visualization is loading, here JFreeChart.
+- By clicking on the desired project's name, you can then select the configuration you want to visualize while a first visualization is loading, here Nest.
   Please note that the visualization may not be centered when appearing. The rendering time of the visualization increases with the number of buildings to display.
   To limit the loading time when switching between projects, we advise to reduce the value of the usage level to limit the number of buildings to render.
 
-  ![visu_selection_panel](images/visu_selection_panel.png)
-- By selecting the `VariMetrics view` configuration, we obtain the following view:
-  ![jfreechart_visualization](images/jfreechart_visualization.png)
+  ![visu_selection_panel](images/visu_selection_panel.png) _TODO #changeMenuImage_
+- By selecting the `Varicity view - Figure 2` configuration, we obtain the following view:
+  ![jfreechart_visualization](images/jfreechart_visualization.png) _TODO #changeMenuImage_
 
-### Building VariMetrics
+### Building varicity
 
-**This step is only needed if you edited VariMetrics's source code.**
+**This step is only needed if you edited varicity's source code.**
 
-You can build VariMetrics's Docker images by running
+You can build varicity's Docker images by running
 
 ```
-./build_varimetrics.sh
+./build_varicity_ts.sh 
 ```
 
-Then, change the TAG variable in the `run-compose` script from `splc2022` to `local`:
+Then, change the TAG variable in the `run-compose` script from `scp2024` to `local`:
 
-- On GNU/Linux and MacOS, edit `run-compose.sh`
+- On GNU/Linux, edit `run-compose.sh`
 ```
-- export TAG=splc2022
+- export TAG=scp2024
 + export TAG=local
 ```
 
-- On Windows, edit `run-compose.bat`
-```
-- set TAG=splc2022
-+ set TAG=local
-```
+## Running a Symfinder-TS analysis
 
-## Running a symfinder analysis
-
-Reproducing the pre-generated visualizations is done by executing their analysis before VariMetrics.
+Reproducing the pre-generated visualizations is done by executing their analysis before visualizing it in varicity.
 All scripts used in this section are located in the artifact's root directory.
 
 ### Reusing the existing Docker images
 
-The following Docker images hosted on the [Docker Hub](https://hub.docker.com/) allow to use symfinder without needing to build it.
+The following Docker images hosted on the [Docker Hub](https://hub.docker.com/) allow to use symfinder-ts without needing to build it.
+
+
 ```
-deathstar3/symfinder-cli
-deathstar3/symfinder-neo4j
-deathstar3/varimetrics
-deathstar3/varimetrics-backend
+deathstar3/symfinder-ts-cli
+deathstar3/varicity-ts
+deathstar3/varicity-backend-ts
 ```
 
-The configuration files for all 7 projects presented in the paper are available in the `/data` directory.
-- `azureus.yaml` → [Azureus 5.7.6.0](https://github.com/Corpus-2021/Azureus/tree/5.7.6.0)
-- `geotools.yaml` → [GeoTools 23.5](https://github.com/Corpus-2021/geotools/tree/23.5-AnalysisReady)
-- `jdk.yaml` → [JDK 17-10](https://github.com/Corpus-2021/jdk/tree/17-10-AnalysisReady)
-- `jfreechart-1.5.0.yaml` → [JFreeChart 1.5.0](https://github.com/DeathStar3/jfreechart)
-  - `jfreechart-refactored.yaml` → [JFreeChart 1.5.0](https://github.com/DeathStar3/jfreechart/tree/refactor) after the maintenance actions studied in section 5.2
-- `jkube.yaml` → [JKube 1.7.0](https://github.com/eclipse/jkube)
-- `openapi-generator.yaml` → [OpenAPI Generator 5.4.0](https://github.com/OpenAPITools/openapi-generator)
-- `spring.yaml` → [Spring framework 5.2.3](https://github.com/Corpus-2021/spring-framework/tree/5.2.13-AnalysisReady)
+In addition, running a symfinder-ts analysis requires a Neo4j Docker image automatically pulled by the running script.
 
-Running the analysis of one project is done as follows, here illustrated with the `/data/jkube.yaml` file:
+The symfinder-ts cli uses Github links to run, example: `https://github.com/nestjs/nest`.  
+Links to all studied projects are provided in `PROJECTS.md`
 
-- First, run the VariMetrics server:
+Running the analysis of one project is done as follows, here illustrated with the project [Nest](https://github.com/nestjs/nest):
 
-  - On GNU/Linux and macOS
+- First, run the varicity server:
+
+  - On GNU/Linux
 
   ```
   ./run-compose.sh
   ```
 
-  - On Windows
-
-  ```
-  run-compose.bat
-  ```
-
 - Then, in another terminal:
 
-  - On GNU/Linux and macOS
+  - On GNU/Linux
 
   ```
-  ./run-docker-cli.sh -i /data/jkube.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
-  ```
-
-  - On Windows
-
-  ```
-  run-docker-cli.bat -i /data/jkube.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
+  ./run-docker-cli.sh https://github.com/nestjs/nest -http
   ```
 
 *Notes:*
-- Some analyses, such as the JDK, GeoTools or Azureus can take multiple hours.
-More details about the analyzed projects and their definition are given in the "Using symfinder on your project" section in the README present in the artifact's root directory.
-- The Docker images are automatically downloaded by Docker with the tag `splc2022` if they are not found on the host system.
+- Some analyses, such as Azure Data Studiom VS Code, Grafana or Angular can take multiple hours.
+--More details about the analyzed projects and their definition are given in the "Using symfinder on your project" section in the README present in the artifact's root directory.--
+- The Docker images are automatically downloaded by Docker with the tag `scp2024` if they are not found on the host system.
 If an image is not found, you can download it manually with the `docker pull` command.
 
 Example:
 ```
-docker pull deathstar3/symfinder-fetcher:splc2022
+docker pull deathstar3/symfinder-ts-cli:scp2024
 ```
 
-### Checking that symfinder works
-Hereafter, we illustrate the different steps of the execution of symfinder by giving excerpts of console outputs corresponding to the execution of symfinder on a single project, JKube.
+### Checking that symfinder works _TODO #update symfinder stacktrace_
+Hereafter, we illustrate the different steps of the execution of symfinder by giving excerpts of console outputs corresponding to the execution of symfinder on a single project, Echarts.
 
-1. First, symfinder clones the repository of the analyzed project, checking out the desired tags/commits.
+1. First, a Neo4j database used to store information about the analyzed project (classes, methods, identified variation points and variants…) is started. _TODO #Update stack_
 ```
-$ ./run-docker-cli.sh -i /data/jkube.yaml -s /data/symfinder.yaml -verbosity INFO -http http://varicityback:3000/projects
-Log Level is set to INFO. The underlying factory being used is org.slf4j.impl.JDK14LoggerFactory
-Jun 08, 2022 5:24:54 PM fr.unice.i3s.sparks.deathstar3.sourcesfetcher.SourceFetcher cloneRepository
-INFO: [/data/projects/jkube-v1.7.0]
+$ ./run-docker-cli.sh https://github.com/nestjs/nest -http
+TODO UPDATE
 ```
-2. Then, a Neo4j database used to store information about the analyzed project (classes, methods, identified variation points and variants…) is started.
-Once operational, the symfinder engine parses the codebase of the project and populates the Neo4j database.
+
+2. Then, symfinder clones the repository of the analyzed project. It is downloaded and then unziped, the operation can take a certain amount of time. _TODO #Update stack_
 ```
-Starting Neo4J container this may take some time ....
-Jun 08, 2022 5:24:55 PM fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants <clinit>
-INFO: Initializing constants based on environment variables...
-Jun 08, 2022 5:24:55 PM fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants <clinit>
-INFO: Running inside Docker.
-Jun 08, 2022 5:24:55 PM fr.unice.i3s.sparks.deathstar3.projectbuilder.Constants <clinit>
-INFO: Using Neo4j deathstar3/symfinder-neo4j:vissoft2021
-Jun 08, 2022 5:24:55 PM fr.unice.i3s.sparks.deathstar3.projectbuilder.Neo4JStarter startNeo4J
-INFO: An instance of neo4j seems to be already running 
-Jun 08, 2022 5:24:55 PM org.neo4j.driver.internal.logging.JULogger info
-INFO: Direct driver instance 1596658651 created for server address symfinder-neo4j:7687
-17:24:55.829 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - ClassesVisitor
-17:24:56.282 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ClassesVisitor - Class: MavenWrapperDownloader
-17:24:56.354 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ClassesVisitor - Class: zero.HelloController
-17:24:56.378 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ClassesVisitor - Class: zero.Application
+TODO UPDATE
 ```
-Five visitors are run on the codebase: `ClassesVisitor`, `GraphBuilderVisitor`, `StrategyTemplateDecoratorVisitor`, `FactoryVisitor`, and `ComposeTypeVisitor`.
+
+3. Once cloned, the symfinder engine parses the codebase of the project and populates the Neo4j database. _TODO #Update stack_
+```
+TODO UPDATE
+```
+Five visitors are run on the codebase: `ClassesVisitor`, `GraphBuilderVisitor`, `DecoratorFactoryTemplateVisitor`, `StrategyVisitor`, and `UsageVisitor`.
 
 3. At the end of the successive parsings, a summary of the results of the execution is given, and symfinder stops.
-The information are then sent to the VariMetrics backend.
+The information are then sent to the varicity backend. _TODO #Update stack_
 ```
-17:26:59.061 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.ManifestProvider
-17:26:59.074 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.LogMojo
-17:26:59.107 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.WatchMojo
-17:26:59.162 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.DebugMojo
-17:26:59.189 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.UndeployMojo
-17:26:59.220 [pool-1-thread-1] INFO  fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.SymfinderVisitor - Visitor: fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor - Class: org.eclipse.jkube.maven.plugin.mojo.develop.DeployMojo
-17:26:59.227 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - fr.unice.i3s.sparks.deathstar3.symfinder.engine.visitors.ComposeTypeVisitor execution time: 00:00:48.242
-17:27:00.403 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of VPs: 268
-17:27:00.405 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of methods VPs: 128
-17:27:00.406 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of constructors VPs: 30
-17:27:00.409 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of method level VPs: 158
-17:27:00.410 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of class level VPs: 110
-17:27:00.425 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of variants: 547
-17:27:00.426 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of methods variants: 340
-17:27:00.428 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of constructors variants: 73
-17:27:00.430 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of method level variants: 413
-17:27:00.431 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of class level variants: 134
-17:27:00.434 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of nodes: 5044
-17:27:00.438 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of relationships: 5554
-17:27:00.443 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Number of corrected inheritance relationships: 144/772
-Jun 08, 2022 5:27:01 PM org.neo4j.driver.internal.logging.JULogger info
-INFO: Closing driver instance 1596658651
-Jun 08, 2022 5:27:01 PM org.neo4j.driver.internal.logging.JULogger info
-INFO: Closing connection pool towards symfinder-neo4j:7687
-17:27:01.243 [pool-1-thread-1] MY_LEVEL fr.unice.i3s.sparks.deathstar3.symfinder.engine.entrypoint.Symfinder - Total execution time: 00:02:05.629
-Jun 08, 2022 5:27:01 PM fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson writeResult
-INFO: JSON path : /data/output/symfinder_files/jkube.json
-Jun 08, 2022 5:27:01 PM fr.unice.i3s.sparks.deathstar3.serializer.ExperimentResultWriterJson writeResult
-INFO: JSON stats path : /data/output/symfinder_files/jkube-stats.json
+TODO UPDATE
 ```
 
-5. Supposing that you run symfinder on JKube only, the `/data/output` directory shall now have the following structure:
+5. Supposing that you run symfinder on Nest only, the `/dockervolume/data` directory shall now have the following structure:
 ```
-/data/output/
-└── symfinder_files
-    ├── externals
-    │   ├── jkube
-    │   │   └── jkube-sonarcloud.json
-    ├── jkube.json
-    └── jkube-stats.json
+/data/symfinder_files/
+└── parsed
+    ├── nest.json
+└── nest.json    
 ```
-Files in the `symfinder_files` directory (`jkube.json` and `jkube-stats.json`) correspond to files generated by analysing JFreeChart with symfinder.
-The `externals` directory contains for each analyzed project the JSON files being the extracted metrics (here, `jkube-sonarcloud.json`). 
-
-JKube has a SonarCloud page, therefore metrics were extracted from this page directly.
-
-In the case of an analysis where a SonarQube server is run locally, the execution is done in parallel of symfinder.
-Traces of the execution are also visible, but are mixed up with symfinder's traces.
-Here's an example of hierarchy for a project requiring a local SonarQube server, JFreeChart. 
-```
-/data/output/
-└── symfinder_files
-    ├── externals
-    │   ├── jfreechart-1.5.0
-    │   │   └── jfreechart-1.5.0-sonarqube.json
-    ├── jfreechart-1.5.0.json
-    └── jfreechart-1.5.0-stats.json
-```
+Files in the `symfinder_files` directory (`nest.json`) correspond to files generated by analysing Nest with symfinder.
 
 ### Building symfinder
 
@@ -306,23 +222,16 @@ Here's an example of hierarchy for a project requiring a local SonarQube server,
 You can build symfinder's Docker images by running
 
 ```
-./build_symfinder.sh
+./build_symfinder_ts.sh
 ```
 
-Then, change the TAG variable in the `run-docker-cli` script from `splc2022` to `local`:
+Then, change the TAG variable in the `run-docker-cli` script from `scp2024` to `local`:
 
-- On GNU/Linux and MacOS, edit `run-docker-cli.sh`
+- On GNU/Linux, edit `run-docker-cli.sh`
 ```
-- TAG=splc2022
+- TAG=scp2024
 + TAG=local
 ```
-
-- On Windows, edit `run-docker-cli.bat`
-```
-- set tag=splc2022
-+ set tag=local
-```
-
 
 ### Troubleshooting known issues
 
@@ -357,7 +266,7 @@ Caused by: java.net.UnknownHostException: varicityback
 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:776)
 	... 5 more
 ```
-This means that the VariMetrics backend is not running.
+This means that the varicity backend is not running.
 You then need to run the `run-compose.sh` script in another terminal before re-running the analysis.
 
 - If you obtain the following message:
