@@ -8,8 +8,6 @@ API classes are the first buildings placed on the "root" street, and classes lin
 Links used to produce this hierarchy can be configured, depending on their type (inheritance or usage), and orientation (see the [Configuration](#configuration) section).
 
 In order to use VariCity to visualize your project, you need to first analyse it using the symfinder toolchain. [Go to symfinder's documentation](./../symfinder/symfinder/README.md)
-And optionally retrieve other metrics from external sources such as SonarCloud using symfinder. [Go to symfinder's documentation](./../symfinder/README.md)
-
 
 ## Technical Requirements
 
@@ -30,7 +28,7 @@ And optionally retrieve other metrics from external sources such as SonarCloud u
 ### Reusing the existing Docker image
 
 All scripts mentioned in this section are not located in the folder containing this readme.  
-They are located and executed from the root of the VariMetrics folder.
+They are located and executed from the root of the VariCity-TS folder.
 
 The following Docker image hosted on the [Docker Hub](https://hub.docker.com/) allows to use VariCity without needing to build it.
 ```
@@ -41,7 +39,7 @@ deathstar3/varimetrics-backend
 Run VariCity by running
 
 
-- On GNU/Linux and macOS
+- On GNU/Linux
 
     ```
     ./run-compose.sh
@@ -53,7 +51,7 @@ Run VariCity by running
 
 **This step is only needed if you edited VariCity's source code.**
 
-You can build VariCity's Docker images by running
+You can build VariCity Docker images by running
 
 ```
 ./build_varicity_ts.sh
@@ -61,7 +59,7 @@ You can build VariCity's Docker images by running
 
 Then, change the TAG variable in the `run-compose` script from `scp2024` to `local`:
 
-- On GNU/Linux and MacOS, edit `run-compose.sh`
+- On GNU/Linux, edit `run-compose.sh`
 ```
 - export TAG=scp2024
 + export TAG=local
@@ -73,20 +71,36 @@ To access the visualization once VariCity is running, you need to access [http:/
 
 ### Select a project
 
-To select the project you want to visualize, head to the side menu and click on Project selection, then on the name of your analysed project.
+**To illustrate, we use here the project [Nest](https://github.com/nestjs/nest) as an example.**
+
+- To select the project you want to visualize, click on the `Project` dropdown menu. A list of the available projects appears.
 ![project_selection_panel](./../readme_files/varicity/project_selection_panel.png)
 
-You will most probably have to wait for a few seconds while the file is getting parsed before the visualization actually appears on your screen.
+- By clicking on the desired project's name here Nest, a pre-configured view appears in the background. You can choose the view you want by clicking on the second dropdown menu.
+![view_selection_panel](TODO)
+> You will most probably have to wait for a few seconds while the file is getting parsed before the visualization actually appears on your screen.
+
+- By clicking on the view `Varicity view - Figure 2`, the city is loaded.
+![Nest_visualization](TODO)
+
+> The visualization above shows Nest with usage orientation set to OUT and usage level set to 2.
 
 ### Exploring your city
 
 Once the visualization is up, you can explore the city by moving the camera with the following controls:
 
 - Left mouse button: Drag to turn the camera
-- Right mouse button: Drag to move the camera
+- Right mouse button: Drag to move the camera, horinzontally and vertically
 - Scroll up/down: Zoom in/out
 
-You can use the search bar at the top of the side menu to search for a specific class and focus the camera on its corresponding building in the visualization (with autocompletion).
+_Note that if you zoom in too much, the city might disappear. In this case just scroll back on drag your camera to a better angle to zoom further in._
+
+You can use the search bar at the bottom left of the screen to search for a specific class and focus the camera on its corresponding building in the visualization (with autocompletion).
+If you do so, the requested building is highlighted. 
+
+![search_bar](TODO)
+
+![highlighted_building](TODO)
 
 #### Buildings
 
@@ -116,14 +130,9 @@ Buildings represent classes and wear information with how they are displayed:
 In VariCity, you can also see relations between your classes, in different ways:
 
 - Streets: A street is created when a VP is parsed, and all its variants are displayed next to the street.
-- Aerial links: By default, inheritance links (EXTENDS and IMPLEMENTS) are displayed as aerial links. The building at the darker side is the source (subclass), and the one at the brighter side is the destination (superclass).  
+- Aerial links: By default, inheritance links (**EXTENDS** and **IMPLEMENTS**) are displayed as aerial links. The building at the darker side is the source (subclass), and the one at the brighter side is the destination (superclass).  
   ![aerial link](./../readme_files/varicity/Aerial_link.png)  
   *On the left, the bright side of the link means that the yellow building is the super class of the blue building on the other hand, at the dark side.*
-- Underground links / Underground streets: By default, an underground link between two buildings shows the DUPLICATE links, unique to VariCity and not present in the symfinder files. It means that the starting building is a variant of the target building, but could not be placed in the target's street because it had already been drawn. Thus, each building is displayed only once.
-  Underground links are also oriented, and the source class is represented by the building having a vertical street underneath itself. The destination class is directly linked by the underground link.
-  The depth of the vertical part depends on the difference of usage level between the two classes.  
-  ![underground link](./../readme_files/varicity/Underground_link.png)  
-  *Here, an underground street goes from the left to the right side of the image. This means that the class on the left side is also present in the district of the class on the right side.*
 
 By clicking on a building, you can display the links leading to or coming from it, as well as detailed info on the side menu (types, attributes, links, etc.) in the "Object details" section.
 
@@ -131,88 +140,73 @@ By clicking on a building, you can display the links leading to or coming from i
 *The highlighted building has all its links displayed*
 
 
+#### How to understand implemented variability 
+
+This section aims to explain how to understand the city you are exploring. 
+
+The [Nest](https://github.com/nestjs/nest) project is still used as an example to illustrate.
+Nest is a modular and extensible framework for back-end development in JavaScript
+
+- If you followed the steps at the section `Select a project`, you have this city view. 
+![Nest_visualization](TODO)
+
+First things that stand out are high towers and a long street with a lot of blue buildings.
+
+
+##### The left tower
+![]()
+
+- It is very high, and yellow. why ? 
+
+> In varicity the basic colors for buildings are blue and yellow. The former is assigned to class building and the later to class building that are considered variation points (vp-s)
+> The size of a building can vary either on vertical axis, or horizontal axis. By default the high is determined by the number of method variants and the width the number of constructor variants. So in both cases the higher the number, the bigger the building is.
+
+_So the left tower represents a class that is considered as variation point and it has a lot of method variants._
+
+- By clicking on the building, the informative metrics side panel appears
+![]()
+
+> You can see a lot of badges i, the "Types" section among which the "vp" badge and the "mlvp" badge. MLVP stands for "Method Level Variation Point" which means that the class as at least one method that is overloaded. This coincides well with the high number of method variants.
+> Second thing that catches the eye is in fact the high number of method variants in the metrics. 
+
+The class is in fact a Logger, that has a lot of method overloading. This is explained by the fact that a logger has different levels of logging (info, log, debug,...) and depending on the context could require to send several information or of different types, hence the heavy overloading. 
+
+##### The 
 
 ### Configuration
 
-![config menu](./../readme_files/varicity/Configuration_menu.png)
-
-In the side menu, you can change various configuration variables in the "Config parameters" submenu:
-
-- Usage level: Change the level of usage used to display the city (default is 4).
-- Orientation: Can be IN, OUT, or IN_OUT. Used to change the orientation of the links used to establish the usage level of each element.
-- hierarchy_links: Contains the list of link types used to compose the graph of the city.
-- api_classes: For each project, list of names of the entry point classes used as starting points to build the city.
+In the side menus, you can change various configuration variables (in order from top to bottom):
 - Building:
-    - padding: will change the space between each building
-    - colors:
-        - faces: Contains the colors list in which the buildings should be displayed according to their tags. Every colors list in the configuration is ordered, and if a class has two of the listed tags, the first one in the list will be taken into account. Putting a ```!```before a tag name will set the color for each class that does not have the tag.
-          Example (default configuration):
-          ![colors list](./../readme_files/varicity/Colors_list.png)
-        - edges: Colors list for the outlines of the buildings (by default, there is only a black outline for the API classes).
-- district:
+  - padding: will change the space between each building (default is 0.2)
+  - colors:
+    - faces: Contains the colors list in which the buildings should be displayed according to their tags. Every colors list in the configuration is ordered, and if a class has two of the listed tags, the first one in the list will be taken into account. Putting a ```!```before a tag name will set the color for each class that does not have the tag.
+    ![colors list](./../readme_files/varicity/Colors_list.png)
+    - edges: Colors list for the outlines of the buildings (by default, there is only a black outline for the API classes).
+- District:
     - padding: Space between every district (default is 0)
-    - colors > faces: Colors list for the types of package (tag PACKAGE is for the root street, tag VP is for the other streets).
-- link:
+    - faces color: Colors list for the types of package (tag PACKAGE is for the root street, tag VP is for the other streets).
+- Link:
     - colors: Colors list for the links.
     - display:
-        - air_traffic: List of tags corresponding to the links that should be displayed as aerial links.
-        - underground_road: List of tags corresponding to the links that should be displayed as underground links.
-- blacklist: Each class or package in this list will be excluded from visualization.
-- variables: Names of the variables used to determine the height and the width of the buildings (do not change unless you know the variable names in the source code).
+      - air_traffic: List of tags corresponding to the links that should be displayed as aerial links.
+      - underground_road: List of tags corresponding to the links that should be displayed as underground links.
+      - hierarchy_links: List of link types used to compose the graph of the city.
+- APIs and Blacklist:
+  - Usage level: Change the level of usage used to display the city (default is 4).
+  - Orientation: Can be IN, OUT. Used to change the orientation of the links used to establish the usage level of each element.
+  - api_classes: For each project, list of names of the entry point classes used as starting points to build the city.
+  - blacklist: Each class or package in this list will be excluded from visualization.
+- Metrics:
+  - variables: Names of the variables used to determine the height and the width of the buildings (do not change unless you know the variable names in the source code).
 
-The default configuration is retrieved from the ```config/config.yaml``` file in the ```varicity ``` folder.
-Its structure is identical to the menu displayed on the visualization.
-This file can be modified at any time. However, you will need to rerun VariCity to take the changes into account.
+#### Save a configuration 
 
+Once a city is displayed, you can save it as a new configuration for later use.
 
-An additional attribute in this file is `default_level`, used to determine the default usage level (default is 4).
+- Click on save in the side menu 
 
-### Configure VariCity for your project
+- Click on save configuration
 
-The `api_classes` section of VariCity's configuration file (being the `config/config.yaml` file in the `varicity ` folder) allows defining default entry point classes for your project.
+- Choose a name for your configuration
 
-#### Example:
-
-Let's suppose that you defined the following experiment in symfinder (see [Using symfinder on your project](#using-symfinder-on-your-project) section for more details on how to define a new experiment in symfinder):
-
-```yaml
-myproject:
-  repositoryUrl: https://github.com/myusername/project1
-  sourcePackage: .
-  tagIds:
-    - customtag
-```
-
-In the `api_classes` section of VariCity's configuration file, you may add a new entry for your project, having for name the pattern `<experiment_name>_<experiment_tag_or_commit>`.
-
-```yaml
-api_classes:
-  - "my.first.EntryPointClass"
-  - "my.second.EntryPointClass"
-```
-
-This allows you to create different pre-configurations for every commit / tag of a same project.
-
-#### Example:
-
-Let's suppose that you defined the following experiment in symfinder:
-
-```yaml
-myproject:
-  repositoryUrl: https://github.com/myusername/project1
-  sourcePackage: .
-  tagIds:
-    - customtag1
-    - customtag2
-  commitIds:
-    - customcommit 
-```
-
-In the `api_classes` section of VariCity's configuration file, you can define entries wih the following names:
-
-```yaml
-api_classes:
-  - "my.first.EntryPointClass"
-  - "my.second.EntryPointClass"
- 
-```
+_Note that the same menu can be used to update your existing configuration. Either for updating camera position, or in case of changes like addition/deletion of entrypoints, colors etc._
