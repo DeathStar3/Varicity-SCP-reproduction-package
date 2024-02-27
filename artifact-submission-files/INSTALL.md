@@ -101,22 +101,24 @@ varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer]
 varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [RouterExplorer] Mapped {/projects/:projectName/configs/filenames-and-names, GET} route +0ms
 varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [NestApplication] Nest application successfully started +16ms
 ```
-- Once the `Nest application successfully started` log appears, you can now open your web browser and go to `http://localhost:8000`.
-- A page appears, showing the list of the available projects.
-  ![project_selection_panel](images/project_selection_panel.png)
-- By clicking on the desired project's name, you can then select the configuration you want to visualize while a first visualization is loading, here Nest.
-  Please note that the visualization may not be centered when appearing. The rendering time of the visualization increases with the number of buildings to display.
-  To limit the loading time when switching between projects, we advise to reduce the value of the usage level to limit the number of buildings to render.
+- Once the `Nest application successfully started` log appears, you can now open your web browser and go to [http://localhost:8000](http://localhost:8000).
+- Click on the `Project` dropdown menu. A list of the available projects appears.
+![project_selection_panel](TODO)
+- By clicking on the desired project's name here Nest, a pre-configured view appears in the background. You can choose the view you want by clicking on the second dropdown menu.
+![view_selection_panel](TODO)
+- The `dockervolume/configs` directory contains a directory for each project, containing several pre-configured views. The Nest configuration matching the view presented in the paper as `Figure 4b` is labeled under `Varicity view - Figure 2`.
+- By clicking on the view `Varicity view - Figure 2`, the city is loaded.
+![Nest_visualization](TODO)
+-The visualization above shows Nest with usage orientation set to OUT and usage level set to 2.
 
-  ![visu_selection_panel](images/visu_selection_panel.png) _TODO #changeMenuImage_
-- By selecting the `Varicity view - Figure 2` configuration, we obtain the following view:
-  ![jfreechart_visualization](images/jfreechart_visualization.png) _TODO #changeMenuImage_
+>Please note that the visualization may not be centered when appearing. The rendering time of the visualization increases with the number of buildings to display.
+>To limit the loading time when switching between projects, we advise to reduce the value of the usage level to limit the number of buildings to render before switching.
 
 ### Building varicity
 
 **This step is only needed if you edited varicity's source code.**
 
-You can build varicity's Docker images by running
+You can build varicity Docker images by running
 
 ```
 ./build_varicity_ts.sh 

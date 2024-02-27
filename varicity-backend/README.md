@@ -1,18 +1,34 @@
 # VariCity-backend
 
-The Varicity-Backend is a REST service that stores and pre-parse the results extracted by Symfinder. It also stores the Visualization Configurations.
+The VariCity-Backend is a REST service that stores and pre-parse the results extracted by Symfinder. It also stores the Visualization Configurations.
 
 Here is a list of the available routes.
+
+The swagger documentation is accessible at the link [http://localhost:3000/api/](http://localhost:3000/api/) **only when the container is running**
+
 <p align="center">
   <img src="images/rest-routes.png" alt="Available REST routes" />
 </p>
 
+### Running VariCity-backend
+
+The backend is not supposed to run alone. It is meant to run along with Varicity to visualize 3D cities of variability.
+Please refer to the readme at the root of the project to run Varicity-ts.
+
+
 ### Building VariCity-backend
 
-To use Varicity-backend just run `build-docker-image.(sh|bat)` depending on your OS.
+**This step is only needed if you edited varicity-backend source code.**
 
+  - On GNU/Linux
 
-### Develop and modify VariCity-backend
+  ```
+  ./build.sh
+  ```
+
+  _Note that if you also intend to modify the source code of Varicity, you can rebuild both images by running the script `build_varicity_ts.sh` at the root of the project._
+
+### Run local on your machine
 
 >If you want to develop the backend, you will need the following
 >- Node 16
