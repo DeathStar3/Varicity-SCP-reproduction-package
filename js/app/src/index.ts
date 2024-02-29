@@ -18,7 +18,8 @@
  */
 import { Symfinder } from "./symfinder";
 
-let symfinder = new Symfinder();
+const runner: any = process.env.ENGINE_RUNNER
+let symfinder = new Symfinder(runner);
 //symfinder.run('../test_project/strategy');
 //symfinder.run('../experiments/n8n/packages');
 //symfinder.run('../experiments/grafana');
@@ -38,11 +39,11 @@ if(path === undefined) console.log("Error path undefined...");
 else {
     if(http_path === undefined){
         console.log("Executing locally...")
-        symfinder.run('../'+path,"",analysis_base, stats_file);
+        symfinder.run(path,"",analysis_base, stats_file);
     }
     else{
         console.log("Sending result to " + http_path + " ...")
-        symfinder.run('../'+path,http_path,analysis_base, stats_file);
+        symfinder.run(path,http_path,analysis_base, stats_file);
     }
 }
 

@@ -18,10 +18,21 @@
  */
 import { load } from "js-yaml"
 import { readFileSync } from "fs"
+import { log } from "console";
 
 export class Configuration{
 
-    properties: any = load(readFileSync('./neo4j.yaml', 'utf8'));
+    runner: string;
+    properties: any;
+
+    constructor(runner: string) {
+        this.runner = runner;
+        if (this.runner === "docker") {
+            this.properties = load(readFileSync('./neo4j_docker.yaml', 'utf8'));
+        } else {
+            this.properties = load(readFileSync('./neo4j.yaml', 'utf8'));
+        }
+    }
 
     getNeo4JBoltAdress(): string{
         return this.properties.neo4j.boltAddress
@@ -35,6 +46,3 @@ export class Configuration{
         return this.properties.neo4j.password
     }
 }
-
-const config = new Configuration()
-export { config }

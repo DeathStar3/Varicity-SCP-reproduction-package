@@ -2,8 +2,8 @@
 
 set -e
 
-TAG=ts
+TAG=scp2024
 
-cd js
-echo "building the symfinder engine"
-docker build -f Dockerfile -t deathstar3/symfinder-cli:${TAG} .
+cd js/app
+echo "building the Symfinder-TS engine"
+docker build -f Dockerfile -t deathstar3/symfinder-ts-cli:${TAG} .

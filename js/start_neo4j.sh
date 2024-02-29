@@ -1,6 +1,6 @@
 if ! docker  ps -a | grep -q symfinderts_neo4j; then
   echo "Starting Docker"
-  docker run --rm --name symfinderts_neo4j -d -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/root \
+  docker run --rm --network varicity-config --name symfinder-ts-neo4j -d -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/root \
   -e NEO4JLABS_PLUGINS='["apoc"]' \
   --volume $(pwd)/conf:/conf \
   --volume $(pwd)/import:/import \
