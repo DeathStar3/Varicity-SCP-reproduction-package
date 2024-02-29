@@ -2,8 +2,8 @@
 if [ ! -d experiments ]; then
     mkdir experiments
 fi
-if [ ! -d ./app/export ]; then
-    mkdir ./app/export
+if [ ! -d export ]; then
+    mkdir export
 fi
 
 # Environment variables
@@ -36,6 +36,7 @@ help()
 ################################################################################
 
 PROJECT_URL=""
+ENGINE_RUNNER=""
 NB_MAX_ARGS=$#
 NB_ARG=0
 # Parse the arguments
@@ -51,6 +52,7 @@ while true; do
     help
     shift ;;
   http*) PROJECT_URL="$1" ; shift 1;; # Project path
+  -runner) ENGINE_RUNNER="$2"; shift 2; ;;
   esac
 done
 
@@ -63,7 +65,6 @@ echo "Project \"$PROJECT_URL\" will be analyse."
 if [ "$HTTP_PATH" != "" ]; then
   echo "Project results will be send to server \"$HTTP_PATH\""
 fi
-echo
 
 # Downloading the project
 project=$(basename -- "$PROJECT_URL")
@@ -73,25 +74,21 @@ if [ ! -d "$path" ]; then
     echo Download at "$PROJECT_URL"
     mkdir download
     cd download
-    wget -q --show-progress -O "$project".zip "$PROJECT_URL"/archive/master.zip
+    wget -q -O "$project".zip "$PROJECT_URL"/archive/master.zip
     if [ ! -f "$project".zip ]; then
         echo Project \'"$project"\' not find...
         cd ..
-        rm -rd download
+        rm -rf download
         exit 1
     fi
     unzip -q "$project".zip
     rm "$project".zip
     mv $(ls) ../experiments/"$project"
     cd ..
-    rm -d download
+    rm -rf download
 fi
 
 echo Anlysing project: "$project"
-echo HERE BANANA
-cd app
-pwd
-echo HERE APPLE
 # npm run build
 
 # Export environment variables
@@ -99,10 +96,12 @@ PROJECT_PATH=$path
 UV_THREADPOOL_SIZE=$(nproc)
 export HTTP_PATH
 export PROJECT_PATH
+export ENGINE_RUNNER
 export UV_THREADPOOL_SIZE
 
 echo "HTTP : $HTTP_PATH"
 echo "PROJECT : $PROJECT_PATH"
+echo "RUNNER: $ENGINE_RUNNER"
 
 # Run Symfidner JS
 node lib/index.js

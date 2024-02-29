@@ -25,7 +25,7 @@ services:
   varicitybackend:
     build:
       context: ./varicity-backend
-    image: deathstar3/varimetrics-backend:${TAG}
+    image: deathstar3/varicity-ts-backend:${TAG}
     container_name: varicity-backend
     hostname: varicityback
     user: "${SYMFINDER_UID}:${SYMFINDER_GID}"
@@ -52,7 +52,7 @@ services:
   varicity:
     build:
       context: ./varicity
-    image: deathstar3/varimetrics:${TAG}
+    image: deathstar3/varicity-ts:${TAG}
     container_name: varicity
     ports:
       - "8000:80"

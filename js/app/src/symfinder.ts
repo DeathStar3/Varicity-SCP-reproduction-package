@@ -23,7 +23,7 @@ import StrategyVisitor from "./visitors/StrategyVisitor"
 import DecoratorFactoryTemplateVisitor from "./visitors/DecoratorFactoryTemplateVisitor"
 import Parser from "./parser/Parser";
 import NeoGraph from "./neograph/NeoGraph";
-import {config} from "./configuration/Configuration";
+import {Configuration} from "./configuration/Configuration";
 import {join} from "path";
 import {readdirSync, readFileSync, statSync} from "fs";
 import {EntityAttribut, EntityType, RelationType} from "./neograph/NodeType";
@@ -47,9 +47,11 @@ import ExportVisitor from "./visitors/ExportVisitor";
 export class Symfinder{
 
     neoGraph: NeoGraph;
+    config: any;
 
-    constructor(){
-        this.neoGraph = new NeoGraph(config);
+    constructor(runner: string){
+        this.config = new Configuration(runner);
+        this.neoGraph = new NeoGraph(this.config);
     }
 
     /**

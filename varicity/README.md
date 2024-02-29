@@ -171,7 +171,44 @@ _So the left tower represents a class that is considered as variation point and 
 
 The class is in fact a Logger, that has a lot of method overloading. This is explained by the fact that a logger has different levels of logging (info, log, debug,...) and depending on the context could require to send several information or of different types, hence the heavy overloading. 
 
-##### The 
+##### The long street
+![]()
+
+- Entrypoint is yellow and of normal size, but it has a lot of linked buildings. 
+
+- By hovering the entrypoint with your mouse, you can see a lot of link going from the entrypoint to each building. 
+
+> If you haven't modify links parameters these links are supposed to be aerial and blue, and they visualize EXTENDS relationship, meaning the entrypoint class has a lot of inheritance, which is the source of the variability here. 
+
+- By clicking on the node, the side panel appears and you can see the node is the basic Exception class. So each building is a type of exception that specialize the context and the behavior of the basic one, this explains the high number of classes extending the entrypoint (hence a high number of buildings). 
+
+##### On the right of the Exception class entrypoint
+ ![buildings]()
+
+ - This entrypoint has an additional shape.
+
+ - By clicking on the `Documentation` menu in the side panel, you have information on the differnet building shapes. 
+
+ ![Icon]()
+ ![Menu]()
+ 
+- The building is then a Strategy pattern, which brings the variability here. Once again, you can click on the building to see its information. 
+
+![panel]()
+
+The class is the ClientProxy class. Nest can be used to build monolithic applications, but the main use if for microservices architecutres. There are two main components to build these architectures in Nest which are the clients and servers. The ClientProxy is the strategy responsible for the different clients. There are several clients to handle the variability in the different transport layer used in the microservices. 
+
+This class goes then as a pair with the strategy building right behind it that is the Server factory. 
+
+![server buildings]()
+
+Both of these classes are used by their respective factories that are used to create the required components. 
+
+![server factory]()
+![client factory]()
+
+These two buildings introduces variability has they are Factory patterns.
+
 
 ### Configuration
 

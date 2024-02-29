@@ -97,7 +97,6 @@ export default class ClassesVisitor extends SymfinderVisitor{
      * @returns 
      */
     async visitInterface(node: InterfaceDeclaration): Promise<void>{
-
         var nodeType: NodeType = EntityType.INTERFACE;   
         var modifiers = node.modifiers?.map(m => m.kind);
         var nodeVisibility = modifiers?.includes(SyntaxKind.PrivateKeyword) ? EntityVisibility.PRIVATE : EntityVisibility.PUBLIC;
@@ -105,7 +104,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var name = node.name?.getText();
         var nodeTypeList: NodeType[] = [nodeVisibility];
         // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         var fileName = filname_from_filepath(filePath);
         await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
             if(filePath === undefined || fileName === undefined) return;
@@ -135,7 +134,7 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var nodeTypeList: NodeType[] = [nodeVisibility];
         if(modifiers?.includes(SyntaxKind.AbstractKeyword))nodeTypeList.push(EntityAttribut.ABSTRACT);
         // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         var fileName = filname_from_filepath(filePath);
         await this.neoGraph.createNode(name, nodeType, nodeTypeList).then(async (neoNode) => {
             if(filePath === undefined || fileName === undefined) return;
@@ -166,8 +165,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var nodeTypeList: NodeType[] = [];
         var nodeType = isConstructorDeclaration(node) ? EntityType.CONSTRUCTOR : EntityType.METHOD;
         // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
-
+        // var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         if(modifiers?.includes(SyntaxKind.AbstractKeyword)) nodeTypeList.push(EntityAttribut.ABSTRACT);
         if(classVisibility == EntityVisibility.PUBLIC) {
             nodeTypeList.push(nodeVisibility)
@@ -192,7 +191,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var name = node.name?.getText()
         if(name === undefined) return;
         // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        // var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         var fileName = filname_from_filepath(filePath);
         var modifiers = node.modifiers?.map(m => m.kind);
         var relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
@@ -221,7 +221,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var nodeTypeList: NodeType[] = [];
         var nodeType = EntityType.VARIABLE;
         // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        // var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         var fileName = filname_from_filepath(filePath);
         // var className = (<any>node.parent.parent.parent).name.getText();
 
@@ -250,7 +251,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         var nodeTypeList: NodeType[] = [];
         var nodeType = EntityType.VARIABLE;
         // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        // var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         var fileName = filname_from_filepath(filePath);
         // var className = (<any>node.parent.parent.parent).name.getText();
 
@@ -280,7 +282,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         const nodeTypeList: NodeType[] = [];
         const nodeType = EntityType.PARAMETER;
         // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        // var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         var fileName = filname_from_filepath(filePath);
         // const className = (<any>node.parent.parent).name.getText();
 
@@ -304,7 +307,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         const nodeTypeList: NodeType[] = [];
         const nodeType = EntityType.PROPERTY;
         // @ts-ignore
-        var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        // var filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        var filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         var fileName = filname_from_filepath(filePath);
         // const className = node.parent.name?.getText();
 
@@ -328,7 +332,8 @@ export default class ClassesVisitor extends SymfinderVisitor{
         const modifiers = node.modifiers?.map(m => m.kind);
         const relationType = modifiers?.includes(SyntaxKind.ExportKeyword) ? RelationType.EXPORT : RelationType.INTERNAL;
         // @ts-ignore
-        const filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        // const filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        const filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         const fileName = filname_from_filepath(filePath);
         await this.neoGraph.createNodeWithPath(name, filePath, EntityType.MODULE, []).then(async (moduleNode) => {
             const fileNode = await this.neoGraph.getNodeWithPath(fileName, filePath);

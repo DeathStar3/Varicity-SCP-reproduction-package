@@ -43,7 +43,8 @@ export default class UsageVisitor extends SymfinderVisitor {
         const name = node.name?.getText();
         if (name === undefined) return;
         // @ts-ignore
-        const filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        // const filePath = path.relative(process.env.PROJECT_PATH, node.getSourceFile().fileName).substring(6);
+        const filePath = node.getSourceFile().fileName.replace(/^.*\/experiment/, 'experiment');
         let className = "";
         let classPath = "";
 
