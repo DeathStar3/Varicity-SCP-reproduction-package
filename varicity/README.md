@@ -1,13 +1,13 @@
 # VariCity-TS
 
 VariCity-TS is a 3D visualization relying on the city metaphor to display zones of high density of variability implementations in a single system.
-The city is built by creating building, corresponding to classes, and streets, grouping every class linked to the street's starting building.
+The city is built by creating buildings, corresponding to classes, and streets, grouping every class linked to the street's starting building.
 
-In order to build the city, VariCity-TS parses the JSON files produced by symfinder and symfinder to produces a graph composed by classes and their links. The starting points of this graph are API classes, defined by the user.
+In order to build the city, VariCity-TS parses the JSON files produced by symfinder and symfinder to produce a graph composed of classes and their links. The starting points of this graph are API classes, defined by the user.
 API classes are the first buildings placed on the "root" street, and classes linked to them are placed in their corresponding streets.
 Links used to produce this hierarchy can be configured, depending on their type (inheritance or usage), and orientation (see the [Configuration](#configuration) section).
 
-In order to use VariCity-TS to visualize your project, you need to first analyse it using the symfinder toolchain. [Go to symfinder's documentation](./../symfinder/symfinder/README.md)
+In order to use VariCity-TS to visualize your project, you need to first analyze it using the symfinder toolchain. [Go to symfinder's documentation](./../symfinder/symfinder/README.md)
 
 ## Technical Requirements
 
@@ -16,11 +16,11 @@ In order to use VariCity-TS to visualize your project, you need to first analyse
 - Docker Compose
     - Instructions to install Docker Compose are available [here](https://docs.docker.com/compose/install/#install-compose).
 - Docker with WSL2 on Windows
-    - Instruction to install Docker are available [here](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
+    - Instructions to install Docker are available [here](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
 
 **Note:** By default, on a GNU/Linux host, Docker commands must be run using `sudo`. Two options are available for you in order to run the project:
 - Follow [these short steps](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user) to allow your user to call Docker commands,
-- Preface the scripts calls with `sudo`.
+- Preface script calls with `sudo`.
 
 
 ## Running VariCity-TS
@@ -30,7 +30,7 @@ In order to use VariCity-TS to visualize your project, you need to first analyse
 All scripts mentioned in this section are not located in the folder containing this readme.  
 They are located and executed from the root of the VariCity-TS folder.
 
-The following Docker images hosted on the [Docker Hub](https://hub.docker.com/u/deathstar3) allow to use VariCity-TS without needing to build it.
+The following Docker images hosted on the [Docker Hub](https://hub.docker.com/u/deathstar3) allow you to use VariCity-TS without needing to build it.
 ```
 deathstar3/varicity-ts
 deathstar3/varicity-ts-backend
@@ -80,7 +80,7 @@ To access the visualization once VariCity-TS is running, you need to access [htt
 ![view_selection_panel](../readme_files/view_selection_panel.png)
 > You will most probably have to wait for a few seconds while the file is getting parsed before the visualization actually appears on your screen.
 
-- By clicking on the view `Varicity view - Figure 2`, the city is loaded.
+- By clicking on the view `Varicity view - Figure 1`, the city is loaded.
 ![Nest_visualization](../readme_files/Nest_visualization.png)
 
 > The visualization above shows Nest with usage orientation set to OUT and usage level set to 2.
@@ -90,10 +90,10 @@ To access the visualization once VariCity-TS is running, you need to access [htt
 Once the visualization is up, you can explore the city by moving the camera with the following controls:
 
 - Left mouse button: Drag to turn the camera
-- Right mouse button: Drag to move the camera, horinzontally and vertically
+- Right mouse button: Drag to move the camera, horizontally and vertically
 - Scroll up/down: Zoom in/out
 
-_Note that if you zoom in too much, the city might disappear. In this case just scroll back on drag your camera to a better angle to zoom further in._
+_Note that if you zoom in too much, the city might disappear. In this case, just scroll back on drag your camera to a better angle to zoom further in._
 
 You can use the search bar at the bottom left of the screen to search for a specific class and focus the camera on its corresponding building in the visualization (with autocompletion).
 If you do so, the requested building is highlighted. 
@@ -109,7 +109,7 @@ Buildings represent classes and wear information with how they are displayed:
     - Height: by default, the height of a building depends on the number of method variants of the class.
     - Width: by default, the width of a building depends on the number of constructor variants of the class.
 - Color: the color of a building depends on the tags of its corresponding class (see the config section)
-- Models: Some building may have additional features to their 3D model:
+- Models: Some buildings may have additional features to their 3D model:
     - Design patterns:
         - Chimneys:  A building with chimneys represents a Factory class  
           ![factory](./../readme_files/varicity/Factory.png)
@@ -129,9 +129,9 @@ Buildings represent classes and wear information with how they are displayed:
 In VariCity-TS, you can also see relations between your classes, in different ways:
 
 - Streets: A street is created when a VP is parsed, and all its variants are displayed next to the street.
-- Aerial links: By default, inheritance links (**EXTENDS** and **IMPLEMENTS**) are displayed as aerial links. The building at the darker side is the source (subclass), and the one at the brighter side is the destination (superclass).  
+- Aerial links: By default, inheritance links (**EXTENDS** and **IMPLEMENTS**) are displayed as aerial links. The building on the darker side is the source (subclass), and the one on the brighter side is the destination (superclass).  
   ![brighter_darker_side](../readme_files/brighter_darker_side.png)  
-  *On the left, the bright side of the link means that the yellow building is the super class of the blue building on the other hand, at the dark side.*
+  *On the left, the bright side of the link means that the yellow building is the superclass of the blue building on the other hand, at the dark side.*
 
 By clicking on a building, you can display the links leading to or coming from it, as well as detailed info on the side menu (types, attributes, links, etc.) in the "Object details" section.
 
@@ -146,49 +146,49 @@ This section aims to explain how to understand the city you are exploring.
 The [Nest](https://github.com/nestjs/nest) project is still used as an example to illustrate.
 Nest is a modular and extensible framework for back-end development in JavaScript
 
-- If you followed the steps at the section `Select a project`, you have this city view. 
+- If you followed the steps in the section `Select a project`, you have this city view. 
 ![Nest_visualization](../readme_files/Nest_visualization.png)
 
-First things that stand out are high towers and a long street with a lot of blue buildings.
+The first things that stand out are the high towers and a long street with a lot of blue buildings.
 
 
 ##### **The left tower**
 ![left_tower](../readme_files/left_tower.png)
 
-- It is very high, and yellow. why ? 
+- It is very high, and yellow. why? 
 
-> In VariCity-TS the basic colors for buildings are blue and yellow. The former is assigned to class building and the later to class building that are considered variation points (vp-s)
-> The size of a building can vary either on vertical axis, or horizontal axis. By default the high is determined by the number of method variants and the width the number of constructor variants. So in both cases the higher the number, the bigger the building is.
+> In VariCity-TS the basic colors for buildings are blue and yellow. The former is assigned to class building and the latter to class building that are considered variation points (vp-s)
+> The size of a building can vary either on the vertical axis or horizontal axis. By default, the heigh is determined by the number of method variants and the width by the number of constructor variants. So in both cases the higher the number, the bigger the building is.
 
-_So the left tower represents a class that is considered as variation point and it has a lot of method variants._
+_So the left tower represents a class that is considered as a variation point and it has a lot of method variants._
 
 - By clicking on the building, the informative metrics side panel appears
 ![left_tower_info](../readme_files/left_tower_info.png)
 
-> You can see a lot of badges i, the "Types" section among which the "vp" badge and the "mlvp" badge. MLVP stands for "Method Level Variation Point" which means that the class as at least one method that is overloaded. This coincides well with the high number of method variants.
-> Second thing that catches the eye is in fact the high number of method variants in the metrics. 
+> You can see a lot of badges i, the "Types" section among which the "vp" badge and the "mlvp" badge. MLVP stands for "Method Level Variation Point" which means that the class has at least one method that is overloaded. This coincides well with the high number of method variants.
+> The second thing that catches the eye is in fact the high number of method variants in the metrics. 
 
-The class is in fact a Logger, that has a lot of method overloading. This is explained by the fact that a logger has different levels of logging (info, log, debug,...) and depending on the context could require to send several information or of different types, hence the heavy overloading. 
+The class is in fact a Logger, that has a lot of method overloading. This is explained by the fact that a logger has different levels of logging (info, log, debug,...) and depending on the context could require sending various information of different types, hence the heavy overloading. 
 
 ##### **The long street**
 ![long_street](../readme_files/long_street.png)
 
 - Entrypoint is yellow and of normal size, but it has a lot of linked buildings. 
 
-- By hovering the entrypoint with your mouse, you can see a lot of link going from the entrypoint to each building. 
+- By hovering the entrypoint with your mouse, you can see a lot of links going from the entrypoint to each building. 
 
 ![long_street_hovering](../readme_files/long_street_hovering.png)
 
-> If you haven't modify links parameters these links are supposed to be aerial and blue, and they visualize EXTENDS relationship, meaning the entrypoint class has a lot of inheritance, which is the source of the variability here. 
+> If you haven't modified link parameters these links are supposed to be aerial and blue, and they visualize EXTENDS relationship, meaning the entrypoint class has a lot of inheritance, which is the source of the variability here. 
 
-- By clicking on the node, the side panel appears and you can see the node is the basic Exception class. So each building is a type of exception that specialize the context and the behavior of the basic one, this explains the high number of classes extending the entrypoint (hence a high number of buildings). 
+- By clicking on the node, the side panel appears and you can see the node is the basic Exception class. So each building is a type of exception that specifies the context and the behavior of the basic one, this explains the high number of classes extending the entrypoint (hence a high number of buildings). 
 
 ##### **On the right of the Exception class entrypoint**
  ![client_proxy](../readme_files/client_proxy.png)
 
  - This entrypoint has an additional shape.
 
- - By clicking on the `Documentation` menu in the side panel, you have information on the differnet building shapes. 
+ - By clicking on the `Documentation` menu in the side panel, you have information on the different building shapes. 
 
  ![documentation](../readme_files/documentation.png)
  ![documentation_menu](../readme_files/documentation_menu.png)
@@ -197,9 +197,9 @@ The class is in fact a Logger, that has a lot of method overloading. This is exp
 
 ![client_proxy_info](../readme_files/client_proxy_info.png)
 
-The class is the ClientProxy class. Nest can be used to build monolithic applications, but the main use if for microservices architecutres. There are two main components to build these architectures in Nest which are the clients and servers. The ClientProxy is the strategy responsible for the different clients. There are several clients to handle the variability in the different transport layer used in the microservices. 
+The class is the ClientProxy class. Nest can be used to build monolithic applications, but the main use is for microservices architectures. There are two main components to build these architectures in Nest which are the clients and servers. The ClientProxy is the strategy responsible for the different clients. There are several clients to handle the variability in the different transport layers used in the microservices. 
 
-This class goes then as a pair with the strategy building right behind it that is the Server factory. 
+This class goes then as a pair with the strategy building right behind it which is the Server factory. 
 
 ![Server](../readme_files/Server.png)
 
@@ -208,7 +208,7 @@ Both of these classes are used by their respective factories that are used to cr
 ![ServerFactory](../readme_files/ServerFactory.png)
 ![ClientProxyFactory](../readme_files/ClientProxyFactory.png)
 
-These two buildings introduces variability has they are Factory patterns.
+These two buildings introduce variability as they are Factory patterns.
 
 
 ### Configuration
@@ -217,7 +217,7 @@ In the side menus, you can change various configuration variables (in order from
 - Building:
   - padding: will change the space between each building (default is 0.2)
   - colors:
-    - faces: Contains the colors list in which the buildings should be displayed according to their tags. Every colors list in the configuration is ordered, and if a class has two of the listed tags, the first one in the list will be taken into account. Putting a ```!```before a tag name will set the color for each class that does not have the tag.
+    - faces: Contains the colors list in which the buildings should be displayed according to their tags. Every color list in the configuration is ordered, and if a class has two of the listed tags, the first one in the list will be taken into account. Putting a ```!``` before a tag name will set the color for each class that does not have the tag.
     ![colors list](./../readme_files/varicity/Colors_list.png)
     - edges: Colors list for the outlines of the buildings (by default, there is only a black outline for the API classes).
 - District:
@@ -232,7 +232,7 @@ In the side menus, you can change various configuration variables (in order from
 - APIs and Blacklist:
   - Usage level: Change the level of usage used to display the city (default is 4).
   - Orientation: Can be IN, OUT. Used to change the orientation of the links used to establish the usage level of each element.
-  - api_classes: For each project, list of names of the entry point classes used as starting points to build the city.
+  - api_classes: For each project, a list of names of the entry point classes used as starting points to build the city.
   - blacklist: Each class or package in this list will be excluded from visualization.
 - Metrics:
   - variables: Names of the variables used to determine the height and the width of the buildings (do not change unless you know the variable names in the source code).
@@ -253,4 +253,4 @@ Once a city is displayed, you can save it as a new configuration for later use.
 
 ![save_validation](../readme_files/save_validation.png)
 
-_Note that the same menu can be used to update your existing configuration. Either for updating camera position, or in case of changes like addition/deletion of entrypoints, colors etc._
+_Note that the same menu can be used to update your existing configuration. Either for updating camera position or in case of changes like addition/deletion of entrypoints, colors, etc._

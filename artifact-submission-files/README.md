@@ -127,8 +127,8 @@ For more information on the execution of VariCity-TS, see `INSTALL.md`.
 ![project_selection_panel](./images/project_selection_panel.png)
 5. By clicking on the desired project's name here Nest, a pre-configured view appears in the background. You can choose the view you want by clicking on the second dropdown menu.
 ![view_selection_panel](./images/view_selection_panel.png)
-6. The `dockervolume/configs` directory contains a directory for each project, containing several pre-configured views. The Nest configuration matching the view presented in the paper as `Figure 4b` is labeled under `Varicity view - Figure 2`.
-7. By clicking on the view `Varicity view - Figure 2`, the city is loaded.
+6. The `dockervolume/configs` directory contains a directory for each project, containing several pre-configured views. The Nest configuration matching the view presented in the paper as `Figure 4b` is labeled under `Varicity view - Figure 1`.
+7. By clicking on the view `Varicity view - Figure 1`, the city is loaded.
 ![Nest_visualization](./images/Nest_visualization.png)
 -The visualization above shows Nest with usage orientation set to OUT and usage level set to 2.
 

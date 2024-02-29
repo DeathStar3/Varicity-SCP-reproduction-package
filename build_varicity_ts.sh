@@ -22,7 +22,7 @@
 # This script builds the images to be used with docker
 
 set -e
-TAG=scp2024
+TAG=local
 
 cd varicity
 echo "Building VariCity-TS front"
