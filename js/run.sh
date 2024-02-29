@@ -74,10 +74,6 @@ fi
 ################################################################################
 cd app
 
-echo installing dependencies
-
-npm ci
-
 ################################################################################
 # Downloading the project
 project=$(basename -- "$PROJECT_URL")

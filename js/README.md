@@ -1,92 +1,167 @@
-# SimfinderJS
+# Symfinder-TS
 
-## Dependencies
+**Symfinder-TS** is a toolchain parsing a single TypeScript codebase to identify potential variability implementations.
+The analysis of Symfinder-TS is paired with a Neo4J Graph database which is populated with all variability implementations found in the source code.
+The output of Symfinder-TS consist in JSON files containing information on the presence of variability implementations in the analysed codebase (e.g. if a class has been identified as a variation point or a variant, number of variants of an identified variation point…).
+The output is then sent to the VariCity-TS-backend which parse it and makes it accessible through the VariCity-TS UI to visualize it as a 3D City.
 
-This project is in TypeScript.
-It also used a test framework, [Jest](https://jestjs.io/fr/) and the framework used to detect code duplication is Jscpd, repo [here](https://github.com/kucherenko/jscpd) and the npm doc [here](https://www.npmjs.com/package/jscpd).
+## Technical Requirements
 
-All Javascript dependencies are specified in the **package.json** file and can be installed with the ```npm install```command or by exec ```./prepare.sh```.
+- Docker
+    - Instructions to install Docker are available [here](https://docs.docker.com/get-docker/).
+- Docker Compose
+    - Instructions to install Docker Compose are available [here](https://docs.docker.com/compose/install/#install-compose).
+- Docker with WSL2 on Windows
+    - Instruction to install Docker are available [here](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
 
-## Preparation
-
-To install all dependencies:
-
->>```./prepare.sh```
-
-
-## Run SymfinderJS
-
-### Via the Run.sh file:
-
-#### Not sending result 
-
->>```./run.sh <githuburl>```
-
-#### Sending result
-
->>```./run.sh <githuburl> -http <targeturl>```
-
-``<targeturl>`` can be empty or invalid. In this case, it will use the default value ``http://localhost:3000/projects`` who is the url for the local docker container of the Varicity-Backend.
-The format of the data sent is the object the Varicity-Backend expect for a project. 
-
-For example:
-
->>```./run.sh https://github.com/apache/echarts```
-
-### Via the manual procedure:
-
->> There are several steps to follow in order to run the app correctly
->> All explanations are focused on the project **Echarts**, more info at the end
->> Here they are:
-
->> **Prerequisites** : Install Docker, NodeJS, NPM (should be included in NodeJS) and then the TypeScript compiler TSC. You can install it with the following command ``` npm install -g typescript```
->> 1. Create a folder **experiments** at the same level as app (in /js)
->> 2. Download into the experiments folder the Github project you want to analyze (echarts link : https://github.com/apache/echarts). You should consider not including the .git folder to ensure a reasonable processing time. You can either do a git clone or download the zip file and unzip it into the experiments folder.
->> 3. Run the Neo4J container in Docker ``` docker run -d -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/root neo4j:4.1.9 ```
->> 4. Install NPM dependencies in js/app ``` npm install ```
->> 5. Build the app still in js/app ``` npm run build ```
->> 6. Run the analysis from js/app with the following cmd ``` PROJECT_PATH=experiments/echarts node lib/index.js```. Here applied to echarts </br>
->> 7. It is possible to run the analysis process from a specific directory and not from the root as you can see [here](https://github.com/DeathStar3-projects/symfinder-js-ter-m1/blob/main/js/neo4J%20analysis%20results/ECharts/echart-chart_analysis.png). To replicate this picture the command is ``` PROJECT_PATH=experiments/echarts/src/chart node lib/index.js```
->> 8. Anyway all visuals can be find even from the project's root. This [one](https://github.com/DeathStar3-projects/symfinder-js-ter-m1/blob/main/js/neo4J%20analysis%20results/ECharts/echarts_vp_folders.png) can be obtained by running analysis on root (i.e step 6), then you have to use neo4j's filter to find **VP_Folder** only and finally by expanding nodes. If you follow the same process you can also obtained the same result but this time you can execute analysis from the src directory with this command: ```PROJECT_PATH=experiments/echarts/src node lib/index.js```
->> 9. Finally, you can find some metrics about the project in your console, and you can go visualize it with Neo4J on http://localhost:7474.
-
-## Concerning Test cases
-
-### To run a test case
-
-- Run the ``` run_test.sh ``` file and specify the name of directory that is placed in the directory **test_project** as a parameter. **Before** running test make sure you have the docker running and that all dependencies are installed.
-
-### To create a test
-
-- In the directory **test_project** create a directory that contains the file architecture you want to test and then create a test file in the directory **app/tests/** that is name like this : ```<previously_created_directory_name>.test.ts```
-
-- To write the test in jest with TypeScript, [here](https://jestjs.io/docs/getting-started#using-typescript)
-
-### Test tool chain
-
-Execute a project and compare the values obtained with those excepted. Its aim is to easily see the changes in the graph after code modifications are made.
-The values monitor are:
-- The files count
-- The variants count
-- The nodes count
-- The relationships count
-- The number of unknown paths during the usage detection
-- The number of unknown export objects
-
-This script takes 8 arguments: the github link of the project, the commit, and the 6 excepted values.
-
-#### test_medium_projects script
-Test 5 medium projects: Ionic-Framework, Prisma, NativeScript, TypeORM and NestJS. It can be used to check if regressions happened or the code modifications changed the right values and without side effects.
+**Note:** By default, on a GNU/Linux host, Docker commands must be run using `sudo`. Two options are available for you in order to run the project:
+- Follow [these short steps](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user) to allow your user to call Docker commands,
+- Preface the scripts calls with `sudo`.
 
 
-#### test_big_projects script
-Test 6 big projects: VSCode, Angular, BabylonJS, n8n, AzureDataStudio and Grafana. It can be used to check the consistency of SymfinderJS and if it scales without problems.
-  
-## ECharts
+## Running Symfinder-TS
 
-- Git repository [here](https://github.com/apache/echarts)
-- web site [here](https://echarts.apache.org/en/index.html)
-- Neo4j visuals of Echarts, obtained during previous TER, [here](https://github.com/DeathStar3-projects/symfinder-js-ter-m1/tree/main/js/neo4J%20analysis%20results/ECharts)
-## Results
+Symfinder can run as a Docker container or locally on your machine.  
+In both cases the Symfinder engine runs along a Neo4J database that is always in a container.
 
-- You can always visualize your neo4j results at ```http://localhost:7474/browser/```
+Symfinder-TS works with Github URLs to analyse projects. The URL is used to download the project archive. 
+
+*Note*: **The required URL is the web page URL not the http cloning URL**
+
+### Reusing the existing Docker image
+
+All scripts mentioned in this section are not located in the folder containing this readme.  
+They are located and executed from the root of the VariCity-TS folder.
+
+_The procedure is here illustrated with the project [NestJS](https://github.com/nestjs/nest)_
+
+The following Docker images hosted on [Docker Hub](https://hub.docker.com/) allow to use VariCity-TS without needing to build it.
+
+```
+deathstar3/symfinder-ts-cli
+deathstar3/varicity-ts
+deathstar3/varicity-ts-backend
+```
+
+- First run VariCity-TS:
+
+    - On GNU/Linux
+
+    ```
+    ./run-compose.sh
+    ```
+
+- Then, in another terminal:
+
+  - On GNU/Linux
+
+  ```
+  ./run_symfinder_ts.sh https://github.com/nestjs/nest -runner docker -http http://varicity-backend:3000/projects 
+  ```
+
+  - What does the command do ?
+
+    - `./run_symfinder_ts.sh` is the script needed to run the docker version of Symfinder-TS. It is located at the root of the folder `VariCity-TS`. It is a combined script that runs both the Neo4J database container and the Symfinder-TS container.
+    - `https://github.com/nestjs/nest` -> The first argument is the Github URL of the project to analyse. 
+    - `-runner docker` -> The second argument specifies if the engine is running on Docker or on a local machine 
+    - `-http http://varicity-backend:3000/projects` -> The third argument is the address with which the engine can communicate the analysis data to the VariCity-TS-backend. As they are part of the same Docker network the URL in directly the container hostname.
+
+  *Note:* As for VariXity-TS, the Docker image is automatically downloaded by Docker with the tag `scp2024` if it is not found on the host system.
+
+
+### Building Symfinder-TS
+
+**This step is only needed if you edited Symfinder-TS source code.**
+
+You can build Symfinder-TS Docker images by running
+
+```
+./build_symfinder_ts.sh
+```
+
+Then, change the TAG variable in the `run_symfinder_ts.sh` script from `scp2024` to `local`:
+
+- On GNU/Linux, edit `run_symfinder_ts.sh`
+```
+- TAG=scp2024
++ TAG=local
+```
+
+### Running Symfinder-TS on local machine
+
+Scripts mentioned in this section are not all located nor executed in the folder containing this readme.  
+
+#### Dependencies
+
+This is a node/npm project that uses Typescript. 
+
+**Note**: It runs on Node 16.
+
+All dependencies are specified in the **package.json** file and can be installed with by running the script `./prepare.sh`.
+
+- On GNU/Linux
+
+    ```
+    ./prepare.sh
+    ```
+
+#### Procedure
+
+_The procedure is here illustrated with the project [NestJS](https://github.com/nestjs/nest)_
+
+- First, at the root of the VariCity-TS folder
+
+    - On GNU/Linux
+
+        ```
+        ./run-compose.sh
+        ```
+
+- Then, in another terminal, in the js folder
+
+    - GNU/Linux
+        ```
+        ./run.sh https://github.com/nestjs/nest -runner local -http
+        ```
+
+  - What does the command do ?
+
+    - `./run.sh` is the script needed to run the lcoal version of Symfinder-TS. It is a combined script that runs both the Neo4J database container and the Symfinder-TS engine.
+    - `https://github.com/nestjs/nest` -> The first argument is the Github URL of the project to analyse. 
+    - `-runner local` -> The second argument specifies if the engine is running on Docker or on a local machine 
+    - `-http` -> The third argument is the address with which the engine can communicate the analysis data to the VariCity-TS-backend. No specific URL is specified here which means the default URL is used.
+
+## Using Symfinder-TS
+
+- Once the analysis is finished you can go at the address [http://localhost:7474/browser/](http://localhost:7474/browser/) is your browser to access the graph database and explore it. 
+
+![browser_auth](../readme_files/browser_auth.png)
+
+*Note*: Username and Password might not be autocompleted. Username is `neo4j`and password is `root`. 
+
+- Once connected, click on the database icon at the top left  
+![db_icon](../readme_files/db_icon.png)
+
+- This opens a side panel with all node labels registered in the database and all relationship types as well. 
+
+![side_panel](../readme_files/side_panel.png)
+
+- Clicking on one label opens a request panel with all node registered with the label. 
+
+*Note*: You can modify the color, the size and the caption of all nodes and relations when clicking on it when inside a request panel.
+
+![label_changes](../readme_files/label_changes.png)
+
+- By hovering a node, all information are displayed at the bottom of the request panel (all labels and variability metrics.)
+
+![node_hovering](../readme_files/node_hovering.png)
+
+- By clicking on a node, you can fix his position, dismiss it or expand it to show all related node.
+
+![node_clicking](../readme_files/node_clicking.png)
+
+- Finally, Neo4J uses the [Cypher query language](https://neo4j.com/docs/getting-started/cypher-intro/). Feel free to run all the queries you want on the browser to explore the analysis data. Queries are to be run in the top bar
+
+![query_bar](../readme_files/query_bar.png)
+
+**Important Note**: The Neo4J database **ONLY** contains the data of the last analyzed project. Let's say you analyze Nest, then you analyze Vim and finally you go on the web to explore your data, you will be exploring Vim database. You will have to run a new analysis on Nest to access its analysis data.

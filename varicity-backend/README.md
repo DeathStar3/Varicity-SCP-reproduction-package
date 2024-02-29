@@ -1,6 +1,6 @@
-# VariCity-backend
+# VariCity-TS-backend
 
-The VariCity-Backend is a REST service that stores and pre-parse the results extracted by Symfinder. It also stores the Visualization Configurations.
+The VariCity-TS-backend is a REST service that stores and pre-parse the results extracted by Symfinder. It also stores the Visualization Configurations.
 
 Here is a list of the available routes.
 
@@ -10,13 +10,13 @@ The swagger documentation is accessible at the link [http://localhost:3000/api/]
   <img src="images/rest-routes.png" alt="Available REST routes" />
 </p>
 
-### Running VariCity-backend
+### Running VariCity-TS-backend
 
-The backend is not supposed to run alone. It is meant to run along with Varicity to visualize 3D cities of variability.
-Please refer to the readme at the root of the project to run Varicity-ts.
+The backend is not supposed to run alone. It is meant to run along with VariCity-TS to visualize 3D cities of variability.
+Please refer to the [readme](../README.md) at the root of the project to run VariCity-TS.
 
 
-### Building VariCity-backend
+### Building VariCity-TS-backend
 
 **This step is only needed if you edited varicity-backend source code.**
 
@@ -26,7 +26,15 @@ Please refer to the readme at the root of the project to run Varicity-ts.
   ./build.sh
   ```
 
-  _Note that if you also intend to modify the source code of Varicity, you can rebuild both images by running the script `build_varicity_ts.sh` at the root of the project._
+  _Note that if you also intend to modify the source code of VariCity-TS, you can rebuild both images by running the script `build_varicity_ts.sh` at the root of the project._
+
+  Then, change the TAG variable in the `run-compose` script from `scp2024` to `local`:
+
+- On GNU/Linux, edit `run-compose.sh`
+```
+- export TAG=scp2024
++ export TAG=local
+```
 
 ### Run local on your machine
 
@@ -55,8 +63,8 @@ $ npm run start:prod
 ```
 
 
-### VariCity-backend configuration
-Here is the list of environment variables you can use to change the behavior of Varicity-Backend
+### VariCity-TS-backend configuration
+Here is the list of environment variables you can use to change the behavior of VariCity-TS-backend
 You can modify their default values in the `.env` or by setting an environment variable with the same names.
 
 ```properties
@@ -81,7 +89,7 @@ __Description of some variables__
 | WATCHED_SYMFINDER_DIR | string | The directory where you can put your symfinder_files manually. If you also have the metrics file of your project place them in `METRICS_DIR` **before** placing the result of the symfinder_analysis |
 | PARSED_INPUT_DIR      | string | When a symfinder_analysis is posted to Varicity Backend or detected by the file watcher it will be parsed and the result will be save in `PARSED_INPUT_DIR`                                            |
 ### Technological stack
-Varicity-Backend was developped with the Nestjs.
+VariCity-TS-backend was developped with the Nestjs.
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>

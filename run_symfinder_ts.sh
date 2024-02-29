@@ -9,4 +9,6 @@ if ! docker ps | grep -q neo4j; then
     ./start_neo4j.sh
 fi
 
+echo Database running, starting engine container
+
 docker run --rm --network varicity-config --name symfinder-ts-cli deathstar3/symfinder-ts-cli:${TAG} $@
