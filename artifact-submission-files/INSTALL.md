@@ -2,7 +2,7 @@
 
 In this document, we assume that you already have a system with:
 - a fully functional Docker and Docker Compose installed;
-- a web browser (our tests have been made with Google Chrome, Mozilla Firefox and Edge).
+- a web browser (our tests have been made with Google Chrome, Mozilla Firefox, and Edge).
 
 See the `REQUIREMENTS.md` file for more details.
 
@@ -31,14 +31,14 @@ docker pull deathstar3/varicity-ts:scp2024
 docker pull deathstar3/varicity-ts-backend:scp2024
 ```
 
-VariCity-TS is a NodeJS application written in TypeScript deployed in a webpack environment.
+VariCity-TS is a NodeJS application written in TypeScript and deployed in a webpack environment.
 The Docker container exposes the application as a server, which is accessed through your web browser.
 
 ### Checking that VariCity-TS works
 
 - Two Docker containers start:
   - `varicity`: the visualization server;
-  - `varicity-backend`: a component exposing an endpoint receiving a symfinder analysis as soon as it is finished.
+  - `varicity-backend`: a component exposing an endpoint receiving a Symfinder-TS analysis as soon as it is finished.
 
 ```
 $ ./run-compose.sh
@@ -111,7 +111,7 @@ varicity-backend  | [Nest] 18  - 06/06/2022, 2:13:20 PM     LOG [NestApplication
 -The visualization above shows Nest with usage orientation set to OUT and usage level set to 2.
 
 >Please note that the visualization may not be centered when appearing. The rendering time of the visualization increases with the number of buildings to display.
->To limit the loading time when switching between projects, we advise to reduce the value of the usage level to limit the number of buildings to render before switching.
+>To limit the loading time when switching between projects, we advise reducing the value of the usage level to limit the number of buildings to render before switching.
 
 ### Building VariCity-TS
 
@@ -138,7 +138,7 @@ All scripts used in this section are located in the artifact's root directory.
 
 ### Reusing the existing Docker images
 
-The following Docker images hosted on the [Docker Hub](https://hub.docker.com/u/deathstar3) allow to use Symfinder-TS without needing to build it.
+The following Docker images hosted on the [Docker Hub](https://hub.docker.com/u/deathstar3) allow you to use Symfinder-TS without needing to build it.
 
 ```
 deathstar3/symfinder-ts-cli
@@ -148,7 +148,7 @@ deathstar3/varicity-ts-backend
 
 In addition, running a Symfinder-TS analysis requires a Neo4j Docker image automatically pulled by the running script.
 
-The Symfinder-TS cli uses Github links to run, example: `https://github.com/nestjs/nest`.  
+The Symfinder-TS cli uses Github links to run, for example: `https://github.com/nestjs/nest`.  
 Links to all studied projects are provided in `PROJECTS.md`
 
 Running the analysis of one project is done as follows, here illustrated with the project [Nest](https://github.com/nestjs/nest):
@@ -170,7 +170,7 @@ Running the analysis of one project is done as follows, here illustrated with th
   ```
 
 *Notes:*
-- Some analyses, such as Azure Data Studio, VS Code, Grafana or Angular can take multiple hours.
+- Some analyses, such as Azure Data Studio, VS Code, Grafana, or Angular can take multiple hours.
 - The Docker images are automatically downloaded by Docker with the tag `scp2024` if they are not found on the host system.
 If an image is not found, you can download it manually with the `docker pull` command.
 
@@ -179,10 +179,10 @@ Example:
 docker pull deathstar3/symfinder-ts-cli:scp2024
 ```
 
-### Checking that symfinder works
-Hereafter, we illustrate the different steps of the execution of symfinder by giving excerpts of console outputs corresponding to the execution of symfinder on a single project, Nest.
+### Checking that Symfinder-TS works
+Hereafter, we illustrate the different steps of the execution of Symfinder-TS by giving excerpts of console outputs corresponding to the execution of Symfinder-TS on a single project, Nest.
 
-1. First, a Neo4j database used to store information about the analyzed project (classes, methods, identified variation points and variants…) is started.
+1. First, a Neo4j database used to store information about the analyzed project (classes, methods, identified variation points, and variants…) is started.
 ```
 $ ./run_symfinder_ts.sh https://github.com/nestjs/nest -runner docker -http http://varicity-backend:3000/projects 
 Starting database container
@@ -191,24 +191,24 @@ eaca35274582889c1ea467e57b7248ee4d8414e45fdd82b59d7cadc268ec4d5d
 Database running, starting engine container
 ```
 
-2. Then, symfinder clones the repository of the analyzed project. It is downloaded and then unziped, the operation can take a certain amount of time.
+2. Then, Symfinder-TS clones the repository of the analyzed project. It is downloaded and then unzipped, the operation can take a certain amount of time.
 ```
 https://github.com/nestjs/nest
 -runner
 -http
 Path to server manually defined.
 HTTP_PATH : http://varicity-backend:3000/projects
-Project "https://github.com/nestjs/nest" will be analyse.
-Project results will be send to server "http://varicity-backend:3000/projects"
+Project "https://github.com/nestjs/nest" will be analyzed.
+Project results will be sent to server "http://varicity-backend:3000/projects"
 Download at https://github.com/nestjs/nest
-Anlysing project: nest
+Analyzing project: nest
 HTTP : http://varicity-backend:3000/projects
 PROJECT : experiments/nest
 RUNNER: docker
 Sending result to http://varicity-backend:3000/projects ...
 ```
 
-3. Once cloned, the symfinder engine parses the codebase of the project and populates the Neo4j database. This is the longest part of the analysis. Small projects like Nest, Vim or Echarts only take several minutes to be analyzed whereas big ones like Azure Data Studio take several hours.
+3. Once cloned, the Symfinder-TS engine parses the codebase of the project and populates the Neo4j database. This is the longest part of the analysis. Small projects like Nest, Vim, or Echarts only take several minutes to be analyzed whereas big ones like Azure Data Studio take several hours.
 ```
 Database ready.                                               
 Analyse variability in : 'experiments/nest'
@@ -242,8 +242,8 @@ data written to fileCREATE PROJECT JSON :
 ```
 Five visitors are run on the codebase: `ClassesVisitor`, `GraphBuilderVisitor`, `DecoratorFactoryTemplateVisitor`, `StrategyVisitor`, and `UsageVisitor`.
 
-3. At the end of the successive parsings, a summary of the results of the execution is given, and symfinder stops, the container is deleted but Database container is running so you can access it on [http://localhost:7474/browser/](http://localhost:7474/browser/) and explore the data.
-The information are then sent to the VariCity-TS backend.
+4. At the end of the successive parsings, a summary of the results of the execution is given, and Symfinder-TS stops, the container is deleted but the database container is running so you can access it on [http://localhost:7474/browser/](http://localhost:7474/browser/) and explore the data.
+The information is then sent to the VariCity-TS backend.
 ```
 data written to fileData has been correctly sent
 Sent to server http://varicity-backend:3000/projects
@@ -264,14 +264,14 @@ Duration: 00:00:53.8
 Number of unknown class path: 0.45% (4/876)
 ```
 
-5. Supposing that you run symfinder on Nest only, the `/dockervolume/data` directory shall now have the following structure:
+5. Supposing that you run Symfinder-TS on Nest only, the `/dockervolume/data` directory shall now have the following structure:
 ```
 /data/symfinder_files/
 └── parsed
     ├── nest.json
 └── nest.json    
 ```
-Files in the `symfinder_files` directory (`nest.json`) correspond to files generated by analysing Nest with symfinder.
+Files in the `symfinder_files` directory (`nest.json`) correspond to files generated by analyzing Nest with symfinder.
 
 ### Building symfinder
 
@@ -295,9 +295,9 @@ Then, change the TAG variable in the `run-docker-cli` script from `scp2024` to `
 
 #### Common issues
 
-- Before Symfinder starts analyzing the project, it establishes connection with the database. It is possible that you see this error in the log
+- Before Symfinder starts analyzing the project, it establishes a connection with the database. It is possible that you see this error in the log
 ```
-Data base not ready... Retrying in 5 sec (0/10)Neo4jError: Failed to connect to server. Please ensure that your database is listening on the correct host and port and that you have compatible encryption settings both on Neo4j server and driver. Note that the default encryption setting has changed in Neo4j 4.0. Caused by: connect ECONNREFUSED 172.18.0.4:7687
+Database not ready... Retrying in 5 sec (0/10)Neo4jError: Failed to connect to server. Please ensure that your database is listening on the correct host and port and that you have compatible encryption settings both on Neo4j server and driver. Note that the default encryption setting has changed in Neo4j 4.0. Caused by: connect ECONNREFUSED 172.18.0.4:7687
 
     at captureStacktrace (/app/node_modules/neo4j-driver-core/lib/result.js:239:17)
     at new Result (/app/node_modules/neo4j-driver-core/lib/result.js:59:23)
@@ -313,8 +313,8 @@ Data base not ready... Retrying in 5 sec (0/10)Neo4jError: Failed to connect to 
   code: 'ServiceUnavailable'
 }
 ```
-The problem should be fixed after two or three retry.
-If it reaches 10, the program execution stops. In this case make sure that you are using the argument `runner` with the value `docker` if executing the script `run_symfinder_ts.sh` and the value `local` if executing the script `run.sh`. 
+The problem should be fixed after two or three retries.
+If it reaches 10, the program execution stops. In this case, make sure that you are using the argument `runner` with the value `docker` if executing the script `run_symfinder_ts.sh` and the value `local` if executing the script `run.sh`. 
 
 - If you obtain the following message:
 ```

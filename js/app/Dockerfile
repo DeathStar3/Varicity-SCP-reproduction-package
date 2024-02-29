@@ -7,10 +7,10 @@ FROM node:16-alpine AS build
 
 WORKDIR /usr/src/app
 
-COPY package.json package-lock.json tsconfig.json babel.config.js ./
+COPY package.json tsconfig.json babel.config.js ./
 
 # installs both production and dev dependencies
-RUN npm ci
+RUN npm i
 
 COPY . .
 

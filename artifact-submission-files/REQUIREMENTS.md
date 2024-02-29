@@ -5,7 +5,7 @@
 - Docker Compose
     - Instructions to install Docker Compose are available [here](https://docs.docker.com/compose/install/#install-compose).
 - Docker with WSL2 on Windows
-    - Instruction to install Docker are available [here](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
+    - Instructions to install Docker are available [here](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers)
 
 **Note:** You need to have a system running on either
 - GNU/Linux
@@ -17,7 +17,7 @@ If your system does not match any of the requirements above, you must install a 
 
 **Note:** By default, on a GNU/Linux host, Docker commands must be run using `sudo`. Two options are available for you in order to run the tool:
 - Follow [these short steps](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user) to allow your user to call Docker commands,
-- Preface the scripts calls with `sudo`.
+- Preface script calls with `sudo`.
 
 Your Docker installation should be allowed to allocate at least 3Go of RAM and 1Go of swap.
 The container for VariCity might be automatically killed at its start otherwise.
