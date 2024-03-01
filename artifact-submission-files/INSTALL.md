@@ -17,6 +17,29 @@ allowing to use it without needing to build it.
 
 Run VariCity-TS by running
 
+*Warning*: Shell scripts may not have execution permissions.
+To check if this is the case:
+
+  - on GNU/Linux
+  ```
+  ll ./script_name.sh
+  ```
+
+  - if it outputs this, you are good to go
+  ```
+  -rwxrwxrwx ...
+  ```
+
+  - if it outputs this:
+  ```
+  -rw_rwxrwx ...
+  ```
+
+  - run the command:
+  ```
+  chmod +x ./script_name.sh
+  ```
+
 - On GNU/Linux
 
     ```

@@ -38,6 +38,29 @@ deathstar3/varicity-ts
 deathstar3/varicity-ts-backend
 ```
 
+*Warning*: Shell scripts may not have execution permissions.
+To check if this is the case:
+
+  - on GNU/Linux
+  ```
+  ll ./script_name.sh
+  ```
+
+  - if it outputs this, you are good to go
+  ```
+  -rwxrwxrwx ...
+  ```
+
+  - if it outputs this:
+  ```
+  -rw_rwxrwx ...
+  ```
+
+  - run the command:
+  ```
+  chmod +x ./script_name.sh
+  ```
+
 - First, run the VariCity-TS server:
 
   - On GNU/Linux
@@ -68,6 +91,6 @@ deathstar3/varicity-ts-backend
 >To limit the loading time when switching between projects, we advise reducing the value of the usage level to limit the number of buildings to render before switching.
 
 ## Documentation
-- [Go to Symfinder-TS documentation](./symfinder/README.md)
+- [Go to Symfinder-TS documentation](./js/README.md)
 - [Go to VariCity-TS documentation](./varicity/README.md)
 - [Go to VariCity-TS-backend documentation](./varicity-backend/README.md)

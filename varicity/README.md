@@ -7,7 +7,7 @@ In order to build the city, VariCity-TS parses the JSON files produced by symfin
 API classes are the first buildings placed on the "root" street, and classes linked to them are placed in their corresponding streets.
 Links used to produce this hierarchy can be configured, depending on their type (inheritance or usage), and orientation (see the [Configuration](#configuration) section).
 
-In order to use VariCity-TS to visualize your project, you need to first analyze it using the symfinder toolchain. [Go to symfinder's documentation](./../symfinder/symfinder/README.md)
+In order to use VariCity-TS to visualize your project, you need to first analyze it using the symfinder toolchain. [Go to symfinder's documentation](../js/README.md)
 
 ## Technical Requirements
 

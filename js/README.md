@@ -35,13 +35,36 @@ They are located and executed from the root of the VariCity-TS folder.
 
 _The procedure is here illustrated with the project [NestJS](https://github.com/nestjs/nest)_
 
-The following Docker images hosted on [Docker Hub](https://hub.docker.com/) allow you to use VariCity-TS without needing to build it.
+The following Docker images hosted on [Docker Hub](https://hub.docker.com/u/deathstar3) allow you to use VariCity-TS without needing to build it.
 
 ```
 deathstar3/symfinder-ts-cli
 deathstar3/varicity-ts
 deathstar3/varicity-ts-backend
 ```
+
+*Warning*: Shell scripts may not have execution permissions.
+To check if this is the case:
+
+  - on GNU/Linux
+  ```
+  ll ./script_name.sh
+  ```
+
+  - if it outputs this, you are good to go
+  ```
+  -rwxrwxrwx ...
+  ```
+
+  - if it outputs this:
+  ```
+  -rw_rwxrwx ...
+  ```
+
+  - run the command:
+  ```
+  chmod +x ./script_name.sh
+  ```
 
 - First run VariCity-TS:
 
@@ -132,6 +155,8 @@ _The procedure is here illustrated with the project [NestJS](https://github.com/
     - `-http` -> The third argument is the address with which the engine can communicate the analysis data to the VariCity-TS-backend. No specific URL is specified here which means the default URL is used.
 
 ## Using Symfinder-TS
+
+*Note*: Examples are illustrated with the project [NestJS](https://github.com/nestjs/nest)
 
 - Once the analysis is finished you can go to the address [http://localhost:7474/browser/](http://localhost:7474/browser/) with your browser to access the graph database and explore it. 
 
