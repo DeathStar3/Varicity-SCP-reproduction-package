@@ -1,10 +1,18 @@
-# 2Cities
-
 <p align="center">
 <img src="varicity/public/images/logovaricity.gif" width="200" alt="Logo"/>
 </p>
 
+# IMPORTANT MESSAGE
 
+The code on this Main branch is the source code of the tool **2Cities** which was presented at SPLC'24.  
+**This version focuses on identifying and visualizing variability implemented with Object-Oriented mechanisms and code clones in TypeScript systems.**  
+Two papers were published at SPLC'24, one short research paper presenting the approach, available at [this link](https://hal.science/hal-04717839), and a tool demo paper addressing the conception of the tool, available at [this link](https://hal.science/hal-04717872).
+
+A previous version, **focusing only on variability implemented with Object-Oriented mechanisms** is also available among released versions in this repository and is tagged `VariCity-TS`.  
+This version is part of the VariCity ecosystem, presented in a journal article for SCP 2025, available at [this link](https://hal.science/hal-04725549).
+
+
+# 2Cities
 **2Cities** is a 3D visualization relying on the city metaphor to display variability implemented with multiple types of variability implementation mechanisms in a single system.   
 The first city, _CloneCity_, aims at visualizing variability implemented by using structural patterns, with modules and file duplications, and code duplication.
 Thus _CloneCity_ visualizes the whole project structure, and is built by creating building corresponding to files, and folders as streets.  
